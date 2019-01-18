@@ -3,8 +3,52 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Client", "00. Client", "{178987FB-F610-491B-B128-1B7CDBBCB5F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Engine", "01. Engine", "{123BBB27-D3D7-40B7-9DD6-C72272E016C9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Include\Engine.vcxproj", "{6369D407-C79B-4D0E-BAB9-7762221E81CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonsterForest", "MonsterForest\Include\MonsterForest.vcxproj", "{F68DD9B8-FB3C-44DF-A57D-A324BD252085}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD} = {6369D407-C79B-4D0E-BAB9-7762221E81CD}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Tools", "02. Tools", "{45C0F9A1-8220-4011-A302-C5A1DC23E804}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Debug|x64.ActiveCfg = Debug|x64
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Debug|x64.Build.0 = Debug|x64
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Debug|x86.ActiveCfg = Debug|Win32
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Debug|x86.Build.0 = Debug|Win32
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Release|x64.ActiveCfg = Release|x64
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Release|x64.Build.0 = Release|x64
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Release|x86.ActiveCfg = Release|Win32
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD}.Release|x86.Build.0 = Release|Win32
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Debug|x64.ActiveCfg = Debug|x64
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Debug|x64.Build.0 = Debug|x64
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Debug|x86.ActiveCfg = Debug|Win32
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Debug|x86.Build.0 = Debug|Win32
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x64.ActiveCfg = Release|x64
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x64.Build.0 = Release|x64
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x86.ActiveCfg = Release|Win32
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD} = {123BBB27-D3D7-40B7-9DD6-C72272E016C9}
+		{F68DD9B8-FB3C-44DF-A57D-A324BD252085} = {178987FB-F610-491B-B128-1B7CDBBCB5F7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD162597-8418-44A7-89D3-6DCAD50B9A0D}
 	EndGlobalSection
 EndGlobal
