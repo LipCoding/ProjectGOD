@@ -19,7 +19,7 @@ private:
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
 	bool returnToInitialPos{false};
-	float hearth_point{ 100 };
+	float hearth_point{ 50 };
 private:
 	CTransform*		m_pTarget;
 	CAnimation*		m_pAnimation;

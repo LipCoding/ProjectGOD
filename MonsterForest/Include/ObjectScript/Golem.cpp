@@ -176,25 +176,68 @@ int Golem::Update(float fTime)
 					//m_pAnimation->ChangeClip("ATTACK");
 				}
 
-				//vTarget.y = 0.f;
-				//vMonster.y = 0.f;
+				//
+				Matrix mMonsterWorld = m_pTransform->GetWorldMatrix();
+				Vector3 vToTarget;
 
-				Vector3 vDir = (vTarget - vMonster).Normalize();
-				//vDir.y = 0.f;
-				Vector3 vDir_Mine = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
-				//vDir_Mine.y = 0.f;
-				float angle = (vDir_Mine.Dot(vDir));
-				if (angle >= 180.f)
-					angle = 180.f - angle;
-				float Radian = (float)acos(angle);
+				vToTarget = vTarget - vMonster;
+				vToTarget = vToTarget.Normalize();
 
-				if (isnan(Radian))
+				Vector3 vLook = Vector3(0.f, 0.f, 1.f);
+				
+				vLook = vLook.TransformNormal(mMonsterWorld.mat);
+				vLook = vLook.Normalize();
+
+				Vector3 vCross;
+				vCross = vLook.Cross(vToTarget);
+					//XMVector3Cross(vLook.Convert(), vToTarget.Convert());
+				float vDot = vLook.Dot(vToTarget);
+
+				float fAngle = (vDot > 0.f) ? XMConvertToDegrees(acos(vDot)) : 90.f;
+				fAngle *= (vCross.y > 0.f) ? 1.f : -1.f;
+
+				if (isnan(fAngle))
 				{
-					Radian = 0.f;
+					return 0;
 				}
 
-				m_pTransform->RotateWorldY(Radian);
+				m_pTransform->RotateWorldY(XMConvertToRadians(fAngle));
 				m_pTransform->MoveWorld(AXIS_Z, 3.f * 2.f, fTime);
+
+				/*Matrix mRotation;
+				
+				mRotation = XMMatrixRotationY(fAngle);
+				mMonsterWorld = mRotation * mMonsterWorld;
+				
+				mMonsterWorld._41 += mMonsterWorld._31 * fTime;
+				mMonsterWorld._42 += mMonsterWorld._32 * fTime;
+				mMonsterWorld._43 += mMonsterWorld._33 * fTime;
+
+				m_pTransform->SetWorldMatrix(mMonsterWorld);*/
+				//
+				
+				////vTarget.y = 0.f;
+				////vMonster.y = 0.f;
+
+				//Vector3 vDir = (vTarget - vMonster).Normalize();
+				////vDir.y = 0.f;
+				//Vector3 vDir_Mine = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+				////vDir_Mine.y = 0.f;
+				//float angle = (vDir_Mine.Dot(vDir));
+				//if (angle >= 180.f)
+				//	angle = 180.f - angle;
+				//float Radian = (float)acos(angle);
+
+				//if (isnan(Radian))
+				//{
+				//	Radian = 0.f;
+				//}
+
+				//
+				//m_pTransform->RotateWorldY(Radian);
+				//m_pTransform->MoveWorld(AXIS_Z, 3.f * 2.f, fTime);
+
+				//m_pTransform->MoveWorld(AXIS_Z, 3.f * 2.f, fTime);
 			}
 		}
 		else
@@ -209,7 +252,7 @@ int Golem::Update(float fTime)
 			{
 				if (typeid(GolemDie) != typeid(pState))
 					nextAnimation = GOLEM_STATE::GOLEM_STATE_MOVE;
-				Vector3 vDir = (initial_pos - vMonster).Normalize();
+				/*Vector3 vDir = (initial_pos - vMonster).Normalize();
 				vDir.y = 0.f;
 				Vector3 vDir_Mine = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 				vDir_Mine.y = 0.f;
@@ -224,7 +267,35 @@ int Golem::Update(float fTime)
 				}
 
 				m_pTransform->RotateWorldY(Radian);
-				m_pTransform->MoveWorld(AXIS_Z, 3.f * 2.f, fTime);
+				m_pTransform->MoveWorld(AXIS_Z, 3.f * 2.f, fTime);*/
+
+				//
+				Matrix mMonsterWorld = m_pTransform->GetWorldMatrix();
+				Vector3 vToTarget;
+
+				vToTarget = initial_pos - vMonster;
+				vToTarget = vToTarget.Normalize();
+
+				Vector3 vLook = Vector3(0.f, 0.f, 1.f);
+
+				vLook = vLook.TransformNormal(mMonsterWorld.mat);
+				vLook = vLook.Normalize();
+
+				Vector3 vCross;
+				vCross = vLook.Cross(vToTarget);
+				//XMVector3Cross(vLook.Convert(), vToTarget.Convert());
+				float vDot = vLook.Dot(vToTarget);
+
+				float fAngle = (vDot > 0.f) ? XMConvertToDegrees(acos(vDot)) : 90.f;
+				fAngle *= (vCross.y > 0.f) ? 1.f : -1.f;
+
+				if (isnan(fAngle))
+				{
+					return 0;
+				}
+
+				m_pTransform->RotateWorldY(XMConvertToRadians(fAngle));
+				m_pTransform->MoveWorld(AXIS_Z, 6.f * 2.f, fTime);
 			}
 		}
 	}

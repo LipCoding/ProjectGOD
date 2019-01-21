@@ -66,7 +66,7 @@ bool CMainScene::Init()
 
 	CTransform*	pTr = pPlayerObj->GetTransform();
 
-	pTr->SetWorldPos(66.f, 0.f, 170.f);
+	pTr->SetWorldPos(159.f, 0.f, 136.f);
 	pTr->SetWorldScale(2.f, 2.f, 2.f);
 	pTr->SetWorldRot(0.f, 0.7f, 0.f);
 	SAFE_RELEASE(pTr);
