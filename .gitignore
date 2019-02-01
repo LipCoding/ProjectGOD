@@ -261,9 +261,4 @@ __pycache__/
 *.pyc
 
 # Big Files
-Engine/Bin64_Debug/libfbxsdk-md64_Debug.lib
-MonsterForest/Bin_Debug/libfbxsdk-md_Debug.lib
-MonsterForest/Bin64_Debug/libfbxsdk-md64_Debug.lib
-EngineRef/Bin_Debug/libfbxsdk-md_Debug.lib
-EngineRef/Bin64_Debug/libfbxsdk-md64_Debug.lib
-Engine/Bin_Debug/libfbxsdk-md_Debug.lib
+
