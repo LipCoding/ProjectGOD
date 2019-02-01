@@ -31,3 +31,8 @@ xcopy /s /y /d .\EngineRef\Bin_Debug\*.* .\MonsterForest\Bin_Debug\
 xcopy /s /y /d .\EngineRef\Bin\*.* .\MonsterForest\Bin\
 xcopy /s /y /d .\EngineRef\Bin64\*.* .\MonsterForest\Bin64\
 xcopy /s /y /d .\EngineRef\Bin64_Debug\*.* .\MonsterForest\Bin64_Debug\
+
+xcopy /s /y /d .\Engine\Bin_Debug\*.* .\EnvTool\Bin_Debug\
+xcopy /s /y /d .\Engine\Bin\*.* .\EnvTool\Bin\
+xcopy /s /y /d .\Engine\Bin64\*.* .\EnvTool\Bin64\
+xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\EnvTool\Bin64_Debug\

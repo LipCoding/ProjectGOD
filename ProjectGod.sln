@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonsterForest", "MonsterFor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Tools", "02. Tools", "{45C0F9A1-8220-4011-A302-C5A1DC23E804}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnvTool", "EnvTool\Include\EnvTool.vcxproj", "{8B076820-F32F-416B-AB42-40242CF9A4C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -40,6 +42,14 @@ Global
 		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x64.Build.0 = Release|x64
 		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x86.ActiveCfg = Release|Win32
 		{F68DD9B8-FB3C-44DF-A57D-A324BD252085}.Release|x86.Build.0 = Release|Win32
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Debug|x64.ActiveCfg = Debug|x64
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Debug|x64.Build.0 = Debug|x64
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Debug|x86.ActiveCfg = Debug|Win32
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Debug|x86.Build.0 = Debug|Win32
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Release|x64.ActiveCfg = Release|x64
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Release|x64.Build.0 = Release|x64
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Release|x86.ActiveCfg = Release|Win32
+		{8B076820-F32F-416B-AB42-40242CF9A4C5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +57,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6369D407-C79B-4D0E-BAB9-7762221E81CD} = {123BBB27-D3D7-40B7-9DD6-C72272E016C9}
 		{F68DD9B8-FB3C-44DF-A57D-A324BD252085} = {178987FB-F610-491B-B128-1B7CDBBCB5F7}
+		{8B076820-F32F-416B-AB42-40242CF9A4C5} = {45C0F9A1-8220-4011-A302-C5A1DC23E804}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FD162597-8418-44A7-89D3-6DCAD50B9A0D}
