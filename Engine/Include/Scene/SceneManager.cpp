@@ -193,11 +193,11 @@ bool CSceneManager::Init()
 	m_pCurScene = CreateScene("DefaultScene");
 	m_pCurScene->Release();
 
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	//CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 
-	pMouseObj->SetScene(m_pCurScene);
+	//pMouseObj->SetScene(m_pCurScene);
 
-	SAFE_RELEASE(pMouseObj);
+	//SAFE_RELEASE(pMouseObj);
 
 	return true;
 }

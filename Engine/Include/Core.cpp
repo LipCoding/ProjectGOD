@@ -10,10 +10,11 @@
 #include "Core\TimerManager.h"
 #include "Scene\SceneManager.h"
 #include "Core\Input.h"
+#include "Core\DirectInput.h"
 #include "Core\CollisionManager.h"
 #include "GameObject\GameObject.h"
 #include "Core\Scheduler.h"
-#include "Core/NavigationManager.h"
+#include "Core\NavigationManager.h"
 
 PG_USING
 
@@ -38,7 +39,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CNavigationManager);
 	DESTROY_SINGLE(CRenderManager);
 	DESTROY_SINGLE(CResourcesManager);
-	DESTROY_SINGLE(CInput);
+	DESTROY_SINGLE(CDirectInput);
 	DESTROY_SINGLE(CCollisionManager);
 	DESTROY_SINGLE(CTimerManager);
 	DESTROY_SINGLE(CPathManager);
@@ -89,7 +90,8 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 	if (!GET_SINGLE(CRenderManager)->Init())
 		return false;
 
-	if (!GET_SINGLE(CInput)->Init(m_hWnd, bOnMouseRenderer))
+	// Direct Input으로 수정
+	if (!GET_SINGLE(CDirectInput)->Init(hInst, m_hWnd, iWidth, iHeight))
 		return false;
 
 	if (!GET_SINGLE(CTimerManager)->Init())
@@ -146,7 +148,7 @@ void CCore::Logic()
 
 	GET_SINGLE(CScheduler)->Update(fTime);
 
-	Input(fTime);
+	/*Input(fTime);
 	if (Update(fTime) == SC_CHANGE)
 	{
 		GET_SINGLE(CInput)->ClearWheel();
@@ -156,8 +158,8 @@ void CCore::Logic()
 	{
 		GET_SINGLE(CInput)->ClearWheel();
 		return;
-	}
-	Collision(fTime);
+	}*/
+	//Collision(fTime);
 	Render(fTime);
 	
 	/*CShader*	pShader = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
@@ -171,31 +173,35 @@ void CCore::Logic()
 	SAFE_RELEASE(pShader);*/
 }
 
+// 수정
 void CCore::Input(float fTime)
 {
-	GET_SINGLE(CInput)->Update(fTime);
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->Input(fTime);
-	SAFE_RELEASE(pMouseObj);
+	//GET_SINGLE(CInput)->Update(fTime);
+	//CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	//pMouseObj->Input(fTime);
+	//SAFE_RELEASE(pMouseObj);
 	GET_SINGLE(CSceneManager)->Input(fTime);
 }
 
+// 수정
 int CCore::Update(float fTime)
 {
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->Update(fTime);
-	SAFE_RELEASE(pMouseObj);
+	//CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	//pMouseObj->Update(fTime);
+	//SAFE_RELEASE(pMouseObj);
 	return GET_SINGLE(CSceneManager)->Update(fTime);
 }
 
+// 수정
 int CCore::LateUpdate(float fTime)
 {
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->LateUpdate(fTime);
-	SAFE_RELEASE(pMouseObj);
+	//CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	//pMouseObj->LateUpdate(fTime);
+	//SAFE_RELEASE(pMouseObj);
 	return GET_SINGLE(CSceneManager)->LateUpdate(fTime);
 }
 
+// 수정
 void CCore::Collision(float fTime)
 {
 	/*CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
@@ -209,6 +215,7 @@ void CCore::Collision(float fTime)
 	// 절두체 컬링
 }
 
+// 수정
 void CCore::Render(float fTime)
 {
 	GET_SINGLE(CDevice)->ClearTarget();
@@ -223,7 +230,7 @@ void CCore::Render(float fTime)
 
 	GET_SINGLE(CDevice)->Present();
 
-	GET_SINGLE(CInput)->ClearWheel();
+	//GET_SINGLE(CInput)->ClearWheel();
 }
 
 ATOM CCore::WindowRegisterClass(TCHAR * pClass, int iIconID)

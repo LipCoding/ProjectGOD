@@ -57,6 +57,7 @@
     <ClCompile Include="Component\UIPanel.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Core\CollisionManager.cpp" />
+    <ClCompile Include="Core\DirectInput.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\NavigationManager.cpp" />
     <ClCompile Include="Core\NavigationMesh.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Component\UIPanel.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Core\CollisionManager.h" />
+    <ClInclude Include="Core\DirectInput.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\NavigationManager.h" />
     <ClInclude Include="Core\NavigationMesh.h" />

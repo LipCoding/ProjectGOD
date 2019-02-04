@@ -32,6 +32,14 @@ public:
 protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CToolBar          m_wndToolBar;
 	CStatusBar        m_wndStatusBar;
+	CSplitterWnd	  m_SplitWnd;
+	class CEnvToolView*		m_pView;
+	class EditForm*			m_pEdit;
+public:
+	class CEnvToolView* GetView() const
+	{
+		return m_pView;
+	}
 
 // 생성된 메시지 맵 함수
 protected:
@@ -40,6 +48,12 @@ protected:
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
+//public:
+//	afx_msg void OnGameobject();
+//	afx_msg void OnAnimationwindow();
+//	afx_msg void OnResourcewindow();
+//	afx_msg void OnTerrainWindow();
 };
 
 

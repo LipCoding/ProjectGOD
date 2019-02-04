@@ -6,6 +6,21 @@
 #include "EnvTool.h"
 
 #include "MainFrm.h"
+#include "EnvToolView.h"
+#include "EditForm.h"
+//#include "AnimationEdit.h"
+//#include "ResourceEdit.h"
+//#include "TerrainEdit.h"
+
+#include "GameObject/GameObject.h"
+#include "Scene/Scene.h"
+#include "Scene/Layer.h"
+#include "Scene/SceneManager.h"
+#include "Component/Transform.h"
+#include "Component/Renderer2D.h"
+#include "Core.h"
+
+PG_USING
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,10 +49,12 @@ static UINT indicators[] =
 CMainFrame::CMainFrame() noexcept
 {
 	// TODO: 여기에 멤버 초기화 코드를 추가합니다.
+
 }
 
 CMainFrame::~CMainFrame()
 {
+	
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -45,24 +62,24 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
-	{
-		TRACE0("도구 모음을 만들지 못했습니다.\n");
-		return -1;      // 만들지 못했습니다.
-	}
+	//if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+	//	!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
+	//{
+	//	TRACE0("도구 모음을 만들지 못했습니다.\n");
+	//	return -1;      // 만들지 못했습니다.
+	//}
 
-	if (!m_wndStatusBar.Create(this))
-	{
-		TRACE0("상태 표시줄을 만들지 못했습니다.\n");
-		return -1;      // 만들지 못했습니다.
-	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	//if (!m_wndStatusBar.Create(this))
+	//{
+	//	TRACE0("상태 표시줄을 만들지 못했습니다.\n");
+	//	return -1;      // 만들지 못했습니다.
+	//}
+	//m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 
-	// TODO: 도구 모음을 도킹할 수 없게 하려면 이 세 줄을 삭제하십시오.
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-	EnableDocking(CBRS_ALIGN_ANY);
-	DockControlBar(&m_wndToolBar);
+	//// TODO: 도구 모음을 도킹할 수 없게 하려면 이 세 줄을 삭제하십시오.
+	//m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	//EnableDocking(CBRS_ALIGN_ANY);
+	//DockControlBar(&m_wndToolBar);
 
 
 	return 0;
@@ -74,6 +91,9 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
+
+	cs.cx = 1680;
+	cs.cy = 720;
 
 	return TRUE;
 }
@@ -169,3 +189,27 @@ void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
 	pCmdUI->SetRadio(theApp.m_nAppLook == pCmdUI->m_nID);
 }
 
+BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext * pContext)
+{
+	if (!m_SplitWnd.CreateStatic(this, 1, 2))
+	{
+		return FALSE;
+	}
+
+	if (!m_SplitWnd.CreateView(0, 0, RUNTIME_CLASS(CEnvToolView),
+		CSize(1280, 720), pContext))
+	{
+		return FALSE;
+	}
+
+	if (!m_SplitWnd.CreateView(0, 1, RUNTIME_CLASS(EditForm),
+		CSize(400, 720), pContext))
+	{
+		return FALSE;
+	}
+
+	m_pView = (CEnvToolView*)m_SplitWnd.GetPane(0, 0);
+	m_pEdit = (EditForm*)m_SplitWnd.GetPane(0, 1);
+
+	return TRUE;
+}

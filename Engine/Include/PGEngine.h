@@ -13,6 +13,8 @@
 #include "PGTypes.h"
 
 #pragma comment(lib, "DirectXTex")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 
 #define	PG_PI	3.141592f

@@ -423,6 +423,9 @@
     <ClCompile Include="Component\BoneSocket.cpp">
       <Filter>06. Component\14. Animation3D\Bone</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DirectInput.cpp">
+      <Filter>00. Core\03. Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PGMath.h">
@@ -649,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="PGEngine.h">
       <Filter>98. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectInput.h">
+      <Filter>00. Core\03. Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

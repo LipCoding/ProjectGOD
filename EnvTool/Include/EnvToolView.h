@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "EnvToolDoc.h"
 
 class CEnvToolView : public CView
 {
@@ -40,6 +41,16 @@ protected:
 // 생성된 메시지 맵 함수
 protected:
 	DECLARE_MESSAGE_MAP()
+
+public:
+	virtual void OnInitialUpdate();
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+
+private:
+	void SetTileColor(float x, float y);
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 #ifndef _DEBUG  // EnvToolView.cpp의 디버그 버전

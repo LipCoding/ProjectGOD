@@ -682,13 +682,13 @@ void CRenderManager::Render(float fTime)
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	//CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 
-	pMouseObj->SetScene(pScene);
+	//pMouseObj->SetScene(pScene);
 
-	pMouseObj->Render(fTime);
+	//pMouseObj->Render(fTime);
 
-	SAFE_RELEASE(pMouseObj);
+	//SAFE_RELEASE(pMouseObj);
 
 	SAFE_RELEASE(pScene);
 }

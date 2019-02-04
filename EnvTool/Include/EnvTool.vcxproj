@@ -191,6 +191,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EditForm.h" />
     <ClInclude Include="EnvTool.h" />
     <ClInclude Include="EnvToolDoc.h" />
     <ClInclude Include="EnvToolView.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EditForm.cpp" />
     <ClCompile Include="EnvTool.cpp" />
     <ClCompile Include="EnvToolDoc.cpp" />
     <ClCompile Include="EnvToolView.cpp" />

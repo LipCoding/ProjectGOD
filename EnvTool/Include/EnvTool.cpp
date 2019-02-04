@@ -16,6 +16,7 @@
 #define new DEBUG_NEW
 #endif
 
+PG_USING
 
 // CEnvToolApp
 
@@ -179,5 +180,13 @@ void CEnvToolApp::OnAppAbout()
 
 // CEnvToolApp 메시지 처리기
 
+BOOL CEnvToolApp::OnIdle(LONG lCount)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (m_pMainWnd->IsIconic())
+		return FALSE;
 
+	GET_SINGLE(CCore)->RunTool();
 
+	return TRUE;
+}
