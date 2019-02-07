@@ -1,15 +1,17 @@
 ﻿#pragma once
 #include "afxwin.h"
 
+
+
 // EditForm 보기
 
-class EditForm : public CFormView
+class CEditForm : public CFormView
 {
-	DECLARE_DYNCREATE(EditForm)
+	DECLARE_DYNCREATE(CEditForm)
 
 protected:
-	EditForm();           // 동적 만들기에 사용되는 protected 생성자입니다.
-	virtual ~EditForm();
+	CEditForm();           // 동적 만들기에 사용되는 protected 생성자입니다.
+	virtual ~CEditForm();
 
 public:
 #ifdef AFX_DESIGN_TIME
@@ -27,7 +29,12 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedButton1();
+	CTabCtrl m_Tab;
+	class CTerrainTab	*m_pTerrainDlg = nullptr;
+	class CObjTab		*m_pObjDlg = nullptr;
+//	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
+	virtual void OnInitialUpdate();
 };
 
 

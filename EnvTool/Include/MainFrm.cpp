@@ -202,14 +202,14 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext * pContext)
 		return FALSE;
 	}
 
-	if (!m_SplitWnd.CreateView(0, 1, RUNTIME_CLASS(EditForm),
+	if (!m_SplitWnd.CreateView(0, 1, RUNTIME_CLASS(CEditForm),
 		CSize(400, 800), pContext))
 	{
 		return FALSE;
 	}
 
 	m_pView = (CEnvToolView*)m_SplitWnd.GetPane(0, 0);
-	m_pEdit = (EditForm*)m_SplitWnd.GetPane(0, 1);
+	m_pEdit = (CEditForm*)m_SplitWnd.GetPane(0, 1);
 
 	return TRUE;
 }

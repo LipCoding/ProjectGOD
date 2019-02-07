@@ -196,9 +196,11 @@
     <ClInclude Include="EnvToolDoc.h" />
     <ClInclude Include="EnvToolView.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="ObjTab.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TerrainTab.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditForm.cpp" />
@@ -206,12 +208,14 @@
     <ClCompile Include="EnvToolDoc.cpp" />
     <ClCompile Include="EnvToolView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="ObjTab.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TerrainTab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EnvTool.rc" />

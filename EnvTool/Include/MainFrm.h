@@ -34,7 +34,7 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CStatusBar        m_wndStatusBar;
 	CSplitterWnd	  m_SplitWnd;
 	class CEnvToolView*		m_pView;
-	class EditForm*			m_pEdit;
+	class CEditForm*			m_pEdit;
 public:
 	class CEnvToolView* GetView() const
 	{

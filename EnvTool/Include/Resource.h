@@ -20,15 +20,17 @@
 #define ID_VIEW_APPLOOK_OFF_2007_SILVER 217
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define ID_VIEW_APPLOOK_WINDOWS_7       219
-#define IDC_BUTTON1                     1002
+#define IDD_DIALOG1                     326
+#define IDD_DIALOG2                     328
+#define IDC_TAB1                        1006
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        322
+#define _APS_NEXT_RESOURCE_VALUE        330
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
