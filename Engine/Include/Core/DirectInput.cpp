@@ -50,8 +50,6 @@ bool CDirectInput::Init(HINSTANCE hinstance, HWND hWnd, int screenWidth, int scr
 	{
 		return false;
 	}
-	
-	HRESULT result = m_keyboard->Acquire();
 
 	// 키보드 할당
 	if (FAILED(m_keyboard->Acquire()))

@@ -14,6 +14,7 @@
 #include "Core.h"
 #include "GameObject/GameObject.h"
 #include "Core/Input.h"
+#include "Core/DirectInput.h"
 #include "Component/Transform.h"
 #include "Device.h"
 #include "Scene/Scene.h"
@@ -136,7 +137,7 @@ void CEnvToolView::OnInitialUpdate()
 	HWND hWnd = pWnd->m_hWnd;
 
 		// 엔진 초기화
-	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), hWnd, 1400, 800, true, false))
+	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 800, true, true, false))
 		return;
 }
 
@@ -160,10 +161,13 @@ void CEnvToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	SAFE_RELEASE(pScene);
 
+	_cprintf("x : %d,   y : %d\n", ptMouse.x, ptMouse.y);
+	
+
 	CView::OnMouseMove(nFlags, point);
 }
 
-
+ 
 void CEnvToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.

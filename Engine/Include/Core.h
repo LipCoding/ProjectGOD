@@ -21,7 +21,7 @@ public:
 	bool Init(HINSTANCE hInst, TCHAR* pTitle, TCHAR* pClass, int iIconID,
 		UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer = true);
 	bool Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
-		UINT iHeight, bool bWindowMode, bool bOnMouseRenderer = true);
+		UINT iHeight, bool bWindowMode, bool bOnMouseRenderer = true, bool bDirectInput = true);
 	int Run();
 	int RunTool();
 

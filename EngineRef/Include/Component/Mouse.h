@@ -23,6 +23,8 @@ public:
 	Vector3 GetRayPos()	const;
 	Vector3 GetRayDir()	const;
 
+	void SetMouseShow(bool bShowCheck);
+
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
