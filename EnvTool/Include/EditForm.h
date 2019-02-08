@@ -28,10 +28,11 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
-public:
+private:
 	CTabCtrl m_Tab;
 	class CTerrainTab	*m_pTerrainDlg = nullptr;
 	class CObjTab		*m_pObjDlg = nullptr;
+public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual void OnInitialUpdate();

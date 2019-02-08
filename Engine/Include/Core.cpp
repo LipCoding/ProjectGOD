@@ -57,7 +57,7 @@ HWND CCore::GetWindowHandle() const
 }
 
 bool CCore::Init(HINSTANCE hInst, TCHAR * pTitle, TCHAR * pClass, int iIconID,
-	UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer)
+	UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer, bool bDirectInput)
 {
 	m_hInst = hInst;
 
@@ -65,7 +65,7 @@ bool CCore::Init(HINSTANCE hInst, TCHAR * pTitle, TCHAR * pClass, int iIconID,
 
 	InitWindow(pClass, pTitle, iWidth, iHeight);
 
-	return Init(hInst, m_hWnd, iWidth, iHeight, bWindowMode, bOnMouseRenderer);
+	return Init(hInst, m_hWnd, iWidth, iHeight, bWindowMode, bOnMouseRenderer, bDirectInput);
 }
 
 bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth, 

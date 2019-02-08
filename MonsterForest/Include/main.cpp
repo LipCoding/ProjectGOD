@@ -14,7 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int       nCmdShow)
 {
 	if (!GET_SINGLE(CCore)->Init(hInstance, L"Monster Forest", L"Monster Forest",
-		IDI_ICON1, 1280, 720, true))
+		IDI_ICON1, 1280, 720, true, true, false))
 	{
 		DESTROY_SINGLE(CCore);
 		return 0;

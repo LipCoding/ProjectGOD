@@ -136,7 +136,7 @@ void CEnvToolView::OnInitialUpdate()
 	CWnd * pWnd = AfxGetMainWnd();
 	HWND hWnd = pWnd->m_hWnd;
 
-		// 엔진 초기화
+	// 엔진 초기화
 	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 800, true, true, false))
 		return;
 }
@@ -161,9 +161,8 @@ void CEnvToolView::OnMouseMove(UINT nFlags, CPoint point)
 
 	SAFE_RELEASE(pScene);
 
-	_cprintf("x : %d,   y : %d\n", ptMouse.x, ptMouse.y);
+	//_cprintf("x : %d,   y : %d\n", ptMouse.x, ptMouse.y);
 	
-
 	CView::OnMouseMove(nFlags, point);
 }
 

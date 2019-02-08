@@ -23,6 +23,9 @@
 #define IDD_DIALOG1                     326
 #define IDD_DIALOG2                     328
 #define IDC_TAB1                        1006
+#define IDC_EDIT_TERRAIN_SIZEX          1009
+#define IDC_EDIT_TERRIAN_SIZEY          1010
+#define IDC_BUTTON_ADJ_SIZE             1011
 
 // Next default values for new objects
 // 
@@ -30,7 +33,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        330
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1009
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
