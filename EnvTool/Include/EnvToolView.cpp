@@ -142,7 +142,7 @@ void CEnvToolView::OnInitialUpdate()
 	HWND hWnd = pWnd->m_hWnd;
 
 	// 엔진 초기화
-	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 800, true, true, false))
+	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1440, 900, true, true, false))
 		return;
 
 	// 카메라 조작을 위한 키 생성
