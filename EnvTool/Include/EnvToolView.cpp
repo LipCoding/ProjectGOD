@@ -22,7 +22,10 @@
 #include "Component/Tile.h"
 #include "Component/Renderer.h"
 #include "Core/TimerManager.h"
+#include "Component/LandScape.h"
 #include "MainFrm.h"
+#include "Scene/Scene.h"
+#include "Component/Camera.h"
 
 //#include "EditForm.h"
 //#include "TarrainEdit.h"
@@ -195,6 +198,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	if (KEYPUSH("MoveRight"))
 	{
 		m_pCamTr->MoveWorld(AXIS_X, 5 * 2.f, fTime);
+
 	}
 
 	if (KEYPUSH("LShift"))
@@ -204,6 +208,92 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	if (KEYUP("LShift"))
 	{
 		m_bCamMove = true;
+	}
+
+	float currMouseX{0}, currMouseY{ 0 };
+	float viewX, viewY;
+	if (KEYPUSH("MouseLButton"))
+	{
+		// 랜드스케이프 정보를 가져온다.
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj != NULL)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			Matrix matProj, matView, matInvView, matWorld, matInvWorld;
+
+			// 피킹을 해서 해당 마우스 포인트에 해당하는 위치를 가져온다.
+			currMouseX = GET_SINGLE(CInput)->GetMousePos().x;
+			currMouseY = GET_SINGLE(CInput)->GetMousePos().y;
+			CScene* pCurrentScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CCamera* pCamera = pCurrentScene->GetMainCamera();
+
+			matProj = pCamera->GetProjMatrix();
+
+			// 뷰포트를 가져온다.
+			D3D11_VIEWPORT tVP{};
+
+			UINT iVPCount = 1;
+			CONTEXT->RSGetViewports(&iVPCount, &tVP);
+
+			viewX = (2.f * currMouseX / tVP.Width - 1.f) / matProj.m[0][0];
+			viewY = (-2.f * currMouseY / tVP.Height + 1.f) / matProj.m[1][1];
+
+			XMVECTOR rayOrigin, rayDir;
+			rayOrigin = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+			rayDir = XMVectorSet(viewX, viewY, 1.f, 0.f);
+
+			matView = pCamera->GetViewMatrix();
+			matInvView = XMMatrixInverse(&XMMatrixDeterminant(matView.mat), matView.mat);
+
+			matWorld = pLandScape->GetTransform()->GetWorldMatrix();
+			matInvWorld = XMMatrixInverse(&XMMatrixDeterminant(matWorld.mat), matWorld.mat);
+
+			Matrix toLocal = XMMatrixMultiply(matInvView.mat, matInvWorld.mat);
+
+			rayOrigin = XMVector3TransformCoord(rayOrigin, toLocal.mat);
+			rayDir = XMVector3TransformNormal(rayDir, toLocal.mat);
+
+			rayDir = XMVector3Normalize(rayDir);
+
+
+			// 피킹되는 인덱스를 체크.
+			UINT pickedTriangle = -1;
+			float min = (numeric_limits<float>::max)();
+
+			vector<VERTEXBUMP>& pVecVtx = pLandScape->getVecVtx();
+
+
+
+			vector<UINT>& pVecIndex = pLandScape->getVecIndex();
+
+			for (int i = 0; i < pVecIndex.size(); i += 3)
+			{
+				UINT i0 = pVecIndex[i];
+				UINT i1 = pVecIndex[i + 1];
+				UINT i2 = pVecIndex[i + 2];
+
+				VERTEXBUMP v0 = pVecVtx[i0];
+				VERTEXBUMP v1 = pVecVtx[i1];
+				VERTEXBUMP v2 = pVecVtx[i2];
+
+				float t = 0.f;
+				Vector3 temp1, temp2;
+				temp1 = rayOrigin;
+				temp2 = rayDir;
+
+				if (rayIntersectTriangle(temp1, temp2, v0.vPos, v1.vPos, v2.vPos, t))
+				{
+					if (t < min)
+					{
+						min = t;
+						pickedTriangle = i;
+						_cprintf("ddd");
+					}
+				}
+
+			}
+		}
 	}
 	
 	if (m_bCamMove == true)
@@ -288,4 +378,41 @@ void CEnvToolView::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CView::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
+
+XMGLOBALCONST XMVECTORF32 g_RayEpsilon = { 1e-20f, 1e-20f, 1e-20f, 1e-20f };
+XMGLOBALCONST XMVECTORF32 g_RayNegEpsilon = { -1e-20f, -1e-20f, -1e-20f, -1e-20f };
+
+
+bool CEnvToolView::rayIntersectTriangle(Vector3 rayOrigin, Vector3 rayDir, Vector3 v0, Vector3 v1, Vector3 v2, float& t)
+{
+	Vector3 e1, e2, h, s, q;
+	float a, f, u, v;
+
+	e1 = v1 - v0;
+	e2 = v2 - v0;
+	h = rayDir.Cross(e2);
+	a = e1.Dot(h);
+
+	if (a > -0.00001 && a < 0.00001) return false;
+
+	f = 1 / a;
+	s = rayOrigin - v0;
+
+	u = f * s.Dot(h);
+
+	if (u < 0.f || u > 1.f) return false;
+
+	q = s.Cross(e1);
+
+	v = f * rayDir.Dot(q);
+
+	if (v < 0.f || u + v > 1.f) return false;
+
+	t = f * e2.Dot(q);
+	if (t > 0.00001)
+		return true;
+	else
+		return false;
 }

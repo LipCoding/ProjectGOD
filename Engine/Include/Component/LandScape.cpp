@@ -105,8 +105,10 @@ bool CLandScape::CreateLandScape(const string& strMeshKey, int iVtxCount, bool b
 	m_iNumX = iVtxCount;
 	m_iNumZ = iVtxCount;
 
-	vector<VERTEXBUMP>	vecVtx;
 	vecVtx.resize(iVtxCount * iVtxCount);
+
+	//vector<VERTEXBUMP>	vecVtx;
+	//vecVtx.resize(iVtxCount * iVtxCount);
 
 	for (int i = 0; i < m_iNumZ; ++i)
 	{
@@ -129,7 +131,7 @@ bool CLandScape::CreateLandScape(const string& strMeshKey, int iVtxCount, bool b
 
 	SAFE_DELETE_ARRAY(pPixel);
 		
-	vector<UINT>	vecIndex((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
+	vecIndex.resize((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
 
 	int		iCount = 0;
 
@@ -220,8 +222,10 @@ bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSiz
 	m_iNumX = iSizeX;
 	m_iNumZ = iSizeZ;
 
-	vector<VERTEXBUMP>	vecVtx;
-	vecVtx.resize(m_iNumX * m_iNumZ);
+	vecVtx.resize(iSizeX * iSizeZ);
+
+	//vector<VERTEXBUMP>	vecVtx;
+	//vecVtx.resize(m_iNumX * m_iNumZ);
 
 	for (int i = 0; i < m_iNumZ; ++i)
 	{
@@ -242,7 +246,7 @@ bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSiz
 		}
 	}
 
-	vector<UINT>	vecIndex((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
+	vecIndex.resize((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
 
 	int		iCount = 0;
 

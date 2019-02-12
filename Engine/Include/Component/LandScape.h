@@ -19,9 +19,17 @@ private:
 	int		m_iNumZ;
 	vector<Vector3>	m_vecPos;
 	vector<Vector3>	m_vecFaceNormal;
+
+	vector<VERTEXBUMP> vecVtx;
+	vector<UINT> vecIndex;
+
 	int		m_iDetailLevel;
 	int		m_iSplatCount;
 
+public:
+	vector<VERTEXBUMP>& getVecVtx() { return vecVtx; }
+	vector<UINT>& getVecIndex() { return vecIndex; }
+	
 public:
 	void SetDetailLevel(int iDetailLevel);
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, 

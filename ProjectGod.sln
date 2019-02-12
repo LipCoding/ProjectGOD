@@ -17,6 +17,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Tools", "02. Tools", "{45C0F9A1-8220-4011-A302-C5A1DC23E804}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnvTool", "EnvTool\Include\EnvTool.vcxproj", "{8B076820-F32F-416B-AB42-40242CF9A4C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD} = {6369D407-C79B-4D0E-BAB9-7762221E81CD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

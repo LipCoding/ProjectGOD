@@ -657,16 +657,16 @@ void CRenderManager::Render(float fTime)
 
 	//pTarget->ResetTarget();
 
-	if (GetAsyncKeyState(VK_F9) & 0x8000)
-	{
-		PMRT	pMRT = FindMRT("GBuffer");
+	//if (GetAsyncKeyState(VK_F9) & 0x8000)
+	//{
+	//	PMRT	pMRT = FindMRT("GBuffer");
 
-		const wchar_t*	pFile[4] = { L"Albedo.png", L"Normal.png", L"Depth.png", L"Specular.png" };
-		for (size_t i = 0; i < pMRT->vecTargets.size(); ++i)
-		{
-			pMRT->vecTargets[i]->SaveFile(pFile[i]);
-		}
-	}
+	//	const wchar_t*	pFile[4] = { L"Albedo.png", L"Normal.png", L"Depth.png", L"Specular.png" };
+	//	for (size_t i = 0; i < pMRT->vecTargets.size(); ++i)
+	//	{
+	//		pMRT->vecTargets[i]->SaveFile(pFile[i]);
+	//	}
+	//}
 
 	// 디버깅용 타겟을 출력한다.
 	unordered_map<string, CRenderingTarget*>::iterator	iter;
