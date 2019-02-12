@@ -308,8 +308,8 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	if (vColor.a == 0.f)
 		clip(-1);
 
-
 	output.vColor = vColor;
+	output.vColor = float4(1.f, 0.f, 0.f, 1.f);
 	output.vColor1.xyz = vViewNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;

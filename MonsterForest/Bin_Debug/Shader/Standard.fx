@@ -296,6 +296,7 @@ PS_OUTPUT StandardBumpPS(VS_OUTPUT_BUMP input)
 
 	float3	vViewNormal = normalize(mul(vBumpNormal, mat));
 	
+
 	output.vColor = vColor;
 	output.vColor1.xyz = vViewNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;

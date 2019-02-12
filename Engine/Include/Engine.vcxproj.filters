@@ -658,34 +658,34 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Collider.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Effect.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\LandScape.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Light.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Sky.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Share.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\Standard.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\MonsterForest\Bin_Debug\Shader\UI.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\DirectXTex.inl">
       <Filter>02. Resources\01. Texture\DirectXTex</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin_Debug\Shader\Collider.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Effect.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\LandScape.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Light.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Share.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Sky.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Standard.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\UI.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

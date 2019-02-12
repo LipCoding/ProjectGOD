@@ -278,9 +278,10 @@ bool CScene::Init()
 	SAFE_RELEASE(pLayer);
 
 	// 메인 카메라 생성
-	m_pMainCameraObj	= CreateCamera("MainCamera",
-		Vector3(0.f, 5.f, -5.f), PG_PI / 2.f, 
-		DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 2.f, 1000.f);
+	m_pMainCameraObj = CreateCamera("MainCamera",
+	Vector3(0.f, 5.f, -5.f), PG_PI / 2.f,
+	DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 2.f, 1000.f);
+
 	m_pMainCamera = m_pMainCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pMainCameraTr = m_pMainCameraObj->GetTransform();
 
