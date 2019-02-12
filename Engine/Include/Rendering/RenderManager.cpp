@@ -657,7 +657,7 @@ void CRenderManager::Render(float fTime)
 
 	//pTarget->ResetTarget();
 
-	/*if (GetAsyncKeyState(VK_F9) & 0x8000)
+	if (GetAsyncKeyState(VK_F9) & 0x8000)
 	{
 		PMRT	pMRT = FindMRT("GBuffer");
 
@@ -666,7 +666,7 @@ void CRenderManager::Render(float fTime)
 		{
 			pMRT->vecTargets[i]->SaveFile(pFile[i]);
 		}
-	}*/
+	}
 
 	// 디버깅용 타겟을 출력한다.
 	unordered_map<string, CRenderingTarget*>::iterator	iter;
