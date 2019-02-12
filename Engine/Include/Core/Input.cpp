@@ -102,13 +102,14 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 
 	CreateKey("MoveFront", 'W');
 	CreateKey("MoveBack", 'S');
-	CreateKey("RotInvY", 'A');
-	CreateKey('D', "RotY");
-	CreateKey(VK_CONTROL, '1', "Skill1");
+	CreateKey("MoveLeft", 'A');
+	CreateKey("MoveRight", 'D');
+	//CreateKey(VK_CONTROL, '1', "Skill1");
+	CreateKey(VK_LSHIFT, "LShift");
 	CreateKey(VK_CONTROL, "Ctrl");
 	CreateKey(VK_LBUTTON, "MouseLButton");
 	CreateKey(VK_RBUTTON, "MouseRButton");
-	CreateKey("Attack", 'X');
+	//CreateKey("Attack", 'X');
 	// 아래 함수는 스크린좌표로 나온다.
 	GetCursorPos(&m_ptMousePos);
 	// 스크린 좌표를 클라이언트 좌표로 바꾼다.

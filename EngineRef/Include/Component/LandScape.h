@@ -29,6 +29,11 @@ public:
 		const wchar_t* pNormalName, const wchar_t* pSpecularName,
 		const char* pHeightMap = NULL,
 		const string& strPathKey = TEXTURE_PATH);
+	bool CreateLandScape(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
+		const string& strTexKey, const wchar_t* pFileName,
+		const wchar_t* pNormalName, const wchar_t* pSpecularName,
+		const char* pHeightMap = NULL,
+		const string& strPathKey = TEXTURE_PATH);
 	bool SetDiffuseSplatting(const string& strSmpKey,
 		const string& strDifKey,
 		const vector<wstring>* pvecPath = NULL,

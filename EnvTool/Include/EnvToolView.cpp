@@ -12,29 +12,24 @@
 #include "EnvToolDoc.h"
 #include "EnvToolView.h"
 #include "Core.h"
-#include "GameObject/GameObject.h"
 #include "Core/Input.h"
 #include "Core/DirectInput.h"
-#include "Component/Transform.h"
 #include "Device.h"
 #include "Scene/Scene.h"
 #include "Scene/Layer.h"
 #include "Scene/SceneManager.h"
 #include "Component/Terrain2D.h"
 #include "Component/Tile.h"
-#include "Core/Timer.h"
+#include "Component/Renderer.h"
 #include "Core/TimerManager.h"
 #include "MainFrm.h"
 
 //#include "EditForm.h"
 //#include "TarrainEdit.h"
 
-PG_USING
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 
 // CEnvToolView
 
@@ -48,11 +43,17 @@ BEGIN_MESSAGE_MAP(CEnvToolView, CView)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_CREATE()
+	ON_WM_KEYDOWN()
+	ON_WM_KEYUP()
 END_MESSAGE_MAP()
 
 // CEnvToolView 생성/소멸
 
-CEnvToolView::CEnvToolView() noexcept
+CEnvToolView::CEnvToolView() noexcept :
+	  m_pCamera(nullptr)
+	, m_pMouseRayTexture(nullptr)
+	, m_pCamTr(nullptr)
+	, m_bCamMove(true)
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -60,6 +61,10 @@ CEnvToolView::CEnvToolView() noexcept
 
 CEnvToolView::~CEnvToolView()
 {
+	SAFE_RELEASE(m_pCamera);
+	SAFE_RELEASE(m_pMouseRayTexture);
+	SAFE_RELEASE(m_pCamTr);
+	SAFE_RELEASE(m_pTimer);
 	DESTROY_SINGLE(CCore);
 }
 
@@ -139,30 +144,18 @@ void CEnvToolView::OnInitialUpdate()
 	// 엔진 초기화
 	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 800, true, true, false))
 		return;
+
+	// 카메라 조작을 위한 키 생성
+	//GET_SINGLE(CInput)->CreateKey("")
+
+	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
+
+	this->SetMainCamera();
 }
 
 
 void CEnvToolView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
-	CTimer* pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
-
-	float	fTime = pTimer->GetDeltaTime();
-
-	SAFE_RELEASE(pTimer);
-
-	// 타일의 색상을 바꿔준다.
-	//SetTileColor(ptMouse.x, ptMouse.y);
-
-	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-
-	//if(ptMouse.x)
-
-	SAFE_RELEASE(pScene);
-
-	//_cprintf("x : %d,   y : %d\n", ptMouse.x, ptMouse.y);
-	
 	CView::OnMouseMove(nFlags, point);
 }
 
@@ -172,6 +165,99 @@ void CEnvToolView::OnLButtonDown(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
 	CView::OnLButtonDown(nFlags, point);
+}
+
+void CEnvToolView::UpdateView()
+{
+	float	fTime = m_pTimer->GetDeltaTime();
+
+	this->UpdateInput(fTime);
+	this->UpdateObject(fTime);
+}
+
+void CEnvToolView::UpdateInput(const float& fTime)
+{
+	if (KEYPUSH("MoveFront"))
+	{
+		m_pCamTr->MoveWorld(AXIS_Z, 5 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveBack"))
+	{
+		m_pCamTr->MoveWorld(AXIS_Z, -5 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveLeft"))
+	{
+		m_pCamTr->MoveWorld(AXIS_X, -5 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveRight"))
+	{
+		m_pCamTr->MoveWorld(AXIS_X, 5 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("LShift"))
+	{
+		m_bCamMove = false;
+	}
+	if (KEYUP("LShift"))
+	{
+		m_bCamMove = true;
+	}
+	
+	if (m_bCamMove == true)
+	{
+		POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+		POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+		if (ptMouseMove.x != 0)
+		{
+			float fAngle = ptMouseMove.x / 1000.f * PG_PI;
+
+			m_pCamTr->RotateWorldY(fAngle);
+		}
+
+		if (ptMouseMove.y != 0)
+		{
+			float fAngle = ptMouseMove.y / 1000.f * PG_PI;
+
+			m_pCamTr->RotateWorldX(fAngle);
+		}
+	}
+}
+
+void CEnvToolView::UpdateObject(const float & fTime)
+{
+}
+
+void CEnvToolView::SetMainCamera()
+{
+	SAFE_RELEASE(m_pCamera);
+	SAFE_RELEASE(m_pCamTr);
+	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
+	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
+}
+
+void CEnvToolView::SetLightCamera()
+{
+	SAFE_RELEASE(m_pCamera);
+	SAFE_RELEASE(m_pCamTr);
+	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraObj();
+	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
+}
+
+void CEnvToolView::AddMouseRayTexture()
+{
+	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer* pLayer = pScene->GetLayer("Default");
+	
+	m_pMouseRayTexture = CGameObject::CreateObject("MouseRayTexture", pLayer);
+	CRenderer* pMouseRayTextureRenderer = m_pMouseRayTexture->AddComponent<CRenderer>("MouseRayTexRenderer");
+
+	SAFE_RELEASE(pMouseRayTextureRenderer);
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 }
 
 void CEnvToolView::SetTileColor(float x, float y)
@@ -188,4 +274,18 @@ int CEnvToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 
 	return 0;
+}
+
+
+void CEnvToolView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+
+void CEnvToolView::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CView::OnKeyUp(nChar, nRepCnt, nFlags);
 }

@@ -6,6 +6,12 @@
 
 #include "EnvToolDoc.h"
 
+#include "GameObject/GameObject.h"
+#include "Core/Timer.h"
+#include "Component/Transform.h"
+
+PG_USING
+
 class CEnvToolView : public CView
 {
 protected: // serialization에서만 만들어집니다.
@@ -47,10 +53,30 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 
+// 사용자 함수
+public:
+	void AddMouseRayTexture();
+
+	void UpdateView();
+	void UpdateInput(const float& fTime);
+	void UpdateObject(const float& fTime);
+	void SetMainCamera();
+	void SetLightCamera();
+
 private:
 	void SetTileColor(float x, float y);
+
+// 사용자 변수
+private:
+	CGameObject	*m_pCamera = nullptr;
+	CGameObject *m_pMouseRayTexture = nullptr;
+	CTransform	*m_pCamTr = nullptr;
+	CTimer		*m_pTimer = nullptr;
+	bool		m_bCamMove = true;
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
 };
 
 #ifndef _DEBUG  // EnvToolView.cpp의 디버그 버전

@@ -54,7 +54,8 @@ CMainFrame::CMainFrame() noexcept
 
 CMainFrame::~CMainFrame()
 {
-	
+	m_pView = nullptr;
+	m_pEdit = nullptr;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)

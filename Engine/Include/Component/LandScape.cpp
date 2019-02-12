@@ -200,6 +200,119 @@ bool CLandScape::CreateLandScape(const string& strMeshKey, int iVtxCount, bool b
 	return true;
 }
 
+bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSizeZ, bool bBump, const string & strTexKey, const wchar_t * pFileName, const wchar_t * pNormalName, const wchar_t * pSpecularName, const char * pHeightMap, const string & strPathKey)
+{
+	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("LandScape");
+
+	CMaterial*	pMaterial = pRenderer->CreateMaterial();
+
+	pMaterial->SetDiffuseTexInfo("Linear", strTexKey, 0, 0, pFileName, strPathKey);
+	pMaterial->SetNormalTexInfo("Linear", strTexKey + "_N", 1, 1,
+		pNormalName, strPathKey);
+	pMaterial->SetSpecularTexInfo("Linear", strTexKey + "_S", 2, 2,
+		pSpecularName, strPathKey);
+
+	SAFE_RELEASE(pMaterial);
+
+	pRenderer->SetShader(LANDSCAPE_SHADER);
+	pRenderer->SetInputLayout("Bump");
+
+	m_iNumX = iSizeX;
+	m_iNumZ = iSizeZ;
+
+	vector<VERTEXBUMP>	vecVtx;
+	vecVtx.resize(m_iNumX * m_iNumZ);
+
+	for (int i = 0; i < m_iNumZ; ++i)
+	{
+		for (int j = 0; j < m_iNumX; ++j)
+		{
+			VERTEXBUMP	tVtx = {};
+
+			tVtx.vPos = Vector3((float)j,
+				0.f, (float)(m_iNumZ - 1) - i);
+			m_vecPos.push_back(tVtx.vPos);
+
+			tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
+			tVtx.vUV = Vector2((float)j / (float)(m_iNumX - 1),
+				(float)i / (float)(m_iNumZ - 1));
+			//tVtx.vUV = Vector2(j, i);
+
+			vecVtx[i * m_iNumX + j] = tVtx;
+		}
+	}
+
+	vector<UINT>	vecIndex((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
+
+	int		iCount = 0;
+
+	for (int i = 0; i < m_iNumZ - 1; ++i)
+	{
+		for (int j = 0; j < m_iNumX - 1; ++j)
+		{
+			// 좌상단 정점의 인덱스를 구해준다.
+			int	idx = i * m_iNumX + j;
+			// 우상단 삼각형 인덱스
+			vecIndex[iCount++] = idx;
+			vecIndex[iCount++] = idx + 1;
+			vecIndex[iCount++] = idx + m_iNumX + 1;
+
+			// 삼각형의 면법선을 구한다.
+			Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
+			Vector3	vEdge2 = m_vecPos[idx + m_iNumX + 1] - m_vecPos[idx];
+
+			vEdge1 = vEdge1.Normalize();
+			vEdge2 = vEdge2.Normalize();
+
+			Vector3	vFaceNormal = vEdge1.Cross(vEdge2);
+
+			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+
+			// 좌하단 삼각형 인덱스
+			vecIndex[iCount++] = idx;
+			vecIndex[iCount++] = idx + m_iNumX + 1;
+			vecIndex[iCount++] = idx + m_iNumX;
+
+			// 삼각형의 면법선을 구한다.
+			vEdge1 = m_vecPos[idx + m_iNumX + 1] - m_vecPos[idx];
+			vEdge2 = m_vecPos[idx + m_iNumX] - m_vecPos[idx];
+
+			vEdge1 = vEdge1.Normalize();
+			vEdge2 = vEdge2.Normalize();
+
+			vFaceNormal = vEdge1.Cross(vEdge2);
+
+			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+		}
+	}
+
+	ComputeNormal(vecVtx, vecIndex);
+	ComputeTangent(vecVtx, vecIndex);
+
+	CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(strMeshKey,
+		vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &vecVtx[0],
+		vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
+		DXGI_FORMAT_R32_UINT, &vecIndex[0]);
+
+	pMesh->SetShaderKey(LANDSCAPE_SHADER);
+	pMesh->SetInputLayoutKey("Bump");
+	pRenderer->SetMesh(pMesh);
+
+	SAFE_RELEASE(pMesh);
+
+	pRenderer->CreateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
+		SCT_PIXEL);
+
+	SAFE_RELEASE(pRenderer);
+
+	// 내비게이션 관리자에 지형을 등록한다.
+	GET_SINGLE(CNavigationManager)->AddLandScapeInfo(strMeshKey,
+		m_iNumX, m_iNumZ, m_pScene, m_pTransform, &m_vecPos);
+
+	return true;
+}
+
 bool CLandScape::SetDiffuseSplatting(const string & strSmpKey, const string & strDifKey,
 	const vector<wstring>* pvecPath, const string & strPathKey)
 {

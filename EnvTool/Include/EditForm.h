@@ -24,6 +24,9 @@ public:
 #endif
 #endif
 
+public:
+	
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -32,10 +35,15 @@ private:
 	CTabCtrl m_Tab;
 	class CTerrainTab	*m_pTerrainDlg = nullptr;
 	class CObjTab		*m_pObjDlg = nullptr;
+	class CEnvToolView  *m_pView = nullptr;
 public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual void OnInitialUpdate();
+	afx_msg void OnBnClickedButtonCamMain();
+	afx_msg void OnBnClickedButtonCamLight();
+	afx_msg void OnBnClickedButtonAdjCamspeed();
+	CEdit m_editCamSpeed;
 };
 
 

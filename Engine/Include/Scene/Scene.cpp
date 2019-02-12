@@ -279,11 +279,12 @@ bool CScene::Init()
 
 	// 메인 카메라 생성
 	m_pMainCameraObj	= CreateCamera("MainCamera",
-		Vector3(0.f, 0.f, -5.f), PG_PI / 2.f, 
+		Vector3(0.f, 5.f, -5.f), PG_PI / 2.f, 
 		DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 0.03f, 5000.f);
 	m_pMainCamera = m_pMainCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pMainCameraTr = m_pMainCameraObj->GetTransform();
 
+	// 라이트 카메라
 	m_pLightCameraObj = CreateCamera("LightCamera",
 		Vector3(0.f, 15.f, 0.f), PG_PI / 2.f,
 		DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 0.03f, 5000.f);
@@ -293,12 +294,12 @@ bool CScene::Init()
 	m_pLightCameraTr->SetWorldRotX(PG_PI / 4.f);
 	m_pLightCameraTr->SetWorldRotY(PG_PI / 4.f);
 
-	// UI 카메라 생성
-	m_pUICameraObj = CreateOrthoCamera("UICamera",
-		Vector3(0.f, 0.f, 0.f), DEVICE_RESOLUTION, 0.f, 5000.f);
-	m_pUICamera = m_pUICameraObj->FindComponentFromTypeID<CCamera>();
-	m_pUICameraTr = m_pUICameraObj->GetTransform();
-	//m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
+	//// UI 카메라 생성
+	//m_pUICameraObj = CreateOrthoCamera("UICamera",
+	//	Vector3(0.f, 0.f, 0.f), DEVICE_RESOLUTION, 0.f, 5000.f);
+	//m_pUICamera = m_pUICameraObj->FindComponentFromTypeID<CCamera>();
+	//m_pUICameraTr = m_pUICameraObj->GetTransform();
+	////m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
 
 	// 전역 조명을 생성한다.
 	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
@@ -314,6 +315,7 @@ bool CScene::Init()
 	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
 
 	pGlobalLight->SetLightRange(1000000.f);
+
 	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
 		Vector4(0.f, 0.f, 0.f, 1.f));*/
 
@@ -326,94 +328,95 @@ bool CScene::Init()
 
 	SAFE_RELEASE(pGlobalLight);
 
-	pGlobalLight = CreateLight("Light1", LT_POINT);
+	//pGlobalLight = CreateLight("Light1", LT_POINT);
 
-	pGlobalLight->SetLightRange(10.f);
-	pGlobalLight->SetLightColor(Vector4::Red, Vector4::Red,
-		Vector4::Red);
+	//pGlobalLight->SetLightRange(10.f);
+	//pGlobalLight->SetLightColor(Vector4::Red, Vector4::Red,
+	//	Vector4::Red);
 
-	pLightTr = pGlobalLight->GetTransform();
+	//pLightTr = pGlobalLight->GetTransform();
 
-	pLightTr->SetWorldPos(0.f, 4.f, 0.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	pGlobalLight = CreateLight("Light2", LT_POINT);
-
-	pGlobalLight->SetLightRange(10.f);
-	pGlobalLight->SetLightColor(Vector4::Blue, Vector4::Blue,
-		Vector4::Blue);
-
-	pLightTr = pGlobalLight->GetTransform();
-
-	pLightTr->SetWorldPos(0.f, 4.f, 10.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	pGlobalLight = CreateLight("Light3", LT_POINT);
-
-	pGlobalLight->SetLightRange(10.f);
-	pGlobalLight->SetLightColor(Vector4::Green, Vector4::Green,
-		Vector4::Green);
-
-	pLightTr = pGlobalLight->GetTransform();
-
-	pLightTr->SetWorldPos(0.f, 4.f, 20.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	pGlobalLight = CreateLight("Light4", LT_POINT);
-
-	pGlobalLight->SetLightRange(10.f);
-	pGlobalLight->SetLightColor(Vector4::Yellow, Vector4::Yellow,
-		Vector4::Yellow);
-
-	pLightTr = pGlobalLight->GetTransform();
-
-	pLightTr->SetWorldPos(0.f, 4.f, 30.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	pGlobalLight = CreateLight("Light5", LT_POINT);
-
-	pGlobalLight->SetLightRange(10.f);
-	pGlobalLight->SetLightColor(Vector4::Magenta, Vector4::Magenta,
-		Vector4::Magenta);
-
-	pLightTr = pGlobalLight->GetTransform();
-
-	pLightTr->SetWorldPos(0.f, 4.f, 40.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	//CLight*	pGlobalLight = CreateLight("GlobalLight", LT_SPOT);
-
-	////pGlobalLight->SetLightRange(5.f);
-
-	//CTransform*	pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, -1.f, 0.f);
-	//pLightTr->SetWorldRot(PG_PI / 2.f, 0.f, 0.f);
+	//pLightTr->SetWorldPos(0.f, 4.f, 0.f);
+	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	//SAFE_RELEASE(pLightTr);
 
 	//SAFE_RELEASE(pGlobalLight);
 
+	//pGlobalLight = CreateLight("Light2", LT_POINT);
+
+	//pGlobalLight->SetLightRange(10.f);
+	//pGlobalLight->SetLightColor(Vector4::Blue, Vector4::Blue,
+	//	Vector4::Blue);
+
+	//pLightTr = pGlobalLight->GetTransform();
+
+	//pLightTr->SetWorldPos(0.f, 4.f, 10.f);
+	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	//SAFE_RELEASE(pLightTr);
+
+	//SAFE_RELEASE(pGlobalLight);
+
+	//pGlobalLight = CreateLight("Light3", LT_POINT);
+
+	//pGlobalLight->SetLightRange(10.f);
+	//pGlobalLight->SetLightColor(Vector4::Green, Vector4::Green,
+	//	Vector4::Green);
+
+	//pLightTr = pGlobalLight->GetTransform();
+
+	//pLightTr->SetWorldPos(0.f, 4.f, 20.f);
+	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	//SAFE_RELEASE(pLightTr);
+
+	//SAFE_RELEASE(pGlobalLight);
+
+	//pGlobalLight = CreateLight("Light4", LT_POINT);
+
+	//pGlobalLight->SetLightRange(10.f);
+	//pGlobalLight->SetLightColor(Vector4::Yellow, Vector4::Yellow,
+	//	Vector4::Yellow);
+
+	//pLightTr = pGlobalLight->GetTransform();
+
+	//pLightTr->SetWorldPos(0.f, 4.f, 30.f);
+	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	//SAFE_RELEASE(pLightTr);
+
+	//SAFE_RELEASE(pGlobalLight);
+
+	//pGlobalLight = CreateLight("Light5", LT_POINT);
+
+	//pGlobalLight->SetLightRange(10.f);
+	//pGlobalLight->SetLightColor(Vector4::Magenta, Vector4::Magenta,
+	//	Vector4::Magenta);
+
+	//pLightTr = pGlobalLight->GetTransform();
+
+	//pLightTr->SetWorldPos(0.f, 4.f, 40.f);
+	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	//SAFE_RELEASE(pLightTr);
+
+	//SAFE_RELEASE(pGlobalLight);
+
+	////CLight*	pGlobalLight = CreateLight("GlobalLight", LT_SPOT);
+
+	//////pGlobalLight->SetLightRange(5.f);
+
+	////CTransform*	pLightTr = pGlobalLight->GetTransform();
+
+	////pLightTr->SetWorldPos(0.f, -1.f, 0.f);
+	////pLightTr->SetWorldRot(PG_PI / 2.f, 0.f, 0.f);
+
+	////SAFE_RELEASE(pLightTr);
+
+	////SAFE_RELEASE(pGlobalLight);
+
+	// 스카이박스
 	m_pSkyObject = CGameObject::CreateObject("Sky");
 
 	m_pSkyObject->SetScene(this);

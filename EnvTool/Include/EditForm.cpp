@@ -5,6 +5,9 @@
 #include "EnvTool.h"
 #include "EditForm.h"
 
+#include "MainFrm.h"
+#include "EnvToolView.h"
+
 // Tab
 #include "TerrainTab.h"
 #include "ObjTab.h"
@@ -15,17 +18,29 @@ IMPLEMENT_DYNCREATE(CEditForm, CFormView)
 
 CEditForm::CEditForm()
 	: CFormView(IDD_DIALOG_FORM)
+	, m_pTerrainDlg(nullptr)
+	, m_pObjDlg(nullptr)
+	, m_pView(nullptr)
 {
 
 }
 
 CEditForm::~CEditForm()
 {
+	delete m_pTerrainDlg;
+	m_pTerrainDlg = nullptr;
+	delete m_pObjDlg;
+	m_pObjDlg = nullptr;
+	m_pView = nullptr;
+	
 }
 
 BEGIN_MESSAGE_MAP(CEditForm, CView)
 //	ON_WM_CREATE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CEditForm::OnTcnSelchangeTab1)
+	ON_BN_CLICKED(IDC_BUTTON_CAM_MAIN, &CEditForm::OnBnClickedButtonCamMain)
+	ON_BN_CLICKED(IDC_BUTTON_CAM_LIGHT, &CEditForm::OnBnClickedButtonCamLight)
+	ON_BN_CLICKED(IDC_BUTTON_ADJ_CAMSPEED, &CEditForm::OnBnClickedButtonAdjCamspeed)
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -51,6 +66,7 @@ void CEditForm::DoDataExchange(CDataExchange * pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_Tab);
+	DDX_Control(pDX, IDC_EDIT_CAMSPEED, m_editCamSpeed);
 }
 
 //int CEditForm::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -113,4 +129,28 @@ void CEditForm::OnInitialUpdate()
 	m_pObjDlg->Create(IDD_DIALOG2, &m_Tab);
 	m_pObjDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_pObjDlg->ShowWindow(SW_HIDE);
+
+	// 메인 프레임을 받아온다.
+	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
+	m_pView = (CEnvToolView*)pMain->GetActiveView();
+}
+
+
+void CEditForm::OnBnClickedButtonCamMain()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_pView->SetMainCamera();
+}
+
+
+void CEditForm::OnBnClickedButtonCamLight()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_pView->SetLightCamera();
+}
+
+
+void CEditForm::OnBnClickedButtonAdjCamspeed()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

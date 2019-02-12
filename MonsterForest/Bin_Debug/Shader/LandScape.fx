@@ -334,6 +334,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		output.vColor4.w = g_vMtrlSpecular.w;
 	}
 	output.vColor3 = vMtrlSpc;
+
 	/*_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
 		input.vUV);
 
@@ -353,6 +354,7 @@ VS_OUTPUT_BUMP ShadowMapVS(VS_INPUT_BUMP input)
 
 	output.vProjPos = mul(float4(vPos, 1.f), g_matWVP);
 	output.vPos = output.vProjPos;
+
 	// Normal을 뷰공간으로 만들어준다.
 	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
 	output.vViewPos = mul(float4(vPos, 1.f), g_matWV).xyz;

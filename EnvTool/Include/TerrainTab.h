@@ -22,7 +22,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 	CEdit m_editTerrainSizeX;
-	CEdit m_editTerrainSizeY;
+	int   m_iSizeX;
+	CEdit m_editTerrainSizeZ;
+	int   m_iSizeZ;
+
 public:
 	afx_msg void OnBnClickedButtonAdjSize();
 };

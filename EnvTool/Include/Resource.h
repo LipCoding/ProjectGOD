@@ -26,6 +26,11 @@
 #define IDC_EDIT_TERRAIN_SIZEX          1009
 #define IDC_EDIT_TERRIAN_SIZEY          1010
 #define IDC_BUTTON_ADJ_SIZE             1011
+#define IDC_BUTTON_CAM_MAIN             1012
+#define IDC_BUTTON_CAM_LIGHT            1013
+#define IDC_EDIT1                       1014
+#define IDC_EDIT_CAMSPEED               1014
+#define IDC_BUTTON_ADJ_CAMSPEED         1016
 
 // Next default values for new objects
 // 
@@ -33,7 +38,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        330
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1012
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -125,6 +125,10 @@ BOOL CEnvToolApp::InitInstance()
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
+
+	// View를 얻어온다.
+	m_pView = ((CMainFrame*)AfxGetMainWnd())->GetView();
+
 	return TRUE;
 }
 
@@ -185,8 +189,12 @@ BOOL CEnvToolApp::OnIdle(LONG lCount)
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	if (m_pMainWnd->IsIconic())
 		return FALSE;
-
-	GET_SINGLE(CCore)->RunTool();
+	else
+	{
+		GET_SINGLE(CCore)->RunTool();
+		
+		m_pView->UpdateView();
+	}
 
 	return TRUE;
 }
