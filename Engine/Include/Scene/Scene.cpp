@@ -279,16 +279,16 @@ bool CScene::Init()
 
 	// 메인 카메라 생성
 	m_pMainCameraObj = CreateCamera("MainCamera",
-	Vector3(0.f, 5.f, -5.f), PG_PI / 2.f,
-	DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 2.f, 1000.f);
+	Vector3(0.f, 5.f, -5.f), XMConvertToRadians(60.f),
+	(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
 
 	m_pMainCamera = m_pMainCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pMainCameraTr = m_pMainCameraObj->GetTransform();
 
 	// 라이트 카메라
 	m_pLightCameraObj = CreateCamera("LightCamera",
-		Vector3(0.f, 15.f, 0.f), PG_PI / 2.f,
-		DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 2.f, 1000.f);
+		Vector3(0.f, 15.f, 0.f), XMConvertToRadians(60.f),
+		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();
 

@@ -38,8 +38,8 @@ public:
 	short GetWheel()	const;
 	void SetWheel(short sWheel);
 	void ClearWheel();
-	Vector3 GetRayPos()	const;
-	Vector3 GetRayDir()	const;
+	//Vector3 GetRayPos()	const;
+	//Vector3 GetRayDir()	const;
 
 public:
 	bool Init(HWND hWnd, bool bOnMouseRenderer = true);

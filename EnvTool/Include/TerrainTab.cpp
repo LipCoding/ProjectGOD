@@ -15,6 +15,8 @@
 #include "Component/Material.h"
 #include "Component/Terrain2D.h"
 #include "Component/LandScape.h"
+#include "Component/Picking.h"
+#include "Component/QuadTree.h"
 
 PG_USING
 
@@ -78,6 +80,11 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 		L"LandScape/GRASS_00+SAND_NRM.png",
 		L"LandScape/GRASS_00+SAND_SPEC.png");
 
+	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
+	CQuadTree* pQuadTree = pLandScapeObj->AddComponent<CQuadTree>("QuadTree");
+	pQuadTree->CreateQuadTree(pLandScape);
+
+	SAFE_RELEASE(pPicking);
 	SAFE_RELEASE(pLandScape);
 
 	SAFE_RELEASE(pLayer);

@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "Material.h"
 #include "../Resources/ResourcesManager.h"
+#include "../Rendering/RenderManager.h"
+#include "../Rendering/RenderState.h"
 #include "../Resources/Mesh.h"
 #include "../Core/PathManager.h"
 #include "../Core/NavigationManager.h"
@@ -219,14 +221,15 @@ bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSiz
 	pRenderer->SetShader(LANDSCAPE_SHADER);
 	pRenderer->SetInputLayout("Bump");
 
-	m_iNumX = iSizeX;
-	m_iNumZ = iSizeZ;
+	m_iNumX = iSizeX + 1;
+	m_iNumZ = iSizeZ + 1;
 
-	vecVtx.resize(iSizeX * iSizeZ);
+	vecVtx.resize(m_iNumX * m_iNumZ);
 
 	//vector<VERTEXBUMP>	vecVtx;
 	//vecVtx.resize(m_iNumX * m_iNumZ);
 
+	// Vertex Pos
 	for (int i = 0; i < m_iNumZ; ++i)
 	{
 		for (int j = 0; j < m_iNumX; ++j)
@@ -246,6 +249,7 @@ bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSiz
 		}
 	}
 
+	// Index Buffer
 	vecIndex.resize((m_iNumX - 1) * (m_iNumZ - 1) * 2 * 3);
 
 	int		iCount = 0;
@@ -302,6 +306,7 @@ bool CLandScape::CreateLandScape(const string & strMeshKey, int iSizeX, int iSiz
 	pMesh->SetShaderKey(LANDSCAPE_SHADER);
 	pMesh->SetInputLayoutKey("Bump");
 	pRenderer->SetMesh(pMesh);
+	pRenderer->SetRenderState(WIRE_FRAME);
 
 	SAFE_RELEASE(pMesh);
 
@@ -467,6 +472,7 @@ int CLandScape::LateUpdate(float fTime)
 			SCT_PIXEL, &tBuffer);
 		SAFE_RELEASE(pRenderer);
 	}
+
 
 	return 0;
 }

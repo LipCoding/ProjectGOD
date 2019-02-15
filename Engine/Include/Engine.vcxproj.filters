@@ -100,9 +100,6 @@
     <Filter Include="06. Component\02. Script">
       <UniqueIdentifier>{3c83fa11-9e64-4f72-9999-3a48237032d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Component\03. Camera">
-      <UniqueIdentifier>{71a2fda0-346f-418b-b604-20c0fb8461f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\04. Material">
       <UniqueIdentifier>{d57fdf37-ab8f-4e0f-b663-50cfdc41c2a4}</UniqueIdentifier>
     </Filter>
@@ -138,12 +135,6 @@
     </Filter>
     <Filter Include="06. Component\01. Renderer\RendererD2">
       <UniqueIdentifier>{2fe50868-60fd-4147-80c5-fbc414ebcf47}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06. Component\03. Camera\Frustum">
-      <UniqueIdentifier>{1e6223f4-7a1c-42f8-97a5-352ae2738cde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06. Component\03. Camera\ThirdCamera">
-      <UniqueIdentifier>{62de7395-6878-43c8-bdc9-b1b3bcba389f}</UniqueIdentifier>
     </Filter>
     <Filter Include="06. Component\06. Collider\AABB">
       <UniqueIdentifier>{e4f50f13-ed78-46e8-b648-0a613f6cb73a}</UniqueIdentifier>
@@ -213,6 +204,24 @@
     </Filter>
     <Filter Include="99. Defaults\헤더 파일">
       <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\03. Camera">
+      <UniqueIdentifier>{71a2fda0-346f-418b-b604-20c0fb8461f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\03. Camera\Frustum">
+      <UniqueIdentifier>{1e6223f4-7a1c-42f8-97a5-352ae2738cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\03. Camera\ThirdCamera">
+      <UniqueIdentifier>{62de7395-6878-43c8-bdc9-b1b3bcba389f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\16. Picking">
+      <UniqueIdentifier>{9f79590f-8e5e-4fdb-9d3e-f5aef19ec53e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\17. QuadTree">
+      <UniqueIdentifier>{0f1f0a22-ca9b-4f61-84c4-43b7098190ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\07. Terrain\Debug">
+      <UniqueIdentifier>{d1a3108c-c005-4e9b-b093-02c46f437a12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +434,15 @@
     </ClCompile>
     <ClCompile Include="Core\DirectInput.cpp">
       <Filter>00. Core\03. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Picking.cpp">
+      <Filter>06. Component\16. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\DebugTree.cpp">
+      <Filter>06. Component\07. Terrain\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\QuadTree.cpp">
+      <Filter>06. Component\07. Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -656,11 +674,21 @@
     <ClInclude Include="Core\DirectInput.h">
       <Filter>00. Core\03. Input</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Picking.h">
+      <Filter>06. Component\16. Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\DebugTree.h">
+      <Filter>06. Component\07. Terrain\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\QuadTree.h">
+      <Filter>06. Component\07. Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DirectXTex.inl">
       <Filter>02. Resources\01. Texture\DirectXTex</Filter>
     </None>
+    <None Include="..\Bin_Debug\Shader\Share.fx" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin_Debug\Shader\Collider.fx">
@@ -673,9 +701,6 @@
       <Filter>03. Rendering\00. Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin_Debug\Shader\Light.fx">
-      <Filter>03. Rendering\00. Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin_Debug\Shader\Share.fx">
       <Filter>03. Rendering\00. Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin_Debug\Shader\Sky.fx">

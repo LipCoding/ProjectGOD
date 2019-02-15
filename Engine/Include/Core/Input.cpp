@@ -85,15 +85,15 @@ void CInput::ClearWheel()
 	m_sWheel = 0;
 }
 
-Vector3 CInput::GetRayPos() const
-{
-	return m_pMouse->GetRayPos();
-}
-
-Vector3 CInput::GetRayDir() const
-{
-	return m_pMouse->GetRayDir();
-}
+//Vector3 CInput::GetRayPos() const
+//{
+//	return m_pMouse->GetRayPos();
+//}
+//
+//Vector3 CInput::GetRayDir() const
+//{
+//	return m_pMouse->GetRayDir();
+//}
 
 bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 {
@@ -109,6 +109,7 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	CreateKey(VK_CONTROL, "Ctrl");
 	CreateKey(VK_LBUTTON, "MouseLButton");
 	CreateKey(VK_RBUTTON, "MouseRButton");
+	CreateKey(VK_MBUTTON, "MouseMButton");
 	//CreateKey("Attack", 'X');
 	// 아래 함수는 스크린좌표로 나온다.
 	GetCursorPos(&m_ptMousePos);

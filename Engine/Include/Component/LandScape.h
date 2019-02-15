@@ -29,7 +29,7 @@ private:
 public:
 	vector<VERTEXBUMP>& getVecVtx() { return vecVtx; }
 	vector<UINT>& getVecIndex() { return vecIndex; }
-	
+	const POINT& GetSize() { return POINT{ m_iNumX, m_iNumZ }; }
 public:
 	void SetDetailLevel(int iDetailLevel);
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, 

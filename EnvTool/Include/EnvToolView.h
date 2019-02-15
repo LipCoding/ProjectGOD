@@ -72,14 +72,10 @@ private:
 	CGameObject *m_pMouseRayTexture = nullptr;
 	CTransform	*m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;
-	bool		m_bCamMove = true;
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
-
-public:
-	bool rayIntersectTriangle(Vector3 rayOrigin, Vector3 rayDir, Vector3 v0, Vector3 v1, Vector3 v2, float& t);
 };
 
 #ifndef _DEBUG  // EnvToolView.cpp의 디버그 버전

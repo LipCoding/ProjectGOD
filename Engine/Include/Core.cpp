@@ -30,6 +30,7 @@ CCore::CCore()
 #ifdef _DEBUG
 	AllocConsole();
 #endif
+	AllocConsole();
 }
 
 CCore::~CCore()

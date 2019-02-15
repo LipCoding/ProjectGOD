@@ -31,15 +31,15 @@ CMouse::~CMouse()
 {
 }
 
-Vector3 CMouse::GetRayPos() const
-{
-	return m_vRayPos;
-}
-
-Vector3 CMouse::GetRayDir() const
-{
-	return m_vRayDir;
-}
+//Vector3 CMouse::GetRayPos() const
+//{
+//	return m_vRayPos;
+//}
+//
+//Vector3 CMouse::GetRayDir() const
+//{
+//	return m_vRayDir;
+//}
 
 void CMouse::SetMouseShow(bool bShowCheck)
 {
@@ -107,7 +107,7 @@ int CMouse::Update(float fTime)
 
 	// 수정 필요
 	// 화면 밖을 나가는지 체크한다.
-	/*Vector3	vPos = m_pTransform->GetWorldPos();
+	Vector3	vPos = m_pTransform->GetWorldPos();
 	if (vPos.x < 0 || vPos.x > DEVICE_RESOLUTION.iWidth ||
 		vPos.y < 0 || vPos.y > DEVICE_RESOLUTION.iHeight)
 	{
@@ -121,13 +121,13 @@ int CMouse::Update(float fTime)
 	{
 		if (m_bMouseShow)
 		{
-			m_bMouseShow = FALSE;
-			ShowCursor(FALSE);
+			m_bMouseShow = TRUE;
+			ShowCursor(TRUE);
 		}
-	}*/
+	}
 
-	//// 마우스 Ray를 만든다.
-	//// 카메라를 얻어온다.	
+	////// 마우스 Ray를 만든다.
+	////// 카메라를 얻어온다.	
 	//CCamera*	pCamera = m_pScene->GetMainCamera();
 
 	//Matrix	matProj = pCamera->GetProjMatrix();
