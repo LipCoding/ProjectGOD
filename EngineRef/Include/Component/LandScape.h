@@ -15,6 +15,8 @@ private:
 	{
 		float fCenterX, fCenterZ, fWidth;
 		int iTriCount;
+		vector<VERTEXBUMP> vecVtx;
+		vector<UINT> vecIndex;
 		MESHCONTAINER* pMeshInfo;
 		NodeType* pNodes[4];
 	};
@@ -95,13 +97,14 @@ private:
 
 private:
 	bool CreateQuadTree();
+	void CreateQuadMesh(NodeType* node);
 	void CalculateMeshDimensions(int vtxCount,
 		float& centerX, float& centerZ,
 		float& meshWidth);
 	void CreateTreeNode(NodeType* node, float positionX, float positionZ,
 		float width);
 	int CountTriangles(float positionX, float positionZ, float width);
-	bool IsTriangleCountaiend(int index, float positionX, float positionZ, float width);
+	bool IsTriangleContaind(int index, float positionX, float positionZ, float width);
 	void ReleaseNode(NodeType* node);
 	void RenderDebug(NodeType* node);
 	/*void NodeCheck(float positionX, float positionZ);
