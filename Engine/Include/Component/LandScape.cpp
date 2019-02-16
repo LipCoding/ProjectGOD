@@ -404,9 +404,14 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 			//좌하단
 			int	idx = i * (m_iNumX) + j;
 
+			int left    = j;									    // 왼쪽
+ 			int right   = (j + 1);									// 오른쪽
+			int top     = (i + 1);					// 위
+			int bottom  = i;						// 아래
+
 			//좌상단
-			Vector3	vEdge1 = m_vecVtx[idx + (m_iNumX)].vPos - m_vecVtx[idx].vPos;
-			Vector3	vEdge2 = m_vecVtx[idx + (m_iNumX) + 1].vPos - m_vecVtx[idx].vPos;
+			Vector3	vEdge1 = m_vecVtx[idx+2].vPos - m_vecVtx[idx].vPos;
+			Vector3	vEdge2 = m_vecVtx[idx+2].vPos - m_vecVtx[idx + 1].vPos;
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -416,8 +421,8 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
 
 			//우하단
-			vEdge1 = m_vecVtx[idx + 1].vPos - m_vecVtx[idx].vPos;
-			vEdge2 = m_vecVtx[idx + (m_iNumX)+1].vPos - m_vecVtx[idx].vPos;
+			vEdge1 = m_vecVtx[idx].vPos - m_vecVtx[idx+1].vPos;
+			vEdge2 = m_vecVtx[idx].vPos - m_vecVtx[idx+2].vPos;
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -427,158 +432,66 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
 		}
 	}
-
-
-	//m_vecVtx.resize((m_iNumX + 1) * (m_iNumZ + 1));
-
-	//// Vertex Pos
-	//for (int i = 0; i <= m_iNumZ; ++i)
-	//{
-	//	for (int j = 0; j <= m_iNumX; ++j)
-	//	{
-	//		VERTEXBUMP	tVtx = {};
-
-	//		// before
-	//		/*tVtx.vPos = Vector3((float)j,
-	//			0.f, (float)(m_iNumZ) - i);*/
-	//		tVtx.vPos = Vector3((float)j,
-	//			0.f, (float)i);
-	//		m_vecPos.push_back(tVtx.vPos);
-
-	//		tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
-	//		tVtx.vUV = Vector2((float)j / (float)(m_iNumX),
-	//			(float)i / (float)(m_iNumZ));
-	//		//tVtx.vUV = Vector2(j, i);
-
-	//		m_vecVtx[i * (m_iNumX + 1) + j] = tVtx;
-	//	}
-	//}
-
-	//// Index Buffer
-	//m_vecIndex.resize((m_iNumX) * (m_iNumZ) * 2 * 3);
-
-	//int		iCount = 0;
-
-	//for (int i = 0; i < m_iNumZ; ++i)
-	//{
-	//	for (int j = 0; j < m_iNumX; ++j)
-	//	{
-	//		// 좌상단 정점의 인덱스를 구해준다.
-	//		int	idx = (i + 1) * (m_iNumX + 1) + j;
-
-	//		// 우상단 삼각형 인덱스
-	//		m_vecIndex[iCount++] = idx;
-	//		m_vecIndex[iCount++] = idx + 1;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
-
-	//		// 좌하단 삼각형 인덱스
-	//		m_vecIndex[iCount++] = idx;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1);
-
-	//		// 삼각형의 면법선을 구하자
-	//		// 우상단
-	//		Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
-	//		Vector3	vEdge2 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
-
-	//		vEdge1 = vEdge1.Normalize();
-	//		vEdge2 = vEdge2.Normalize();
-
-	//		Vector3	vFaceNormal = vEdge1.Cross(vEdge2);
-
-	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
-
-	//		// 좌하단
-	//		vEdge1 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
-	//		vEdge2 = m_vecPos[idx - (m_iNumX + 1)] - m_vecPos[idx];
-
-	//		vEdge1 = vEdge1.Normalize();
-	//		vEdge2 = vEdge2.Normalize();
-
-	//		vFaceNormal = vEdge1.Cross(vEdge2);
-
-	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
-
-	//	}
-	//}
-
-	// before
-	/*for (int i = 0; i < m_iNumZ; ++i)
+	
+	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
 	{
-		for (int j = 0; j < m_iNumX; ++j)
-		{
-			// 좌상단 정점의 인덱스를 구해준다.
-			int	idx = i * (m_iNumX + 1) + j;
+		int	idx0 = m_vecIndex[i * 3];
+		int	idx1 = m_vecIndex[i * 3 + 1];
+		int	idx2 = m_vecIndex[i * 3 + 2];
 
-			// 우상단 삼각형 인덱스
-			m_vecIndex[iCount++] = idx;
-			m_vecIndex[iCount++] = idx + 1;
-			m_vecIndex[iCount++] = idx + (m_iNumX + 1) + 1;
+		m_vecVtx[idx0].vNormal += m_vecFaceNormal[i];
+		m_vecVtx[idx1].vNormal += m_vecFaceNormal[i];
+		m_vecVtx[idx2].vNormal += m_vecFaceNormal[i];
+	}
 
-			// 좌하단 삼각형 인덱스
-			m_vecIndex[iCount++] = idx;
-			m_vecIndex[iCount++] = idx + (m_iNumX + 1) + 1;
-			m_vecIndex[iCount++] = idx + (m_iNumX + 1);
+	for (size_t i = 0; i < m_vecVtx.size(); ++i)
+	{
+		m_vecVtx[i].vNormal = m_vecVtx[i].vNormal.Normalize();
+	}
+	
+	// 탄젠트 벡터 구함.
+	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
+	{
+		int	idx0 = m_vecIndex[i * 3];
+		int	idx1 = m_vecIndex[i * 3 + 1];
+		int	idx2 = m_vecIndex[i * 3 + 2];
 
-			// 삼각형의 면법선을 구하자
-			// 우상단
-			Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
-			Vector3	vEdge2 = m_vecPos[idx + (m_iNumX + 1) + 1] - m_vecPos[idx];
+		float	fVtx1[3], fVtx2[3];
+		fVtx1[0] = m_vecVtx[idx1].vPos.x - m_vecVtx[idx0].vPos.x;
+		fVtx1[1] = m_vecVtx[idx1].vPos.y - m_vecVtx[idx0].vPos.y;
+		fVtx1[2] = m_vecVtx[idx1].vPos.z - m_vecVtx[idx0].vPos.z;
 
-			vEdge1 = vEdge1.Normalize();
-			vEdge2 = vEdge2.Normalize();
+		fVtx2[0] = m_vecVtx[idx2].vPos.x - m_vecVtx[idx0].vPos.x;
+		fVtx2[1] = m_vecVtx[idx2].vPos.y - m_vecVtx[idx0].vPos.y;
+		fVtx2[2] = m_vecVtx[idx2].vPos.z - m_vecVtx[idx0].vPos.z;
 
-			Vector3	vFaceNormal = vEdge1.Cross(vEdge2);
+		float	ftu[2], ftv[2];
+		ftu[0] = m_vecVtx[idx1].vUV.x - m_vecVtx[idx0].vUV.x;
+		ftv[0] = m_vecVtx[idx1].vUV.y - m_vecVtx[idx0].vUV.y;
 
-			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+		ftu[1] = m_vecVtx[idx2].vUV.x - m_vecVtx[idx0].vUV.x;
+		ftv[1] = m_vecVtx[idx2].vUV.y - m_vecVtx[idx0].vUV.y;
 
-			// 좌하단
-			vEdge1 = m_vecPos[idx + (m_iNumX + 1) + 1] - m_vecPos[idx];
-			vEdge2 = m_vecPos[idx + (m_iNumX + 1)] - m_vecPos[idx];
+		float	fDen = 1.f / (ftu[0] * ftv[1] - ftu[1] * ftv[0]);
 
-			vEdge1 = vEdge1.Normalize();
-			vEdge2 = vEdge2.Normalize();
+		Vector3	vTangent;
+		vTangent.x = (ftv[1] * fVtx1[0] - ftv[0] * fVtx2[0]) * fDen;
+		vTangent.y = (ftv[1] * fVtx1[1] - ftv[0] * fVtx2[1]) * fDen;
+		vTangent.z = (ftv[1] * fVtx1[2] - ftv[0] * fVtx2[2]) * fDen;
 
-			vFaceNormal = vEdge1.Cross(vEdge2);
+		vTangent = vTangent.Normalize();
 
-			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+		m_vecVtx[idx0].vTangent = vTangent;
+		m_vecVtx[idx1].vTangent = vTangent;
+		m_vecVtx[idx2].vTangent = vTangent;
 
-		}
-	}*/
+		m_vecVtx[idx0].vBinormal = m_vecVtx[idx0].vNormal.Cross(vTangent).Normalize();
+		m_vecVtx[idx1].vBinormal = m_vecVtx[idx1].vNormal.Cross(vTangent).Normalize();
+		m_vecVtx[idx2].vBinormal = m_vecVtx[idx2].vNormal.Cross(vTangent).Normalize();
+	}
 
-	/*ComputeNormal(m_vecVtx, m_vecIndex);
-	ComputeTangent(m_vecVtx, m_vecIndex);
-
-	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("LandScape");
-	CMaterial*	pMaterial = pRenderer->CreateMaterial();
-
-	// 추후에 고쳐야함
-	pMaterial->SetDiffuseTexInfo("Linear", "LandScape", 0, 0, L"LandScape/GRASS_00+SAND.dds", TEXTURE_PATH);
-	pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1,
-		L"LandScape/GRASS_00+SAND_NRM.png", TEXTURE_PATH);
-	pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2,
-		L"LandScape/GRASS_00+SAND_SPEC.png", TEXTURE_PATH);
-
-	SAFE_RELEASE(pMaterial);
-
-	// Mesh 설정
-	CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-		"LandScape",
-		m_vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &m_vecVtx[0],
-		m_vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
-		DXGI_FORMAT_R32_UINT, &m_vecIndex[0]);
-
-	pMesh->SetShaderKey(LANDSCAPE_SHADER);
-	pMesh->SetInputLayoutKey("Bump");
-	pRenderer->SetMesh(pMesh);
-	pRenderer->SetRenderState(CULLING_NONE);
-
-	SAFE_RELEASE(pMesh);
-	SAFE_RELEASE(pRenderer);*/
-
-	ComputeNormal(m_vecVtx, m_vecIndex);
-	ComputeTangent(m_vecVtx, m_vecIndex);
+	//ComputeNormal(m_vecVtx, m_vecIndex);
+	//ComputeTangent(m_vecVtx, m_vecIndex);
 
 	CreateQuadTree();
 
