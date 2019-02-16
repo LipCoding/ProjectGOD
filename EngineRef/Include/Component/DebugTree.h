@@ -6,6 +6,9 @@ PG_BEGIN
 class PG_DLL DebugTree
 {
 private:
+	friend class CGameObject;
+
+private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -17,19 +20,20 @@ public:
 	DebugTree(const DebugTree&);
 	~DebugTree();
 	
-	bool Initialize(ID3D11Device*, float, float, float);
+	bool Initialize();
+	bool MakeMesh(float, float, float);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
 private:
-	bool InitializeBuffer(ID3D11Device*);
+	bool InitializeBuffer();
 
 private:
 	float m_posX = 0.f;
 	float m_posZ = 0.f;
 	float m_radian = 0.f;
-	ID3D11Buffer* m_vertexBuffer = nullptr;
-	ID3D11Buffer* m_indexBuffer = nullptr;
+	static int g_iDebugNum;
+	CGameObject* m_pGameObject = nullptr;
 };
 
 PG_END

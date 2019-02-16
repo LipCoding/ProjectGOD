@@ -2,9 +2,10 @@
 #include "Component.h"
 #include "../Component/LandScape.h"
 #include "../Component/DebugTree.h"
+
 PG_BEGIN
 
-const int MAX_TRIANGLES = 10000;
+const int MAX_TRIANGLES2 = 10000;
 
 class PG_DLL CQuadTree :
 	public CComponent

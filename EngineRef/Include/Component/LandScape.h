@@ -1,11 +1,24 @@
 #pragma once
 #include "Component.h"
+#include "../Resources/Mesh.h"
+#include "../Component/DebugTree.h"
 
 PG_BEGIN
+
+const int MAX_TRIANGLES = 1000;
 
 class PG_DLL CLandScape :
 	public CComponent
 {
+private:
+	struct NodeType
+	{
+		float fCenterX, fCenterZ, fWidth;
+		int iTriCount;
+		MESHCONTAINER* pMeshInfo;
+		NodeType* pNodes[4];
+	};
+
 private:
 	friend class CGameObject;
 
@@ -20,16 +33,17 @@ private:
 	vector<Vector3>	m_vecPos;
 	vector<Vector3>	m_vecFaceNormal;
 
-	vector<VERTEXBUMP> vecVtx;
-	vector<UINT> vecIndex;
+	vector<VERTEXBUMP> m_vecVtx;
+	vector<UINT> m_vecIndex;
 
 	int		m_iDetailLevel;
 	int		m_iSplatCount;
 
 public:
-	vector<VERTEXBUMP>& getVecVtx() { return vecVtx; }
-	vector<UINT>& getVecIndex() { return vecIndex; }
+	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
+	vector<UINT>& getVecIndex() { return m_vecIndex; }
 	const POINT& GetSize() { return POINT{ m_iNumX, m_iNumZ }; }
+
 public:
 	void SetDetailLevel(int iDetailLevel);
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, 
@@ -38,6 +52,11 @@ public:
 		const char* pHeightMap = NULL,
 		const string& strPathKey = TEXTURE_PATH);
 	bool CreateLandScape(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
+		const string& strTexKey, const wchar_t* pFileName,
+		const wchar_t* pNormalName, const wchar_t* pSpecularName,
+		const char* pHeightMap = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+	bool CreateLandScapeQuadTree(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
 		const string& strTexKey, const wchar_t* pFileName,
 		const wchar_t* pNormalName, const wchar_t* pSpecularName,
 		const char* pHeightMap = NULL,
@@ -71,8 +90,29 @@ public:
 	virtual void Load(FILE* pFile);
 
 private:
-	void ComputeNormal(vector<VERTEXBUMP>& vecVtx, const vector<UINT>& vecIdx);
-	void ComputeTangent(vector<VERTEXBUMP>& vecVtx, const vector<UINT>& vecIdx);
+	void ComputeNormal(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
+	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
+
+private:
+	bool CreateQuadTree();
+	void CalculateMeshDimensions(int vtxCount,
+		float& centerX, float& centerZ,
+		float& meshWidth);
+	void CreateTreeNode(NodeType* node, float positionX, float positionZ,
+		float width);
+	int CountTriangles(float positionX, float positionZ, float width);
+	bool IsTriangleCountaiend(int index, float positionX, float positionZ, float width);
+	void ReleaseNode(NodeType* node);
+	void RenderDebug(NodeType* node);
+	/*void NodeCheck(float positionX, float positionZ);
+	bool CollideCheck(float nodePosX, float nodePosZ, float width, float positionX, float positionZ);*/
+
+private:
+	bool m_bVisualCheck = false;
+	int m_iTriCount, m_iDrawCount = 0;
+	NodeType* m_pParentNode = nullptr;
+	DebugTree* m_pDebugTree = nullptr;
+	static int g_iQuadName;
 };
 
 PG_END

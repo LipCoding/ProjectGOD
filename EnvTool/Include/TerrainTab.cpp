@@ -75,14 +75,12 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	SAFE_RELEASE(pLandTr);
 
 	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
-	pLandScape->CreateLandScape("LandScapeMesh", m_iSizeX, m_iSizeZ, false, "LandScape",
+	pLandScape->CreateLandScapeQuadTree("LandScapeMesh", m_iSizeX, m_iSizeZ, false, "LandScape",
 		L"LandScape/GRASS_00+SAND.dds",
 		L"LandScape/GRASS_00+SAND_NRM.png",
 		L"LandScape/GRASS_00+SAND_SPEC.png");
 
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
-	CQuadTree* pQuadTree = pLandScapeObj->AddComponent<CQuadTree>("QuadTree");
-	pQuadTree->CreateQuadTree(pLandScape);
 
 	SAFE_RELEASE(pPicking);
 	SAFE_RELEASE(pLandScape);

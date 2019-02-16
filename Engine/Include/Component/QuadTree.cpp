@@ -26,8 +26,12 @@ CQuadTree::~CQuadTree()
 		m_pParentNode = nullptr;
 	}
 
-	delete m_pDebugTree;
-	m_pDebugTree = nullptr;
+	if (m_pDebugTree)
+	{
+		m_pDebugTree->Shutdown();
+		delete m_pDebugTree;
+		m_pDebugTree = nullptr;
+	}
 }
 
 bool CQuadTree::CreateQuadTree(CLandScape * terrain)
@@ -141,7 +145,7 @@ void CQuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ
 
 	// 2. 이 노드에 너무 많은 삼각형이 있는 경우 4 개의 동일한 크기의 
 	// 더 작은 트리 노드로 분할한다.
-	if (iNumTriangles > MAX_TRIANGLES)
+	if (iNumTriangles > MAX_TRIANGLES2)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -162,6 +166,8 @@ void CQuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ
 		}
 		return;
 	}
+
+	//m_pDebugTree->MakeMesh(node->fPositionX, node->fPositionZ, node->fWidth / 2.f);
 
 	// 3. 이 노드가 비어 있지 않고 그 노드의 삼각형 수가 최대 값보다 작으면
 	// 이 노드는 트리의 맨 아래에 있으므로 저장할 삼각형 목록을 만든다.
@@ -357,25 +363,7 @@ void CQuadTree::ReleaseNode(NodeType* node)
 
 void CQuadTree::RenderDebug(NodeType * node)
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (node->nodes[i] != 0)
-		{
-			count++;
-			RenderDebug(node->nodes[i]);
-		}
-	}
 
-	// 자식 노드가 있는 경우
-	if (count != 0)
-	{
-		return;
-	}
-
-	m_pDebugTree->Initialize(DEVICE, node->fPositionX, node->fPositionZ, node->fWidth / 2.f);
-	m_pDebugTree->Render(CONTEXT);
-	
 }
 
 void CQuadTree::NodeCheck(NodeType * node, float positionX, float positionZ)
@@ -430,6 +418,7 @@ bool CQuadTree::CollideCheck(float nodePosX, float nodePosZ, float width, float 
 bool CQuadTree::Init()
 {
 	m_pDebugTree = new DebugTree;
+	m_pDebugTree->Initialize();
 
 	return true;
 }

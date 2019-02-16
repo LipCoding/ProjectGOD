@@ -19,6 +19,13 @@ public:
 		D3D11_USAGE eIdxUsage = D3D11_USAGE_DEFAULT,
 		DXGI_FORMAT eFmt = DXGI_FORMAT_R32_UINT,
 		void* pIdxData = NULL);
+	class CMesh* CreateMesh(void* pOut, 
+		const string& strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
+		D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void* pVtxData,
+		UINT iIdxCount = 0, UINT iIdxSize = 0,
+		D3D11_USAGE eIdxUsage = D3D11_USAGE_DEFAULT,
+		DXGI_FORMAT eFmt = DXGI_FORMAT_R32_UINT,
+		void* pIdxData = NULL);
 	class CMesh* CreateSphere(const string& strKey, float radius, UINT numSubdivisions);
 	class CMesh* LoadMesh(const string& strKey, const wchar_t* pFileName,
 		const string& strPathKey);

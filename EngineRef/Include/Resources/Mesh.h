@@ -84,6 +84,15 @@ public:
 		D3D11_USAGE eIdxUsage = D3D11_USAGE_DEFAULT,
 		DXGI_FORMAT eFmt = DXGI_FORMAT_R32_UINT,
 		void* pIdxData = NULL);
+
+	bool CreateMesh(MESHCONTAINER* pOut, 
+		UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
+		D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void* pVtxData,
+		UINT iIdxCount = 0, UINT iIdxSize = 0,
+		D3D11_USAGE eIdxUsage = D3D11_USAGE_DEFAULT,
+		DXGI_FORMAT eFmt = DXGI_FORMAT_R32_UINT,
+		void* pIdxData = NULL);
+
 	bool LoadMesh(const string& strKey, const char* pFullPath);
 
 private:

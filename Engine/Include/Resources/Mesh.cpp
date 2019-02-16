@@ -227,6 +227,32 @@ bool CMesh::CreateMesh(UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
 	return true;
 }
 
+bool CMesh::CreateMesh(MESHCONTAINER * pOut, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage, D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
+{
+	PMESHCONTAINER	pContainer = new MESHCONTAINER;
+
+	m_vecMeshContainer.push_back(pContainer);
+
+	if (!CreateVertexBuffer(iVtxCount, iVtxSize, eVtxUsage, ePrimitive,
+		pVtxData))
+		return false;
+
+	if (!CreateIndexBuffer(iIdxCount, iIdxSize, eIdxUsage, eFmt,
+		pIdxData))
+		return false;
+
+	m_vLength = m_vMax - m_vMin;
+	m_vCenter = (m_vMax + m_vMin) / 2.f;
+
+	m_fRadius = m_vLength.x > m_vLength.y ? m_vLength.x : m_vLength.y;
+	m_fRadius = m_fRadius > m_vLength.z ? m_fRadius : m_vLength.z;
+	m_fRadius /= 2.f;
+
+	pOut = pContainer;
+
+	return true;
+}
+
 bool CMesh::LoadMesh(const string & strKey, const char * pFullPath)
 {
 	m_strKey = strKey;
