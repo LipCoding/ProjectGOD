@@ -315,7 +315,7 @@ bool CScene::Init()
 
 	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
 
-	pGlobalLight->SetLightRange(1000000.f);
+	pGlobalLight->SetLightRange(100000.f);
 
 	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
 		Vector4(0.f, 0.f, 0.f, 1.f));*/
