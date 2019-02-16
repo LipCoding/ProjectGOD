@@ -217,9 +217,6 @@
     <Filter Include="06. Component\16. Picking">
       <UniqueIdentifier>{9f79590f-8e5e-4fdb-9d3e-f5aef19ec53e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Component\17. QuadTree">
-      <UniqueIdentifier>{0f1f0a22-ca9b-4f61-84c4-43b7098190ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\07. Terrain\Debug">
       <UniqueIdentifier>{d1a3108c-c005-4e9b-b093-02c46f437a12}</UniqueIdentifier>
     </Filter>

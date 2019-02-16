@@ -796,7 +796,7 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 		}
 	}
 
-	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>(to_string(g_iQuadName));
+	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("LandScape");
 	CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
 	// 추후에 고쳐야함
@@ -819,7 +819,7 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 	pMesh->SetShaderKey(LANDSCAPE_SHADER);
 	pMesh->SetInputLayoutKey("Bump");
 	pRenderer->SetMesh(pMesh);
-	pRenderer->SetRenderState(CULLING_NONE);
+	pRenderer->SetRenderState(WIRE_FRAME);
 
 	SAFE_RELEASE(pMesh);
 	SAFE_RELEASE(pRenderer);

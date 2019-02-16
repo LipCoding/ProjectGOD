@@ -130,7 +130,7 @@ bool DebugTree::InitializeBuffer()
 		indices[i] = i;
 	}
 
-	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>(to_string(g_iDebugNum));
+	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("DebugQuadTree");
 	CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
 	SAFE_RELEASE(pMaterial);
