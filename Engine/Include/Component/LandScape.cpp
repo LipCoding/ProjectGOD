@@ -328,57 +328,85 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 	m_iNumX = iSizeX;
 	m_iNumZ = iSizeZ;
 
-	m_vecVtx.resize((m_iNumX + 1) * (m_iNumZ + 1));
-
-	// Vertex Pos
-	for (int i = 0; i <= m_iNumZ; ++i)
-	{
-		for (int j = 0; j <= m_iNumX; ++j)
-		{
-			VERTEXBUMP	tVtx = {};
-
-			// before
-			/*tVtx.vPos = Vector3((float)j,
-				0.f, (float)(m_iNumZ) - i);*/
-			tVtx.vPos = Vector3((float)j,
-				0.f, (float)i);
-			m_vecPos.push_back(tVtx.vPos);
-
-			tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
-			tVtx.vUV = Vector2((float)j / (float)(m_iNumX),
-				(float)i / (float)(m_iNumZ));
-			//tVtx.vUV = Vector2(j, i);
-
-			m_vecVtx[i * (m_iNumX + 1) + j] = tVtx;
-		}
-	}
-
-	// Index Buffer
+	m_vecVtx.resize((m_iNumX) * (m_iNumZ) * 2 * 3);
 	m_vecIndex.resize((m_iNumX) * (m_iNumZ) * 2 * 3);
-
-	int		iCount = 0;
+	int index = 0;
 
 	for (int i = 0; i < m_iNumZ; ++i)
 	{
 		for (int j = 0; j < m_iNumX; ++j)
 		{
-			// 좌상단 정점의 인덱스를 구해준다.
-			int	idx = (i + 1) * (m_iNumX + 1) + j;
+			int left    = j;									    // 왼쪽
+ 			int right   = (j + 1);									// 오른쪽
+			int top     = (i + 1);					// 위
+			int bottom  = i;						// 아래
 
-			// 우상단 삼각형 인덱스
-			m_vecIndex[iCount++] = idx;
-			m_vecIndex[iCount++] = idx + 1;
-			m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
+			// 왼쪽 위.
 
-			// 좌하단 삼각형 인덱스
-			m_vecIndex[iCount++] = idx;
-			m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
-			m_vecIndex[iCount++] = idx - (m_iNumX + 1);
+			m_vecVtx[index].vPos = XMFLOAT3(left, 0.f, top);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)left / (float)(m_iNumX),
+							(float)top / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
 
-			// 삼각형의 면법선을 구하자
-			// 우상단
-			Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
-			Vector3	vEdge2 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
+			// 오른쪽 위.
+			
+			m_vecVtx[index].vPos = XMFLOAT3(right, 0.f, top);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)right / (float)(m_iNumX),
+				(float)top / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
+
+			// 왼쪽 아래.
+			
+			m_vecVtx[index].vPos = XMFLOAT3(left, 0.f, bottom);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)left / (float)(m_iNumX),
+				(float)bottom / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
+
+			// 왼쪽 아래.
+			
+			m_vecVtx[index].vPos = XMFLOAT3(left, 0.f, bottom);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)left / (float)(m_iNumX),
+				(float)bottom / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
+
+			// 오른쪽 위.
+			
+			m_vecVtx[index].vPos = XMFLOAT3(right, 0.f, top);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)right / (float)(m_iNumX),
+				(float)top / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
+
+			// 오른쪽 아래.
+			
+			m_vecVtx[index].vPos = XMFLOAT3(right, 0.f, bottom);
+			m_vecVtx[index].vNormal = Vector3(0.f, 1.f, 0.f);
+			m_vecVtx[index].vUV = Vector2((float)right / (float)(m_iNumX),
+				(float)bottom / (float)(m_iNumZ));
+			m_vecIndex[index] = index;
+			index++;
+		}
+	}
+
+	for (int i = 0; i < m_iNumZ; ++i)
+	{
+		for (int j = 0; j < m_iNumX; ++j)
+		{
+			//좌하단
+			int	idx = i * (m_iNumX) + j;
+
+			//좌상단
+			Vector3	vEdge1 = m_vecVtx[idx + (m_iNumX)].vPos - m_vecVtx[idx].vPos;
+			Vector3	vEdge2 = m_vecVtx[idx + (m_iNumX) + 1].vPos - m_vecVtx[idx].vPos;
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -387,9 +415,9 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
 
-			// 좌하단
-			vEdge1 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
-			vEdge2 = m_vecPos[idx - (m_iNumX + 1)] - m_vecPos[idx];
+			//우하단
+			vEdge1 = m_vecVtx[idx + 1].vPos - m_vecVtx[idx].vPos;
+			vEdge2 = m_vecVtx[idx + (m_iNumX)+1].vPos - m_vecVtx[idx].vPos;
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -397,9 +425,82 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 			vFaceNormal = vEdge1.Cross(vEdge2);
 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
-
 		}
 	}
+
+
+	//m_vecVtx.resize((m_iNumX + 1) * (m_iNumZ + 1));
+
+	//// Vertex Pos
+	//for (int i = 0; i <= m_iNumZ; ++i)
+	//{
+	//	for (int j = 0; j <= m_iNumX; ++j)
+	//	{
+	//		VERTEXBUMP	tVtx = {};
+
+	//		// before
+	//		/*tVtx.vPos = Vector3((float)j,
+	//			0.f, (float)(m_iNumZ) - i);*/
+	//		tVtx.vPos = Vector3((float)j,
+	//			0.f, (float)i);
+	//		m_vecPos.push_back(tVtx.vPos);
+
+	//		tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
+	//		tVtx.vUV = Vector2((float)j / (float)(m_iNumX),
+	//			(float)i / (float)(m_iNumZ));
+	//		//tVtx.vUV = Vector2(j, i);
+
+	//		m_vecVtx[i * (m_iNumX + 1) + j] = tVtx;
+	//	}
+	//}
+
+	//// Index Buffer
+	//m_vecIndex.resize((m_iNumX) * (m_iNumZ) * 2 * 3);
+
+	//int		iCount = 0;
+
+	//for (int i = 0; i < m_iNumZ; ++i)
+	//{
+	//	for (int j = 0; j < m_iNumX; ++j)
+	//	{
+	//		// 좌상단 정점의 인덱스를 구해준다.
+	//		int	idx = (i + 1) * (m_iNumX + 1) + j;
+
+	//		// 우상단 삼각형 인덱스
+	//		m_vecIndex[iCount++] = idx;
+	//		m_vecIndex[iCount++] = idx + 1;
+	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
+
+	//		// 좌하단 삼각형 인덱스
+	//		m_vecIndex[iCount++] = idx;
+	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
+	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1);
+
+	//		// 삼각형의 면법선을 구하자
+	//		// 우상단
+	//		Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
+	//		Vector3	vEdge2 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
+
+	//		vEdge1 = vEdge1.Normalize();
+	//		vEdge2 = vEdge2.Normalize();
+
+	//		Vector3	vFaceNormal = vEdge1.Cross(vEdge2);
+
+	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+
+	//		// 좌하단
+	//		vEdge1 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
+	//		vEdge2 = m_vecPos[idx - (m_iNumX + 1)] - m_vecPos[idx];
+
+	//		vEdge1 = vEdge1.Normalize();
+	//		vEdge2 = vEdge2.Normalize();
+
+	//		vFaceNormal = vEdge1.Cross(vEdge2);
+
+	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
+
+	//	}
+	//}
 
 	// before
 	/*for (int i = 0; i < m_iNumZ; ++i)
@@ -475,12 +576,15 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 
 	SAFE_RELEASE(pMesh);
 	SAFE_RELEASE(pRenderer);*/
-	
+
+	ComputeNormal(m_vecVtx, m_vecIndex);
+	ComputeTangent(m_vecVtx, m_vecIndex);
+
 	CreateQuadTree();
 
 	// 내비게이션 관리자에 지형을 등록한다.
-	GET_SINGLE(CNavigationManager)->AddLandScapeInfo(strMeshKey,
-		m_iNumX, m_iNumZ, m_pScene, m_pTransform, &m_vecPos);
+	/*GET_SINGLE(CNavigationManager)->AddLandScapeInfo(strMeshKey,
+		m_iNumX, m_iNumZ, m_pScene, m_pTransform, &m_vecVtx[]);*/
 
 	return true;
 }
@@ -771,72 +875,86 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 		return;
 	}
 
-	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("LandScape");
-	CMaterial*	pMaterial = pRenderer->CreateMaterial();
+	string rendererName = "Renderer";
+	static int number = 0;
+	char str[64];
 
-	// 추후에 고쳐야함
-	pMaterial->SetDiffuseTexInfo("Linear", "LandScape", 0, 0, L"LandScape/GRASS_00+SAND.dds", TEXTURE_PATH);
-	pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1,
-		L"LandScape/GRASS_00+SAND_NRM.png", TEXTURE_PATH);
-	pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2,
-		L"LandScape/GRASS_00+SAND_SPEC.png", TEXTURE_PATH);
+	string appendName = itoa(number, str, 10);
+	rendererName = rendererName + appendName;
+	_cprintf(rendererName.c_str());
+	number++;
 
-	SAFE_RELEASE(pMaterial);
-
-	/*vector<VERTEXCOLOR> vecVtx;
-	vector<UINT> vecIndex;
-
-	vecVtx.resize(node->vecVtx.size());
-	vecIndex.resize(node->vecIndex.size());
-
-	int iCount = 0;
-
-	for (auto iter : node->vecVtx)
+	//if (rendererName == "Renderer1")
 	{
-		vecVtx[iCount].vPos = iter.vPos;
-		vecVtx[iCount].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
-		iCount++;
+		CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>(rendererName);
+		CMaterial*	pMaterial = pRenderer->CreateMaterial();
+
+		// 추후에 고쳐야함
+		pMaterial->SetDiffuseTexInfo("Linear", "LandScape", 0, 0, L"LandScape/GRASS_00+SAND.dds", TEXTURE_PATH);
+		pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1,
+			L"LandScape/GRASS_00+SAND_NRM.png", TEXTURE_PATH);
+		pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2,
+			L"LandScape/GRASS_00+SAND_SPEC.png", TEXTURE_PATH);
+
+		SAFE_RELEASE(pMaterial);
+
+		// for debug
+		/*vector<VERTEXCOLOR> vecVtx;
+		vector<UINT> vecIndex;
+
+		vecVtx.resize(node->vecVtx.size());
+		vecIndex.resize(node->vecIndex.size());
+
+		int iCount = 0;
+
+		for (auto iter : node->vecVtx)
+		{
+			vecVtx[iCount].vPos = iter.vPos;
+			vecVtx[iCount].vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+			iCount++;
+		}
+
+		iCount = 0;
+
+		for (auto iter : node->vecIndex)
+		{
+			vecIndex[iCount] = iter;
+			iCount++;
+		}
+
+		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
+			node->pMeshInfo, to_string(g_iQuadName),
+			vecVtx.size(), sizeof(VERTEXCOLOR), D3D11_USAGE_DEFAULT,
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &vecVtx[0],
+			vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
+			DXGI_FORMAT_R32_UINT, &vecIndex[0]);
+
+		pMesh->SetShaderKey(STANDARD_COLOR_SHADER);
+		pRenderer->SetMesh(pMesh);
+		pRenderer->SetRenderState(WIRE_FRAME);*/
+
+
+		// Mesh 설정
+		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
+			node->pMeshInfo, to_string(g_iQuadName),
+			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
+			node->vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
+			DXGI_FORMAT_R32_UINT, &node->vecIndex[0]);
+
+		pMesh->SetShaderKey(LANDSCAPE_SHADER);
+		pMesh->SetInputLayoutKey("Bump");
+		pRenderer->SetMesh(pMesh);
+		pRenderer->SetRenderState(CULLING_NONE);
+
+		SAFE_RELEASE(pMesh);
+		SAFE_RELEASE(pRenderer);
+
+		m_pDebugTree->MakeMesh(node->fCenterX, node->fCenterZ, node->fWidth / 2.f);
+
+		g_iQuadName++;
+		cprintf("%d\n", g_iQuadName);
 	}
-
-	iCount = 0;
-
-	for (auto iter : node->vecIndex)
-	{
-		vecIndex[iCount] = iter;
-		iCount++;
-	}
-
-	CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-		node->pMeshInfo, to_string(g_iQuadName),
-		vecVtx.size(), sizeof(VERTEXCOLOR), D3D11_USAGE_DEFAULT,
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &vecVtx[0],
-		vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
-		DXGI_FORMAT_R32_UINT, &vecIndex[0]);
-
-	pMesh->SetShaderKey(STANDARD_COLOR_SHADER);
-	pRenderer->SetMesh(pMesh);
-	pRenderer->SetRenderState(WIRE_FRAME);*/
-
-	// Mesh 설정
-	CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-		node->pMeshInfo, to_string(g_iQuadName),
-		node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
-		node->vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
-		DXGI_FORMAT_R32_UINT, &node->vecIndex[0]);
-
-	pMesh->SetShaderKey(LANDSCAPE_SHADER);
-	pMesh->SetInputLayoutKey("Bump");
-	pRenderer->SetMesh(pMesh);
-	pRenderer->SetRenderState(CULLING_NONE);
-
-	SAFE_RELEASE(pMesh);
-	SAFE_RELEASE(pRenderer);
-
-	m_pDebugTree->MakeMesh(node->fCenterX, node->fCenterZ, node->fWidth / 2.f);
-
-	g_iQuadName++;
-	cprintf("%d\n", g_iQuadName);
 }
 
 void CLandScape::CalculateMeshDimensions(int vtxCount, float & centerX, float & centerZ, float & meshWidth)
@@ -928,75 +1046,33 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 	vector<UINT> vecIndex;
 
 	vecVtx.resize(iVertexCount);
-	vecIndex.resize((iNumTriangles - 1) * (iNumTriangles - 1) * 3 * 2);
+	vecIndex.resize(iVertexCount);
 
-	int iIndex_Vtx = 0;
-	int iIndex_Index = 0;
+	int iIndex = 0;
 	int iVertexIndex = 0;
-	int iIdxTop = 0;
-	int iIdxBottom = 0;
 
 	for (int i = 0; i < m_iTriCount; i++)
 	{
 		// 삼각형이 이 노드 안에 있으면 꼭지점 배열에 추가한다.
 		if (this->IsTriangleContaind(i, positionX, positionZ, width))
 		{
-			// vertex
 			// 지형 버텍스 목록에 인덱스를 계산한다.
 			iVertexIndex = i * 3;
 
 			// 정점 목록에서 이 삼각형의 세 꼭지점을 가져온다.
-			vecVtx[iIndex_Vtx] = m_vecVtx[iVertexIndex];
-			//vecIndex[iIndex] = iIndex;
-			iIndex_Vtx++;
+			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			vecIndex[iIndex] = iIndex;
+			iIndex++;
 
 			iVertexIndex++;
-			vecVtx[iIndex_Vtx] = m_vecVtx[iVertexIndex];
-			//vecIndex[iIndex] = iIndex;
-			iIndex_Vtx++;
+			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			vecIndex[iIndex] = iIndex;
+			iIndex++;
 
 			iVertexIndex++;
-			vecVtx[iIndex_Vtx] = m_vecVtx[iVertexIndex];
-			//vecIndex[iIndex] = iIndex;
-			iIndex_Vtx++;
-
-			// index
-			if (i < m_iTriCount - 1)
-			{
-				iIdxTop = (i + 1) * 3;
-				iIdxBottom = i * 3;
-
-				vecIndex[iIndex_Index] = iIdxTop;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxTop + 1;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom + 1;
-				iIndex_Index++;
-
-				vecIndex[iIndex_Index] = iIdxTop;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom + 1;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom;
-				iIndex_Index++;
-
-				iIdxTop++;
-				iIdxBottom++;
-
-				vecIndex[iIndex_Index] = iIdxTop;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxTop + 1;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom + 1;
-				iIndex_Index++;
-
-				vecIndex[iIndex_Index] = iIdxTop;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom + 1;
-				iIndex_Index++;
-				vecIndex[iIndex_Index] = iIdxBottom;
-				iIndex_Index++;
-			}
+			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			vecIndex[iIndex] = iIndex;
+			iIndex++;
 		}
 		else
 		{
