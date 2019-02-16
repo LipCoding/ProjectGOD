@@ -402,11 +402,11 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 		for (int j = 0; j < m_iNumX; ++j)
 		{
 			//좌하단
-			int	idx = i * (m_iNumX) + j;
+			int	idx = i * (m_iNumX + 1) + j;
 
-			//좌상단
-			Vector3	vEdge1 = m_vecVtx[idx + (m_iNumX)].vPos - m_vecVtx[idx].vPos;
-			Vector3	vEdge2 = m_vecVtx[idx + (m_iNumX) + 1].vPos - m_vecVtx[idx].vPos;
+			//우하단
+			Vector3	 vEdge1 = m_vecVtx[idx + (m_iNumX + 1) + 1].vPos - m_vecVtx[idx].vPos;
+			Vector3	 vEdge2 = m_vecVtx[idx + 1].vPos - m_vecVtx[idx].vPos;
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -415,9 +415,11 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
 
-			//우하단
-			vEdge1 = m_vecVtx[idx + 1].vPos - m_vecVtx[idx].vPos;
-			vEdge2 = m_vecVtx[idx + (m_iNumX)+1].vPos - m_vecVtx[idx].vPos;
+			//좌상단
+			vEdge1 = m_vecVtx[idx + (m_iNumX + 1) + 1].vPos - m_vecVtx[idx].vPos;
+			vEdge2 = m_vecVtx[idx + (m_iNumX + 1)].vPos - m_vecVtx[idx].vPos;
+
+		
 
 			vEdge1 = vEdge1.Normalize();
 			vEdge2 = vEdge2.Normalize();
@@ -427,80 +429,6 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 			m_vecFaceNormal.push_back(vFaceNormal.Normalize());
 		}
 	}
-
-
-	//m_vecVtx.resize((m_iNumX + 1) * (m_iNumZ + 1));
-
-	//// Vertex Pos
-	//for (int i = 0; i <= m_iNumZ; ++i)
-	//{
-	//	for (int j = 0; j <= m_iNumX; ++j)
-	//	{
-	//		VERTEXBUMP	tVtx = {};
-
-	//		// before
-	//		/*tVtx.vPos = Vector3((float)j,
-	//			0.f, (float)(m_iNumZ) - i);*/
-	//		tVtx.vPos = Vector3((float)j,
-	//			0.f, (float)i);
-	//		m_vecPos.push_back(tVtx.vPos);
-
-	//		tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
-	//		tVtx.vUV = Vector2((float)j / (float)(m_iNumX),
-	//			(float)i / (float)(m_iNumZ));
-	//		//tVtx.vUV = Vector2(j, i);
-
-	//		m_vecVtx[i * (m_iNumX + 1) + j] = tVtx;
-	//	}
-	//}
-
-	//// Index Buffer
-	//m_vecIndex.resize((m_iNumX) * (m_iNumZ) * 2 * 3);
-
-	//int		iCount = 0;
-
-	//for (int i = 0; i < m_iNumZ; ++i)
-	//{
-	//	for (int j = 0; j < m_iNumX; ++j)
-	//	{
-	//		// 좌상단 정점의 인덱스를 구해준다.
-	//		int	idx = (i + 1) * (m_iNumX + 1) + j;
-
-	//		// 우상단 삼각형 인덱스
-	//		m_vecIndex[iCount++] = idx;
-	//		m_vecIndex[iCount++] = idx + 1;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
-
-	//		// 좌하단 삼각형 인덱스
-	//		m_vecIndex[iCount++] = idx;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1) + 1;
-	//		m_vecIndex[iCount++] = idx - (m_iNumX + 1);
-
-	//		// 삼각형의 면법선을 구하자
-	//		// 우상단
-	//		Vector3	vEdge1 = m_vecPos[idx + 1] - m_vecPos[idx];
-	//		Vector3	vEdge2 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
-
-	//		vEdge1 = vEdge1.Normalize();
-	//		vEdge2 = vEdge2.Normalize();
-
-	//		Vector3	vFaceNormal = vEdge1.Cross(vEdge2);
-
-	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
-
-	//		// 좌하단
-	//		vEdge1 = m_vecPos[idx - (m_iNumX + 1) + 1] - m_vecPos[idx];
-	//		vEdge2 = m_vecPos[idx - (m_iNumX + 1)] - m_vecPos[idx];
-
-	//		vEdge1 = vEdge1.Normalize();
-	//		vEdge2 = vEdge2.Normalize();
-
-	//		vFaceNormal = vEdge1.Cross(vEdge2);
-
-	//		m_vecFaceNormal.push_back(vFaceNormal.Normalize());
-
-	//	}
-	//}
 
 	// before
 	/*for (int i = 0; i < m_iNumZ; ++i)
@@ -577,9 +505,63 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 	SAFE_RELEASE(pMesh);
 	SAFE_RELEASE(pRenderer);*/
 
-	ComputeNormal(m_vecVtx, m_vecIndex);
-	ComputeTangent(m_vecVtx, m_vecIndex);
-
+	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
+	{
+		int	idx0 = m_vecIndex[i * 3];
+		int	idx1 = m_vecIndex[i * 3 + 1];
+		int	idx2 = m_vecIndex[i * 3 + 2];
+	
+		m_vecVtx[idx0].vNormal += m_vecFaceNormal[i];
+		m_vecVtx[idx1].vNormal += m_vecFaceNormal[i];
+		m_vecVtx[idx2].vNormal += m_vecFaceNormal[i];
+	}
+	
+	for (size_t i = 0; i < m_vecVtx.size(); ++i)
+	{
+		m_vecVtx[i].vNormal = m_vecVtx[i].vNormal.Normalize();
+	}
+	
+	// 탄젠트 벡터 구함.
+	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
+	{
+		int	idx0 = m_vecIndex[i * 3];
+		int	idx1 = m_vecIndex[i * 3 + 1];
+		int	idx2 = m_vecIndex[i * 3 + 2];
+	
+		float	fVtx1[3], fVtx2[3];
+		fVtx1[0] = m_vecVtx[idx1].vPos.x - m_vecVtx[idx0].vPos.x;
+		fVtx1[1] = m_vecVtx[idx1].vPos.y - m_vecVtx[idx0].vPos.y;
+		fVtx1[2] = m_vecVtx[idx1].vPos.z - m_vecVtx[idx0].vPos.z;
+	
+		fVtx2[0] = m_vecVtx[idx2].vPos.x - m_vecVtx[idx0].vPos.x;
+		fVtx2[1] = m_vecVtx[idx2].vPos.y - m_vecVtx[idx0].vPos.y;
+		fVtx2[2] = m_vecVtx[idx2].vPos.z - m_vecVtx[idx0].vPos.z;
+	
+		float	ftu[2], ftv[2];
+		ftu[0] = m_vecVtx[idx1].vUV.x - m_vecVtx[idx0].vUV.x;
+		ftv[0] = m_vecVtx[idx1].vUV.y - m_vecVtx[idx0].vUV.y;
+	
+		ftu[1] = m_vecVtx[idx2].vUV.x - m_vecVtx[idx0].vUV.x;
+		ftv[1] = m_vecVtx[idx2].vUV.y - m_vecVtx[idx0].vUV.y;
+	
+		float	fDen = 1.f / (ftu[0] * ftv[1] - ftu[1] * ftv[0]);
+	
+		Vector3	vTangent;
+		vTangent.x = (ftv[1] * fVtx1[0] - ftv[0] * fVtx2[0]) * fDen;
+		vTangent.y = (ftv[1] * fVtx1[1] - ftv[0] * fVtx2[1]) * fDen;
+		vTangent.z = (ftv[1] * fVtx1[2] - ftv[0] * fVtx2[2]) * fDen;
+	
+		vTangent = vTangent.Normalize();
+	
+		m_vecVtx[idx0].vTangent = vTangent;
+		m_vecVtx[idx1].vTangent = vTangent;
+		m_vecVtx[idx2].vTangent = vTangent;
+	
+		m_vecVtx[idx0].vBinormal = m_vecVtx[idx0].vNormal.Cross(vTangent).Normalize();
+		m_vecVtx[idx1].vBinormal = m_vecVtx[idx1].vNormal.Cross(vTangent).Normalize();
+		m_vecVtx[idx2].vBinormal = m_vecVtx[idx2].vNormal.Cross(vTangent).Normalize();
+	}
+	
 	CreateQuadTree();
 
 	// 내비게이션 관리자에 지형을 등록한다.
@@ -884,7 +866,7 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 	_cprintf(rendererName.c_str());
 	number++;
 
-	//if (rendererName == "Renderer1")
+	//if (rendererName == "Renderer0")
 	{
 		CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>(rendererName);
 		CMaterial*	pMaterial = pRenderer->CreateMaterial();
@@ -933,10 +915,9 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 		pRenderer->SetMesh(pMesh);
 		pRenderer->SetRenderState(WIRE_FRAME);*/
 
-
 		// Mesh 설정
 		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-			node->pMeshInfo, to_string(g_iQuadName),
+			node->pMeshInfo, rendererName,
 			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
 			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
 			node->vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
@@ -952,8 +933,8 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 
 		m_pDebugTree->MakeMesh(node->fCenterX, node->fCenterZ, node->fWidth / 2.f);
 
-		g_iQuadName++;
-		cprintf("%d\n", g_iQuadName);
+		//g_iQuadName++;
+		//cprintf("%d\n", g_iQuadName);
 	}
 }
 

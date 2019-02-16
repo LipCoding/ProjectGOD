@@ -5,7 +5,7 @@
 
 PG_BEGIN
 
-const int MAX_TRIANGLES = 1000;
+const int MAX_TRIANGLES = 10000;
 
 class PG_DLL CLandScape :
 	public CComponent

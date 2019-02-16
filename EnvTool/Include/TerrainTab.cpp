@@ -80,6 +80,11 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 		L"LandScape/GRASS_00+SAND_NRM.png",
 		L"LandScape/GRASS_00+SAND_SPEC.png");
 
+	/*pLandScape->CreateLandScape("LandScapeMesh", m_iSizeX, m_iSizeZ, false, "LandScape",
+		L"LandScape/GRASS_00+SAND.dds",
+		L"LandScape/GRASS_00+SAND_NRM.png",
+		L"LandScape/GRASS_00+SAND_SPEC.png");*/
+
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
 	SAFE_RELEASE(pPicking);
