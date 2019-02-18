@@ -45,11 +45,9 @@ bool CColliderAABB::Init()
 {
 	CCollider::Init();
 
-#ifdef _DEBUG
 	m_pMesh = GET_SINGLE(CResourcesManager)->FindMesh("AABB");
 	m_pShader = GET_SINGLE(CShaderManager)->FindShader(COLLIDER_SHADER);
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
-#endif // _DEBUG
 
 	return true;
 }
@@ -83,7 +81,6 @@ void CColliderAABB::Collision(float fTime)
 
 void CColliderAABB::Render(float fTime)
 {
-#ifdef _DEBUG
 	Matrix	matScale, matTrans, matRot;
 
 	Vector3	vLength = m_tInfo.vMax - m_tInfo.vMin;
@@ -114,7 +111,6 @@ void CColliderAABB::Render(float fTime)
 	m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
 
 	SAFE_RELEASE(pCamera);
-#endif // _DEBUG
 
 	CCollider::Render(fTime);
 }

@@ -160,6 +160,10 @@ typedef struct PG_DLL _tagVector3	:
 
 	bool operator >= (const _tagVector3& v)	const;
 
+	// index
+	float& operator [](int i);
+	float operator [](int i) const;
+
 	XMVECTOR Convert()	const;
 
 	float Length()	const;

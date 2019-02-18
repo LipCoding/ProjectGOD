@@ -573,6 +573,36 @@ bool _tagVector3::operator>=(const _tagVector3 & v) const
 	return x >= v.x && y >= v.y && z >= v.z;
 }
 
+float& _tagVector3::operator[](int i)
+{
+	switch (i)
+	{
+	case AXIS_X:
+		return x;
+	case AXIS_Y:
+		return y;
+	case AXIS_Z:
+		return z;
+	default:
+		return z;
+	}	
+}
+
+float _tagVector3::operator[](int i) const
+{
+	switch (i)
+	{
+	case AXIS_X:
+		return x;
+	case AXIS_Y:
+		return y;
+	case AXIS_Z:
+		return z;
+	default:
+		return 0.f;
+	}
+}
+
 XMVECTOR _tagVector3::Convert()	const
 {
 	return XMLoadFloat3(this);

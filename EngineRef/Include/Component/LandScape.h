@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "../Resources/Mesh.h"
 #include "../Component/DebugTree.h"
+#include "../Component/ColliderAABB.h"
 
 PG_BEGIN
 
@@ -13,11 +14,16 @@ class PG_DLL CLandScape :
 private:
 	struct NodeType
 	{
+		string strNodeName;
 		float fCenterX, fCenterZ, fWidth;
 		int iTriCount;
 		vector<VERTEXBUMP> vecVtx;
 		vector<UINT> vecIndex;
+		CGameObject* pGameObject;
+		DebugTree* pDebugTree;
+		// 안쓸수도 있음
 		MESHCONTAINER* pMeshInfo;
+		//
 		NodeType* pNodes[4];
 	};
 
@@ -44,7 +50,7 @@ private:
 public:
 	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
-	const POINT& GetSize() { return POINT{ m_iNumX, m_iNumZ }; }
+	//const POINT& GetSize() { return POINT{ m_iNumX, m_iNumZ }; }
 
 public:
 	void SetDetailLevel(int iDetailLevel);
@@ -95,27 +101,39 @@ private:
 	void ComputeNormal(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
 	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
 
+public:
+	list<CGameObject*>* FindNode();
+
 private:
+	// QuadTree
 	bool CreateQuadTree();
-	void CreateQuadMesh(NodeType* node);
+	void CreateTreeNodeToObject(NodeType* node);
+	void CreateTreeNode(NodeType* node, float positionX, float positionZ,
+		float width);
+
 	void CalculateMeshDimensions(int vtxCount,
 		float& centerX, float& centerZ,
 		float& meshWidth);
-	void CreateTreeNode(NodeType* node, float positionX, float positionZ,
-		float width);
 	int CountTriangles(float positionX, float positionZ, float width);
 	bool IsTriangleContaind(int index, float positionX, float positionZ, float width);
 	void ReleaseNode(NodeType* node);
-	void RenderDebug(NodeType* node);
+	void RenderDebug(NodeType* node, float fTime);
+
+	// Node
+	
+	void NodeCollisionCheck(NodeType* node);
 	/*void NodeCheck(float positionX, float positionZ);
 	bool CollideCheck(float nodePosX, float nodePosZ, float width, float positionX, float positionZ);*/
 
 private:
 	bool m_bVisualCheck = false;
 	int m_iTriCount, m_iDrawCount = 0;
+	int m_iTriStack = 0;
+	int m_iDebugStack = 0;
 	NodeType* m_pParentNode = nullptr;
-	DebugTree* m_pDebugTree = nullptr;
-	static int g_iQuadName;
+	static int number;
+
+	list<CGameObject*> m_listNodeObject;
 };
 
 PG_END

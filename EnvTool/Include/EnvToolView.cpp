@@ -182,27 +182,25 @@ void CEnvToolView::UpdateInput(const float& fTime)
 {
 	if (KEYPUSH("MoveFront"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, 5 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveBack"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, -5 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, -30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveLeft"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, -5 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, -30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveRight"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, 5 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
 
 	}
-
-	float currMouseX{0}, currMouseY{ 0 };
-	float viewX, viewY;
+	
 	if (KEYPUSH("MouseLButton"))
 	{
 		// 랜드스케이프 정보를 가져온다.
@@ -212,23 +210,18 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 			CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
 
+			pLandScape->FindNode();
+
 			Vector3 pickPos;
 
-			currMouseX = (float)GET_SINGLE(CInput)->GetMousePos().x;
-			currMouseY = (float)GET_SINGLE(CInput)->GetMousePos().y;
-
-			CScene* pCurrentScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-			CCamera* pCamera = pCurrentScene->GetMainCamera();
-
-			if (pPicking->Picking_ToBuffer(&pickPos, pLandScapeObj->GetTransform()->GetWorldMatrix(),
-				Vector2(currMouseX, currMouseY), pCamera,
+			if (pPicking->Picking_ToBuffer(&pickPos, 
+				GET_SINGLE(CInput)->GetRayPos(),
+				GET_SINGLE(CInput)->GetRayDir(), 
 				pLandScape->getVecVtx(), pLandScape->getVecIndex()))
 			{
-				_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+				//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
 			}
 
-			SAFE_RELEASE(pCamera);
-			SAFE_RELEASE(pCurrentScene);
 			SAFE_RELEASE(pPicking);
 			SAFE_RELEASE(pLandScape);
 			SAFE_RELEASE(pLandScapeObj);

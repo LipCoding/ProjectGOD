@@ -16,7 +16,7 @@ private:
 	~CPicking();
 
 public:
-	bool Picking_ToBuffer(Vector3 *pOut, const Matrix & worldMatrix, const Vector2& mousePos, CCamera* pCamera, vector<VERTEXBUMP>& vecVtx, vector<UINT>& vecIndex);
+	bool Picking_ToBuffer(Vector3 *pOut, Vector3 rayOrigin,  Vector3 rayDir, vector<VERTEXBUMP>& vecVtx, vector<UINT>& vecIndex);
 	//bool Picking_ToMesh();
 
 private:

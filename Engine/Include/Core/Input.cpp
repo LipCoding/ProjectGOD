@@ -85,15 +85,15 @@ void CInput::ClearWheel()
 	m_sWheel = 0;
 }
 
-//Vector3 CInput::GetRayPos() const
-//{
-//	return m_pMouse->GetRayPos();
-//}
-//
-//Vector3 CInput::GetRayDir() const
-//{
-//	return m_pMouse->GetRayDir();
-//}
+Vector3 CInput::GetRayPos() const
+{
+	return m_pMouse->GetRayPos();
+}
+
+Vector3 CInput::GetRayDir() const
+{
+	return m_pMouse->GetRayDir();
+}
 
 bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 {
@@ -126,6 +126,7 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	m_pMouse = m_pMouseObj->AddComponent<CMouse>("Mouse");
 	m_pMouse->SetMouseShow(m_bOnMouseRenderer);
 	m_pMouseTr = m_pMouseObj->GetTransform();
+	
 
 	return true;
 }

@@ -8,10 +8,13 @@
 #include "../Resources/Mesh.h"
 #include "../Core/PathManager.h"
 #include "../Core/NavigationManager.h"
+#include "../Core/Input.h"
+#include "../Component/Mouse.h"
+#include "../Component/ColliderRay.h"
 
 PG_USING
 
-int CLandScape::g_iQuadName = 0;
+int CLandScape::number = 0;
 
 CLandScape::CLandScape()
 {
@@ -434,8 +437,6 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 	}
 
 	// before
-	/*for (int i = 0; i < m_iNumZ; ++i)
-	
 	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
 	{
 		int	idx0 = m_vecIndex[i * 3];
@@ -492,63 +493,6 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 		m_vecVtx[idx1].vBinormal = m_vecVtx[idx1].vNormal.Cross(vTangent).Normalize();
 		m_vecVtx[idx2].vBinormal = m_vecVtx[idx2].vNormal.Cross(vTangent).Normalize();
 	}
-
-	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
-	{
-		int	idx0 = m_vecIndex[i * 3];
-		int	idx1 = m_vecIndex[i * 3 + 1];
-		int	idx2 = m_vecIndex[i * 3 + 2];
-	
-		m_vecVtx[idx0].vNormal += m_vecFaceNormal[i];
-		m_vecVtx[idx1].vNormal += m_vecFaceNormal[i];
-		m_vecVtx[idx2].vNormal += m_vecFaceNormal[i];
-	}
-	
-	for (size_t i = 0; i < m_vecVtx.size(); ++i)
-	{
-		m_vecVtx[i].vNormal = m_vecVtx[i].vNormal.Normalize();
-	}
-	
-	// 탄젠트 벡터 구함.
-	for (size_t i = 0; i < m_vecFaceNormal.size(); ++i)
-	{
-		int	idx0 = m_vecIndex[i * 3];
-		int	idx1 = m_vecIndex[i * 3 + 1];
-		int	idx2 = m_vecIndex[i * 3 + 2];
-	
-		float	fVtx1[3], fVtx2[3];
-		fVtx1[0] = m_vecVtx[idx1].vPos.x - m_vecVtx[idx0].vPos.x;
-		fVtx1[1] = m_vecVtx[idx1].vPos.y - m_vecVtx[idx0].vPos.y;
-		fVtx1[2] = m_vecVtx[idx1].vPos.z - m_vecVtx[idx0].vPos.z;
-	
-		fVtx2[0] = m_vecVtx[idx2].vPos.x - m_vecVtx[idx0].vPos.x;
-		fVtx2[1] = m_vecVtx[idx2].vPos.y - m_vecVtx[idx0].vPos.y;
-		fVtx2[2] = m_vecVtx[idx2].vPos.z - m_vecVtx[idx0].vPos.z;
-	
-		float	ftu[2], ftv[2];
-		ftu[0] = m_vecVtx[idx1].vUV.x - m_vecVtx[idx0].vUV.x;
-		ftv[0] = m_vecVtx[idx1].vUV.y - m_vecVtx[idx0].vUV.y;
-	
-		ftu[1] = m_vecVtx[idx2].vUV.x - m_vecVtx[idx0].vUV.x;
-		ftv[1] = m_vecVtx[idx2].vUV.y - m_vecVtx[idx0].vUV.y;
-	
-		float	fDen = 1.f / (ftu[0] * ftv[1] - ftu[1] * ftv[0]);
-	
-		Vector3	vTangent;
-		vTangent.x = (ftv[1] * fVtx1[0] - ftv[0] * fVtx2[0]) * fDen;
-		vTangent.y = (ftv[1] * fVtx1[1] - ftv[0] * fVtx2[1]) * fDen;
-		vTangent.z = (ftv[1] * fVtx1[2] - ftv[0] * fVtx2[2]) * fDen;
-	
-		vTangent = vTangent.Normalize();
-	
-		m_vecVtx[idx0].vTangent = vTangent;
-		m_vecVtx[idx1].vTangent = vTangent;
-		m_vecVtx[idx2].vTangent = vTangent;
-	
-		m_vecVtx[idx0].vBinormal = m_vecVtx[idx0].vNormal.Cross(vTangent).Normalize();
-		m_vecVtx[idx1].vBinormal = m_vecVtx[idx1].vNormal.Cross(vTangent).Normalize();
-		m_vecVtx[idx2].vBinormal = m_vecVtx[idx2].vNormal.Cross(vTangent).Normalize();
-	}*/
 
 	//ComputeNormal(m_vecVtx, m_vecIndex);
 	//ComputeTangent(m_vecVtx, m_vecIndex);
@@ -558,6 +502,8 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey, int iSizeX, 
 	// 내비게이션 관리자에 지형을 등록한다.
 	/*GET_SINGLE(CNavigationManager)->AddLandScapeInfo(strMeshKey,
 		m_iNumX, m_iNumZ, m_pScene, m_pTransform, &m_vecVtx[]);*/
+
+	_cprintf("%d Created!\n", m_iTriStack);
 
 	return true;
 }
@@ -687,9 +633,6 @@ bool CLandScape::SetSplattingAlpha(const string & strSmpKey,
 
 bool CLandScape::Init()
 {
-	m_pDebugTree = new DebugTree;
-	m_pDebugTree->Initialize();
-
 	return true;
 }
 
@@ -716,6 +659,14 @@ int CLandScape::LateUpdate(float fTime)
 		SAFE_RELEASE(pRenderer);
 	}
 
+	if (m_bVisualCheck)
+	{
+		m_iDebugStack = 0;
+
+		RenderDebug(m_pParentNode, fTime);
+
+		//_cprintf("Rendering Now : %d\n", m_iDebugStack);
+	}
 
 	return 0;
 }
@@ -726,6 +677,7 @@ void CLandScape::Collision(float fTime)
 
 void CLandScape::Render(float fTime)
 {
+
 }
 
 CLandScape * CLandScape::Clone()
@@ -826,12 +778,12 @@ bool CLandScape::CreateQuadTree()
 	}
 
 	CreateTreeNode(m_pParentNode, fCenterX, fCenterZ, fWidth);
-	CreateQuadMesh(m_pParentNode);
+	CreateTreeNodeToObject(m_pParentNode);
 
 	return true;
 }
 
-void CLandScape::CreateQuadMesh(NodeType * node)
+void CLandScape::CreateTreeNodeToObject(NodeType * node)
 {
 	int count = 0;
 	for (int i = 0; i < 4; i++)
@@ -839,7 +791,7 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 		if (node->pNodes[i] != 0)
 		{
 			count++;
-			CreateQuadMesh(node->pNodes[i]);
+			CreateTreeNodeToObject(node->pNodes[i]);
 		}
 	}
 
@@ -848,18 +800,12 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 		return;
 	}
 
-	string rendererName = "Renderer";
-	static int number = 0;
-	char str[64];
-
-	string appendName = itoa(number, str, 10);
-	rendererName = rendererName + appendName;
-	_cprintf(rendererName.c_str());
-	number++;
-
-	//if (rendererName == "Renderer0")
+	//if (node->strNodeName == "Node2")
 	{
-		CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>(rendererName);
+		node->pGameObject = CGameObject::CreateObject(node->strNodeName, m_pLayer);
+
+		// Mesh
+		CRenderer*	pRenderer = node->pGameObject->AddComponent<CRenderer>("Renderer");
 		CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
 		// 추후에 고쳐야함
@@ -908,7 +854,7 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 
 		// Mesh 설정
 		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-			node->pMeshInfo, rendererName,
+			node->pMeshInfo, node->strNodeName,
 			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
 			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
 			node->vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
@@ -922,10 +868,19 @@ void CLandScape::CreateQuadMesh(NodeType * node)
 		SAFE_RELEASE(pMesh);
 		SAFE_RELEASE(pRenderer);
 
-		m_pDebugTree->MakeMesh(node->fCenterX, node->fCenterZ, node->fWidth / 2.f);
+		node->pDebugTree = new DebugTree;
+		node->pDebugTree->Init();
+		node->pDebugTree->SetPosition(node->fCenterX, node->fCenterZ, node->fWidth);
 
-		//g_iQuadName++;
-		//cprintf("%d\n", g_iQuadName);
+		// Collider
+		CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
+		pCollider->SetAABB(Vector3{ (node->fCenterX - node->fWidth / 2.f), 0.f, (node->fCenterZ - node->fWidth / 2.f) },
+			Vector3{ (node->fCenterX + node->fWidth / 2.f), 0.f, (node->fCenterZ + node->fWidth / 2.f) });
+
+		SAFE_RELEASE(pCollider);
+
+
+		//_cprintf("CreateObject : Renderer%d\n", number);
 	}
 }
 
@@ -974,7 +929,11 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 
 	node->iTriCount = 0;
 
+	node->pGameObject = nullptr;
+	node->pDebugTree = nullptr;
+
 	node->pMeshInfo = nullptr;
+	
 
 	node->pNodes[0] = nullptr;
 	node->pNodes[1] = nullptr;
@@ -1010,21 +969,33 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 		return;
 	}
 
+	string nodeName = "Node";
+	char str[64];
+
+	string appendName = itoa(number, str, 10);
+	nodeName = nodeName + appendName;
+	number++;
+
+	node->strNodeName = nodeName;
+	_cprintf("Node%d\n", number);
+
 	node->iTriCount = iNumTriangles;
+	_cprintf("TriCount : %d\n", node->iTriCount);
+	m_iTriStack += node->iTriCount;
 
 	int iVertexCount = iNumTriangles * 3;
-	
-	vector<VERTEXBUMP> vecVtx;
-	vector<UINT> vecIndex;
 
-	vecVtx.resize(iVertexCount);
-	vecIndex.resize(iVertexCount);
+	node->vecVtx.resize(iVertexCount);
+	node->vecIndex.resize(iVertexCount);
 
 	int iIndex = 0;
 	int iVertexIndex = 0;
 
 	for (int i = 0; i < m_iTriCount; i++)
 	{
+		/*if (iIndex == iVertexCount)
+			break;*/
+
 		// 삼각형이 이 노드 안에 있으면 꼭지점 배열에 추가한다.
 		if (this->IsTriangleContaind(i, positionX, positionZ, width))
 		{
@@ -1032,28 +1003,21 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 			iVertexIndex = i * 3;
 
 			// 정점 목록에서 이 삼각형의 세 꼭지점을 가져온다.
-			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
-			vecIndex[iIndex] = iIndex;
+			node->vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			node->vecIndex[iIndex] = iIndex;
 			iIndex++;
 
 			iVertexIndex++;
-			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
-			vecIndex[iIndex] = iIndex;
+			node->vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			node->vecIndex[iIndex] = iIndex;
 			iIndex++;
 
 			iVertexIndex++;
-			vecVtx[iIndex] = m_vecVtx[iVertexIndex];
-			vecIndex[iIndex] = iIndex;
+			node->vecVtx[iIndex] = m_vecVtx[iVertexIndex];
+			node->vecIndex[iIndex] = iIndex;
 			iIndex++;
-		}
-		else
-		{
-			int a = 10;
 		}
 	}
-
-	node->vecVtx = vecVtx;
-	node->vecIndex = vecIndex;
 }
 
 int CLandScape::CountTriangles(float positionX, float positionZ, float width)
@@ -1126,8 +1090,20 @@ void CLandScape::ReleaseNode(NodeType* node)
 		}
 	}
 
+	if (node->pGameObject)
+	{
+		SAFE_RELEASE(node->pGameObject);
+	}
+
+	if (node->pDebugTree)
+	{
+		delete node->pDebugTree;
+		node->pDebugTree = nullptr;
+	}
+
 	if (node->pMeshInfo)
 	{
+		delete node->pMeshInfo;
 		node->pMeshInfo = nullptr;
 	}
 
@@ -1141,6 +1117,72 @@ void CLandScape::ReleaseNode(NodeType* node)
 	}
 }
 
-void CLandScape::RenderDebug(NodeType* node)
+void CLandScape::RenderDebug(NodeType* node, float fTime)
 {
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != 0)
+		{
+			count++;
+			RenderDebug(node->pNodes[i], fTime);
+		}
+	}
+
+	if (count != 0)
+	{
+		return;
+	}
+
+	node->pDebugTree->Update(fTime);
+	node->pDebugTree->Render(fTime);
+
+	if(node->pGameObject->GetCulling() == false)
+		++m_iDebugStack;
+}
+
+list<CGameObject*>* CLandScape::FindNode()
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	Safe_Release_VecList(m_listNodeObject);
+
+	NodeCollisionCheck(m_pParentNode);
+
+	return &m_listNodeObject;
+}
+
+void CLandScape::NodeCollisionCheck(NodeType * node)
+{
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != 0)
+		{
+			count++;
+			NodeCollisionCheck(node->pNodes[i]);
+		}
+	}
+
+	if (count != 0)
+	{
+		return;
+	}
+
+	CGameObject* pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	CMouse* pMouse = pMouseObj->FindComponentFromTag<CMouse>("Mouse");
+	CColliderRay* pRay = pMouse->FindComponentFromTag<CColliderRay>("MouseRay");
+	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+
+	if (pRay->Collision(pAABB))
+	{
+		m_listNodeObject.push_back(node->pGameObject);
+		_cprintf("Collide!\n");
+	}
+
+	SAFE_RELEASE(pRay);
+	SAFE_RELEASE(pAABB);
+	SAFE_RELEASE(pMouse);
+	SAFE_RELEASE(pMouseObj);
+
+	return;
 }

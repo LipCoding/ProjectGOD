@@ -411,6 +411,55 @@ bool CCollider::CollisionAABBToAABB(const AABB & src, const AABB & dest)
 	return true;
 }
 
+bool CCollider::CollisionRayToAABB(PRAY tRay, const AABB & dest)
+{
+	// vectors to hold the T - values for everty direction
+	Vector3 t1, t2;
+	// maximums defined in float.h
+	double t_near = -DBL_MAX;
+	double t_far = DBL_MAX;
+
+	// we test slabs in every direction
+	for (int i = 0; i < 3; i++)
+	{
+		// ray parallel to planes in this direction
+		if (tRay->vDir[i] == 0.f)
+		{
+			if ((tRay->vPos[i] < dest.vMin[i]) || (tRay->vPos[i] > dest.vMax[i]))
+			{
+				// parallel And outside box : no intersection possible
+				return false;
+			}
+		}
+		// ray not parallel to planes in this direction
+		else
+		{
+			t1[i] = (dest.vMin[i] - tRay->vPos[i]) / tRay->vDir[i];
+			t2[i] = (dest.vMax[i] - tRay->vPos[i]) / tRay->vDir[i];
+
+			// we want t1 to hold values for intersection with near plane
+			if (t1[i] > t2[i])
+			{
+				swap(t1, t2);
+			}
+			if (t1[i] > t_near)
+			{
+				t_near = t1[i];
+			}
+			if (t2[i] < t_far)
+			{
+				t_far = t2[i];
+			}
+			if ((t_near > t_far) || (t_far < 0))
+			{
+				return false;
+			}
+		}
+	}
+	//tnear = t_near; tfar = t_far;
+	return true;
+}
+
 bool CCollider::CollisionRayToSphere(PRAY pRay,
 	const SPHERE & tSphere)
 {

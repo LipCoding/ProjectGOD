@@ -1,6 +1,7 @@
 #include "ColliderRay.h"
 #include "Transform.h"
 #include "ColliderSphere.h"
+#include "ColliderAABB.h"
 
 PG_USING
 
@@ -97,6 +98,8 @@ bool CColliderRay::Collision(CCollider * pDest)
 	{
 	case CT_SPHERE:
 		return CollisionRayToSphere(&m_tRay, ((CColliderSphere*)pDest)->GetSphere());
+	case CT_AABB:
+		return CollisionRayToAABB(&m_tRay, ((CColliderAABB*)pDest)->GetInfo());
 	}
 
 	return false;

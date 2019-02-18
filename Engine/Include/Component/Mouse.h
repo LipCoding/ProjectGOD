@@ -16,12 +16,12 @@ private:
 
 private:
 	BOOL	m_bMouseShow;
-	//Vector3	m_vRayPos;
-	//Vector3	m_vRayDir;
+	Vector3	m_vRayPos;
+	Vector3	m_vRayDir;
 
 public:
-	//Vector3 GetRayPos()	const;
-	//Vector3 GetRayDir()	const;
+	Vector3 GetRayPos()	const;
+	Vector3 GetRayDir()	const;
 
 	void SetMouseShow(bool bShowCheck);
 

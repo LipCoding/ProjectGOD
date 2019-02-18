@@ -68,7 +68,7 @@ bool CResourcesManager::Init()
 	vNormal[3] = vFaceNormal[0] + vFaceNormal[3];
 	vNormal[3] = vNormal[3].Normalize();
 
-
+	// 피라미드
 	VERTEXCOLORNORMAL	tPyramid[9]	=
 	{
 		VERTEXCOLORNORMAL(vPos[0], Vector3(0.f, 1.f, 0.f), vColor[0]),
@@ -89,6 +89,8 @@ bool CResourcesManager::Init()
 		D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT, iIndex);
 
 	SAFE_RELEASE(pMesh);
+
+	// AABB
 
 	VERTEXCOLOR	tAABB[8] =
 	{
@@ -111,6 +113,7 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pMesh);
 
+	// 
 	VERTEXTEX	tVtxRectLTTex[4] =
 	{
 		VERTEXTEX(0.f, 0.f, 0, 0, 0),
@@ -128,6 +131,7 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pMesh);
 
+	// 
 	VERTEXCOLOR	tVtxRectCenterLine[5] =
 	{
 		VERTEXCOLOR(-0.5f, -0.5f, 0, 0, 1, 0, 1),
@@ -143,6 +147,7 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pMesh);
 
+	// 큐브
 	Vector3	tCube[8] =
 	{
 		Vector3(-0.5f, 0.5f, -0.5f),
@@ -219,7 +224,8 @@ CMesh * CResourcesManager::CreateMesh(const string & strKey, UINT iVtxCount,
 	return pMesh;
 }
 
-CMesh * CResourcesManager::CreateMesh(void * pOut, const string & strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage, D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
+CMesh * CResourcesManager::CreateMesh(MESHCONTAINER * pOut, const string & strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
+	D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
 {
 	CMesh*	pMesh = FindMesh(strKey);
 
@@ -229,7 +235,7 @@ CMesh * CResourcesManager::CreateMesh(void * pOut, const string & strKey, UINT i
 	pMesh = new CMesh;
 	pMesh->m_strKey = strKey;
 
-	if (!pMesh->CreateMesh((MESHCONTAINER*)pOut, iVtxCount, iVtxSize, eVtxUsage, ePrimitive, pVtxData,
+	if (!pMesh->CreateMesh(pOut, iVtxCount, iVtxSize, eVtxUsage, ePrimitive, pVtxData,
 		iIdxCount, iIdxSize, eIdxUsage, eFmt, pIdxData))
 	{
 		SAFE_RELEASE(pMesh);

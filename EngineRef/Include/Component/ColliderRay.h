@@ -15,7 +15,7 @@ private:
 	~CColliderRay();
 
 private:
-	RAY	m_tRay;
+	RAY		m_tRay;
 	AXIS	m_eAxis;
 
 public:

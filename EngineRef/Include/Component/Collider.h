@@ -72,6 +72,7 @@ protected:
 	bool CollisionRectToPoint(const RECTINFO& rc, const Vector2& point);
 	bool CollisionObb2DToObb2D(const OBB2DINFO& tObb1, const OBB2DINFO& tObb2);
 	bool CollisionAABBToAABB(const AABB& src, const AABB& dest);
+	bool CollisionRayToAABB(PRAY tRay, const AABB& dest);
 	bool CollisionRayToSphere(PRAY tRay, const SPHERE& tSphere);
 	bool CollisionSphereToSphere(const SPHERE& tSrc, const SPHERE& tDest);
 };

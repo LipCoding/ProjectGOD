@@ -9,6 +9,7 @@
 #include "../Device.h"
 #include "Camera.h"
 #include "../Scene/Scene.h"
+#include "../Scene/SceneManager.h"
 
 PG_USING
 
@@ -31,15 +32,15 @@ CMouse::~CMouse()
 {
 }
 
-//Vector3 CMouse::GetRayPos() const
-//{
-//	return m_vRayPos;
-//}
-//
-//Vector3 CMouse::GetRayDir() const
-//{
-//	return m_vRayDir;
-//}
+Vector3 CMouse::GetRayPos() const
+{
+	return m_vRayPos;
+}
+
+Vector3 CMouse::GetRayDir() const
+{
+	return m_vRayDir;
+}
 
 void CMouse::SetMouseShow(bool bShowCheck)
 {
@@ -126,52 +127,55 @@ int CMouse::Update(float fTime)
 		}
 	}
 
-	////// 마우스 Ray를 만든다.
-	////// 카메라를 얻어온다.	
-	//CCamera*	pCamera = m_pScene->GetMainCamera();
+	if(m_pScene == nullptr)
+		m_pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
-	//Matrix	matProj = pCamera->GetProjMatrix();
-	//Matrix	matView = pCamera->GetViewMatrix();
+	//// 마우스 Ray를 만든다.
+	//// 카메라를 얻어온다.	
+	CCamera*	pCamera = m_pScene->GetMainCamera();
 
-	//SAFE_RELEASE(pCamera);
+	Matrix	matProj = pCamera->GetProjMatrix();
+	Matrix	matView = pCamera->GetViewMatrix();
 
-	//D3D11_VIEWPORT	tVP = {};
+	SAFE_RELEASE(pCamera);
 
-	//UINT	iVPCount = 1;
-	//CONTEXT->RSGetViewports(&iVPCount, &tVP);
+	D3D11_VIEWPORT	tVP = {};
 
-	//float	fHalfW = tVP.Width * 0.5f;
-	//float	fHalfH = tVP.Height * 0.5f;
+	UINT	iVPCount = 1;
+	CONTEXT->RSGetViewports(&iVPCount, &tVP);
 
-	//Vector3	vRayDir;
+	float	fHalfW = tVP.Width * 0.5f;
+	float	fHalfH = tVP.Height * 0.5f;
 
-	//// 뷰공간에서의 Ray를 구해준다.
-	//vRayDir.x = (vPos.x / fHalfW - 1.f) / matProj.m[0][0];
-	//vRayDir.y = (-(vPos.y / fHalfH) + 1.f) / matProj.m[1][1];
-	//vRayDir.z = 1.f;
+	Vector3	vRayDir;
 
-	//vRayDir = vRayDir.Normalize();
+	// 뷰공간에서의 Ray를 구해준다.
+	vRayDir.x = (vPos.x / fHalfW - 1.f) / matProj.m[0][0];
+	vRayDir.y = (-(vPos.y / fHalfH) + 1.f) / matProj.m[1][1];
+	vRayDir.z = 1.f;
 
-	//// 월드공간으로 변환한다.
-	//// 뷰의 역행렬을 구해준다.
-	//matView	= XMMatrixInverse(&XMMatrixDeterminant(matView.mat),
-	//	matView.mat);
-	//vRayDir = vRayDir.TransformNormal(matView.mat);
+	vRayDir = vRayDir.Normalize();
 
-	//Vector3	vRayPos;
+	// 월드공간으로 변환한다.
+	// 뷰의 역행렬을 구해준다.
+	matView	= XMMatrixInverse(&XMMatrixDeterminant(matView.mat),
+		matView.mat);
+	vRayDir = vRayDir.TransformNormal(matView.mat);
 
-	//vRayPos = vRayPos.TransformCoord(matView.mat);
+	Vector3	vRayPos;
 
-	//// Ray 충돌체를 얻어온다.
-	//CColliderRay*	pRay = FindComponentFromTag<CColliderRay>("MouseRay");
+	vRayPos = vRayPos.TransformCoord(matView.mat);
 
-	//pRay->SetPos(vRayPos);
-	//pRay->SetDir(vRayDir);
+	// Ray 충돌체를 얻어온다.
+	CColliderRay*	pRay = FindComponentFromTag<CColliderRay>("MouseRay");
 
-	//SAFE_RELEASE(pRay);
+	pRay->SetPos(vRayPos);
+	pRay->SetDir(vRayDir);
 
-	//m_vRayPos = vRayPos;
-	//m_vRayDir = vRayDir;
+	SAFE_RELEASE(pRay);
+
+	m_vRayPos = vRayPos;
+	m_vRayDir = vRayDir;
 
 	return 0;
 }

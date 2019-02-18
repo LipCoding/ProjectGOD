@@ -1,5 +1,7 @@
 #pragma once
-#include "Component.h"
+#include "../Resources/Mesh.h"
+#include "../Rendering/Shader.h"
+#include "../Scene/Scene.h"
 
 PG_BEGIN
 
@@ -8,32 +10,27 @@ class PG_DLL DebugTree
 private:
 	friend class CGameObject;
 
-private:
-	struct VertexType
-	{
-		XMFLOAT3 position;
-		XMFLOAT4 color;
-	};
-
 public:
 	DebugTree();
-	DebugTree(const DebugTree&);
+	DebugTree(const DebugTree& debugTree);
 	~DebugTree();
 	
-	bool Initialize();
-	bool MakeMesh(float, float, float);
-	void Shutdown();
-	void Render(ID3D11DeviceContext*);
+	bool Init();
+	void Update(float fTime);
+	void Render(float fTime);
+
+	void SetPosition(float posX, float posZ, float width);
+	void Release();
 
 private:
-	bool InitializeBuffer();
+	Vector3				m_vLength;
+	Vector3				m_vPos;
 
-private:
-	float m_posX = 0.f;
-	float m_posZ = 0.f;
-	float m_radian = 0.f;
-	static int g_iDebugNum;
-	CGameObject* m_pGameObject = nullptr;
+	CScene*				m_pScene = nullptr;
+	CMesh*				m_pMesh = nullptr;
+	CShader*			m_pShader = nullptr;
+	ID3D11InputLayout*  m_pLayout = nullptr;
+	TRANSFORMCBUFFER    m_tTransform;
 };
 
 PG_END

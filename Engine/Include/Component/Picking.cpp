@@ -14,42 +14,8 @@ CPicking::~CPicking()
 {
 }
 
-bool CPicking::Picking_ToBuffer(Vector3 * pOut, const Matrix & worldMatrix, const Vector2 & mousePos, CCamera * pCamera, vector<VERTEXBUMP>& vecVtx, vector<UINT>& vecIndex)
+bool CPicking::Picking_ToBuffer(Vector3 * pOut, Vector3 rayOrigin, Vector3 rayDir, vector<VERTEXBUMP>& vecVtx, vector<UINT>& vecIndex)
 {
-	Matrix matProj, matView, matInvView, matWorld, matInvWorld;
-
-	matProj = pCamera->GetProjMatrix();
-
-	// 뷰포트를 가져온다.
-	D3D11_VIEWPORT tVP{};
-
-	UINT iVPCount = 1;
-	CONTEXT->RSGetViewports(&iVPCount, &tVP);
-
-	float viewX, viewY;
-
-	viewX = (2.f * mousePos.x / tVP.Width - 1.f) / matProj.m[0][0];
-	viewY = (-2.f * mousePos.y / tVP.Height + 1.f) / matProj.m[1][1];
-
-	matView = pCamera->GetViewMatrix();
-	matInvView = XMMatrixInverse(&XMMatrixDeterminant(matView.mat), matView.mat);
-
-	matWorld = worldMatrix;
-	matInvWorld = XMMatrixInverse(&XMMatrixDeterminant(matWorld.mat), matWorld.mat);
-
-	Matrix toLocal = XMMatrixMultiply(matInvView.mat, matInvWorld.mat);
-
-	XMVECTOR rayOrigin, rayDir;
-	Vector3 camPos = pCamera->GetTransform()->GetLocalPos();
-	//rayOrigin = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	rayOrigin = XMVectorSet(camPos.x, camPos.y, camPos.z, 1.f);
-	rayDir = XMVectorSet(viewX, viewY, 1.f, 0.f);
-
-	rayOrigin = XMVector3TransformCoord(rayOrigin, toLocal.mat);
-	rayDir = XMVector3TransformNormal(rayDir, toLocal.mat);
-
-	rayDir = XMVector3Normalize(rayDir);
-
 	// 피킹되는 인덱스를 체크.
 	UINT pickedTriangle = -1;
 	float min = (numeric_limits<float>::max)();
