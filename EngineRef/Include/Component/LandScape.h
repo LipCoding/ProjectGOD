@@ -8,25 +8,24 @@ PG_BEGIN
 
 const int MAX_TRIANGLES = 10000;
 
+typedef struct _tagNodeQuadTree
+{
+	string strNodeName;
+	float fCenterX, fCenterZ, fWidth;
+	int iTriCount;
+	vector<VERTEXBUMP> vecVtx;
+	vector<UINT> vecIndex;
+	CGameObject* pGameObject;
+	DebugTree* pDebugTree;
+	// 안쓸수도 있음
+	MESHCONTAINER* pMeshInfo;
+	//
+	_tagNodeQuadTree* pNodes[4];
+}QUADTREENODE;
+
 class PG_DLL CLandScape :
 	public CComponent
 {
-private:
-	struct NodeType
-	{
-		string strNodeName;
-		float fCenterX, fCenterZ, fWidth;
-		int iTriCount;
-		vector<VERTEXBUMP> vecVtx;
-		vector<UINT> vecIndex;
-		CGameObject* pGameObject;
-		DebugTree* pDebugTree;
-		// 안쓸수도 있음
-		MESHCONTAINER* pMeshInfo;
-		//
-		NodeType* pNodes[4];
-	};
-
 private:
 	friend class CGameObject;
 
@@ -102,26 +101,29 @@ private:
 	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
 
 public:
-	list<CGameObject*>* FindNode();
+	list<QUADTREENODE*>* FindNode();
 
 private:
 	// QuadTree
 	bool CreateQuadTree();
-	void CreateTreeNodeToObject(NodeType* node);
-	void CreateTreeNode(NodeType* node, float positionX, float positionZ,
+	void CreateTreeNodeToObject(QUADTREENODE* node);
+	void CreateTreeNode(QUADTREENODE* node, float positionX, float positionZ,
 		float width);
 
 	void CalculateMeshDimensions(int vtxCount,
 		float& centerX, float& centerZ,
 		float& meshWidth);
+
 	int CountTriangles(float positionX, float positionZ, float width);
+	bool CountTrianglesMax_For_Speed(int& out,  float positionX, float positionZ, float width);
+	bool CountTriangles_For_Speed(float positionX, float positionZ, float width);
 	bool IsTriangleContaind(int index, float positionX, float positionZ, float width);
-	void ReleaseNode(NodeType* node);
-	void RenderDebug(NodeType* node, float fTime);
+	void ReleaseNode(QUADTREENODE* node);
+	void RenderDebug(QUADTREENODE* node, float fTime);
 
 	// Node
 	
-	void NodeCollisionCheck(NodeType* node);
+	void NodeCollisionCheck(QUADTREENODE* node);
 	/*void NodeCheck(float positionX, float positionZ);
 	bool CollideCheck(float nodePosX, float nodePosZ, float width, float positionX, float positionZ);*/
 
@@ -130,10 +132,10 @@ private:
 	int m_iTriCount, m_iDrawCount = 0;
 	int m_iTriStack = 0;
 	int m_iDebugStack = 0;
-	NodeType* m_pParentNode = nullptr;
+	QUADTREENODE* m_pParentNode = nullptr;
 	static int number;
 
-	list<CGameObject*> m_listNodeObject;
+	list<QUADTREENODE*> m_listNode;
 };
 
 PG_END

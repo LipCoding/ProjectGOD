@@ -209,17 +209,23 @@ void CEnvToolView::UpdateInput(const float& fTime)
 		{
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 			CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
-
-			pLandScape->FindNode();
+			
+			list<QUADTREENODE*>* pNodes = pLandScape->FindNode();
 
 			Vector3 pickPos;
 
-			if (pPicking->Picking_ToBuffer(&pickPos, 
-				GET_SINGLE(CInput)->GetRayPos(),
-				GET_SINGLE(CInput)->GetRayDir(), 
-				pLandScape->getVecVtx(), pLandScape->getVecIndex()))
+			if (!pNodes->empty())
 			{
-				//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+				for (const auto iter : *pNodes)
+				{
+					if (pPicking->Picking_ToBuffer(&pickPos,
+						GET_SINGLE(CInput)->GetRayPos(),
+						GET_SINGLE(CInput)->GetRayDir(),
+						iter->vecVtx, iter->vecIndex))
+					{
+						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+					}
+				}
 			}
 
 			SAFE_RELEASE(pPicking);

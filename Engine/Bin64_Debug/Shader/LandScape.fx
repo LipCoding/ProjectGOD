@@ -216,7 +216,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 {
 	PS_OUTPUT	output = (PS_OUTPUT)0;
 
-	float2	vUV = input.vUV * 8.f;
+	float2	vUV = input.vUV * 1.f;
 
 	float4	vColor = g_DifTex.Sample(g_DifSmp, vUV);
 

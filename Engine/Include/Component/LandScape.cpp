@@ -771,7 +771,7 @@ bool CLandScape::CreateQuadTree()
 
 	CalculateMeshDimensions(vertexCount, fCenterX, fCenterZ, fWidth);
 
-	m_pParentNode = new NodeType;
+	m_pParentNode = new QUADTREENODE;
 	if (!m_pParentNode)
 	{
 		return false;
@@ -783,7 +783,7 @@ bool CLandScape::CreateQuadTree()
 	return true;
 }
 
-void CLandScape::CreateTreeNodeToObject(NodeType * node)
+void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 {
 	int count = 0;
 	for (int i = 0; i < 4; i++)
@@ -879,7 +879,6 @@ void CLandScape::CreateTreeNodeToObject(NodeType * node)
 
 		SAFE_RELEASE(pCollider);
 
-
 		//_cprintf("CreateObject : Renderer%d\n", number);
 	}
 }
@@ -921,7 +920,7 @@ void CLandScape::CalculateMeshDimensions(int vtxCount, float & centerX, float & 
 	meshWidth = max(fMaxX, fMaxZ) * 2.f;
 }
 
-void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ, float width)
+void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float positionZ, float width)
 {
 	node->fCenterX = positionX;
 	node->fCenterZ = positionZ;
@@ -940,14 +939,16 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 	node->pNodes[2] = nullptr;
 	node->pNodes[3] = nullptr;
 
-	int iNumTriangles = CountTriangles(positionX, positionZ, width);
+	int iNumTriangles = 0;
+	
+	bool MaxCheck = CountTrianglesMax_For_Speed(iNumTriangles, positionX, positionZ, width);
 
 	if (iNumTriangles == 0)
 	{
 		return;
 	}
 
-	if (iNumTriangles > MAX_TRIANGLES)
+	if (MaxCheck)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -956,11 +957,15 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 			float fOffsetZ = (((i % 4) < 2) ? -1.f : 1.f) * (width / 4.f);
 
 			// 새 노드에 삼각형이 있는지 확인한다.
-			int iCount = CountTriangles((positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
-			if (iCount > 0)
+			//int iCount = CountTriangles((positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
+			//if (iCount > 0)
+			
+			bool bCheck = CountTriangles_For_Speed((positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
+
+			if(bCheck)
 			{
 				// 이 새 노드가 있는 삼각형이 있는 경우 자식 노드로 만든다.
-				node->pNodes[i] = new NodeType;
+				node->pNodes[i] = new QUADTREENODE;
 
 				// 이제 새 자식 노드에서 시작하는 트리를 확장한다.
 				this->CreateTreeNode(node->pNodes[i], (positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
@@ -993,8 +998,8 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 
 	for (int i = 0; i < m_iTriCount; i++)
 	{
-		/*if (iIndex == iVertexCount)
-			break;*/
+		if (iIndex == iVertexCount)
+			break;
 
 		// 삼각형이 이 노드 안에 있으면 꼭지점 배열에 추가한다.
 		if (this->IsTriangleContaind(i, positionX, positionZ, width))
@@ -1018,6 +1023,8 @@ void CLandScape::CreateTreeNode(NodeType* node, float positionX, float positionZ
 			iIndex++;
 		}
 	}
+
+	return;
 }
 
 int CLandScape::CountTriangles(float positionX, float positionZ, float width)
@@ -1034,6 +1041,47 @@ int CLandScape::CountTriangles(float positionX, float positionZ, float width)
 	}
 
 	return count;
+}
+
+bool CLandScape::CountTrianglesMax_For_Speed(int& out, float positionX, float positionZ, float width)
+{
+	int count = 0;
+
+	for (int i = 0; i < m_iTriCount; i++)
+	{
+		if (count > MAX_TRIANGLES)
+		{
+			out = count;
+			return true;
+		}
+		// 삼각형이 이 노드 안에 있으면 1씩 증가시킨다.
+		if (IsTriangleContaind(i, positionX, positionZ, width))
+		{
+			count++;
+		}
+	}
+	
+	out = count;
+	return false;
+}
+
+bool CLandScape::CountTriangles_For_Speed(float positionX, float positionZ, float width)
+{
+	int count = 0;
+
+	for (int i = 0; i < m_iTriCount; i++)
+	{
+		if (count > 0)
+			return true;
+
+		// 삼각형이 이 노드 안에 있으면 1씩 증가시킨다.
+		if (IsTriangleContaind(i, positionX, positionZ, width))
+		{
+			count++;
+		}
+	}
+
+	return false;
 }
 
 bool CLandScape::IsTriangleContaind(int index, float positionX, float positionZ, float width)
@@ -1080,7 +1128,7 @@ bool CLandScape::IsTriangleContaind(int index, float positionX, float positionZ,
 	return true;
 }
 
-void CLandScape::ReleaseNode(NodeType* node)
+void CLandScape::ReleaseNode(QUADTREENODE* node)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -1117,12 +1165,12 @@ void CLandScape::ReleaseNode(NodeType* node)
 	}
 }
 
-void CLandScape::RenderDebug(NodeType* node, float fTime)
+void CLandScape::RenderDebug(QUADTREENODE* node, float fTime)
 {
 	int count = 0;
 	for (int i = 0; i < 4; i++)
 	{
-		if (node->pNodes[i] != 0)
+		if (node->pNodes[i] != nullptr)
 		{
 			count++;
 			RenderDebug(node->pNodes[i], fTime);
@@ -1141,29 +1189,30 @@ void CLandScape::RenderDebug(NodeType* node, float fTime)
 		++m_iDebugStack;
 }
 
-list<CGameObject*>* CLandScape::FindNode()
+list<QUADTREENODE*>* CLandScape::FindNode()
 {
 	// TODO: 여기에 반환 구문을 삽입합니다.
-	Safe_Release_VecList(m_listNodeObject);
+	m_listNode.clear();
 
 	NodeCollisionCheck(m_pParentNode);
 
-	return &m_listNodeObject;
+	return &m_listNode;
 }
 
-void CLandScape::NodeCollisionCheck(NodeType * node)
+void CLandScape::NodeCollisionCheck(QUADTREENODE * node)
 {
 	int count = 0;
 	for (int i = 0; i < 4; i++)
 	{
-		if (node->pNodes[i] != 0)
+		if (node->pNodes[i] != nullptr)
 		{
 			count++;
-			NodeCollisionCheck(node->pNodes[i]);
+			NodeCollisionCheck(node->pNodes[i]);	
 		}
 	}
 
-	if (count != 0)
+	if (count != 0 ||
+		node->pGameObject->GetCulling() == false)
 	{
 		return;
 	}
@@ -1175,8 +1224,8 @@ void CLandScape::NodeCollisionCheck(NodeType * node)
 
 	if (pRay->Collision(pAABB))
 	{
-		m_listNodeObject.push_back(node->pGameObject);
-		_cprintf("Collide!\n");
+		m_listNode.push_back(node);
+		//_cprintf("Collide!\n");
 	}
 
 	SAFE_RELEASE(pRay);
