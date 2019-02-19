@@ -647,26 +647,11 @@ int CLandScape::Update(float fTime)
 
 int CLandScape::LateUpdate(float fTime)
 {
-	CRenderer*	pRenderer = FindComponentFromType<CRenderer>(CT_RENDERER);
-
-	if (pRenderer)
-	{
-		LANDSCAPECBUFFER	tBuffer = {};
-		tBuffer.iDetailLevel = m_iDetailLevel;
-		tBuffer.iSplatCount = m_iSplatCount;
-		pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
-			SCT_PIXEL, &tBuffer);
-		SAFE_RELEASE(pRenderer);
-	}
+	UpdateNode(m_pParentNode);
 
 	if (m_bVisualCheck)
-	{
-		m_iDebugStack = 0;
-
 		RenderDebug(m_pParentNode, fTime);
-
-		//_cprintf("Rendering Now : %d\n", m_iDebugStack);
-	}
+	
 
 	return 0;
 }
@@ -800,7 +785,7 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 		return;
 	}
 
-	//if (node->strNodeName == "Node2")
+	//if (node->strNodeName == "Node3")
 	{
 		node->pGameObject = CGameObject::CreateObject(node->strNodeName, m_pLayer);
 
@@ -872,12 +857,18 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 		node->pDebugTree->Init();
 		node->pDebugTree->SetPosition(node->fCenterX, node->fCenterZ, node->fWidth);
 
-		// Collider
 		CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
-		pCollider->SetAABB(Vector3{ (node->fCenterX - node->fWidth / 2.f), 0.f, (node->fCenterZ - node->fWidth / 2.f) },
-			Vector3{ (node->fCenterX + node->fWidth / 2.f), 0.f, (node->fCenterZ + node->fWidth / 2.f) });
+		pCollider->SetAABB(node->fMin,
+			node->fMax);
 
 		SAFE_RELEASE(pCollider);
+
+		//// Collider
+		//CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
+		//pCollider->SetAABB(Vector3{ (node->fCenterX - node->fWidth / 2.f), 0.f, (node->fCenterZ - node->fWidth / 2.f) },
+		//	Vector3{ (node->fCenterX + node->fWidth / 2.f), 0.f, (node->fCenterZ + node->fWidth / 2.f) });
+
+		//SAFE_RELEASE(pCollider);
 
 		//_cprintf("CreateObject : Renderer%d\n", number);
 	}
@@ -925,6 +916,9 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 	node->fCenterX = positionX;
 	node->fCenterZ = positionZ;
 	node->fWidth = width;
+
+	node->fMin = Vector3(0.f, 0.f, 0.f);
+	node->fMax = Vector3(0.f, 0.f, 0.f);
 
 	node->iTriCount = 0;
 
@@ -979,14 +973,17 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 
 	string appendName = itoa(number, str, 10);
 	nodeName = nodeName + appendName;
-	number++;
-
+	
 	node->strNodeName = nodeName;
 	_cprintf("Node%d\n", number);
+
+	number++;
 
 	node->iTriCount = iNumTriangles;
 	_cprintf("TriCount : %d\n", node->iTriCount);
 	m_iTriStack += node->iTriCount;
+
+	_cprintf("CenterX : %f, CenterZ : %f, width : %f\n", node->fCenterX, node->fCenterZ, node->fWidth);
 
 	int iVertexCount = iNumTriangles * 3;
 
@@ -995,17 +992,22 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 
 	int iIndex = 0;
 	int iVertexIndex = 0;
+	bool bFirstCheck = false;
 
 	for (int i = 0; i < m_iTriCount; i++)
 	{
-		if (iIndex == iVertexCount)
-			break;
-
 		// 삼각형이 이 노드 안에 있으면 꼭지점 배열에 추가한다.
 		if (this->IsTriangleContaind(i, positionX, positionZ, width))
 		{
 			// 지형 버텍스 목록에 인덱스를 계산한다.
 			iVertexIndex = i * 3;
+
+			if (!bFirstCheck)
+			{
+				node->fMin = m_vecVtx[iVertexIndex + 2].vPos;
+				//_cprintf("Min --> X : %f, Z : %f\n", node->fMin.x, node->fMin.z);
+				bFirstCheck = true;
+			}
 
 			// 정점 목록에서 이 삼각형의 세 꼭지점을 가져온다.
 			node->vecVtx[iIndex] = m_vecVtx[iVertexIndex];
@@ -1023,6 +1025,9 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 			iIndex++;
 		}
 	}
+
+	node->fMax = m_vecVtx[iVertexIndex - 1].vPos;
+	//_cprintf("MAX --> X : %f, Z : %f\n", node->fMax.x, node->fMax.z);
 
 	return;
 }
@@ -1128,6 +1133,114 @@ bool CLandScape::IsTriangleContaind(int index, float positionX, float positionZ,
 	return true;
 }
 
+
+
+list<QUADTREENODE*>* CLandScape::FindNode_ByMouse()
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	m_listNode.clear();
+
+	NodeRayCollisionCheck(m_pParentNode);
+
+	return &m_listNode;
+}
+
+void CLandScape::RenderDebug(QUADTREENODE* node, float fTime)
+{
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != nullptr)
+		{
+			count++;
+			RenderDebug(node->pNodes[i], fTime);
+		}
+	}
+
+	if (count != 0)
+	{
+		return;
+	}
+
+	node->pDebugTree->Update(fTime);
+	node->pDebugTree->Render(fTime);
+
+	if (node->pGameObject->GetCulling() == false)
+		++m_iDebugStack;
+}
+
+void CLandScape::UpdateNode(QUADTREENODE * node)
+{
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != nullptr)
+		{
+			count++;
+			UpdateNode(node->pNodes[i]);
+		}
+	}
+
+	if (count != 0 ||
+		node->pGameObject->GetCulling() == true)
+	{
+		return;
+	}
+
+	CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+	if (pRenderer)
+	{
+		LANDSCAPECBUFFER	tBuffer = {};
+		tBuffer.iDetailLevel = m_iDetailLevel;
+		tBuffer.iSplatCount = m_iSplatCount;
+		tBuffer.fRangeBrush = 10.f;
+		tBuffer.vPosBrush = Vector3(0.f, 0.f, 0.f);
+		tBuffer.vColorBrush = Vector4(0.f, 0.f, 1.f, 1.f);
+		
+		pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
+			SCT_PIXEL, &tBuffer);
+		SAFE_RELEASE(pRenderer);
+	}
+}
+
+void CLandScape::NodeRayCollisionCheck(QUADTREENODE * node)
+{
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != nullptr)
+		{
+			count++;
+			NodeRayCollisionCheck(node->pNodes[i]);	
+		}
+	}
+
+	if (count != 0 ||
+		node->pGameObject->GetCulling() == true)
+	{
+		return;
+	}
+
+	CGameObject* pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	CMouse* pMouse = pMouseObj->FindComponentFromTag<CMouse>("Mouse");
+	CColliderRay* pRay = pMouse->FindComponentFromTag<CColliderRay>("MouseRay");
+	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+
+	if (pRay->Collision(pAABB))
+	{
+		m_listNode.push_back(node);
+		//_cprintf("Collide!\n");
+	}
+
+	SAFE_RELEASE(pRay);
+	SAFE_RELEASE(pAABB);
+	SAFE_RELEASE(pMouse);
+	SAFE_RELEASE(pMouseObj);
+
+	return;
+}
+
 void CLandScape::ReleaseNode(QUADTREENODE* node)
 {
 	for (int i = 0; i < 4; i++)
@@ -1163,75 +1276,4 @@ void CLandScape::ReleaseNode(QUADTREENODE* node)
 			node->pNodes[i] = nullptr;
 		}
 	}
-}
-
-void CLandScape::RenderDebug(QUADTREENODE* node, float fTime)
-{
-	int count = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (node->pNodes[i] != nullptr)
-		{
-			count++;
-			RenderDebug(node->pNodes[i], fTime);
-		}
-	}
-
-	if (count != 0)
-	{
-		return;
-	}
-
-	node->pDebugTree->Update(fTime);
-	node->pDebugTree->Render(fTime);
-
-	if(node->pGameObject->GetCulling() == false)
-		++m_iDebugStack;
-}
-
-list<QUADTREENODE*>* CLandScape::FindNode()
-{
-	// TODO: 여기에 반환 구문을 삽입합니다.
-	m_listNode.clear();
-
-	NodeCollisionCheck(m_pParentNode);
-
-	return &m_listNode;
-}
-
-void CLandScape::NodeCollisionCheck(QUADTREENODE * node)
-{
-	int count = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (node->pNodes[i] != nullptr)
-		{
-			count++;
-			NodeCollisionCheck(node->pNodes[i]);	
-		}
-	}
-
-	if (count != 0 ||
-		node->pGameObject->GetCulling() == false)
-	{
-		return;
-	}
-
-	CGameObject* pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	CMouse* pMouse = pMouseObj->FindComponentFromTag<CMouse>("Mouse");
-	CColliderRay* pRay = pMouse->FindComponentFromTag<CColliderRay>("MouseRay");
-	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-
-	if (pRay->Collision(pAABB))
-	{
-		m_listNode.push_back(node);
-		//_cprintf("Collide!\n");
-	}
-
-	SAFE_RELEASE(pRay);
-	SAFE_RELEASE(pAABB);
-	SAFE_RELEASE(pMouse);
-	SAFE_RELEASE(pMouseObj);
-
-	return;
 }

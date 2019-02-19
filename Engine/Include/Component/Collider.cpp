@@ -413,27 +413,31 @@ bool CCollider::CollisionAABBToAABB(const AABB & src, const AABB & dest)
 
 bool CCollider::CollisionRayToAABB(PRAY tRay, const AABB & dest)
 {
-	// vectors to hold the T - values for everty direction
+	//
 	Vector3 t1, t2;
-	// maximums defined in float.h
-	double t_near = -DBL_MAX;
-	double t_far = DBL_MAX;
+	
+	// 충돌 조건을 위해 필요한 원소이다.
+	// t_min은 광선이 최초로 slab 평면과의 교차하는 위치이다.
+	double t_min = -DBL_MAX;
+	// t_max는 다음 slab 평면과의 교차점 위치이다.
+	double t_max = DBL_MAX;
 
-	// we test slabs in every direction
+	// 축마다 순회돈다.
 	for (int i = 0; i < 3; i++)
 	{
-		// ray parallel to planes in this direction
+		// 축에 평행하는 경우
 		if (tRay->vDir[i] == 0.f)
 		{
 			if ((tRay->vPos[i] < dest.vMin[i]) || (tRay->vPos[i] > dest.vMax[i]))
 			{
-				// parallel And outside box : no intersection possible
+				// Ray의 위치가 AABB 박스 안에 없는경우 충돌하지 않음
 				return false;
 			}
 		}
-		// ray not parallel to planes in this direction
+		// 축에 평행하지 않는 경우
 		else
 		{
+			// 
 			t1[i] = (dest.vMin[i] - tRay->vPos[i]) / tRay->vDir[i];
 			t2[i] = (dest.vMax[i] - tRay->vPos[i]) / tRay->vDir[i];
 
@@ -442,21 +446,21 @@ bool CCollider::CollisionRayToAABB(PRAY tRay, const AABB & dest)
 			{
 				swap(t1, t2);
 			}
-			if (t1[i] > t_near)
+			if (t1[i] > t_min)
 			{
-				t_near = t1[i];
+				t_min = t1[i];
 			}
-			if (t2[i] < t_far)
+			if (t2[i] < t_max)
 			{
-				t_far = t2[i];
+				t_max = t2[i];
 			}
-			if ((t_near > t_far) || (t_far < 0))
+			if ((t_min > t_max) || (t_max < 0))
 			{
 				return false;
 			}
 		}
 	}
-	//tnear = t_near; tfar = t_far;
+	//tnear = t_min; tfar = t_max;
 	return true;
 }
 

@@ -128,6 +128,7 @@ struct VS_OUTPUT_BUMP
 	int		iDecal : DECAL;
 	float4  vPosLight : POSITION2;
 	float4  vLightVec : POSITION3;
+	float3  vOriginPos : POSITION4;
 };
 
 struct PS_OUTPUT

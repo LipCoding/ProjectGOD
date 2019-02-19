@@ -11,7 +11,11 @@ cbuffer LandScapeCBuffer	: register(b12)
 {
 	int		g_iDetailLevel;
 	int		g_iSplatCount;
-	float2	g_vLandScapeEmpty;
+	float   g_fRangeBrush;
+	float   g_fEmpty1;
+	float3  g_vPosBrush;
+	float   g_fEmpty2;
+	float4  g_vColorBrush;
 }
 
 Texture2DArray	g_SplatDif	: register(t11);
@@ -40,6 +44,7 @@ VS_OUTPUT_BUMP LandScapeVS(VS_INPUT_BUMP input)
 	output.vPosLight = mul(output.vPosLight, g_matLightView);
 	output.vPosLight = mul(output.vPosLight, g_matLightProj);
 
+	output.vOriginPos = input.vPos;
 
 	return output;
 }
@@ -216,7 +221,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 {
 	PS_OUTPUT	output = (PS_OUTPUT)0;
 
-	float2	vUV = input.vUV * 1.f;
+	float2	vUV = input.vUV * g_iDetailLevel;
 
 	float4	vColor = g_DifTex.Sample(g_DifSmp, vUV);
 
@@ -340,7 +345,18 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz;
 	output.vColor.w = vColor.w;*/
 
-	//output.vColor *= float4(0.f, 1.f, 0.f, 1.f);
+	// Brush
+	float3	vPos = g_vPosBrush;
+	vPos.y = 0.f;
+	vPos = mul(float4(vPos, 1.f), g_matWorld).xyz;
+	
+	float3 vPos_other = input.vOriginPos;
+	vPos_other.y = 0.f;
+	vPos_other = mul(float4(vPos_other, 1.f), g_matWorld).xyz;
+
+	if (length(abs(vPos_other - vPos)) < g_fRangeBrush)
+		output.vColor *= g_vColorBrush;
+
 
 	return output;
 }
@@ -377,8 +393,6 @@ VS_OUTPUT_BUMP ShadowMapVS(VS_INPUT_BUMP input)
 	//output.vPos = mul(output.vPos, g_matLightView);
 	//output.vPos = mul(output.vPos, g_matLightProj);
 	//output.vDepthPosition = output.vPos;
-
-
 
 	//return output;
 }

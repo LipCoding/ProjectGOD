@@ -210,7 +210,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 			CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
 			
-			list<QUADTREENODE*>* pNodes = pLandScape->FindNode();
+			list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByMouse();
 
 			Vector3 pickPos;
 
@@ -226,6 +226,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
 					}
 				}
+				_cprintf("%d\n", pNodes->size());
 			}
 
 			SAFE_RELEASE(pPicking);

@@ -61,24 +61,34 @@ bool CPicking::IntersectTri(Vector3 rayOrigin, Vector3 rayDir, Vector3 v0, Vecto
 
 	e1 = v1 - v0;
 	e2 = v2 - v0;
+
 	h = rayDir.Cross(e2);
 	a = e1.Dot(h);
+
+	// 구하는 공식
+	// t = e2 * (m X e1) / e1 * (u X e2)
+	// u = m * (u X e2) / e1 * (u X e2)
+	// v = u * (m X e1) / e1 * (u X e2)
+
 
 	if (a > -0.00001 && a < 0.00001) return false;
 
 	f = 1 / a;
 	s = rayOrigin - v0;
 
+	// u
 	u = f * s.Dot(h);
 
 	if (u < 0.f || u > 1.f) return false;
 
 	q = s.Cross(e1);
-
+	
+	// v
 	v = f * rayDir.Dot(q);
 
 	if (v < 0.f || u + v > 1.f) return false;
 
+	// t
 	dist = f * e2.Dot(q);
 
 	if (dist > 0.00001)

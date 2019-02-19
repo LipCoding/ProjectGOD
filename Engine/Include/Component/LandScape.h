@@ -12,6 +12,7 @@ typedef struct _tagNodeQuadTree
 {
 	string strNodeName;
 	float fCenterX, fCenterZ, fWidth;
+	Vector3 fMin, fMax;
 	int iTriCount;
 	vector<VERTEXBUMP> vecVtx;
 	vector<UINT> vecIndex;
@@ -49,7 +50,6 @@ private:
 public:
 	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
-	//const POINT& GetSize() { return POINT{ m_iNumX, m_iNumZ }; }
 
 public:
 	void SetDetailLevel(int iDetailLevel);
@@ -101,7 +101,7 @@ private:
 	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
 
 public:
-	list<QUADTREENODE*>* FindNode();
+	list<QUADTREENODE*>* FindNode_ByMouse();
 
 private:
 	// QuadTree
@@ -109,23 +109,19 @@ private:
 	void CreateTreeNodeToObject(QUADTREENODE* node);
 	void CreateTreeNode(QUADTREENODE* node, float positionX, float positionZ,
 		float width);
-
 	void CalculateMeshDimensions(int vtxCount,
 		float& centerX, float& centerZ,
 		float& meshWidth);
-
 	int CountTriangles(float positionX, float positionZ, float width);
 	bool CountTrianglesMax_For_Speed(int& out,  float positionX, float positionZ, float width);
 	bool CountTriangles_For_Speed(float positionX, float positionZ, float width);
 	bool IsTriangleContaind(int index, float positionX, float positionZ, float width);
-	void ReleaseNode(QUADTREENODE* node);
-	void RenderDebug(QUADTREENODE* node, float fTime);
-
-	// Node
 	
-	void NodeCollisionCheck(QUADTREENODE* node);
-	/*void NodeCheck(float positionX, float positionZ);
-	bool CollideCheck(float nodePosX, float nodePosZ, float width, float positionX, float positionZ);*/
+	// Node Circulation
+	void UpdateNode(QUADTREENODE* node);
+	void RenderDebug(QUADTREENODE* node, float fTime);
+	void NodeRayCollisionCheck(QUADTREENODE* node);
+	void ReleaseNode(QUADTREENODE* node);
 
 private:
 	bool m_bVisualCheck = false;
