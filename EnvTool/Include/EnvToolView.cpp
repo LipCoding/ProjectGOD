@@ -24,11 +24,13 @@
 #include "Core/TimerManager.h"
 #include "Component/LandScape.h"
 #include "Component/Picking.h"
+#include "Component/ColliderSphere.h"
 #include "MainFrm.h"
 #include "Scene/Scene.h"
 #include "Component/Camera.h"
+#include "EditForm.h"
 
-//#include "EditForm.h"
+#include "BrushTool.h"
 //#include "TarrainEdit.h"
 
 #ifdef _DEBUG
@@ -55,17 +57,17 @@ END_MESSAGE_MAP()
 
 CEnvToolView::CEnvToolView() noexcept :
 	  m_pCamera(nullptr)
-	, m_pMouseRayTexture(nullptr)
+	, m_pBrushObj(nullptr)
 	, m_pCamTr(nullptr)
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
-
+	m_vPickPos = Vector3{ 0.f, 0.f, 0.f };
 }
 
 CEnvToolView::~CEnvToolView()
 {
 	SAFE_RELEASE(m_pCamera);
-	SAFE_RELEASE(m_pMouseRayTexture);
+	SAFE_RELEASE(m_pBrushObj)
 	SAFE_RELEASE(m_pCamTr);
 	SAFE_RELEASE(m_pTimer);
 	DESTROY_SINGLE(CCore);
@@ -153,7 +155,30 @@ void CEnvToolView::OnInitialUpdate()
 
 	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
 
+	// Camera
 	this->SetMainCamera();
+
+	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer* pLayer = pScene->GetLayer("Default");
+
+	// Brush
+	m_pBrushObj = CGameObject::CreateObject("Brush", pLayer);
+	CBrushTool* pBrushTool = m_pBrushObj->AddComponent<CBrushTool>("BrushTool");
+	CColliderSphere* pSphere = m_pBrushObj->AddComponent<CColliderSphere>("Collider");
+
+	m_vPickPos = Vector3{ 0.f, 0.f, 0.f };
+
+	pSphere->SetSphere(m_vPickPos, pBrushTool->GetBrushRange());
+
+	CTransform*	pTr = m_pBrushObj->GetTransform();
+	pTr->SetWorldPos(0.f, 0.f, 0.f);
+	pTr->SetWorldScale(1.f, 1.f, 1.f);
+	pTr->SetWorldRot(0.f, 0.f, 0.f);
+	SAFE_RELEASE(pTr);
+
+	SAFE_RELEASE(pSphere);
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 }
 
 
@@ -180,6 +205,16 @@ void CEnvToolView::UpdateView()
 
 void CEnvToolView::UpdateInput(const float& fTime)
 {
+	TOOLTAB_TYPE type = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTabType();
+
+	/*POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+	POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();*/
+
+	//if (ptMouseMove.x != 0 || ptMouseMove.y != 0)
+	{
+		PickingProcess(type);
+	}
+
 	if (KEYPUSH("MoveFront"))
 	{
 		m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
@@ -203,38 +238,61 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	
 	if (KEYPUSH("MouseLButton"))
 	{
-		// 랜드스케이프 정보를 가져온다.
+		switch (type)
+		{
+		case TAB_TERRAIN:
+		case TAB_OBJECT:
+		default:
+			break;
+		}
+	}
+	
+	if (KEYPUSH("MouseRButton"))
+	{
 		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 		if (pLandScapeObj != NULL)
 		{
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-			CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
-			
-			list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByMouse();
-
-			Vector3 pickPos;
-
-			if (!pNodes->empty())
+			switch (type)
 			{
-				for (const auto iter : *pNodes)
+			case TAB_TERRAIN:
+			{
+				CColliderSphere* pSphere = m_pBrushObj->FindComponentFromTag<CColliderSphere>("Collider");
+				CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+				pSphere->SetSphere(m_vPickPos, pBrushTool->GetBrushRange());
+				list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByRadius(m_pBrushObj);
+				if (!pNodes->empty())
 				{
-					if (pPicking->Picking_ToBuffer(&pickPos,
-						GET_SINGLE(CInput)->GetRayPos(),
-						GET_SINGLE(CInput)->GetRayDir(),
-						iter->vecVtx, iter->vecIndex))
+					for (auto& iter : *pNodes)
 					{
-						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+						D3D11_MAPPED_SUBRESOURCE	tMap = {};
+						
+						pBrushTool->MoveHeight(&iter->vecVtx, m_vPickPos, fTime);
+
+						CONTEXT->Map(iter->MeshInfo.tVB.pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &tMap);
+						void* dataPtr;
+						dataPtr = (void*)tMap.pData;
+						memcpy(dataPtr, &iter->vecVtx[0], iter->vecVtx.size() * sizeof(VERTEXBUMP));
+						CONTEXT->Unmap(iter->MeshInfo.tVB.pBuffer, 0);
 					}
 				}
-				_cprintf("%d\n", pNodes->size());
+				SAFE_RELEASE(pSphere);
+				SAFE_RELEASE(pBrushTool);
+				break;
+			}
+			case TAB_OBJECT:
+			{
+				break;
+			}
+			default:
+				break;
 			}
 
-			SAFE_RELEASE(pPicking);
 			SAFE_RELEASE(pLandScape);
 			SAFE_RELEASE(pLandScapeObj);
 		}
 	}
-	
+
 	if (KEYPUSH("MouseMButton"))
 	{
 		POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
@@ -276,24 +334,57 @@ void CEnvToolView::SetLightCamera()
 	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
 }
 
-void CEnvToolView::AddMouseRayTexture()
+void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 {
-	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer* pLayer = pScene->GetLayer("Default");
-	
-	m_pMouseRayTexture = CGameObject::CreateObject("MouseRayTexture", pLayer);
-	CRenderer* pMouseRayTextureRenderer = m_pMouseRayTexture->AddComponent<CRenderer>("MouseRayTexRenderer");
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (pLandScapeObj != NULL)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
 
-	SAFE_RELEASE(pMouseRayTextureRenderer);
-	SAFE_RELEASE(pLayer);
-	SAFE_RELEASE(pScene);
+		list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByMouse();
+
+		if (!pNodes->empty())
+		{
+			for (const auto iter : *pNodes)
+			{
+				if (pPicking->Picking_ToBuffer(&m_vPickPos,
+					GET_SINGLE(CInput)->GetRayPos(),
+					GET_SINGLE(CInput)->GetRayDir(),
+					iter->vecVtx, iter->vecIndex))
+				{
+					switch (type)
+					{
+					case TAB_TERRAIN:
+					{
+						CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+						pBrushTool->SetBrushInformation(m_vPickPos);
+						SAFE_RELEASE(pBrushTool);
+						break;
+					}
+					case TAB_OBJECT:
+					{
+						break;
+					}
+					default:
+						break;
+					}
+				}
+			}
+			//_cprintf("%d\n", pNodes->size());
+		}
+
+		SAFE_RELEASE(pPicking);
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
 }
 
 void CEnvToolView::SetTileColor(float x, float y)
 {
 
 }
-
 
 int CEnvToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {

@@ -33,7 +33,6 @@
     <ClCompile Include="Component\ColliderRect.cpp" />
     <ClCompile Include="Component\ColliderSphere.cpp" />
     <ClCompile Include="Component\Component.cpp" />
-    <ClCompile Include="Component\DebugTree.cpp" />
     <ClCompile Include="Component\Decal.cpp" />
     <ClCompile Include="Component\Frustum.cpp" />
     <ClCompile Include="Component\LandScape.cpp" />
@@ -47,12 +46,6 @@
     <ClCompile Include="Component\Navigation3D.cpp" />
     <ClCompile Include="Component\ParticleSingle.cpp" />
     <ClCompile Include="Component\Picking.cpp" />
-    <ClCompile Include="Component\QuadTree.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Component\Renderer.cpp" />
     <ClCompile Include="Component\Renderer2D.cpp" />
     <ClCompile Include="Component\Script.cpp" />
@@ -113,7 +106,6 @@
     <ClInclude Include="Component\ColliderRect.h" />
     <ClInclude Include="Component\ColliderSphere.h" />
     <ClInclude Include="Component\Component.h" />
-    <ClInclude Include="Component\DebugTree.h" />
     <ClInclude Include="Component\Decal.h" />
     <ClInclude Include="Component\Frustum.h" />
     <ClInclude Include="Component\LandScape.h" />
@@ -127,12 +119,6 @@
     <ClInclude Include="Component\Navigation3D.h" />
     <ClInclude Include="Component\ParticleSingle.h" />
     <ClInclude Include="Component\Picking.h" />
-    <ClInclude Include="Component\QuadTree.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Component\Renderer.h" />
     <ClInclude Include="Component\Renderer2D.h" />
     <ClInclude Include="Component\Script.h" />

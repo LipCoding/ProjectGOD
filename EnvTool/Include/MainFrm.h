@@ -33,9 +33,13 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 	CToolBar          m_wndToolBar;
 	CStatusBar        m_wndStatusBar;
 	CSplitterWnd	  m_SplitWnd;
-	class CEnvToolView*		m_pView;
+	class CEnvToolView*			m_pView;
 	class CEditForm*			m_pEdit;
 public:
+	class CEditForm* GetEdit() const
+	{
+		return m_pEdit;
+	}
 	class CEnvToolView* GetView() const
 	{
 		return m_pView;

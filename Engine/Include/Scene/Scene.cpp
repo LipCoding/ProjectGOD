@@ -287,7 +287,7 @@ bool CScene::Init()
 
 	// 라이트 카메라
 	m_pLightCameraObj = CreateCamera("LightCamera",
-		Vector3(0.f, 15.f, 0.f), XMConvertToRadians(60.f),
+		Vector3(-10.f, 100.f, -10.f), XMConvertToRadians(90.f),
 		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();

@@ -61,7 +61,7 @@
       <Filter>Tab\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="BrushTool.h">
-      <Filter>99.Default\헤더 파일</Filter>
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +90,7 @@
       <Filter>Tab\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="BrushTool.cpp">
-      <Filter>99.Default\소스 파일</Filter>
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

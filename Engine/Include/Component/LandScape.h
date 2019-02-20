@@ -1,7 +1,6 @@
 #pragma once
 #include "Component.h"
 #include "../Resources/Mesh.h"
-#include "../Component/DebugTree.h"
 #include "../Component/ColliderAABB.h"
 
 PG_BEGIN
@@ -11,16 +10,13 @@ const int MAX_TRIANGLES = 10000;
 typedef struct _tagNodeQuadTree
 {
 	string strNodeName;
+	int iTriCount;
 	float fCenterX, fCenterZ, fWidth;
 	Vector3 fMin, fMax;
-	int iTriCount;
 	vector<VERTEXBUMP> vecVtx;
 	vector<UINT> vecIndex;
 	CGameObject* pGameObject;
-	DebugTree* pDebugTree;
-	// 안쓸수도 있음
-	MESHCONTAINER* pMeshInfo;
-	//
+	MESHCONTAINER MeshInfo;
 	_tagNodeQuadTree* pNodes[4];
 }QUADTREENODE;
 
@@ -47,12 +43,22 @@ private:
 	int		m_iDetailLevel;
 	int		m_iSplatCount;
 
+	// Brush
+	bool m_bCheckBrush = false;
+	Vector3 m_vPosBrush;
+	Vector4 m_vColorBrush;
+	float   m_fRangeBrush = 1.f;
+
 public:
 	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
 
 public:
 	void SetDetailLevel(int iDetailLevel);
+	void SetBrushCheck(bool check);
+	void SetBrushInformation(float range) { m_fRangeBrush = range; }
+	void SetBrushInformation(Vector4 color) { m_vColorBrush = color; }
+	void SetBrushInformation(Vector3 pos) { m_vPosBrush = pos; }
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, 
 		const string& strTexKey, const wchar_t* pFileName, 
 		const wchar_t* pNormalName, const wchar_t* pSpecularName,
@@ -102,7 +108,7 @@ private:
 
 public:
 	list<QUADTREENODE*>* FindNode_ByMouse();
-
+	list<QUADTREENODE*>* FindNode_ByRadius(CGameObject* src);
 private:
 	// QuadTree
 	bool CreateQuadTree();
@@ -119,19 +125,22 @@ private:
 	
 	// Node Circulation
 	void UpdateNode(QUADTREENODE* node);
-	void RenderDebug(QUADTREENODE* node, float fTime);
 	void NodeRayCollisionCheck(QUADTREENODE* node);
+	void NodeRadiusCollisionCheck(QUADTREENODE* node, CGameObject* src);
 	void ReleaseNode(QUADTREENODE* node);
 
 private:
+	// Node
 	bool m_bVisualCheck = false;
 	int m_iTriCount, m_iDrawCount = 0;
 	int m_iTriStack = 0;
 	int m_iDebugStack = 0;
 	QUADTREENODE* m_pParentNode = nullptr;
 	static int number;
-
 	list<QUADTREENODE*> m_listNode;
+
+	// 
+
 };
 
 PG_END

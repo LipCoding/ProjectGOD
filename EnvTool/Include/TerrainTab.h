@@ -28,4 +28,12 @@ private:
 
 public:
 	afx_msg void OnBnClickedButtonAdjSize();
+	afx_msg void OnBnClickedCheckBrush();
+	virtual BOOL OnInitDialog();
+//	afx_msg void OnNMReleasedcaptureSliderRange(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	
+	CButton m_checkBoxHeightCheck;
+	CSliderCtrl m_ctrSliderBrushRange;
+	CEdit m_editBrushRange;
 };

@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "afxwin.h"
 
-
-
 // EditForm 보기
 
 class CEditForm : public CFormView
@@ -24,18 +22,22 @@ public:
 #endif
 #endif
 
-public:
-	
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+
+public:
+	TOOLTAB_TYPE GetTabType() { return m_eTabType; }
+
 private:
 	CTabCtrl m_Tab;
 	class CTerrainTab	*m_pTerrainDlg = nullptr;
 	class CObjTab		*m_pObjDlg = nullptr;
 	class CEnvToolView  *m_pView = nullptr;
+
+	TOOLTAB_TYPE m_eTabType = TAB_END;
 public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);

@@ -179,10 +179,20 @@ bool CCollisionManager::AddCollider(CGameObject * pObj)
 
 		CRenderer*	pRenderer = pObj->FindComponentFromType<CRenderer>(CT_RENDERER);
 
-		CMesh*	pMesh = pRenderer->GetMesh();
+		CMesh*	pMesh = nullptr;
 
-		Vector3	vCenter = pMesh->GetCenter();
-		Vector3	vLength = pMesh->GetLength();
+		Vector3	vCenter = Vector3{ 0.f, 0.f, 0.f };
+		Vector3	vLength = Vector3{ 1.f, 1.f, 1.f };
+
+		if (pRenderer)
+		{
+			pMesh = pRenderer->GetMesh();
+
+			vCenter = pMesh->GetCenter();
+			vLength = pMesh->GetLength();
+
+			SAFE_RELEASE(pMesh);
+		}
 
 		CTransform*	pTransform = pObj->GetTransform();
 
@@ -200,7 +210,7 @@ bool CCollisionManager::AddCollider(CGameObject * pObj)
 
 		SAFE_RELEASE(pTransform);
 
-		SAFE_RELEASE(pMesh);
+		
 
 		if (!pCamera->FrustumInSphere(vCenter, fRadius))
 			pObj->SetCulling(true);

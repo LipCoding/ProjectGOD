@@ -75,6 +75,7 @@ protected:
 	bool CollisionRayToAABB(PRAY tRay, const AABB& dest);
 	bool CollisionRayToSphere(PRAY tRay, const SPHERE& tSphere);
 	bool CollisionSphereToSphere(const SPHERE& tSrc, const SPHERE& tDest);
+	bool CollisionSphereToAABB(const AABB& tDest, const SPHERE & tSrc);
 };
 
 PG_END

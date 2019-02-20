@@ -31,18 +31,21 @@
 #define IDC_EDIT1                       1014
 #define IDC_EDIT_CAMSPEED               1014
 #define IDC_EDIT2                       1015
+#define IDC_EDIT_BRUSH_RANGE            1015
 #define IDC_BUTTON_ADJ_CAMSPEED         1016
 #define IDC_RADIO1                      1017
 #define IDC_RADIO2                      1018
 #define IDC_RADIO3                      1019
 #define IDC_SLIDER1                     1020
 #define IDC_SLIDER2                     1021
+#define IDC_SLIDER_RANGE                1021
 #define IDC_SLIDER3                     1022
 #define IDC_RADIO4                      1023
 #define IDC_RADIO5                      1024
 #define IDC_BUTTON1                     1025
 #define IDC_BUTTON2                     1026
 #define IDC_CHECK1                      1027
+#define IDC_CHECK_HEIGHT                1028
 
 // Next default values for new objects
 // 

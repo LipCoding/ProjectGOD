@@ -55,8 +55,6 @@ public:
 
 // 사용자 함수
 public:
-	void AddMouseRayTexture();
-
 	void UpdateView();
 	void UpdateInput(const float& fTime);
 	void UpdateObject(const float& fTime);
@@ -64,14 +62,20 @@ public:
 	void SetLightCamera();
 
 private:
+	//tab control
+	//void UpdateTerrainTab
+	void PickingProcess(TOOLTAB_TYPE type);
+private:
 	void SetTileColor(float x, float y);
-
 // 사용자 변수
 private:
 	CGameObject	*m_pCamera = nullptr;
-	CGameObject *m_pMouseRayTexture = nullptr;
 	CTransform	*m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;
+
+	CGameObject	*m_pBrushObj = nullptr;
+	Vector3		m_vPickPos;
+
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);

@@ -227,7 +227,7 @@ bool CMesh::CreateMesh(UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
 	return true;
 }
 
-bool CMesh::CreateMesh(MESHCONTAINER * pOut, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage, D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
+bool CMesh::CreateMesh(MESHCONTAINER & pOut, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage, D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
 {
 	PMESHCONTAINER	pContainer = new MESHCONTAINER;
 
@@ -248,7 +248,7 @@ bool CMesh::CreateMesh(MESHCONTAINER * pOut, UINT iVtxCount, UINT iVtxSize, D3D1
 	m_fRadius = m_fRadius > m_vLength.z ? m_fRadius : m_vLength.z;
 	m_fRadius /= 2.f;
 
-	pOut = pContainer;
+	pOut = *pContainer;
 
 	return true;
 }

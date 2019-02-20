@@ -7,7 +7,7 @@
 #include "../Rendering/RenderManager.h"
 #include "../Rendering/RenderState.h"
 #include "ColliderRay.h"
-
+#include "ColliderAABB.h"
 PG_USING
 
 CColliderSphere::CColliderSphere()
@@ -52,7 +52,6 @@ bool CColliderSphere::Init()
 	m_pMesh = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
 	m_pShader = GET_SINGLE(CShaderManager)->FindShader(COLLIDER_SHADER);
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
-
 
 	return true;
 }
@@ -135,7 +134,9 @@ bool CColliderSphere::Collision(CCollider * pDest)
 	case CT_RAY:
 		return CollisionRayToSphere(((CColliderRay*)pDest)->GetRayAddress(), m_tSphere);
 	case CT_SPHERE:
-		return CollisionSphereToSphere(((CColliderSphere*)pDest)->m_tSphere, m_tSphere);
+		return CollisionSphereToSphere(((CColliderSphere*)pDest)->m_tSphere, m_tSphere);\
+	case CT_AABB:
+		return CollisionSphereToAABB(((CColliderAABB*)pDest)->GetInfo(), m_tSphere);
 	}
 
 	return false;

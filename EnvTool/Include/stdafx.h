@@ -76,3 +76,12 @@
 #pragma comment(lib, "Engine")
 #endif
 #endif // _DEBUG
+
+
+// enum
+enum TOOLTAB_TYPE
+{
+	TAB_TERRAIN,
+	TAB_OBJECT,
+	TAB_END
+};

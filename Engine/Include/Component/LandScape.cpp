@@ -11,6 +11,7 @@
 #include "../Core/Input.h"
 #include "../Component/Mouse.h"
 #include "../Component/ColliderRay.h"
+#include "../Component/ColliderSphere.h"
 
 PG_USING
 
@@ -24,6 +25,11 @@ CLandScape::CLandScape()
 	m_eType = CT_LANDSCAPE;
 	m_iDetailLevel = 37;
 	m_iSplatCount = 0;
+
+	m_bCheckBrush = false;
+	m_fRangeBrush = 1.f;
+	m_vPosBrush = Vector3(0.f, 0.f, 0.f);
+	m_vColorBrush = Vector4::Red;
 }
 
 
@@ -41,6 +47,11 @@ CLandScape::~CLandScape()
 void CLandScape::SetDetailLevel(int iDetailLevel)
 {
 	m_iDetailLevel = iDetailLevel;
+}
+
+void CLandScape::SetBrushCheck(bool check)
+{
+	m_bCheckBrush = check; 
 }
 
 bool CLandScape::CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, const string& strTexKey,
@@ -647,11 +658,7 @@ int CLandScape::Update(float fTime)
 
 int CLandScape::LateUpdate(float fTime)
 {
-	UpdateNode(m_pParentNode);
-
-	if (m_bVisualCheck)
-		RenderDebug(m_pParentNode, fTime);
-	
+	UpdateNode(m_pParentNode);	
 
 	return 0;
 }
@@ -839,10 +846,10 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 
 		// Mesh ¼³Á¤
 		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-			node->pMeshInfo, node->strNodeName,
-			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DEFAULT,
+			node->MeshInfo, node->strNodeName,
+			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DYNAMIC,
 			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
-			node->vecIndex.size(), 4, D3D11_USAGE_DEFAULT,
+			node->vecIndex.size(), 4, D3D11_USAGE_DYNAMIC,
 			DXGI_FORMAT_R32_UINT, &node->vecIndex[0]);
 
 		pMesh->SetShaderKey(LANDSCAPE_SHADER);
@@ -852,10 +859,6 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 
 		SAFE_RELEASE(pMesh);
 		SAFE_RELEASE(pRenderer);
-
-		node->pDebugTree = new DebugTree;
-		node->pDebugTree->Init();
-		node->pDebugTree->SetPosition(node->fCenterX, node->fCenterZ, node->fWidth);
 
 		CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
 		pCollider->SetAABB(node->fMin,
@@ -923,10 +926,6 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 	node->iTriCount = 0;
 
 	node->pGameObject = nullptr;
-	node->pDebugTree = nullptr;
-
-	node->pMeshInfo = nullptr;
-	
 
 	node->pNodes[0] = nullptr;
 	node->pNodes[1] = nullptr;
@@ -1027,6 +1026,7 @@ void CLandScape::CreateTreeNode(QUADTREENODE* node, float positionX, float posit
 	}
 
 	node->fMax = m_vecVtx[iVertexIndex - 1].vPos;
+	node->fMin.y = 50.f;
 	//_cprintf("MAX --> X : %f, Z : %f\n", node->fMax.x, node->fMax.z);
 
 	return;
@@ -1145,28 +1145,13 @@ list<QUADTREENODE*>* CLandScape::FindNode_ByMouse()
 	return &m_listNode;
 }
 
-void CLandScape::RenderDebug(QUADTREENODE* node, float fTime)
+list<QUADTREENODE*>* CLandScape::FindNode_ByRadius(CGameObject * src)
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (node->pNodes[i] != nullptr)
-		{
-			count++;
-			RenderDebug(node->pNodes[i], fTime);
-		}
-	}
+	m_listNode.clear();
 
-	if (count != 0)
-	{
-		return;
-	}
+	NodeRadiusCollisionCheck(m_pParentNode, src);
 
-	node->pDebugTree->Update(fTime);
-	node->pDebugTree->Render(fTime);
-
-	if (node->pGameObject->GetCulling() == false)
-		++m_iDebugStack;
+	return &m_listNode;
 }
 
 void CLandScape::UpdateNode(QUADTREENODE * node)
@@ -1194,9 +1179,19 @@ void CLandScape::UpdateNode(QUADTREENODE * node)
 		LANDSCAPECBUFFER	tBuffer = {};
 		tBuffer.iDetailLevel = m_iDetailLevel;
 		tBuffer.iSplatCount = m_iSplatCount;
-		tBuffer.fRangeBrush = 10.f;
-		tBuffer.vPosBrush = Vector3(0.f, 0.f, 0.f);
-		tBuffer.vColorBrush = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		// brush
+		if (m_bCheckBrush)
+		{
+			tBuffer.fEmpty1 = 1.f;
+			tBuffer.fRangeBrush = m_fRangeBrush;
+			tBuffer.vPosBrush = m_vPosBrush;
+			tBuffer.vColorBrush = m_vColorBrush;
+		}
+		else
+		{
+			tBuffer.fEmpty1 = 0.f;
+		}
 		
 		pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
 			SCT_PIXEL, &tBuffer);
@@ -1241,6 +1236,39 @@ void CLandScape::NodeRayCollisionCheck(QUADTREENODE * node)
 	return;
 }
 
+void CLandScape::NodeRadiusCollisionCheck(QUADTREENODE * node, CGameObject * src)
+{
+	int count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->pNodes[i] != nullptr)
+		{
+			count++;
+			NodeRadiusCollisionCheck(node->pNodes[i], src);
+		}
+	}
+
+	if (count != 0 ||
+		node->pGameObject->GetCulling() == true)
+	{
+		return;
+	}
+
+	CColliderSphere* pSphere = src->FindComponentFromTag<CColliderSphere>("Collider");
+	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+
+	if (pSphere->Collision(pAABB))
+	{
+		m_listNode.push_back(node);
+		//_cprintf("Collide!\n");
+	}
+
+	SAFE_RELEASE(pSphere);
+	SAFE_RELEASE(pAABB);
+
+	return;
+}
+
 void CLandScape::ReleaseNode(QUADTREENODE* node)
 {
 	for (int i = 0; i < 4; i++)
@@ -1254,18 +1282,6 @@ void CLandScape::ReleaseNode(QUADTREENODE* node)
 	if (node->pGameObject)
 	{
 		SAFE_RELEASE(node->pGameObject);
-	}
-
-	if (node->pDebugTree)
-	{
-		delete node->pDebugTree;
-		node->pDebugTree = nullptr;
-	}
-
-	if (node->pMeshInfo)
-	{
-		delete node->pMeshInfo;
-		node->pMeshInfo = nullptr;
 	}
 
 	for (int i = 0; i < 4; i++)

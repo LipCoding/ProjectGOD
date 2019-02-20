@@ -224,7 +224,7 @@ CMesh * CResourcesManager::CreateMesh(const string & strKey, UINT iVtxCount,
 	return pMesh;
 }
 
-CMesh * CResourcesManager::CreateMesh(MESHCONTAINER * pOut, const string & strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
+CMesh * CResourcesManager::CreateMesh(MESHCONTAINER & pOut, const string & strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
 	D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void * pVtxData, UINT iIdxCount, UINT iIdxSize, D3D11_USAGE eIdxUsage, DXGI_FORMAT eFmt, void * pIdxData)
 {
 	CMesh*	pMesh = FindMesh(strKey);

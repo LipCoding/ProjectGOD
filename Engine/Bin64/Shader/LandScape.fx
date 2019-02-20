@@ -288,26 +288,25 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 		if (lightDepthValue < depthValue)
 		{
-			//float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+			float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
 
-			//// 조명 방향을 구해준다.
-			//float3 vLightDir = vLightPos - input.vViewPos;
-			//vLightDir = normalize(vLightDir);
+			// 조명 방향을 구해준다.
+			float3 vLightDir = vLightPos - input.vViewPos;
+			vLightDir = normalize(vLightDir);
 
-			//lightIntensity = saturate(dot(input.vNormal, vLightDir));
+			lightIntensity = saturate(dot(input.vNormal, vLightDir));
 
-			//if (lightIntensity > 0.f)
-			//{
-			//	//vColor = float4(0.f, 1.f, 1.f, 1.f);
-			//	vColor = vColor * lightIntensity;
-			//	vColor = saturate(vColor);
-
-			//}
+			if (lightIntensity > 0.f)
+			{
+				//vColor = float4(0.f, 1.f, 1.f, 1.f);
+				vColor += vColor * lightIntensity;
+				vColor = saturate(vColor);
+			}
 		}
-		else
-		{
-			vColor = float4(0.f, 0.f, 0.f, 1.f);
-		}
+		//else
+		//{
+		//	//vColor *= float4(0.4f, 0.4f, 0.4f, 1.f);
+		//}
 	}
 
 	if (vColor.a == 0.f)
@@ -346,17 +345,18 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	output.vColor.w = vColor.w;*/
 
 	// Brush
-	float3	vPos = g_vPosBrush;
-	vPos.y = 0.f;
-	vPos = mul(float4(vPos, 1.f), g_matWorld).xyz;
-	
-	float3 vPos_other = input.vOriginPos;
-	vPos_other.y = 0.f;
-	vPos_other = mul(float4(vPos_other, 1.f), g_matWorld).xyz;
 
-	if (length(abs(vPos_other - vPos)) < g_fRangeBrush)
-		output.vColor *= g_vColorBrush;
+	if (g_fEmpty1)
+	{
+		float3	vPos = g_vPosBrush;
+		vPos = mul(float4(vPos, 1.f), g_matWorld).xyz;
 
+		float3 vPos_other = input.vOriginPos;	
+		vPos_other = mul(float4(vPos_other, 1.f), g_matWorld).xyz;
+
+		if (length(abs(vPos_other - vPos)) < g_fRangeBrush)
+			output.vColor += g_vColorBrush;
+	}
 
 	return output;
 }

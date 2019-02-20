@@ -21,6 +21,7 @@ CEditForm::CEditForm()
 	, m_pTerrainDlg(nullptr)
 	, m_pObjDlg(nullptr)
 	, m_pView(nullptr)
+	, m_eTabType(TAB_END)
 {
 
 }
@@ -90,10 +91,12 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 	switch (sel)
 	{
 	case 0:
+		m_eTabType = TAB_TERRAIN;
 		m_pTerrainDlg->ShowWindow(SW_SHOW);
 		m_pObjDlg->ShowWindow(SW_HIDE);
 		break;
 	case 1:
+		m_eTabType = TAB_OBJECT;
 		m_pTerrainDlg->ShowWindow(SW_HIDE);
 		m_pObjDlg->ShowWindow(SW_SHOW);
 		break;
@@ -133,6 +136,8 @@ void CEditForm::OnInitialUpdate()
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
 	m_pView = (CEnvToolView*)pMain->GetActiveView();
+
+	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
 }
 
 

@@ -500,3 +500,29 @@ bool CCollider::CollisionSphereToSphere(const SPHERE & tSrc, const SPHERE & tDes
 {
 	return tSrc.vCenter.Distance(tDest.vCenter) <= tSrc.fRadius + tDest.fRadius;
 }
+
+bool CCollider::CollisionSphereToAABB(const AABB & tDest, const SPHERE & tSrc)
+{
+	float fDist = 0.f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		float fCenter = tSrc.vCenter[i];
+
+		if (fCenter < tDest.vMin[i])
+		{
+			fDist += ((tDest.vMin[i] - fCenter) *
+					(tDest.vMin[i] - fCenter));
+		}
+		else if (fCenter > tDest.vMax[i])
+		{
+			fDist += ((fCenter - tDest.vMax[i]) *
+				(fCenter - tDest.vMax[i]));
+		}
+	}
+
+	if (fDist > tSrc.fRadius *  tSrc.fRadius)
+		return false;
+
+	return true;
+}

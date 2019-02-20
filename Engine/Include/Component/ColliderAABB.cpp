@@ -126,6 +126,7 @@ bool CColliderAABB::Collision(CCollider * pDest)
 	{
 	case CT_AABB:
 		return CollisionAABBToAABB(m_tInfo, ((CColliderAABB*)pDest)->m_tInfo);
+
 	}
 
 	return false;

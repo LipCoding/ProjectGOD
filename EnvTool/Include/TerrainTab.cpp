@@ -16,7 +16,8 @@
 #include "Component/Terrain2D.h"
 #include "Component/LandScape.h"
 #include "Component/Picking.h"
-#include "Component/QuadTree.h"
+
+#include "BrushTool.h"
 
 PG_USING
 
@@ -41,11 +42,17 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_TERRAIN_SIZEX, m_editTerrainSizeX);
 	DDX_Control(pDX, IDC_EDIT_TERRIAN_SIZEY, m_editTerrainSizeZ);
+	DDX_Control(pDX, IDC_CHECK_HEIGHT, m_checkBoxHeightCheck);
+	DDX_Control(pDX, IDC_SLIDER_RANGE, m_ctrSliderBrushRange);
+	DDX_Control(pDX, IDC_EDIT_BRUSH_RANGE, m_editBrushRange);
 }
 
 
 BEGIN_MESSAGE_MAP(CTerrainTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ADJ_SIZE, &CTerrainTab::OnBnClickedButtonAdjSize)
+	ON_BN_CLICKED(IDC_CHECK_HEIGHT, &CTerrainTab::OnBnClickedCheckBrush)
+//	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_RANGE, &CTerrainTab::OnNMReleasedcaptureSliderRange)
+ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -94,4 +101,84 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	SAFE_RELEASE(pScene);
 
 	_cprintf("Terrain Create Success!\n");
+}
+
+
+void CTerrainTab::OnBnClickedCheckBrush()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int iCheckStatus = m_checkBoxHeightCheck.GetCheck();
+
+	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+	if (iCheckStatus == 1)
+	{
+		pBrushTool->SetBrushCheck(true);
+	}
+	else
+	{
+		pBrushTool->SetBrushCheck(false);
+	}
+
+	SAFE_RELEASE(pBrushTool);
+	SAFE_RELEASE(pBrushObj);
+}
+
+
+BOOL CTerrainTab::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	m_ctrSliderBrushRange.SetRange(1, 50);
+	m_ctrSliderBrushRange.SetPos(1);
+	m_editBrushRange.SetWindowTextA(to_string(1).c_str());
+
+	// 눈금
+	m_ctrSliderBrushRange.SetTicFreq(5);
+
+	// 키보드 커서키 조작시 증감 크기
+	m_ctrSliderBrushRange.SetLineSize(1);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
+
+
+//void CTerrainTab::OnNMReleasedcaptureSliderRange(NMHDR *pNMHDR, LRESULT *pResult)
+//{
+//	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+//	*pResult = 0;
+//}
+
+
+void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다
+
+	if (pScrollBar)
+	{
+		// 어떤 슬라이더인지 검사
+		if (pScrollBar == (CScrollBar*)&m_ctrSliderBrushRange)
+		{
+			int iPos = m_ctrSliderBrushRange.GetPos();
+
+			CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+			CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+			pBrushTool->SetBrushInformation((float)iPos);
+			m_editBrushRange.SetWindowTextA(to_string(iPos).c_str());
+
+			SAFE_RELEASE(pBrushTool);
+			SAFE_RELEASE(pBrushObj);
+		}
+	}
+	else
+	{
+		// CScrollView를 상속받은 뷰의 경우 프레임의 스크롤 동작시 pScrollBar가 
+		// NULL이 된다.
+	}
+
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 }
