@@ -79,7 +79,9 @@
 #define	DEPTH_LESS_EQUAL	"DepthLessEqual"
 
 #define	WIRE_FRAME		"WireFrame"
+#define CULLING_BACK    "CullBack"
 #define	CULLING_NONE	"CullNone"
+
 
 
 template <typename T>

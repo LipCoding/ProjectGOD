@@ -5,14 +5,15 @@
 
 PG_BEGIN
 
-const int MAX_TRIANGLES = 10000;
+const int MAX_TRIANGLES = 5000;
 
 typedef struct _tagNodeQuadTree
 {
 	string strNodeName;
 	int iTriCount;
 	float fCenterX, fCenterZ, fWidth;
-	Vector3 fMin, fMax;
+	Vector3 vMin, vMax;
+	int iSizeX, iSizeZ;
 	vector<VERTEXBUMP> vecVtx;
 	vector<UINT> vecIndex;
 	CGameObject* pGameObject;
@@ -108,7 +109,8 @@ private:
 
 public:
 	list<QUADTREENODE*>* FindNode_ByMouse();
-	list<QUADTREENODE*>* FindNode_ByRadius(CGameObject* src);
+	list<QUADTREENODE*>* FindNode_ByRadius(float radius);
+	list<QUADTREENODE*>* FindNode_All();
 private:
 	// QuadTree
 	bool CreateQuadTree();
@@ -119,21 +121,21 @@ private:
 		float& centerX, float& centerZ,
 		float& meshWidth);
 	int CountTriangles(float positionX, float positionZ, float width);
-	bool CountTrianglesMax_For_Speed(int& out,  float positionX, float positionZ, float width);
-	bool CountTriangles_For_Speed(float positionX, float positionZ, float width);
-	bool IsTriangleContaind(int index, float positionX, float positionZ, float width);
+	bool IsTriangleContaind_Index(int index, float positionX, float positionZ, float width);
+	bool IsTriangleContaind_Vertex(int vtxIndex, Vector3 min, Vector3 max);
 	
 	// Node Circulation
 	void UpdateNode(QUADTREENODE* node);
 	void NodeRayCollisionCheck(QUADTREENODE* node);
-	void NodeRadiusCollisionCheck(QUADTREENODE* node, CGameObject* src);
+	void NodeRadiusCollisionCheck(QUADTREENODE* node, float radius);
+	void NodeSphereCollisionCheck(QUADTREENODE* node, CGameObject* src);
+	void NodeAll(QUADTREENODE* node);
 	void ReleaseNode(QUADTREENODE* node);
 
 private:
 	// Node
 	bool m_bVisualCheck = false;
 	int m_iTriCount, m_iDrawCount = 0;
-	int m_iTriStack = 0;
 	int m_iDebugStack = 0;
 	QUADTREENODE* m_pParentNode = nullptr;
 	static int number;

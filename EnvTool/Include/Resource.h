@@ -30,22 +30,47 @@
 #define IDC_BUTTON_CAM_LIGHT            1013
 #define IDC_EDIT1                       1014
 #define IDC_EDIT_CAMSPEED               1014
+#define IDC_EDIT_HEIGHTPOWER            1014
 #define IDC_EDIT2                       1015
 #define IDC_EDIT_BRUSH_RANGE            1015
 #define IDC_BUTTON_ADJ_CAMSPEED         1016
 #define IDC_RADIO1                      1017
+#define IDC_RADIO_UPTYPE_HEIGHT_1       1017
 #define IDC_RADIO2                      1018
+#define IDC_RADIO_UPTYPE_HEIGHT_2       1018
 #define IDC_RADIO3                      1019
+#define IDC_RADIO_UPTYPE_HEIGHT_3       1019
 #define IDC_SLIDER1                     1020
+#define IDC_SLIDER_HEIGHTPOWER          1020
 #define IDC_SLIDER2                     1021
 #define IDC_SLIDER_RANGE                1021
 #define IDC_SLIDER3                     1022
+#define IDC_SLIDER_DETAIL_DEFAULT       1022
 #define IDC_RADIO4                      1023
+#define IDC_RADIO_HEIGHT_DIR_1          1023
 #define IDC_RADIO5                      1024
+#define IDC_RADIO_HEIGHT_DIR_2          1024
 #define IDC_BUTTON1                     1025
+#define IDC_BUTTON_HEIGHT_RESET         1025
 #define IDC_BUTTON2                     1026
 #define IDC_CHECK1                      1027
 #define IDC_CHECK_HEIGHT                1028
+#define IDC_RADIO_MODE_1                1029
+#define IDC_RADIO_MODE_2                1030
+#define IDC_RADIO_DETAIL_1              1031
+#define IDC_RADIO_DETAIL_2              1032
+#define IDC_RADIO_DETAIL_3              1033
+#define IDC_RADIO_DETAIL_4              1034
+#define IDC_RADIO_DETAIL_5              1035
+#define IDC_EDIT3                       1036
+#define IDC_EDIT4                       1037
+#define IDC_EDIT5                       1038
+#define IDC_EDIT6                       1039
+#define IDC_EDIT7                       1040
+#define IDC_BUTTON_TEX_LOAD             1041
+#define IDC_BUTTON4                     1042
+#define IDC_BUTTON5                     1043
+#define IDC_BUTTON6                     1044
 
 // Next default values for new objects
 // 
@@ -53,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        330
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1028
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

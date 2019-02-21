@@ -93,7 +93,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
 
-	cs.cx = 1900;
+	cs.cx = 1800;
 	cs.cy = 900;
 
 	return TRUE;
@@ -198,13 +198,13 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext * pContext)
 	}
 
 	if (!m_SplitWnd.CreateView(0, 0, RUNTIME_CLASS(CEnvToolView),
-		CSize(1440, 900), pContext))
+		CSize(1400, 900), pContext))
 	{
 		return FALSE;
 	}
 
 	if (!m_SplitWnd.CreateView(0, 1, RUNTIME_CLASS(CEditForm),
-		CSize(460, 900), pContext))
+		CSize(400, 900), pContext))
 	{
 		return FALSE;
 	}

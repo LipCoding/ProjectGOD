@@ -147,7 +147,7 @@ void CEnvToolView::OnInitialUpdate()
 	HWND hWnd = pWnd->m_hWnd;
 
 	// 엔진 초기화
-	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1440, 900, true, true, false))
+	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 900, true, true, false))
 		return;
 
 	// 카메라 조작을 위한 키 생성
@@ -164,19 +164,9 @@ void CEnvToolView::OnInitialUpdate()
 	// Brush
 	m_pBrushObj = CGameObject::CreateObject("Brush", pLayer);
 	CBrushTool* pBrushTool = m_pBrushObj->AddComponent<CBrushTool>("BrushTool");
-	CColliderSphere* pSphere = m_pBrushObj->AddComponent<CColliderSphere>("Collider");
 
 	m_vPickPos = Vector3{ 0.f, 0.f, 0.f };
 
-	pSphere->SetSphere(m_vPickPos, pBrushTool->GetBrushRange());
-
-	CTransform*	pTr = m_pBrushObj->GetTransform();
-	pTr->SetWorldPos(0.f, 0.f, 0.f);
-	pTr->SetWorldScale(1.f, 1.f, 1.f);
-	pTr->SetWorldRot(0.f, 0.f, 0.f);
-	SAFE_RELEASE(pTr);
-
-	SAFE_RELEASE(pSphere);
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 }
@@ -257,26 +247,26 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			{
 			case TAB_TERRAIN:
 			{
-				CColliderSphere* pSphere = m_pBrushObj->FindComponentFromTag<CColliderSphere>("Collider");
 				CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
-				pSphere->SetSphere(m_vPickPos, pBrushTool->GetBrushRange());
-				list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByRadius(m_pBrushObj);
-				if (!pNodes->empty())
-				{
-					for (auto& iter : *pNodes)
-					{
-						D3D11_MAPPED_SUBRESOURCE	tMap = {};
-						
-						pBrushTool->MoveHeight(&iter->vecVtx, m_vPickPos, fTime);
 
-						CONTEXT->Map(iter->MeshInfo.tVB.pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &tMap);
-						void* dataPtr;
-						dataPtr = (void*)tMap.pData;
-						memcpy(dataPtr, &iter->vecVtx[0], iter->vecVtx.size() * sizeof(VERTEXBUMP));
-						CONTEXT->Unmap(iter->MeshInfo.tVB.pBuffer, 0);
+				if (!pBrushTool->GetBrushCheck())
+				{
+					SAFE_RELEASE(pBrushTool);
+					break;
+				}
+
+				if (pBrushTool->GetHeightCheck())
+				{
+					list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByRadius(pBrushTool->GetBrushRange());
+					if (!pNodes->empty())
+					{
+						pBrushTool->MoveHeight(pNodes, m_vPickPos, fTime);
 					}
 				}
-				SAFE_RELEASE(pSphere);
+				else if (pBrushTool->GetSplattingCheck())
+				{
+
+				}
 				SAFE_RELEASE(pBrushTool);
 				break;
 			}
@@ -344,10 +334,15 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 
 		list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByMouse();
 
+		bool bFirstCheck = false;
+
 		if (!pNodes->empty())
 		{
 			for (const auto iter : *pNodes)
 			{
+				if (bFirstCheck)
+					break;
+
 				if (pPicking->Picking_ToBuffer(&m_vPickPos,
 					GET_SINGLE(CInput)->GetRayPos(),
 					GET_SINGLE(CInput)->GetRayDir(),
@@ -361,6 +356,7 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
 						pBrushTool->SetBrushInformation(m_vPickPos);
 						SAFE_RELEASE(pBrushTool);
+						bFirstCheck = true;
 						break;
 					}
 					case TAB_OBJECT:

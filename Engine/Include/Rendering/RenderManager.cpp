@@ -89,6 +89,11 @@ bool CRenderManager::Init()
 
 	SAFE_RELEASE(pRS);
 
+	pRS = CreateRasterizerState(CULLING_BACK, D3D11_FILL_SOLID,
+		D3D11_CULL_BACK);
+
+	SAFE_RELEASE(pRS);
+
 	pRS = CreateRasterizerState(CULLING_NONE, D3D11_FILL_SOLID,
 		D3D11_CULL_NONE);
 
