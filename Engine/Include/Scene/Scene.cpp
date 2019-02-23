@@ -313,16 +313,18 @@ bool CScene::Init()
 
 	SAFE_RELEASE(pGlobalLight);*/
 
-	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
+	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
 
-	pGlobalLight->SetLightRange(100000.f);
+	//pGlobalLight->SetLightRange(100000.f);
 
 	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
 		Vector4(0.f, 0.f, 0.f, 1.f));*/
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
-	pLightTr->SetWorldPos(0.f, 1000.f, 0.f);
+	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	//pLightTr->SetWorldPos(0.f, 1000.f, 0.f);
 	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	SAFE_RELEASE(pLightTr);

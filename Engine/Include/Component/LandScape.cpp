@@ -12,6 +12,7 @@
 #include "../Component/Mouse.h"
 #include "../Component/ColliderRay.h"
 #include "../Component/ColliderSphere.h"
+#include "../Resources/Texture.h"
 
 PG_USING
 
@@ -362,8 +363,8 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey,
 			m_vecPos.push_back(tVtx.vPos);
 
 			tVtx.vNormal = Vector3(0.f, 1.f, 0.f);
-			tVtx.vUV = Vector2((float)j / (float)(m_iNumX),
-				(float)i / (float)(m_iNumZ));
+			tVtx.vUV = Vector2((float)(j) / (float)(m_iNumX),
+				(float)(m_iNumZ - i) / (float)(m_iNumZ));
 			//tVtx.vUV = Vector2(j, i);
 
 			m_vecVtx[i * (m_iNumX + 1) + j] = tVtx;
@@ -422,9 +423,175 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey,
 
 	CreateQuadTree();
 
+	// 머테리얼 등록
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		// Splatting
+		if (pFileName)
+		{
+			pMaterial->SetDiffuseTexInfo("Linear", "LandScape_D", 0, 0, pFileName, TEXTURE_PATH);
+		}
+		if (pNormalName)
+		{
+			pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1, pNormalName, TEXTURE_PATH);
+		}
+		if (pSpecularName)
+		{
+			pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2, pSpecularName, TEXTURE_PATH);
+		}
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+	}
+
 	// 내비게이션 관리자에 지형을 등록한다.
 	/*GET_SINGLE(CNavigationManager)->AddLandScapeInfo(strMeshKey,
 		m_iNumX, m_iNumZ, m_pScene, m_pTransform, &m_vecVtx[]);*/
+
+	return true;
+}
+
+bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
+{
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		if (!pRenderer)
+			return false;
+		
+
+		CMaterial*	pMaterial = pRenderer->GetMaterial();
+
+		if (pMaterial)
+		{
+			pMaterial->AddMultiTexture(strSmpKey, strDifKey, 11, 11, 
+				pvecPath, strPathKey);
+
+			SAFE_RELEASE(pMaterial);
+		}
+		else
+		{
+			assert(false);
+			return false;
+		}
+
+		SAFE_RELEASE(pRenderer);
+	}
+
+	++m_iSplatCount;
+
+	return true;
+}
+
+bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
+{
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		if (!pRenderer)
+			return false;
+
+
+		CMaterial*	pMaterial = pRenderer->GetMaterial();
+
+		if (pMaterial)
+		{
+			pMaterial->AddMultiTexture(strSmpKey, strDifKey, 12, 11,
+				pvecPath, strPathKey);
+
+			SAFE_RELEASE(pMaterial);
+		}
+		else
+		{
+			assert(false);
+			return false;
+		}
+
+		SAFE_RELEASE(pRenderer);
+	}
+
+	++m_iSplatCount;
+
+	return true;
+}
+
+bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
+{
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		if (!pRenderer)
+			return false;
+
+
+		CMaterial*	pMaterial = pRenderer->GetMaterial();
+
+		if (pMaterial)
+		{
+			pMaterial->AddMultiTexture(strSmpKey, strDifKey, 13, 11,
+				pvecPath, strPathKey);
+
+			SAFE_RELEASE(pMaterial);
+		}
+		else
+		{
+			assert(false);
+			return false;
+		}
+
+		SAFE_RELEASE(pRenderer);
+	}
+
+	++m_iSplatCount;
+
+	return true;
+}
+
+bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const string & strDifKey, int iRegTex, int iRegSmp, const vector<wstring>* pvecPath, const string & strPathKey)
+{
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		if (!pRenderer)
+			return false;
+
+
+		CMaterial*	pMaterial = pRenderer->GetMaterial();
+
+		if (pMaterial)
+		{
+			pMaterial->AddMultiTexture(strSmpKey, strDifKey, 14, 11,
+				pvecPath, strPathKey);
+
+			SAFE_RELEASE(pMaterial);
+		}
+		else
+		{
+			assert(false);
+			return false;
+		}
+
+		SAFE_RELEASE(pRenderer);
+	}
+
+	++m_iSplatCount;
 
 	return true;
 }
@@ -550,6 +717,58 @@ bool CLandScape::SetSplattingAlpha(const string & strSmpKey,
 	SAFE_RELEASE(pRenderer);
 
 	return true;
+}
+
+void CLandScape::SetMaterial_DNS(const wchar_t * pFileName, const wchar_t * pNormalName, const wchar_t * pSpecularName)
+{
+	// 머테리얼 등록
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	/*CTexture* pDiffuseTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_D");
+	CTexture* pNormalTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_N");
+	CTexture* pSpecularTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_S");
+	*/
+	for (auto& node : *nodes)
+	{
+		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->ResetTextureInfo();
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+	}
+
+
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("LandScape_D");
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("LandScape_N");
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("LandScape_S");
+
+
+	for (auto& node : *nodes)
+	{
+		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		
+		// Splatting
+		if (pFileName)
+		{
+			// 지우고 해줘야하는듯
+			pMaterial->SetDiffuseTexInfo("Linear", "LandScape_D", 0, 0, pFileName, TEXTURE_PATH);
+		}
+		if (pNormalName)
+		{
+			pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1, pNormalName, TEXTURE_PATH);
+		}
+		if (pSpecularName)
+		{
+			pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2, pSpecularName, TEXTURE_PATH);
+		}
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+	}
 }
 
 bool CLandScape::Init()
@@ -710,13 +929,10 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 		CRenderer*	pRenderer = node->pGameObject->AddComponent<CRenderer>("Renderer");
 		CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
+		pRenderer->SetRenderState(LANDSCAPE_SHADER);
+		pRenderer->SetInputLayout("Bump");
 		// 추후에 고쳐야함
 		// Splatting
-		pMaterial->SetDiffuseTexInfo("Linear", "LandScape", 0, 0, L"LandScape/GRASS_00+SAND.dds", TEXTURE_PATH);
-		pMaterial->SetNormalTexInfo("Linear", "LandScape_N", 1, 1,
-			L"LandScape/GRASS_00+SAND_NRM.png", TEXTURE_PATH);
-		pMaterial->SetSpecularTexInfo("Linear", "LandScape_S", 2, 2,
-			L"LandScape/GRASS_00+SAND_SPEC.png", TEXTURE_PATH);
 
 		SAFE_RELEASE(pMaterial);
 
@@ -740,7 +956,7 @@ void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
 		pCollider->SetAABB(node->vMin,
 			node->vMax);
 
-		SAFE_RELEASE(pCollider);
+		SAFE_RELEASE(pCollider);	
 	}
 }
 
@@ -794,7 +1010,6 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	node->iSizeZ = 0;
 
 	node->iTriCount = 0;
-
 	node->pGameObject = nullptr;
 
 	node->pNodes[0] = nullptr;

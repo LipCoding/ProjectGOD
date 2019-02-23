@@ -16,6 +16,7 @@
 #include "Component/Terrain2D.h"
 #include "Component/LandScape.h"
 #include "Component/Picking.h"
+#include "Core/PathManager.h"
 
 #include "BrushTool.h"
 
@@ -56,6 +57,11 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_RADIO_MODE_1, (int&)m_iRadio2);
 	DDX_Radio(pDX, IDC_RADIO_DETAIL_1, (int&)m_iRadio_Texture);
 	DDX_Control(pDX, IDC_SLIDER_DETAIL_DEFAULT, m_ctrSliderDetail_Default);
+	DDX_Control(pDX, IDC_EDIT3, m_editDetail_Default);
+	DDX_Control(pDX, IDC_EDIT5, m_editDetail_Tex1);
+	DDX_Control(pDX, IDC_EDIT6, m_editDetail_Tex2);
+	DDX_Control(pDX, IDC_EDIT7, m_editDetail_Tex3);
+	DDX_Control(pDX, IDC_EDIT4, m_editDetail_Tex4);
 }
 
 
@@ -82,12 +88,21 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	CString sizeX, sizeZ;
 
 	// 에디트 컨트롤을 가져온다.
-	m_editTerrainSizeX.GetWindowTextA(sizeX);
-	m_editTerrainSizeZ.GetWindowTextA(sizeZ);
+	m_editTerrainSizeX.GetWindowTextW(sizeX);
+	m_editTerrainSizeZ.GetWindowTextW(sizeZ);
 
 	// string을 숫자로 변환
 	m_iSizeX = _ttoi(sizeX);
 	m_iSizeZ = _ttoi(sizeZ);
+
+	CGameObject* pLandScapeFind = CGameObject::FindObject("LandScape");
+
+	if (pLandScapeFind)
+	{
+		AfxMessageBox(L"Error : You already have terrain!");
+		SAFE_RELEASE(pLandScapeFind);
+		return;
+	}
 
 	// terrain 생성
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -100,9 +115,80 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
 	pLandScape->CreateLandScapeQuadTree("LandScapeMesh", m_iSizeX, m_iSizeZ, false, "LandScape",
-		L"LandScape/GRASS_00+SAND.dds",
-		L"LandScape/GRASS_00+SAND_NRM.png",
-		L"LandScape/GRASS_00+SAND_SPEC.png");
+		L"Terrain/TerrainTex0_D.tga", 
+		L"Terrain/TerrainTex0_N.tga",
+		L"Terrain/TerrainTex0_S.tga");
+
+	vector<wstring>	vecSplatting;
+
+	wchar_t	strSplatPath[MAX_PATH] = {};
+
+	// splatting
+
+	// Diffuse
+	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
+	vecSplatting.push_back(strSplatPath);
+
+	//vecSplatting.clear();
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
+	vecSplatting.push_back(strSplatPath);
+
+	pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
+
+
+	// Normal
+	vecSplatting.clear();
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_NRM.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
+
+
+	// Specular
+	vecSplatting.clear();
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_SPEC.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
+
+	// File
+	vecSplatting.clear();
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/RoadAlpha.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/SandBaseAlpha.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/WaterBaseAlpha.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", 15, 11, &vecSplatting);
 
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
@@ -143,9 +229,12 @@ BOOL CTerrainTab::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	CString num;
+
 	m_ctrSliderBrushRange.SetRange(1, 50);
 	m_ctrSliderBrushRange.SetPos(1);
-	m_editBrushRange.SetWindowTextA(to_string(1).c_str());
+	num.Format(_T("%d"), 1);
+	m_editBrushRange.SetWindowTextW(num);
 
 	// 눈금
 	m_ctrSliderBrushRange.SetTicFreq(5);
@@ -156,7 +245,8 @@ BOOL CTerrainTab::OnInitDialog()
 	//
 	m_ctrSliderHeightPower.SetRange(1, 100);
 	m_ctrSliderHeightPower.SetPos(10);
-	m_editHeightPower.SetWindowTextA(to_string(10 / 10.f).c_str());
+	num.Format(_T("%f"), 10 / 10.f);
+	m_editHeightPower.SetWindowTextW(num);
 
 	// 눈금
 	m_ctrSliderHeightPower.SetTicFreq(10);
@@ -192,6 +282,7 @@ void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	if (pScrollBar)
 	{
+		CString num;
 		// 어떤 슬라이더인지 검사
 		if (pScrollBar == (CScrollBar*)&m_ctrSliderBrushRange)
 		{
@@ -201,7 +292,8 @@ void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 			CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
 			pBrushTool->SetBrushInformation((float)iPos);
-			m_editBrushRange.SetWindowTextA(to_string(iPos).c_str());
+			num.Format(_T("%d"), iPos);
+			m_editBrushRange.SetWindowTextW(num);
 
 			SAFE_RELEASE(pBrushTool);
 			SAFE_RELEASE(pBrushObj);
@@ -214,7 +306,8 @@ void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 			CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
 			pBrushTool->SetSpeed((float)iPos / 10.f);
-			m_editHeightPower.SetWindowTextA(to_string((float)iPos / 10.f).c_str());
+			num.Format(_T("%f"), (float)iPos / 10.f);
+			m_editHeightPower.SetWindowTextW(num);
 
 			SAFE_RELEASE(pBrushTool);
 			SAFE_RELEASE(pBrushObj);
@@ -355,4 +448,103 @@ void CTerrainTab::OnBnClickedButtonHeightReset()
 void CTerrainTab::OnBnClickedButtonTexLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("이미지 파일(*.BMP,*.GIF,*.JPG, *.TGA, *.DDS) | *.BMP,*.GIF,*.JPG,*.TGA,*.DDS;*.bmp;*.gif;*.jpg;*.tga;*.dds|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(TEXTURE_PATH));
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	//if (IDOK == dlg.DoModal())
+	{
+		// 절대경로 하위 경로
+		CString fileDir = dlg.GetPathName();
+
+		fileDir.Delete(0, int(lstrlen(strPath) - 1));
+
+		for (int i = lstrlen(fileDir) - 1; i >= 0; i--)
+		{
+			if (fileDir[i] == '\\')
+			{
+				fileDir.Delete(i + 1, lstrlen(fileDir) - 1);
+				fileDir.Delete(0, 1);
+				break;
+			}		
+		}
+
+		// 파일 이름 + 확장자
+		CString fileName = dlg.GetFileName();
+
+		// 파일 확장자
+		CString fileType = dlg.GetFileExt();
+
+		// 파일 이름 (_D, _N, _S를 제외한)
+		CString fileTitleName = dlg.GetFileTitle();
+		fileTitleName.Delete((lstrlen(fileTitleName) - 1) - 1, (lstrlen(fileTitleName) - 1));
+
+		// 경로를 담을 변수
+		CString diffuseName;
+		CString normalName;
+		CString specularName;
+
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+		diffuseName = fileDir + fileTitleName + L"_D";
+		normalName = fileDir + fileTitleName + L"_N";
+		specularName = fileDir + fileTitleName + L"_S";
+
+		fileType = L"." + fileType;
+
+		diffuseName += fileType;
+		normalName += fileType;
+		specularName += fileType;
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			switch (m_iRadio_Texture)
+			{
+			case 0:
+				// Default
+				pLandScape->SetMaterial_DNS(T2W(diffuseName.GetBuffer(0)), T2W(normalName.GetBuffer(0)), T2W(specularName.GetBuffer(0)));
+				//pLandScape->SetMaterial_DNS(nullptr, T2W(normalName.GetBuffer(0)), nullptr);
+				m_editDetail_Default.SetWindowTextW(fileName);
+				break;
+			case 1:
+				// Tex
+				m_editDetail_Tex1.SetWindowTextW(fileName);
+
+				break;
+			case 2:
+				m_editDetail_Tex2.SetWindowTextW(fileName);
+
+				break;
+			case 3:
+				m_editDetail_Tex3.SetWindowTextW(fileName);
+
+				break;
+			case 4:
+				m_editDetail_Tex4.SetWindowTextW(fileName);
+
+				break;
+			}
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+		else
+		{
+			AfxMessageBox(L"Error : No terrain! Make terrain first!");
+		}
+	}
 }

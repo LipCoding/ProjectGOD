@@ -90,6 +90,7 @@ public:
 
 	void SetMaterial(int iShaderConstantType);
 	void ResetMaterial(int iShaderConstantType);
+	void ResetTextureInfo();
 	void SetTexturePathKey(const string& strPathKey);
 	void ChangeTexturePath(const string& strPath);
 

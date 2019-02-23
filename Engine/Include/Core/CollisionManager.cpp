@@ -547,7 +547,9 @@ void CCollisionManager::Collision(float fTime)
 			{
 				if (pGroup->pSectionList[i]->pArray[j]->GetTag() == "PlayerBody")
 					int a = 1;
-				pGroup->pSectionList[i]->pArray[j]->CheckCollisionSection(fTime);
+				// Collider Section 별로 Collision 검사 : 느려서 안쓸거 같음
+				// 추후 고치거나 안쓰거나
+				// pGroup->pSectionList[i]->pArray[j]->CheckCollisionSection(fTime);
 			}
 
 			if (pGroup->pSectionList[i]->iSize < 2)

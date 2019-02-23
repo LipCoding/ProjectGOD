@@ -18,14 +18,19 @@ bool CPathManager::Init()
 	TCHAR	strPath[MAX_PATH] = {};
 	GetModuleFileName(NULL, strPath, MAX_PATH);
 
-	for (int i = lstrlen(strPath) - 1; i >= 0; --i)
+	for (int j = 0; j < 3; j++)
 	{
-		if (strPath[i] == '\\' || strPath[i] == '/')
+		for (int i = lstrlen(strPath) - 1; i >= 0; --i)
 		{
-			memset(&strPath[i + 1], 0, sizeof(TCHAR) * (MAX_PATH - (i + 1)));
-			break;
+			if (strPath[i] == '\\' || strPath[i] == '/')
+			{
+				memset(&strPath[i], 0, sizeof(TCHAR) * (MAX_PATH - (i)));
+				break;
+			}
 		}
 	}
+
+	wcscat_s(strPath, MAX_PATH,  L"\\Common\\");
 
 	m_mapPath.insert(make_pair(BASE_PATH, strPath));
 

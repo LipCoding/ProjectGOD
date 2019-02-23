@@ -179,6 +179,9 @@ bool CMainScene::Init()
 
 	wchar_t	strSplatPath[MAX_PATH] = {};
 
+	// splatting
+	
+	// Diffuse
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
 	vecSplatting.push_back(strSplatPath);
 
@@ -193,6 +196,8 @@ bool CMainScene::Init()
 
 	pLandScape->SetDiffuseSplatting("Linear", "SplatDif", &vecSplatting);
 
+
+	// Normal
 	vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
@@ -208,6 +213,8 @@ bool CMainScene::Init()
 
 	pLandScape->SetNormalSplatting("Linear", "SplatNormal", &vecSplatting);
 
+
+	// Specular
 	vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
@@ -223,6 +230,7 @@ bool CMainScene::Init()
 
 	pLandScape->SetSpecularSplatting("Linear", "SplatSpecular", &vecSplatting);
 
+	// File
 	vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/RoadAlpha.bmp");

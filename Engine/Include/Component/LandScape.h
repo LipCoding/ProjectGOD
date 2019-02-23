@@ -60,17 +60,13 @@ public:
 	void SetBrushInformation(float range) { m_fRangeBrush = range; }
 	void SetBrushInformation(Vector4 color) { m_vColorBrush = color; }
 	void SetBrushInformation(Vector3 pos) { m_vPosBrush = pos; }
-	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, 
-		const string& strTexKey, const wchar_t* pFileName, 
-		const wchar_t* pNormalName, const wchar_t* pSpecularName,
-		const char* pHeightMap = NULL,
-		const string& strPathKey = TEXTURE_PATH);
-	bool CreateLandScape(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
+public:
+	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump,
 		const string& strTexKey, const wchar_t* pFileName,
 		const wchar_t* pNormalName, const wchar_t* pSpecularName,
 		const char* pHeightMap = NULL,
 		const string& strPathKey = TEXTURE_PATH);
-	bool CreateLandScapeQuadTree(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
+	bool CreateLandScape(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
 		const string& strTexKey, const wchar_t* pFileName,
 		const wchar_t* pNormalName, const wchar_t* pSpecularName,
 		const char* pHeightMap = NULL,
@@ -91,6 +87,32 @@ public:
 		const string& strDifKey, int iRegTex = 0, int iRegSmp = 0,
 		const vector<wstring>* pvecPath = NULL,
 		const string& strPathKey = TEXTURE_PATH);
+public:
+	bool CreateLandScapeQuadTree(const string& strMeshKey, int iSizeX, int iSizeZ, bool bBump,
+		const string& strTexKey, const wchar_t* pFileName,
+		const wchar_t* pNormalName, const wchar_t* pSpecularName,
+		const char* pHeightMap = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+	bool SetDiffuseSplattingQuadTree(const string& strSmpKey,
+		const string& strDifKey,
+		const vector<wstring>* pvecPath = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+	bool SetNormalSplattingQuadTree(const string& strSmpKey,
+		const string& strDifKey,
+		const vector<wstring>* pvecPath = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+	bool SetSpecularSplattingQuadTree(const string& strSmpKey,
+		const string& strDifKey,
+		const vector<wstring>* pvecPath = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+	bool SetSplattingAlphaQuadTree(const string& strSmpKey,
+		const string& strDifKey, int iRegTex = 0, int iRegSmp = 0,
+		const vector<wstring>* pvecPath = NULL,
+		const string& strPathKey = TEXTURE_PATH);
+
+	void SetMaterial_DNS(const wchar_t* pFileName,
+		const wchar_t* pNormalName,
+		const wchar_t* pSpecularName);
 
 public:
 	virtual bool Init();
@@ -103,14 +125,11 @@ public:
 	virtual void Save(FILE* pFile);
 	virtual void Load(FILE* pFile);
 
-private:
-	void ComputeNormal(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
-	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
-
 public:
 	list<QUADTREENODE*>* FindNode_ByMouse();
 	list<QUADTREENODE*>* FindNode_ByRadius(float radius);
 	list<QUADTREENODE*>* FindNode_All();
+
 private:
 	// QuadTree
 	bool CreateQuadTree();
@@ -123,7 +142,7 @@ private:
 	int CountTriangles(float positionX, float positionZ, float width);
 	bool IsTriangleContaind_Index(int index, float positionX, float positionZ, float width);
 	bool IsTriangleContaind_Vertex(int vtxIndex, Vector3 min, Vector3 max);
-	
+
 	// Node Circulation
 	void UpdateNode(QUADTREENODE* node);
 	void NodeRayCollisionCheck(QUADTREENODE* node);
@@ -131,6 +150,10 @@ private:
 	void NodeSphereCollisionCheck(QUADTREENODE* node, CGameObject* src);
 	void NodeAll(QUADTREENODE* node);
 	void ReleaseNode(QUADTREENODE* node);
+
+private:
+	void ComputeNormal(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
+	void ComputeTangent(vector<VERTEXBUMP>& m_vecVtx, const vector<UINT>& vecIdx);
 
 private:
 	// Node

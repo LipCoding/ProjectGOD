@@ -24,6 +24,11 @@ Texture2DArray	g_SplatSpc	: register(t13);
 Texture2DArray	g_AlphaTex	: register(t14);
 SamplerState	g_SplatSmp	: register(s11);
 
+Texture2D		g_Target	: register(t1);
+//Texture2D		g_GBufferNrm	: register(t12);
+//Texture2D		g_GBufferDepth	: register(t13);
+//Texture2D		g_GBufferSpc	: register(t14);
+
 VS_OUTPUT_BUMP LandScapeVS(VS_INPUT_BUMP input)
 {
 	VS_OUTPUT_BUMP	output = (VS_OUTPUT_BUMP)0;
@@ -400,6 +405,44 @@ VS_OUTPUT_BUMP ShadowMapVS(VS_INPUT_BUMP input)
 PS_OUTPUT_SINGLE ShadowMapPS(VS_OUTPUT_BUMP input)
 {
 
+	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
+
+	float depthValue;
+	depthValue = input.vPosLight.z / input.vPosLight.w;
+
+	output.vColor = float4(depthValue, depthValue, depthValue, 1.f);
+
+	return output;
+}
+
+VS_OUTPUT_BUMP SplattingMapVS(VS_INPUT_BUMP input)
+{
+	VS_OUTPUT_BUMP	output = (VS_OUTPUT_BUMP)0;
+
+	float3	vPos = input.vPos - g_vTrLength * g_vPivot;
+
+	output.vProjPos = mul(float4(vPos, 1.f), g_matWVP);
+	output.vPos = output.vProjPos;
+
+	// Normal을 뷰공간으로 만들어준다.
+	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
+	output.vViewPos = mul(float4(vPos, 1.f), g_matWV).xyz;
+	output.vTangent = normalize(mul(float4(input.vTangent, 0.f), g_matWV).xyz);
+	output.vBinormal = normalize(mul(float4(input.vBinormal, 0.f), g_matWV).xyz);
+	output.vUV = input.vUV;
+	output.iDecal = 1;
+	output.vPos = mul(float4(vPos, 1.f), g_matWorld);
+	output.vPos = mul(output.vPos, g_matLightView);
+	output.vPos = mul(output.vPos, g_matLightProj);
+	output.vPosLight = mul(float4(vPos, 1.f), g_matWorld);
+	output.vPosLight = mul(output.vPosLight, g_matLightView);
+	output.vPosLight = mul(output.vPosLight, g_matLightProj);
+
+	return output;
+}
+
+PS_OUTPUT_SINGLE SplattingMapPS(VS_OUTPUT_BUMP input)
+{
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
 
 	float depthValue;

@@ -30,6 +30,8 @@ private:
 	UINT  m_iRadio2;
 	UINT  m_iRadio_Texture;
 
+
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButtonAdjSize();
@@ -41,7 +43,7 @@ public:
 	afx_msg void OnRadioCheck2(UINT id);
 	afx_msg void OnRadioCheck_Texture(UINT id);
 	afx_msg void OnBnClickedButtonHeightReset();
-
+	afx_msg void OnBnClickedButtonTexLoad();
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;
@@ -51,6 +53,11 @@ private:
 	CSliderCtrl m_ctrSliderHeightPower;
 	CEdit m_editHeightPower;
 	CSliderCtrl m_ctrSliderDetail_Default;
-public:
-	afx_msg void OnBnClickedButtonTexLoad();
+
+	CEdit m_editDetail_Default;
+	CEdit m_editDetail_Tex1;
+	CEdit m_editDetail_Tex2;
+	CEdit m_editDetail_Tex3;
+	CEdit m_editDetail_Tex4;
+
 };

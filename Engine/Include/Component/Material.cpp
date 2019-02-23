@@ -441,6 +441,7 @@ void CMaterial::AddMultiTexture(const string & strSmpKey,
 
 void CMaterial::SetMaterial(int iShaderConstantType)
 {
+	// Constant Buffer
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Material", &m_tMtrl, iShaderConstantType);
 
 	if (m_pDifInfo)
@@ -550,6 +551,28 @@ void CMaterial::ResetMaterial(int iShaderConstantType)
 			if (iShaderConstantType & SCT_PIXEL)
 				CONTEXT->PSSetSamplers(m_vecMultiTex[i]->iRegisterSmp, 1, &pSmp);
 		}*/
+	}
+}
+
+void CMaterial::ResetTextureInfo()
+{
+	if (m_pDifInfo)
+	{
+		SAFE_RELEASE(m_pDifInfo->pTexture);
+		SAFE_RELEASE(m_pDifInfo->pSampler);
+		SAFE_DELETE(m_pDifInfo);
+	}
+	if (m_pNormalInfo)
+	{
+		SAFE_RELEASE(m_pNormalInfo->pTexture);
+		SAFE_RELEASE(m_pNormalInfo->pSampler);
+		SAFE_DELETE(m_pNormalInfo);
+	}
+	if (m_pSpecularInfo)
+	{
+		SAFE_RELEASE(m_pSpecularInfo->pTexture);
+		SAFE_RELEASE(m_pSpecularInfo->pSampler);
+		SAFE_DELETE(m_pSpecularInfo);
 	}
 }
 

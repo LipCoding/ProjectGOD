@@ -184,6 +184,7 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pMesh);
 
+	// Liner
 	CSampler*	pSampler = CreateSampler(SAMPLER_LINEAR);
 
 	SAFE_RELEASE(pSampler);
@@ -477,6 +478,19 @@ CTexture * CResourcesManager::FindTexture(const string & strKey)
 	iter->second->AddRef();
 
 	return iter->second;
+}
+
+void CResourcesManager::FindAndDeleteTexture(const string & strKey)
+{
+	unordered_map<string, CTexture*>::iterator	iter = m_mapTexture.find(strKey);
+
+	if (iter == m_mapTexture.end())
+		return;
+
+	SAFE_DELETE(iter->second);
+	m_mapTexture.erase(iter->first);
+
+	return;
 }
 
 CSampler * CResourcesManager::CreateSampler(const string & strKey, 
