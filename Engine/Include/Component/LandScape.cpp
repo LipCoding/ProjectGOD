@@ -486,7 +486,7 @@ bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const str
 		SAFE_RELEASE(pRenderer);
 	}
 
-	//++m_iSplatCount;
+	++m_iSplatCount;
 
 	return true;
 }
@@ -521,7 +521,7 @@ bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const stri
 		SAFE_RELEASE(pRenderer);
 	}
 
-	//++m_iSplatCount;
+	++m_iSplatCount;
 
 	return true;
 }
@@ -556,7 +556,7 @@ bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const st
 		SAFE_RELEASE(pRenderer);
 	}
 
-	//++m_iSplatCount;
+	++m_iSplatCount;
 
 	return true;
 }
@@ -579,6 +579,8 @@ bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const strin
 		{
 			pMaterial->AddMultiTexture_Dynamic(strSmpKey, strDifKey, 14, 11,
 				pvecPath, strPathKey);
+			/*pMaterial->AddMultiTexture(strSmpKey, strDifKey, 14, 11,
+				pvecPath, strPathKey);*/
 
 			SAFE_RELEASE(pMaterial);
 		}

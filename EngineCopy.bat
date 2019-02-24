@@ -21,6 +21,8 @@ xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Engine\Bin\Shade
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Engine\Bin64\Shader\
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Engine\Bin64_Debug\Shader\
 
+xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Common\Shader\
+
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin\*.* .\EngineRef\Bin\
 
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin64_Debug\*.* .\EngineRef\Bin64_Debug\

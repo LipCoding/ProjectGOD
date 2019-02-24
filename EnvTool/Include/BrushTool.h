@@ -33,18 +33,19 @@ public:
 	void SetUpType(HEIGHTUP_TYPE type) { m_eUpType = type; }
 public:
 	void MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
-	void MovePixel(list<QUADTREENODE*>* list, Vector3 pos, const float& fTime);
+	void MovePixel(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
 	void ResetHeight();
 
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
-	void UpdateTextureBuffer(CTexture* pTexture ,Vector3 pos);
+	void UpdateTextureBuffer(CTexture* pTexture ,Vector3 mousePos, float power);
 private:
 	bool  m_bBrushCheck = false;
 	bool  m_bHeightCheck = true;
 	bool  m_bSplattingCheck = false;
 	float m_fRange = 1.f;
 	float m_fUpSpeed = 10.f;
+	float m_fPower = 1.f;
 	HEIGHTUP_TYPE   m_eUpType = UP_TYPE_FLAT;
 	Vector4 m_vColor = Vector4::Red;
 	

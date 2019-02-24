@@ -178,7 +178,7 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	// File
 	vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/RoadAlpha.bmp");
+	wsprintf(strSplatPath, L"LandScape/Height.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);

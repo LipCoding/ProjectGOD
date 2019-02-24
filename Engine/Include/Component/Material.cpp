@@ -137,7 +137,6 @@ void CMaterial::SetDiffuseTexInfo(const string & strSmpKey,
 
 	if (!pFileName)
 		m_pDifInfo->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strDifKey);
-
 	else
 		m_pDifInfo->pTexture = GET_SINGLE(CResourcesManager)->LoadTexture(strDifKey, pFileName, strPathKey);
 

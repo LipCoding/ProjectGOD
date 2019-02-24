@@ -250,16 +250,22 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 	for (int i = 0; i < g_iSplatCount; i++)
 	{
+		// UV Splat
 		float3	vSplatUV;
 		vSplatUV.xy = vUV;
 		vSplatUV.z = i;
+		
+		// Diffuse Splat
 		float4	vSplatColor	= g_SplatDif.Sample(g_SplatSmp, vSplatUV);
+		// Normal Splat
 		float3	vSplatNormal = g_SplatNrm.Sample(g_SplatSmp, vSplatUV).xyz;
+		vSplatUV.xy = input.vUV;
+		//
+		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
+		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) + 
+						(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
 		vBumpNormal += vSplatNormal;
-
-		vSplatUV.xy = input.vUV;
-		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
 
 		vColor = (vColor * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
 			vSplatColor * vSplatAlpha);

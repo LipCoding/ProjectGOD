@@ -250,16 +250,22 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 	for (int i = 0; i < g_iSplatCount; i++)
 	{
+		// UV Splat
 		float3	vSplatUV;
 		vSplatUV.xy = vUV;
 		vSplatUV.z = i;
+		
+		// Diffuse Splat
 		float4	vSplatColor	= g_SplatDif.Sample(g_SplatSmp, vSplatUV);
+		// Normal Splat
 		float3	vSplatNormal = g_SplatNrm.Sample(g_SplatSmp, vSplatUV).xyz;
+		vSplatUV.xy = input.vUV;
+		//
+		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
+		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) + 
+						(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
 		vBumpNormal += vSplatNormal;
-
-		vSplatUV.xy = input.vUV;
-		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
 
 		vColor = (vColor * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
 			vSplatColor * vSplatAlpha);
@@ -400,6 +406,44 @@ VS_OUTPUT_BUMP ShadowMapVS(VS_INPUT_BUMP input)
 PS_OUTPUT_SINGLE ShadowMapPS(VS_OUTPUT_BUMP input)
 {
 
+	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
+
+	float depthValue;
+	depthValue = input.vPosLight.z / input.vPosLight.w;
+
+	output.vColor = float4(depthValue, depthValue, depthValue, 1.f);
+
+	return output;
+}
+
+VS_OUTPUT_BUMP SplattingMapVS(VS_INPUT_BUMP input)
+{
+	VS_OUTPUT_BUMP	output = (VS_OUTPUT_BUMP)0;
+
+	float3	vPos = input.vPos - g_vTrLength * g_vPivot;
+
+	output.vProjPos = mul(float4(vPos, 1.f), g_matWVP);
+	output.vPos = output.vProjPos;
+
+	// Normal을 뷰공간으로 만들어준다.
+	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
+	output.vViewPos = mul(float4(vPos, 1.f), g_matWV).xyz;
+	output.vTangent = normalize(mul(float4(input.vTangent, 0.f), g_matWV).xyz);
+	output.vBinormal = normalize(mul(float4(input.vBinormal, 0.f), g_matWV).xyz);
+	output.vUV = input.vUV;
+	output.iDecal = 1;
+	output.vPos = mul(float4(vPos, 1.f), g_matWorld);
+	output.vPos = mul(output.vPos, g_matLightView);
+	output.vPos = mul(output.vPos, g_matLightProj);
+	output.vPosLight = mul(float4(vPos, 1.f), g_matWorld);
+	output.vPosLight = mul(output.vPosLight, g_matLightView);
+	output.vPosLight = mul(output.vPosLight, g_matLightProj);
+
+	return output;
+}
+
+PS_OUTPUT_SINGLE SplattingMapPS(VS_OUTPUT_BUMP input)
+{
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
 
 	float depthValue;

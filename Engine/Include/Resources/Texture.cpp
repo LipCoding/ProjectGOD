@@ -76,6 +76,22 @@ bool CTexture::LoadTexture(const string & strKey, const vector<wstring>& vecFile
 	return LoadTextureFromFullPath(strKey, vecFullPath);
 }
 
+bool CTexture::LoadTexture_Dynamic(const string & strKey, const char * pFileName, const string & strPathKey)
+{
+	m_strKey = strKey;
+	const char*	pPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(strPathKey);
+
+	string	strPath;
+
+	if (pPath)
+		strPath = pPath;
+
+	strPath += pFileName;
+
+	return LoadTextureFromFullPath_Dynamic(strKey, strPath.c_str());
+}
+
+
 bool CTexture::LoadTexture_Dynamic(const string & strKey, const vector<wstring>& vecFileName, const string & strPathKey)
 {
 	m_strKey = strKey;
@@ -296,6 +312,63 @@ bool CTexture::LoadTextureFromFullPath(const string & strKey,
 	return true;
 }
 
+bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const char * pFullPath)
+{
+	m_vecFullPath.push_back(pFullPath);
+	m_strKey = strKey;
+
+	char	cExt[_MAX_EXT] = {};
+
+	_splitpath_s(pFullPath, 0, 0, 0, 0, 0, 0, cExt, _MAX_EXT);
+
+	_strupr_s(cExt);
+
+	ScratchImage*	pImage = new ScratchImage;
+
+	TCHAR	strFullPath[MAX_PATH] = {};
+
+	MultiByteToWideChar(CP_ACP, 0, pFullPath, -1, strFullPath,
+		strlen(pFullPath));
+
+	if (strcmp(cExt, ".DDS") == 0)
+	{
+		if (FAILED(LoadFromDDSFile(strFullPath, DDS_FLAGS_NONE, NULL,
+			*pImage)))
+		{
+			delete	pImage;
+			return false;
+		}
+	}
+
+	else if (strcmp(cExt, ".TGA") == 0)
+	{
+		if (FAILED(LoadFromTGAFile(strFullPath, NULL, *pImage)))
+		{
+			delete	pImage;
+			return false;
+		}
+	}
+
+	else
+	{
+		if (FAILED(LoadFromWICFile(strFullPath, WIC_FLAGS_NONE, NULL,
+			*pImage)))
+		{
+			delete	pImage;
+			return false;
+		}
+	}
+
+	m_vecImage.push_back(pImage);
+
+	if (FAILED(CreateShaderResourceView(DEVICE, pImage->GetImages(),
+		pImage->GetImageCount(), pImage->GetMetadata(),
+		&m_pSRView)))
+		return false;
+
+	return true;
+}
+
 bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vector<string>& vecFullPath)
 {
 	m_strKey = strKey;
@@ -355,17 +428,19 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 	{
 		ID3D11Texture2D*	pTex = NULL;
 
-		HRESULT hr = CreateTexture(DEVICE, m_vecImage[i]->GetImages(),
-			m_vecImage[i]->GetImageCount(), m_vecImage[i]->GetMetadata(), (ID3D11Resource**)&pTex);
+		/*HRESULT hr = CreateTexture(DEVICE, m_vecImage[i]->GetImages(),
+			m_vecImage[i]->GetImageCount(), m_vecImage[i]->GetMetadata(), (ID3D11Resource**)&pTex);*/
 
-		/*if (FAILED(CreateTextureEx(DEVICE, m_vecImage[i]->GetImages(),
+		//CreateTextureEx
+
+		if (FAILED(CreateTextureEx(DEVICE, m_vecImage[i]->GetImages(),
 			m_vecImage[i]->GetImageCount(), m_vecImage[i]->GetMetadata(),
-			D3D11_USAGE_DYNAMIC, 0,
-			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ, 0, FALSE, (ID3D11Resource**)&pTex)))
+			D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE,
+			D3D11_CPU_ACCESS_WRITE, 0, FALSE, (ID3D11Resource**)&pTex)))
 		{
 			Safe_Release_VecList(vecTex);
 			return false;
-		}*/
+		}
 
 		vecTex.push_back(pTex);
 	}
@@ -393,7 +468,7 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 		return false;
 	}
 
-	/*for (size_t i = 0; i < vecTex.size(); ++i)
+	for (size_t i = 0; i < vecTex.size(); ++i)
 	{
 		for (int iMipLevel = 0; iMipLevel < tTexDesc.MipLevels;
 			++iMipLevel)
@@ -409,7 +484,7 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 
 			CONTEXT->Unmap(vecTex[i], iMipLevel);
 		}
-	}*/
+	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC	tViewDesc = {};
 

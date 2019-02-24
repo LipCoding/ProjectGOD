@@ -38,10 +38,13 @@ public:
 		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTexture(const string& strKey, const vector<wstring>& vecFileName,
 		const string& strPathKey = TEXTURE_PATH);
+	bool LoadTexture_Dynamic(const string& strKey, const char* pFileName,
+		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTexture_Dynamic(const string& strKey, const vector<wstring>& vecFileName,
 		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTextureFromFullPath(const string& strKey, const char* pFullPath);
 	bool LoadTextureFromFullPath(const string& strKey, const vector<string>& vecFullPath);
+	bool LoadTextureFromFullPath_Dynamic(const string& strKey, const char* pFullPath);
 	bool LoadTextureFromFullPath_Dynamic(const string& strKey, const vector<string>& vecFullPath);
 	void SetTexture(int iRegister, int iShaderConstantType);
 	void SetTexturePathKey(const string& strPathKey);

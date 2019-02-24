@@ -55,7 +55,10 @@ public:
 	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
 
+	POINT GetTerrainSize() { return POINT{ (LONG)m_iNumX, (LONG)m_iNumZ }; }
+
 public:
+
 	void SetDetailLevel(int iDetailLevel);
 	void SetBrushCheck(bool check);
 	void SetBrushInformation(float range) { m_fRangeBrush = range; }
