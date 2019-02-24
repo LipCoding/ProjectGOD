@@ -421,6 +421,28 @@ class CTexture* CResourcesManager::LoadTexture(const string & strKey,
 	return pTexture;
 }
 
+CTexture * CResourcesManager::LoadTexture_Dynamic(const string & strKey, const vector<wstring>& vecFileName, const string & strPathKey)
+{
+	CTexture*	pTexture = FindTexture(strKey);
+
+	if (pTexture)
+		return pTexture;
+
+	pTexture = new CTexture;
+
+	if (!pTexture->LoadTexture_Dynamic(strKey, vecFileName, strPathKey))
+	{
+		SAFE_RELEASE(pTexture);
+		return NULL;
+	}
+
+	pTexture->AddRef();
+
+	m_mapTexture.insert(make_pair(strKey, pTexture));
+
+	return pTexture;
+}
+
 CTexture * CResourcesManager::LoadTextureFromFullPath(const string & strKey, 
 	const char * pFullPath)
 {

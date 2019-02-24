@@ -60,4 +60,6 @@ private:
 	CEdit m_editDetail_Tex3;
 	CEdit m_editDetail_Tex4;
 
+public:
+	afx_msg void OnBnClickedButtonSplatLoad();
 };

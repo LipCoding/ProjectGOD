@@ -2,6 +2,7 @@
 #include "BrushTool.h"
 
 #include "Device.h"
+#include "Resources/ResourcesManager.h"
 
 CBrushTool::CBrushTool()
 {
@@ -234,6 +235,18 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 	}
 }
 
+void CBrushTool::MovePixel(list<QUADTREENODE*>* list, Vector3 pos, const float & fTime)
+{
+	for (auto& node : *list)
+	{
+		CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
+		
+		UpdateTextureBuffer(pTexture, pos);
+
+		SAFE_RELEASE(pTexture);
+	}
+}
+
 void CBrushTool::ResetHeight()
 {
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
@@ -266,8 +279,40 @@ void CBrushTool::UpdateVtxBuffer(MESHCONTAINER * info, vector<VERTEXBUMP>& vtx)
 	CONTEXT->Map(info->tVB.pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &tMap);
 	void* dataPtr;
 	dataPtr = (void*)tMap.pData;
+	
 	memcpy(dataPtr, &vtx[0], vtx.size() * sizeof(VERTEXBUMP));
 	CONTEXT->Unmap(info->tVB.pBuffer, 0);
+}
+
+void CBrushTool::UpdateTextureBuffer(CTexture * pTexture, Vector3 pos)
+{
+	D3D11_MAPPED_SUBRESOURCE tMap = {};
+
+	UINT Height = pTexture->GetTexDesc().Height;
+	UINT Width = pTexture->GetTexDesc().Width;
+
+	CONTEXT->Map(pTexture->GetTexArr(), 0, D3D11_MAP_WRITE_DISCARD, 0, &tMap);
+	
+	BYTE* data = (BYTE*)tMap.pData;
+
+	for (UINT i = 0; i < Height; ++i)
+	{
+		for (UINT j = 0; j < Width; ++j)
+		{
+			int pixel = i * tMap.RowPitch + (j * 4);
+			BYTE* blue = &data[pixel];
+			BYTE* green = &data[pixel] + 1;
+			BYTE* red = &data[pixel] + 2;
+			BYTE* alpha = &data[pixel] + 3;
+
+			*blue = 255;
+			*green = 255;
+			*red = 255;
+			*alpha = 0;
+		}
+	}
+
+	CONTEXT->Unmap(pTexture->GetTexArr(), 0);
 }
 
 bool CBrushTool::Init()

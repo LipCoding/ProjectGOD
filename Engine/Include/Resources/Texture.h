@@ -23,6 +23,14 @@ private:
 	vector<string>	m_vecFullPath;
 	string		m_strPathKey;
 
+private:
+	D3D11_TEXTURE2D_DESC m_tTexArr;
+	ID3D11Texture2D*	 m_pTexArr = NULL;
+
+public:
+	D3D11_TEXTURE2D_DESC GetTexDesc() { return m_tTexArr; }
+	ID3D11Texture2D*	 GetTexArr() { return m_pTexArr; }
+
 public:
 	bool LoadTexture(const string& strKey, const wchar_t* pFileName,
 		const string& strPathKey = TEXTURE_PATH);
@@ -30,8 +38,11 @@ public:
 		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTexture(const string& strKey, const vector<wstring>& vecFileName,
 		const string& strPathKey = TEXTURE_PATH);
+	bool LoadTexture_Dynamic(const string& strKey, const vector<wstring>& vecFileName,
+		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTextureFromFullPath(const string& strKey, const char* pFullPath);
 	bool LoadTextureFromFullPath(const string& strKey, const vector<string>& vecFullPath);
+	bool LoadTextureFromFullPath_Dynamic(const string& strKey, const vector<string>& vecFullPath);
 	void SetTexture(int iRegister, int iShaderConstantType);
 	void SetTexturePathKey(const string& strPathKey);
 	void ChangeTexturePath(const string& strPath);

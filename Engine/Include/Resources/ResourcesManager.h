@@ -45,6 +45,8 @@ public:
 		const string& strPathKey = TEXTURE_PATH);
 	class CTexture* LoadTexture(const string& strKey, const vector<wstring>& vecFileName,
 		const string& strPathKey = TEXTURE_PATH);
+	class CTexture* LoadTexture_Dynamic(const string& strKey, const vector<wstring>& vecFileName,
+		const string& strPathKey = TEXTURE_PATH);
 	class CTexture* LoadTextureFromFullPath(const string& strKey,
 		const char* pFullPath);
 	class CTexture* LoadTextureFromFullPath(const string& strKey,

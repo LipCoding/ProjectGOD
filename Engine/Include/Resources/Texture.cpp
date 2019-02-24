@@ -14,6 +14,9 @@ CTexture::~CTexture()
 {
 	Safe_Delete_VecList(m_vecImage);
 	SAFE_RELEASE(m_pSRView);
+
+	if (m_pTexArr)
+		SAFE_RELEASE(m_pTexArr);
 }
 
 bool CTexture::LoadTexture(const string & strKey, const wchar_t * pFileName,
@@ -71,6 +74,34 @@ bool CTexture::LoadTexture(const string & strKey, const vector<wstring>& vecFile
 	}
 
 	return LoadTextureFromFullPath(strKey, vecFullPath);
+}
+
+bool CTexture::LoadTexture_Dynamic(const string & strKey, const vector<wstring>& vecFileName, const string & strPathKey)
+{
+	m_strKey = strKey;
+	m_bArray = true;
+	vector<string>	vecFullPath;
+
+	const char*	pPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(strPathKey);
+
+	for (size_t i = 0; i < vecFileName.size(); ++i)
+	{
+		string	strPath;
+
+		if (pPath)
+			strPath = pPath;
+
+		char	strMultiPath[MAX_PATH] = {};
+
+		WideCharToMultiByte(CP_ACP, 0, vecFileName[i].c_str(), -1, strMultiPath,
+			vecFileName[i].length(), 0, 0);
+
+		strPath += strMultiPath;
+
+		vecFullPath.push_back(strPath.c_str());
+	}
+
+	return LoadTextureFromFullPath_Dynamic(strKey, vecFullPath);
 }
 
 bool CTexture::LoadTextureFromFullPath(const string & strKey, 
@@ -261,6 +292,140 @@ bool CTexture::LoadTextureFromFullPath(const string & strKey,
 
 	Safe_Release_VecList(vecTex);
 	SAFE_RELEASE(pTexArr);
+
+	return true;
+}
+
+bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vector<string>& vecFullPath)
+{
+	m_strKey = strKey;
+	m_bArray = true;
+
+	for (size_t i = 0; i < vecFullPath.size(); ++i)
+	{
+		m_vecFullPath.push_back(vecFullPath[i]);
+		char	cExt[_MAX_EXT] = {};
+
+		_splitpath_s(vecFullPath[i].c_str(), 0, 0, 0, 0, 0, 0, cExt, _MAX_EXT);
+
+		_strupr_s(cExt);
+
+		ScratchImage*	pImage = new ScratchImage;
+
+		TCHAR	strFullPath[MAX_PATH] = {};
+
+		MultiByteToWideChar(CP_ACP, 0, vecFullPath[i].c_str(), -1, strFullPath,
+			vecFullPath[i].length());
+
+		if (strcmp(cExt, ".DDS") == 0)
+		{
+			if (FAILED(LoadFromDDSFile(strFullPath, DDS_FLAGS_NONE, NULL,
+				*pImage)))
+			{
+				delete	pImage;
+				return false;
+			}
+		}
+
+		else if (strcmp(cExt, ".TGA") == 0)
+		{
+			if (FAILED(LoadFromTGAFile(strFullPath, NULL, *pImage)))
+			{
+				delete	pImage;
+				return false;
+			}
+		}
+
+		else
+		{
+			if (FAILED(LoadFromWICFile(strFullPath, WIC_FLAGS_NONE, NULL,
+				*pImage)))
+			{
+				delete	pImage;
+				return false;
+			}
+		}
+
+		m_vecImage.push_back(pImage);
+	}
+
+	vector<ID3D11Texture2D*>	vecTex;
+
+	for (size_t i = 0; i < m_vecImage.size(); ++i)
+	{
+		ID3D11Texture2D*	pTex = NULL;
+
+		HRESULT hr = CreateTexture(DEVICE, m_vecImage[i]->GetImages(),
+			m_vecImage[i]->GetImageCount(), m_vecImage[i]->GetMetadata(), (ID3D11Resource**)&pTex);
+
+		/*if (FAILED(CreateTextureEx(DEVICE, m_vecImage[i]->GetImages(),
+			m_vecImage[i]->GetImageCount(), m_vecImage[i]->GetMetadata(),
+			D3D11_USAGE_DYNAMIC, 0,
+			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ, 0, FALSE, (ID3D11Resource**)&pTex)))
+		{
+			Safe_Release_VecList(vecTex);
+			return false;
+		}*/
+
+		vecTex.push_back(pTex);
+	}
+
+	D3D11_TEXTURE2D_DESC	tTexDesc = {};
+	vecTex[0]->GetDesc(&tTexDesc);
+
+	m_tTexArr.Width = tTexDesc.Width;
+	m_tTexArr.Height = tTexDesc.Height;
+	m_tTexArr.MipLevels = tTexDesc.MipLevels;
+	m_tTexArr.ArraySize = vecTex.size();
+	m_tTexArr.Format = tTexDesc.Format;
+	m_tTexArr.SampleDesc.Count = 1;
+	m_tTexArr.SampleDesc.Quality = 0;
+	m_tTexArr.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	m_tTexArr.Usage = D3D11_USAGE_DYNAMIC;
+	m_tTexArr.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	m_tTexArr.MiscFlags = 0;
+
+	//HRESULT hr = DEVICE->CreateTexture2D(&m_tTexArr, NULL, &m_pTexArr);
+
+	if (FAILED(DEVICE->CreateTexture2D(&m_tTexArr, NULL, &m_pTexArr)))
+	{
+		Safe_Release_VecList(vecTex);
+		return false;
+	}
+
+	/*for (size_t i = 0; i < vecTex.size(); ++i)
+	{
+		for (int iMipLevel = 0; iMipLevel < tTexDesc.MipLevels;
+			++iMipLevel)
+		{
+			D3D11_MAPPED_SUBRESOURCE	tMap = {};
+
+			CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_WRITE_DISCARD,
+				0, &tMap);
+
+			CONTEXT->UpdateSubresource(m_pTexArr,
+				D3D11CalcSubresource(iMipLevel, i, tTexDesc.MipLevels),
+				NULL, tMap.pData, tMap.RowPitch, tMap.DepthPitch);
+
+			CONTEXT->Unmap(vecTex[i], iMipLevel);
+		}
+	}*/
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC	tViewDesc = {};
+
+	tViewDesc.Format = m_tTexArr.Format;
+	tViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	tViewDesc.Texture2DArray.MipLevels = m_tTexArr.MipLevels;
+	tViewDesc.Texture2DArray.ArraySize = vecTex.size();
+
+	if (FAILED(DEVICE->CreateShaderResourceView(m_pTexArr, &tViewDesc,
+		&m_pSRView)))
+	{
+		Safe_Release_VecList(vecTex);
+		return false;
+	}
+
+	Safe_Release_VecList(vecTex);
 
 	return true;
 }

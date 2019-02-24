@@ -24,11 +24,6 @@ Texture2DArray	g_SplatSpc	: register(t13);
 Texture2DArray	g_AlphaTex	: register(t14);
 SamplerState	g_SplatSmp	: register(s11);
 
-Texture2D		g_Target	: register(t1);
-//Texture2D		g_GBufferNrm	: register(t12);
-//Texture2D		g_GBufferDepth	: register(t13);
-//Texture2D		g_GBufferSpc	: register(t14);
-
 VS_OUTPUT_BUMP LandScapeVS(VS_INPUT_BUMP input)
 {
 	VS_OUTPUT_BUMP	output = (VS_OUTPUT_BUMP)0;

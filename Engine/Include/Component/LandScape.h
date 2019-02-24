@@ -18,6 +18,7 @@ typedef struct _tagNodeQuadTree
 	vector<UINT> vecIndex;
 	CGameObject* pGameObject;
 	MESHCONTAINER MeshInfo;
+	DWORD*		 pPixel[4];
 	_tagNodeQuadTree* pNodes[4];
 }QUADTREENODE;
 

@@ -486,7 +486,7 @@ bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const str
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
@@ -521,7 +521,7 @@ bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const stri
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
@@ -556,7 +556,7 @@ bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const st
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
@@ -577,7 +577,7 @@ bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const strin
 
 		if (pMaterial)
 		{
-			pMaterial->AddMultiTexture(strSmpKey, strDifKey, 14, 11,
+			pMaterial->AddMultiTexture_Dynamic(strSmpKey, strDifKey, 14, 11,
 				pvecPath, strPathKey);
 
 			SAFE_RELEASE(pMaterial);
@@ -1012,10 +1012,12 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	node->iTriCount = 0;
 	node->pGameObject = nullptr;
 
-	node->pNodes[0] = nullptr;
-	node->pNodes[1] = nullptr;
-	node->pNodes[2] = nullptr;
-	node->pNodes[3] = nullptr;
+	for (int i = 0; i < 4; i++)
+	{
+		node->pNodes[i] = nullptr;
+		node->pPixel[i] = nullptr;
+	}
+		
 
 	int iNumTriangles = CountTriangles(positionX, positionZ, width);
 
@@ -1090,6 +1092,12 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	
 	node->iSizeZ = (int)node->vMax.z - (int)node->vMin.z;
 	node->iSizeX = (int)node->vMax.x - (int)node->vMin.x;
+
+	// pixel 할당
+	for (int i = 0; i < 4; i++)
+	{
+		node->pPixel[i] = new DWORD[(node->iSizeX + 1) * (node->iSizeZ + 1)];
+	}
 
 	// 정점 할당 
 	node->vecVtx.resize((node->iSizeZ + 1) * (node->iSizeX + 1));

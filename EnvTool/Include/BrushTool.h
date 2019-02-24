@@ -2,6 +2,7 @@
 #include "Component/Script.h"
 #include "GameObject/GameObject.h"
 #include "Component/LandScape.h"
+#include "Resources/Texture.h"
 
 PG_USING
 
@@ -32,11 +33,12 @@ public:
 	void SetUpType(HEIGHTUP_TYPE type) { m_eUpType = type; }
 public:
 	void MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
+	void MovePixel(list<QUADTREENODE*>* list, Vector3 pos, const float& fTime);
 	void ResetHeight();
 
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
-
+	void UpdateTextureBuffer(CTexture* pTexture ,Vector3 pos);
 private:
 	bool  m_bBrushCheck = false;
 	bool  m_bHeightCheck = true;

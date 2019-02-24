@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CTerrainTab, CDialogEx)
 ON_WM_HSCROLL()
 ON_BN_CLICKED(IDC_BUTTON_HEIGHT_RESET, &CTerrainTab::OnBnClickedButtonHeightReset)
 ON_BN_CLICKED(IDC_BUTTON_TEX_LOAD, &CTerrainTab::OnBnClickedButtonTexLoad)
+ON_BN_CLICKED(IDC_BUTTON_SPLAT_LOAD, &CTerrainTab::OnBnClickedButtonSplatLoad)
 END_MESSAGE_MAP()
 
 // CTerrainTab 메시지 처리기
@@ -129,14 +130,14 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
-	vecSplatting.push_back(strSplatPath);
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
+	//vecSplatting.push_back(strSplatPath);
 
-	//vecSplatting.clear();
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
-	vecSplatting.push_back(strSplatPath);
+	////vecSplatting.clear();
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
+	//vecSplatting.push_back(strSplatPath);
 
 	pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
 
@@ -147,13 +148,13 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_NRM.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
-	vecSplatting.push_back(strSplatPath);
+	vecSplatting.push_back(strSplatPath);*/
 
 	pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
 
@@ -164,13 +165,13 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_SPEC.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
-	vecSplatting.push_back(strSplatPath);
+	vecSplatting.push_back(strSplatPath);*/
 
 	pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
 
@@ -180,13 +181,13 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/RoadAlpha.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/SandBaseAlpha.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/WaterBaseAlpha.bmp");
-	vecSplatting.push_back(strSplatPath);
+	vecSplatting.push_back(strSplatPath);*/
 
 	pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", 15, 11, &vecSplatting);
 
@@ -547,4 +548,11 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 			AfxMessageBox(L"Error : No terrain! Make terrain first!");
 		}
 	}
+}
+
+
+void CTerrainTab::OnBnClickedButtonSplatLoad()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	
 }

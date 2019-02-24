@@ -69,6 +69,7 @@
 #define IDC_EDIT7                       1040
 #define IDC_BUTTON_TEX_LOAD             1041
 #define IDC_BUTTON4                     1042
+#define IDC_BUTTON_SPLAT_LOAD           1042
 #define IDC_BUTTON5                     1043
 #define IDC_BUTTON6                     1044
 

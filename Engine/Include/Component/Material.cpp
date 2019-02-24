@@ -439,6 +439,23 @@ void CMaterial::AddMultiTexture(const string & strSmpKey,
 	m_vecMultiTex.push_back(pInfo);
 }
 
+void CMaterial::AddMultiTexture_Dynamic(const string & strSmpKey, const string & strDifKey, int iRegTex, int iRegSmp, const vector<wstring>* pvecPath, const string & strPathKey)
+{
+	PTEXTUREINFO	pInfo = new TEXTUREINFO;
+
+	if (!pvecPath)
+		pInfo->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strDifKey);
+	else
+		pInfo->pTexture = GET_SINGLE(CResourcesManager)->LoadTexture_Dynamic(strDifKey, *pvecPath, strPathKey);
+
+	pInfo->pSampler = GET_SINGLE(CResourcesManager)->FindSampler(strSmpKey);
+
+	pInfo->iRegisterTex = iRegTex;
+	pInfo->iRegisterSmp = iRegSmp;
+
+	m_vecMultiTex.push_back(pInfo);
+}
+
 void CMaterial::SetMaterial(int iShaderConstantType)
 {
 	// Constant Buffer

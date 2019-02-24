@@ -87,6 +87,10 @@ public:
 		const string& strDifKey, int iRegTex = 0, int iRegSmp = 0,
 		const vector<wstring>* pvecPath = NULL,
 		const string& strPathKey = TEXTURE_PATH);
+	void AddMultiTexture_Dynamic(const string& strSmpKey,
+		const string& strDifKey, int iRegTex = 0, int iRegSmp = 0,
+		const vector<wstring>* pvecPath = NULL,
+		const string& strPathKey = TEXTURE_PATH);
 
 	void SetMaterial(int iShaderConstantType);
 	void ResetMaterial(int iShaderConstantType);
