@@ -241,7 +241,7 @@ void CBrushTool::MovePixel(list<QUADTREENODE*>* list, Vector3 mousePos, const fl
 	{
 		CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
 		
-		UpdateTextureBuffer(pTexture, mousePos, m_fPower * fTime);
+		UpdateTextureBuffer_2(pTexture, mousePos, m_fPower * fTime);
 
 		SAFE_RELEASE(pTexture);
 	}
@@ -354,6 +354,60 @@ void CBrushTool::UpdateTextureBuffer(CTexture * pTexture, Vector3 mousePos, floa
 	}
 
 	
+}
+void CBrushTool::UpdateTextureBuffer_2(CTexture * pTexture, Vector3 mousePos, float power)
+{
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+	if (pLandScapeObj)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+		POINT landSize = pLandScape->GetTerrainSize();
+
+		UINT Height = pTexture->GetTexDesc().Height;
+		UINT Width = pTexture->GetTexDesc().Width;
+	
+		Vector3 vMouseUV;
+
+		vMouseUV.x = mousePos.x / (float)landSize.x;
+		vMouseUV.z = ((float)landSize.y - mousePos.z) / landSize.y;
+
+		vMouseUV.x *= Width;
+		vMouseUV.z *= Height;
+
+		for (UINT i = 0; i < Height; ++i)
+		{
+			for (UINT j = 0; j < Width; ++j)
+			{
+				// UV°ª
+				int pixel = i * Width + (j * 1);
+
+				Vector3 vPixelPos;
+				vPixelPos.x = (float)j;
+				vPixelPos.y = 0.f;
+				vPixelPos.z = (float)i;
+
+				float distance = vMouseUV.Distance(vPixelPos);
+
+				if (distance < m_fRange)
+				{
+					// R
+					// G
+					// B
+					// A
+					m_arrPixel2[pixel] = 0xFFFFFFFF;
+				}
+			}
+		}
+
+		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), 0, NULL, m_arrPixel2, Width * 4 , Width * Height * 4);
+
+
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
+
 }
 bool CBrushTool::Init()
 {

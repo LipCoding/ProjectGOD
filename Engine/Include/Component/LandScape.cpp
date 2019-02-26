@@ -581,7 +581,7 @@ bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const strin
 				pvecPath, strPathKey);
 			/*pMaterial->AddMultiTexture(strSmpKey, strDifKey, 14, 11,
 				pvecPath, strPathKey);*/
-
+		
 			SAFE_RELEASE(pMaterial);
 		}
 		else
