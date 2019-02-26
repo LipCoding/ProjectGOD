@@ -62,6 +62,8 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT6, m_editDetail_Tex2);
 	DDX_Control(pDX, IDC_EDIT7, m_editDetail_Tex3);
 	DDX_Control(pDX, IDC_EDIT4, m_editDetail_Tex4);
+	DDX_Control(pDX, IDC_SLIDER_SPLAT_POWER, m_ctrSlideSplatPower);
+	DDX_Control(pDX, IDC_EDIT_SPLAT_POWER, m_editSplatPower);
 }
 
 
@@ -78,6 +80,7 @@ ON_WM_HSCROLL()
 ON_BN_CLICKED(IDC_BUTTON_HEIGHT_RESET, &CTerrainTab::OnBnClickedButtonHeightReset)
 ON_BN_CLICKED(IDC_BUTTON_TEX_LOAD, &CTerrainTab::OnBnClickedButtonTexLoad)
 ON_BN_CLICKED(IDC_BUTTON_SPLAT_LOAD, &CTerrainTab::OnBnClickedButtonSplatLoad)
+ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
 // CTerrainTab 메시지 처리기
@@ -130,14 +133,14 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
 	vecSplatting.push_back(strSplatPath);
 
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
-	//vecSplatting.push_back(strSplatPath);
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
+	vecSplatting.push_back(strSplatPath);
 
-	////vecSplatting.clear();
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
-	//vecSplatting.push_back(strSplatPath);
+	//vecSplatting.clear();
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
+	vecSplatting.push_back(strSplatPath);
 
 	pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
 
@@ -148,13 +151,13 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_NRM.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
-	vecSplatting.push_back(strSplatPath);*/
+	vecSplatting.push_back(strSplatPath);
 
 	pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
 
@@ -165,29 +168,29 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_SPEC.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
-	vecSplatting.push_back(strSplatPath);*/
+	vecSplatting.push_back(strSplatPath);
 
 	pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
 
 	// File
 	vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Height.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	/*memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/SandBaseAlpha.bmp");
+	wsprintf(strSplatPath, L"LandScape/Splat.bmp");
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/WaterBaseAlpha.bmp");
-	vecSplatting.push_back(strSplatPath);*/
+	wsprintf(strSplatPath, L"LandScape/Splat2.bmp");
+	vecSplatting.push_back(strSplatPath);
+
+	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	wsprintf(strSplatPath, L"LandScape/Splat3.bmp");
+	vecSplatting.push_back(strSplatPath);
 
 	pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", 15, 11, &vecSplatting);
 
@@ -232,6 +235,7 @@ BOOL CTerrainTab::OnInitDialog()
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 	CString num;
 
+	// Range
 	m_ctrSliderBrushRange.SetRange(1, 50);
 	m_ctrSliderBrushRange.SetPos(1);
 	num.Format(_T("%d"), 1);
@@ -243,7 +247,7 @@ BOOL CTerrainTab::OnInitDialog()
 	// 키보드 커서키 조작시 증감 크기
 	m_ctrSliderBrushRange.SetLineSize(1);
 
-	//
+	// Height Power
 	m_ctrSliderHeightPower.SetRange(1, 100);
 	m_ctrSliderHeightPower.SetPos(10);
 	num.Format(_T("%f"), 10 / 10.f);
@@ -255,6 +259,16 @@ BOOL CTerrainTab::OnInitDialog()
 	// 키보드 커서키 조작시 증감 크기
 	m_ctrSliderHeightPower.SetLineSize(1);
 
+	// Splat Power
+	m_ctrSlideSplatPower.SetRange(50, 500);
+	m_ctrSlideSplatPower.SetPos(50);
+	num.Format(_T("%d"), 50);
+	m_editSplatPower.SetWindowTextW(num);
+
+	m_ctrSlideSplatPower.SetTicFreq(50);
+
+	m_ctrSlideSplatPower.SetLineSize(50);
+
 	//
 	m_ctrSliderDetail_Default.SetRange(1, 50);
 	m_ctrSliderDetail_Default.SetPos(1);
@@ -264,6 +278,8 @@ BOOL CTerrainTab::OnInitDialog()
 
 	// 키보드 커서키 조작시 증감 크기
 	m_ctrSliderDetail_Default.SetLineSize(1);
+
+
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -555,4 +571,36 @@ void CTerrainTab::OnBnClickedButtonSplatLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
+}
+
+
+void CTerrainTab::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (pScrollBar)
+	{
+		CString num;
+
+		if (pScrollBar == (CScrollBar*)&m_ctrSlideSplatPower)
+		{
+			int iPos = m_ctrSlideSplatPower.GetPos();
+
+			CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+			CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+			pBrushTool->SetPower((float)iPos);
+			num.Format(_T("%d"), iPos);
+			m_editSplatPower.SetWindowTextW(num);
+
+			SAFE_RELEASE(pBrushTool);
+			SAFE_RELEASE(pBrushObj);
+
+		}
+	}
+	else
+	{
+
+	}
+
+	CDialogEx::OnVScroll(nSBCode, nPos, pScrollBar);
 }

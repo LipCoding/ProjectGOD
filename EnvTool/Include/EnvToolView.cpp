@@ -265,11 +265,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				}
 				else if (pBrushTool->GetSplattingCheck())
 				{
-					list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByRadius(pBrushTool->GetBrushRange());
-					if (!pNodes->empty())
-					{
-						pBrushTool->MovePixel(pNodes, m_vPickPos, fTime);
-					}
+					pBrushTool->MovePixel(2, m_vPickPos, fTime);
 				}
 				SAFE_RELEASE(pBrushTool);
 				break;

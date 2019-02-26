@@ -94,6 +94,11 @@ void CBrushTool::SetSpeedDir(bool check)
 	}
 }
 
+void CBrushTool::SetPower(float power)
+{
+	m_fPower = power;
+}
+
 void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float & fTime)
 {
 	for (auto& node : *list)
@@ -235,16 +240,43 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 	}
 }
 
-void CBrushTool::MovePixel(list<QUADTREENODE*>* list, Vector3 mousePos, const float & fTime)
+void CBrushTool::MovePixel(int texType, Vector3 mousePos, const float & fTime)
 {
-	for (auto& node : *list)
-	{
-		CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
-		
-		UpdateTextureBuffer_2(pTexture, mousePos, m_fPower * fTime);
+	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
+	UpdateTextureBuffer(texType, pTexture, mousePos, m_fPower * fTime);
+	SAFE_RELEASE(pTexture);
 
-		SAFE_RELEASE(pTexture);
-	}
+	//switch (texType)
+	//{
+	//case 0:
+	//{
+	//	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
+	//	UpdateTextureBuffer(texType, pTexture, mousePos, m_fPower * fTime);
+	//	SAFE_RELEASE(pTexture);
+	//	break;
+	//}
+	//case 1:
+	//{
+	//	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha1");
+	//	UpdateTextureBuffer(texType, pTexture, mousePos, m_fPower * fTime);
+	//	SAFE_RELEASE(pTexture);
+	//	break;
+	//}
+	//case 2:
+	//{
+	//	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha2");
+	//	UpdateTextureBuffer(texType, pTexture, mousePos, m_fPower * fTime);
+	//	SAFE_RELEASE(pTexture);
+	//	break;
+	//}
+	//case 3:
+	//{
+	//	/*CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
+	//	UpdateTextureBuffer(texType, pTexture, mousePos, m_fPower * fTime);
+	//	SAFE_RELEASE(pTexture);
+	//	break;*/
+	//}
+	//}
 }
 
 void CBrushTool::ResetHeight()
@@ -283,91 +315,68 @@ void CBrushTool::UpdateVtxBuffer(MESHCONTAINER * info, vector<VERTEXBUMP>& vtx)
 	CONTEXT->Unmap(info->tVB.pBuffer, 0);
 }
 
-void CBrushTool::UpdateTextureBuffer(CTexture * pTexture, Vector3 mousePos, float power)
+void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power)
 {
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 
 	if (pLandScapeObj)
 	{
-		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-
-		POINT landSize = pLandScape->GetTerrainSize();
-
 		UINT Height = pTexture->GetTexDesc().Height;
 		UINT Width = pTexture->GetTexDesc().Width;
 
-		D3D11_MAPPED_SUBRESOURCE tMap = {};
-		HRESULT hr = CONTEXT->Map(pTexture->GetTexArr(), 0, D3D11_MAP_WRITE_DISCARD, 0 , &tMap);
+		D3D11_MAPPED_SUBRESOURCE   tMap = {};
+		vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
 
-		Vector3 vMouseUV;
-		
-		vMouseUV.x = mousePos.x / (float)landSize.x;
-		vMouseUV.z = ((float)landSize.y - mousePos.z) / landSize.y;
-
-		vMouseUV.x *= Width;
-		vMouseUV.z *= Height;
-
-		BYTE* data = reinterpret_cast<BYTE*>(tMap.pData);
-
-		for (UINT i = 0; i < Height; ++i)
+		if (m_pArrPixel[texType] == nullptr)
 		{
-			for (UINT j = 0; j < Width; ++j)
+			m_pArrPixel[texType] = new UINT32[Height * Width];
+			
+			//for (size_t i = 0; i < vecTex.size(); ++i)
+			//{
+				//for (int iMipLevel = 0; iMipLevel < pTexture->GetTexDesc().MipLevels;
+				//	++iMipLevel)
+				//{
+					CONTEXT->Map(vecTex[texType], 0, D3D11_MAP_READ,
+						0, &tMap);
+					m_pArrPixel_Byte = reinterpret_cast<BYTE*>(tMap.pData);
+					CONTEXT->Unmap(vecTex[texType], 0);
+				//}
+			//}
+
+			for (UINT i = 0; i < Height; ++i)
 			{
-				// UV값
-				int pixel = i * tMap.RowPitch + (j * 4);
-
-				Vector3 vPixelPos;
-				vPixelPos.x = (float)j;
-				vPixelPos.y = 0.f;
-				vPixelPos.z = (float)i;
-
-				float distance = vMouseUV.Distance(vPixelPos);
-
-				if (distance < m_fRange)
+				for (UINT j = 0; j < Width; ++j)
 				{
-					BYTE* blue = &data[pixel];
-					BYTE* green = &data[pixel] + 1;
-					BYTE* red = &data[pixel] + 2;
+					// UV값
+					int pixel = i * tMap.RowPitch + (j * 4);
+					int pixel2 = i * Width + (j * 1);
 
-					if (*blue < 255
-						&& *green < 255
-						&& *red < 255)
-					{
-						*blue = 255;
-						*green = 255;
-						*red = 255;
-					}
+					// 강제형변환은 오른쪽부터 크기만큼 짤림
+					// R
+					BYTE r = (BYTE)(m_pArrPixel_Byte[pixel]);
+					// G
+					BYTE g = (BYTE)(m_pArrPixel_Byte[pixel] + 1);
+					// B
+					BYTE b = (BYTE)(m_pArrPixel_Byte[pixel] + 2);
+					// A
+					BYTE a = (BYTE)(m_pArrPixel_Byte[pixel] + 3);
 
-					if (*blue > 255)
-						*blue = 255;
-					if (*green > 255)
-						*green = 255;
-					if (*red > 255)
-						*red = 255;
+					UINT32 tempR = (r << 8 * 3);
+					UINT32 tempG = (g << 8 * 2);
+					UINT32 tempB = (b << 8 * 1);
+					UINT32 tempA = (a << 8 * 0);
+					//
+					(m_pArrPixel[texType])[pixel2] = tempR | tempG | tempB | tempA;
 				}
 			}
 		}
-		CONTEXT->Unmap(pTexture->GetTexArr(), 0);
 
-		SAFE_RELEASE(pLandScape);
-		SAFE_RELEASE(pLandScapeObj);
-	}
-
-	
-}
-void CBrushTool::UpdateTextureBuffer_2(CTexture * pTexture, Vector3 mousePos, float power)
-{
-	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
-
-	if (pLandScapeObj)
-	{
 		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 
 		POINT landSize = pLandScape->GetTerrainSize();
 
-		UINT Height = pTexture->GetTexDesc().Height;
-		UINT Width = pTexture->GetTexDesc().Width;
-	
+		float fVal = (float)Height / landSize.x;
+
 		Vector3 vMouseUV;
 
 		vMouseUV.x = mousePos.x / (float)landSize.x;
@@ -390,24 +399,179 @@ void CBrushTool::UpdateTextureBuffer_2(CTexture * pTexture, Vector3 mousePos, fl
 
 				float distance = vMouseUV.Distance(vPixelPos);
 
-				if (distance < m_fRange)
+				if (distance < m_fRange * fVal)
 				{
+					// 강제형변환은 오른쪽부터 크기만큼 짤림
 					// R
+					BYTE r = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 3);
 					// G
+					BYTE g = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 2);
 					// B
+					BYTE b = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 1);
 					// A
-					m_arrPixel2[pixel] = 0xFFFFFFFF;
+					BYTE a = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 0);
+
+					if (r < 255 || g < 255
+						|| b < 255 || a < 255)
+					{
+						r += (BYTE)(power);
+						g += (BYTE)(power);
+						b += (BYTE)(power);
+						a += (BYTE)(power);
+					}
+
+					if (r + (BYTE)(power) > 255 ||
+						g + (BYTE)(power) > 255 ||
+						b + (BYTE)(power) > 255 ||
+						a + (BYTE)(power) > 255)
+					{
+						r = 255;
+						g = 255;
+						b = 255;
+						a = 255;
+					}
+
+					UINT32 tempR = (r << 8 * 3);
+					UINT32 tempG = (g << 8 * 2);
+					UINT32 tempB = (b << 8 * 1);
+					UINT32 tempA = (a << 8 * 0);
+					//
+					(m_pArrPixel[texType])[pixel] = tempR | tempG | tempB | tempA;
 				}
 			}
 		}
 
-		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), 0, NULL, m_arrPixel2, Width * 4 , Width * Height * 4);
+		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), texType, NULL, (m_pArrPixel[texType]), Width * 4, Width * Height * 4);
 
+		/*for (size_t i = 0; i < vecTex.size(); ++i)
+		{
+			for (int iMipLevel = 0; iMipLevel < pTexture->GetTexDesc().MipLevels;
+				++iMipLevel)
+			{
+				D3D11_MAPPED_SUBRESOURCE	tMap = {};
+
+				CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_READ,
+					0, &tMap);
+
+				CONTEXT->UpdateSubresource(pTexture->GetTexArr(),
+					D3D11CalcSubresource(iMipLevel, i, pTexture->GetTexDesc().MipLevels),
+					NULL, tMap.pData, tMap.RowPitch, tMap.DepthPitch);
+
+				CONTEXT->Unmap(vecTex[i], iMipLevel);
+			}
+		}*/
 
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 	}
 
+//	{
+//	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+//
+//	if (pLandScapeObj)
+//	{
+//		UINT Height = pTexture->GetTexDesc().Height;
+//		UINT Width = pTexture->GetTexDesc().Width;
+//
+//		if (m_pArrPixel == nullptr)
+//		{
+//			vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
+//
+//			for (size_t i = 0; i < vecTex.size(); ++i)
+//			{
+//				for (int iMipLevel = 0; iMipLevel < pTexture->GetTexDesc().MipLevels;
+//					++iMipLevel)
+//				{
+//					D3D11_MAPPED_SUBRESOURCE   tMap = {};
+//
+//					CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_READ,
+//						0, &tMap);
+//					//m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
+//					m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
+//					//memcpy(m_arrPixel2, tMap.pData, Height * Width * 4);
+//
+//					CONTEXT->Unmap(vecTex[i], iMipLevel);
+//				}
+//			}
+//		}
+//
+//		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+//
+//		POINT landSize = pLandScape->GetTerrainSize();
+//
+//		float fVal = (float)Height / landSize.x;
+//
+//		Vector3 vMouseUV;
+//
+//		vMouseUV.x = mousePos.x / (float)landSize.x;
+//		vMouseUV.z = ((float)landSize.y - mousePos.z) / landSize.y;
+//
+//		vMouseUV.x *= Width;
+//		vMouseUV.z *= Height;
+//
+//		for (UINT i = 0; i < Height; ++i)
+//		{
+//			for (UINT j = 0; j < Width; ++j)
+//			{
+//				// UV값
+//				int pixel = i * Width + (j * 1);
+//
+//				Vector3 vPixelPos;
+//				vPixelPos.x = (float)j;
+//				vPixelPos.y = 0.f;
+//				vPixelPos.z = (float)i;
+//
+//				float distance = vMouseUV.Distance(vPixelPos);
+//
+//				if (distance < m_fRange * fVal)
+//				{
+//					// 강제형변환은 오른쪽부터 크기만큼 짤림
+//					// R
+//					BYTE r = (BYTE)(m_pArrPixel[pixel] >> 8 * 3);
+//					// G
+//					BYTE g = (BYTE)(m_pArrPixel[pixel] >> 8 * 2);
+//					// B
+//					BYTE b = (BYTE)(m_pArrPixel[pixel] >> 8 * 1);
+//					// A
+//					BYTE a = (BYTE)(m_pArrPixel[pixel] >> 8 * 0);
+//
+//					if (r < 255 || g < 255
+//						|| b < 255 || a < 255)
+//					{
+//						r += (BYTE)(power);
+//						g += (BYTE)(power);
+//						b += (BYTE)(power);
+//						a += (BYTE)(power);
+//					}
+//
+//					if (r + (BYTE)(power) > 255 ||
+//						g + (BYTE)(power) > 255 ||
+//						b + (BYTE)(power) > 255 ||
+//						a + (BYTE)(power) > 255)
+//					{
+//						r = 255;
+//						g = 255;
+//						b = 255;
+//						a = 255;
+//					}
+//
+//					UINT32 tempR = (r << 8 * 3);
+//					UINT32 tempG = (g << 8 * 2);
+//					UINT32 tempB = (b << 8 * 1);
+//					UINT32 tempA = (a << 8 * 0);
+//					//
+//					m_pArrPixel[pixel] = tempR | tempG | tempB | tempA;
+//				}
+//			}
+//		}
+//
+//		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), 0, NULL, m_pArrPixel, Width * 4, Width * Height * 4);
+//
+//
+//		SAFE_RELEASE(pLandScape);
+//		SAFE_RELEASE(pLandScapeObj);
+//	}
+//}
 }
 bool CBrushTool::Init()
 {

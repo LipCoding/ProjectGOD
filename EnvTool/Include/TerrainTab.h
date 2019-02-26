@@ -44,6 +44,7 @@ public:
 	afx_msg void OnRadioCheck_Texture(UINT id);
 	afx_msg void OnBnClickedButtonHeightReset();
 	afx_msg void OnBnClickedButtonTexLoad();
+	afx_msg void OnBnClickedButtonSplatLoad();
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;
@@ -53,13 +54,15 @@ private:
 	CSliderCtrl m_ctrSliderHeightPower;
 	CEdit m_editHeightPower;
 	CSliderCtrl m_ctrSliderDetail_Default;
-
 	CEdit m_editDetail_Default;
+	CSliderCtrl m_ctrSlideSplatPower;
+	CEdit m_editSplatPower;
+
+
 	CEdit m_editDetail_Tex1;
 	CEdit m_editDetail_Tex2;
 	CEdit m_editDetail_Tex3;
 	CEdit m_editDetail_Tex4;
-
 public:
-	afx_msg void OnBnClickedButtonSplatLoad();
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };

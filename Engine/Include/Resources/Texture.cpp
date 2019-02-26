@@ -422,7 +422,7 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 		m_vecImage.push_back(pImage);
 	}
 
-	vector<ID3D11Texture2D*>	vecTex;
+	//vector<ID3D11Texture2D*>	vecTex;
 
 	for (size_t i = 0; i < m_vecImage.size(); ++i)
 	{
@@ -433,15 +433,15 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 			D3D11_USAGE_STAGING, 0,
 			D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ, 0, FALSE, (ID3D11Resource**)&pTex)))
 		{
-			Safe_Release_VecList(vecTex);
+			Safe_Release_VecList(m_vecTex);
 			return false;
 		}
 
-		vecTex.push_back(pTex);
+		m_vecTex.push_back(pTex);
 	}
 
 	D3D11_TEXTURE2D_DESC	tTexDesc = {};
-	vecTex[0]->GetDesc(&tTexDesc);
+	m_vecTex[0]->GetDesc(&tTexDesc);
 
 	// 읽어온 이미지들로 TextureArray를 생성한다.
 	//D3D11_TEXTURE2D_DESC	tTexArr = {};
@@ -449,7 +449,7 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 	m_tTexArr.Width = tTexDesc.Width;
 	m_tTexArr.Height = tTexDesc.Height;
 	m_tTexArr.MipLevels = tTexDesc.MipLevels;
-	m_tTexArr.ArraySize = vecTex.size();
+	m_tTexArr.ArraySize = m_vecTex.size();
 	m_tTexArr.Format = tTexDesc.Format;
 	m_tTexArr.SampleDesc.Count = 1;
 	m_tTexArr.SampleDesc.Quality = 0;
@@ -468,21 +468,21 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 		return false;
 	}*/
 
-	for (size_t i = 0; i < vecTex.size(); ++i)
+	for (size_t i = 0; i < m_vecTex.size(); ++i)
 	{
 		for (int iMipLevel = 0; iMipLevel < tTexDesc.MipLevels;
 			++iMipLevel)
 		{
 			D3D11_MAPPED_SUBRESOURCE	tMap = {};
 
-			CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_READ,
+			CONTEXT->Map(m_vecTex[i], iMipLevel, D3D11_MAP_READ,
 				0, &tMap);
 
 			CONTEXT->UpdateSubresource(m_pTexArr,
 				D3D11CalcSubresource(iMipLevel, i, tTexDesc.MipLevels),
 				NULL, tMap.pData, tMap.RowPitch, tMap.DepthPitch);
 
-			CONTEXT->Unmap(vecTex[i], iMipLevel);
+			CONTEXT->Unmap(m_vecTex[i], iMipLevel);
 		}
 	}
 
@@ -491,16 +491,16 @@ bool CTexture::LoadTextureFromFullPath_Dynamic(const string & strKey, const vect
 	tViewDesc.Format = m_tTexArr.Format;
 	tViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 	tViewDesc.Texture2DArray.MipLevels = m_tTexArr.MipLevels;
-	tViewDesc.Texture2DArray.ArraySize = vecTex.size();
+	tViewDesc.Texture2DArray.ArraySize = m_vecTex.size();
 
 	if (FAILED(DEVICE->CreateShaderResourceView(m_pTexArr, &tViewDesc,
 		&m_pSRView)))
 	{
-		Safe_Release_VecList(vecTex);
+		Safe_Release_VecList(m_vecTex);
 		return false;
 	}
 
-	Safe_Release_VecList(vecTex);
+	//Safe_Release_VecList(m_vecTex);
 	//SAFE_RELEASE(pTexArr);
 
 	return true;
