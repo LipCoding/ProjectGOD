@@ -486,7 +486,7 @@ bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const str
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
@@ -521,7 +521,7 @@ bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const stri
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
@@ -556,12 +556,12 @@ bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const st
 		SAFE_RELEASE(pRenderer);
 	}
 
-	++m_iSplatCount;
+	//++m_iSplatCount;
 
 	return true;
 }
 
-bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const string & strDifKey, int iRegTex, int iRegSmp, const vector<wstring>* pvecPath, const string & strPathKey)
+bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
 {
 	list<QUADTREENODE*>* nodes = FindNode_All();
 
@@ -615,7 +615,6 @@ bool CLandScape::SetDiffuseSplatting(const string & strSmpKey, const string & st
 
 		SAFE_RELEASE(pMaterial);
 	}
-
 	else
 	{
 		assert(false);
@@ -721,7 +720,7 @@ bool CLandScape::SetSplattingAlpha(const string & strSmpKey,
 	return true;
 }
 
-void CLandScape::SetMaterial_DNS(const wchar_t * pFileName, const wchar_t * pNormalName, const wchar_t * pSpecularName)
+void CLandScape::SetMaterial_DNS_Default(const wchar_t * pFileName, const wchar_t * pNormalName, const wchar_t * pSpecularName)
 {
 	// 머테리얼 등록
 	list<QUADTREENODE*>* nodes = FindNode_All();
@@ -771,6 +770,32 @@ void CLandScape::SetMaterial_DNS(const wchar_t * pFileName, const wchar_t * pNor
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
 	}
+}
+
+void CLandScape::SetMaterial_Splatting(vector<wstring>& vecDif, vector<wstring>& vecNormal, vector<wstring>& vecSpecular, vector<wstring>& vecAlpha)
+{
+	list<QUADTREENODE*>* nodes = FindNode_All();
+
+	for (auto& node : *nodes)
+	{
+		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->ResetMultiTextureInfo();
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+	}
+
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("SplatDif");
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("SplatNormal");
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("SplatSpecular");
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("SplatAlpha");
+
+	SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecDif);
+	SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecNormal);
+	SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSpecular);
+	SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecAlpha);
 }
 
 bool CLandScape::Init()
@@ -1294,7 +1319,7 @@ void CLandScape::UpdateNode(QUADTREENODE * node)
 		// brush
 		if (m_bCheckBrush)
 		{
-			tBuffer.fEmpty1 = 1.f;
+ 			tBuffer.fEmpty1 = 1.f;
 			tBuffer.fRangeBrush = m_fRangeBrush;
 			tBuffer.vPosBrush = m_vPosBrush;
 			tBuffer.vColorBrush = m_vColorBrush;

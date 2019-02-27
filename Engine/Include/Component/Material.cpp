@@ -592,6 +592,18 @@ void CMaterial::ResetTextureInfo()
 	}
 }
 
+void CMaterial::ResetMultiTextureInfo()
+{
+	for (size_t i = 0; i < m_vecMultiTex.size(); ++i)
+	{
+		SAFE_RELEASE(m_vecMultiTex[i]->pTexture);
+		SAFE_RELEASE(m_vecMultiTex[i]->pSampler);
+		SAFE_DELETE(m_vecMultiTex[i]);
+	}
+
+	m_vecMultiTex.clear();
+}
+
 void CMaterial::SetTexturePathKey(const string & strPathKey)
 {
 	if (m_pDifInfo)

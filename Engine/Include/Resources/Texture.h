@@ -25,7 +25,7 @@ private:
 
 private:
 	D3D11_TEXTURE2D_DESC m_tTexArr;
-	ID3D11Texture2D*	 m_pTexArr = NULL;
+	ID3D11Texture2D*	 m_pTexArr = nullptr;
 	vector<ID3D11Texture2D*> m_vecTex;
 public:
 	D3D11_TEXTURE2D_DESC GetTexDesc() { return m_tTexArr; }

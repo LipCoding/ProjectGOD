@@ -265,10 +265,17 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) + 
 						(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
-		vBumpNormal = vSplatNormal;
+		vBumpNormal += vSplatNormal;
 
-		vColor = (vColor * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
-			vSplatColor * vSplatAlpha);
+		//if (!g_fEmpty1)
+		{
+			vColor = (vColor * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
+				vSplatColor * vSplatAlpha);
+		}
+		//else
+		{
+
+		}
 	}
 
 	vBumpNormal = normalize(vBumpNormal);

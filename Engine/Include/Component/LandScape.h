@@ -110,13 +110,18 @@ public:
 		const vector<wstring>* pvecPath = NULL,
 		const string& strPathKey = TEXTURE_PATH);
 	bool SetSplattingAlphaQuadTree(const string& strSmpKey,
-		const string& strDifKey, int iRegTex = 0, int iRegSmp = 0,
+		const string& strDifKey,
 		const vector<wstring>* pvecPath = NULL,
 		const string& strPathKey = TEXTURE_PATH);
 
-	void SetMaterial_DNS(const wchar_t* pFileName,
+	void SetMaterial_DNS_Default(const wchar_t* pFileName,
 		const wchar_t* pNormalName,
 		const wchar_t* pSpecularName);
+	void SetMaterial_Splatting(
+		vector<wstring>& vecDif, 
+		vector<wstring>& vecNormal, 
+		vector<wstring>& vecSpecular,
+		vector<wstring>& vecAlpha);
 
 public:
 	virtual bool Init();

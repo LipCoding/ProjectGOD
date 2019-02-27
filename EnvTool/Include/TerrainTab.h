@@ -1,6 +1,5 @@
 ﻿#pragma once
-
-
+#include "Core/PathManager.h"
 // CTerrainTab 대화 상자
 
 class CTerrainTab : public CDialogEx
@@ -30,14 +29,13 @@ private:
 	UINT  m_iRadio2;
 	UINT  m_iRadio_Texture;
 
-
-
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButtonAdjSize();
 	afx_msg void OnBnClickedCheckBrush();
 //	afx_msg void OnNMReleasedcaptureSliderRange(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnRadioCheck(UINT id);
 	afx_msg void OnRadioCheck1(UINT id);
 	afx_msg void OnRadioCheck2(UINT id);
@@ -58,11 +56,13 @@ private:
 	CSliderCtrl m_ctrSlideSplatPower;
 	CEdit m_editSplatPower;
 
-
 	CEdit m_editDetail_Tex1;
 	CEdit m_editDetail_Tex2;
 	CEdit m_editDetail_Tex3;
 	CEdit m_editDetail_Tex4;
-public:
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+
+	vector<wstring>	m_vecSplattingDiffuse;
+	vector<wstring> m_vecSplattingNormal;
+	vector<wstring> m_vecSplattingSpecular;
+	vector<wstring> m_vecSplattingAlpha;
 };

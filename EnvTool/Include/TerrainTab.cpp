@@ -16,7 +16,6 @@
 #include "Component/Terrain2D.h"
 #include "Component/LandScape.h"
 #include "Component/Picking.h"
-#include "Core/PathManager.h"
 
 #include "BrushTool.h"
 
@@ -133,16 +132,13 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01.dds");
-	vecSplatting.push_back(strSplatPath);
-
 	//vecSplatting.clear();
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
 	vecSplatting.push_back(strSplatPath);
 
-	pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
+
+	//pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
 
 
 	// Normal
@@ -152,14 +148,11 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_NRM.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
+
+	//pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
 
 
 	// Specular
@@ -169,14 +162,10 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	vecSplatting.push_back(strSplatPath);
 
 	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Pebbles_01_SPEC.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
+	//pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
 
 	// File
 	vecSplatting.clear();
@@ -188,11 +177,7 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	wsprintf(strSplatPath, L"LandScape/Splat2.bmp");
 	vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Splat3.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", 15, 11, &vecSplatting);
+	//pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecSplatting);
 
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
@@ -253,10 +238,7 @@ BOOL CTerrainTab::OnInitDialog()
 	num.Format(_T("%f"), 10 / 10.f);
 	m_editHeightPower.SetWindowTextW(num);
 
-	// 눈금
 	m_ctrSliderHeightPower.SetTicFreq(10);
-
-	// 키보드 커서키 조작시 증감 크기
 	m_ctrSliderHeightPower.SetLineSize(1);
 
 	// Splat Power
@@ -266,19 +248,19 @@ BOOL CTerrainTab::OnInitDialog()
 	m_editSplatPower.SetWindowTextW(num);
 
 	m_ctrSlideSplatPower.SetTicFreq(50);
-
 	m_ctrSlideSplatPower.SetLineSize(50);
 
-	//
 	m_ctrSliderDetail_Default.SetRange(1, 50);
 	m_ctrSliderDetail_Default.SetPos(1);
 	
-	// 눈금
 	m_ctrSliderDetail_Default.SetTicFreq(5);
-
-	// 키보드 커서키 조작시 증감 크기
 	m_ctrSliderDetail_Default.SetLineSize(1);
 
+	// 스플래팅 정보를 담는 벡터 크기 조절
+	m_vecSplattingDiffuse.resize(4);
+	m_vecSplattingNormal.resize(4);
+	m_vecSplattingSpecular.resize(4);
+	m_vecSplattingAlpha.resize(4);
 
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -333,15 +315,38 @@ void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		{
 			int iPos = m_ctrSliderDetail_Default.GetPos();
 
-			CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
-			if (pLandScapeObj)
+			switch (m_iRadio_Texture)
 			{
-				CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			case 0:
+			{
+				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+				if (pLandScapeObj)
+				{
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 
-				pLandScape->SetDetailLevel(iPos);
+					pLandScape->SetDetailLevel(iPos);
 
-				SAFE_RELEASE(pLandScape);
-				SAFE_RELEASE(pLandScapeObj);
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
+				}
+				break;
+			}
+			case 1:
+			{
+				break;
+			}
+			case 2:
+			{
+				break;
+			}
+			case 3:
+			{
+				break;
+			}
+			case 4:
+			{
+				break;
+			}
 			}
 		}
 	}
@@ -428,6 +433,9 @@ void CTerrainTab::OnRadioCheck_Texture(UINT id)
 {
 	UpdateData(TRUE);
 
+	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
 	switch (m_iRadio_Texture)
 	{
 	case 0:
@@ -435,19 +443,22 @@ void CTerrainTab::OnRadioCheck_Texture(UINT id)
 		break;
 	case 1:
 		// Tex
+		pBrushTool->SetTexType(0);
 		break;
 	case 2:
-
+		pBrushTool->SetTexType(1);
 		break;
 	case 3:
-
+		pBrushTool->SetTexType(2);
 		break;
 	case 4:
-
+		pBrushTool->SetTexType(3);
 		break;
 	}
-}
 
+	SAFE_RELEASE(pBrushTool);
+	SAFE_RELEASE(pBrushObj);
+}
 
 void CTerrainTab::OnBnClickedButtonHeightReset()
 {
@@ -460,7 +471,6 @@ void CTerrainTab::OnBnClickedButtonHeightReset()
 	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pBrushObj);
 }
-
 
 void CTerrainTab::OnBnClickedButtonTexLoad()
 {
@@ -514,6 +524,9 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 		CString specularName;
 
 		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
 
 		diffuseName = fileDir + fileTitleName + L"_D";
 		normalName = fileDir + fileTitleName + L"_N";
@@ -525,6 +538,8 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 		normalName += fileType;
 		specularName += fileType;
 
+		wchar_t	strSplatPath[MAX_PATH] = {};
+
 		if (pLandScapeObj)
 		{
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
@@ -533,29 +548,147 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 			{
 			case 0:
 				// Default
-				pLandScape->SetMaterial_DNS(T2W(diffuseName.GetBuffer(0)), T2W(normalName.GetBuffer(0)), T2W(specularName.GetBuffer(0)));
-				//pLandScape->SetMaterial_DNS(nullptr, T2W(normalName.GetBuffer(0)), nullptr);
+				pLandScape->SetMaterial_DNS_Default(T2W(diffuseName.GetBuffer(0)), T2W(normalName.GetBuffer(0)), T2W(specularName.GetBuffer(0)));
 				m_editDetail_Default.SetWindowTextW(fileName);
 				break;
 			case 1:
+			{
 				// Tex
-				m_editDetail_Tex1.SetWindowTextW(fileName);
+				// D
+				wsprintf(strSplatPath, diffuseName);
+				m_vecSplattingDiffuse[0] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+				// N
+				wsprintf(strSplatPath, normalName);
+				m_vecSplattingNormal[0] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+				// S
+				wsprintf(strSplatPath, specularName);
+				m_vecSplattingSpecular[0] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+				// A
+				wsprintf(strSplatPath, L"Tool\\Tex1.bmp");
+				m_vecSplattingAlpha[0] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
 
+				pLandScape->SetMaterial_Splatting(
+					m_vecSplattingDiffuse,
+					m_vecSplattingNormal,
+					m_vecSplattingSpecular,
+					m_vecSplattingAlpha);
+
+				pBrushTool->SetArrPixel(0);
+
+				m_editDetail_Tex1.SetWindowTextW(fileName);
 				break;
+			}
 			case 2:
+			{
+				if (m_vecSplattingAlpha[0] == L"")
+				{
+					AfxMessageBox(L"Error : Add Texture 1 First!");
+					break;
+				}
+
+				wsprintf(strSplatPath, diffuseName);
+				m_vecSplattingDiffuse[1] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, normalName);
+				m_vecSplattingNormal[1] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, specularName);
+				m_vecSplattingSpecular[1] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, L"Tool\\Tex2.bmp");
+				m_vecSplattingAlpha[1] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				pLandScape->SetMaterial_Splatting(m_vecSplattingDiffuse,
+					m_vecSplattingNormal,
+					m_vecSplattingSpecular,
+					m_vecSplattingAlpha);
+
+				pBrushTool->SetArrPixel(1);
+
 				m_editDetail_Tex2.SetWindowTextW(fileName);
 
 				break;
+			}
 			case 3:
+			{
+				if (m_vecSplattingAlpha[1] == L"")
+				{
+					AfxMessageBox(L"Error : Add Texture 2 First!");
+					break;
+				}
+
+				wsprintf(strSplatPath, diffuseName);
+				m_vecSplattingDiffuse[2] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, normalName);
+				m_vecSplattingNormal[2] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, specularName);
+				m_vecSplattingSpecular[2] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, L"Tool\\Tex3.bmp");
+				m_vecSplattingAlpha[2] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				pLandScape->SetMaterial_Splatting(m_vecSplattingDiffuse,
+					m_vecSplattingNormal,
+					m_vecSplattingSpecular,
+					m_vecSplattingAlpha);
+
 				m_editDetail_Tex3.SetWindowTextW(fileName);
 
-				break;
-			case 4:
-				m_editDetail_Tex4.SetWindowTextW(fileName);
+				pBrushTool->SetArrPixel(2);
 
 				break;
 			}
+			case 4:
+			{
+				if (m_vecSplattingAlpha[0] == L"")
+				{
+					AfxMessageBox(L"Error : Add Texture 3 First!");
+					break;
+				}
 
+				wsprintf(strSplatPath, diffuseName);
+				m_vecSplattingDiffuse[3] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+		
+				wsprintf(strSplatPath, normalName);
+				m_vecSplattingNormal[3] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+				
+				wsprintf(strSplatPath, specularName);
+				m_vecSplattingSpecular[3] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				wsprintf(strSplatPath, L"Tool\\Tex4.bmp");
+				m_vecSplattingAlpha[3] = strSplatPath;
+				memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+
+				// process
+				pLandScape->SetMaterial_Splatting(m_vecSplattingDiffuse,
+					m_vecSplattingNormal,
+					m_vecSplattingSpecular,
+					m_vecSplattingAlpha);
+
+				m_editDetail_Tex4.SetWindowTextW(fileName);
+
+				pBrushTool->SetArrPixel(3);
+
+				break;
+			}
+			}
 			SAFE_RELEASE(pLandScape);
 			SAFE_RELEASE(pLandScapeObj);
 		}
@@ -563,6 +696,15 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 		{
 			AfxMessageBox(L"Error : No terrain! Make terrain first!");
 		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			// 기존 픽셀 정보를 다시 Set
+			pBrushTool->SettingOriginPixelToTexture(i);
+		}
+
+		SAFE_RELEASE(pBrushTool);
+		SAFE_RELEASE(pBrushObj);
 	}
 }
 

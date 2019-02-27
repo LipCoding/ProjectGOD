@@ -265,7 +265,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				}
 				else if (pBrushTool->GetSplattingCheck())
 				{
-					pBrushTool->MovePixel(2, m_vPickPos, fTime);
+					pBrushTool->MovePixel(m_vPickPos, fTime);
 				}
 				SAFE_RELEASE(pBrushTool);
 				break;

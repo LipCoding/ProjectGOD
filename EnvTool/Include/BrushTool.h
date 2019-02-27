@@ -32,12 +32,15 @@ public:
 	void SetSpeedDir(bool check);
 	void SetPower(float power);
 	void SetUpType(HEIGHTUP_TYPE type) { m_eUpType = type; }
+	void SetTexType(int type) { m_iTexType = type; }
 
+	void SetArrPixel(int type);
 public:
 	void MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
-	void MovePixel(int texType, Vector3 mousePos, const float& fTime);
+	void MovePixel(Vector3 mousePos, const float& fTime);
 	void ResetHeight();
 
+	void SettingOriginPixelToTexture(int texType);
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
 	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power);
@@ -47,8 +50,9 @@ private:
 	bool  m_bSplattingCheck = false;
 	float m_fRange = 1.f;
 	float m_fUpSpeed = 10.f;
-	float m_fPower = 1.f;
+	float m_fPower = 50.f;
 	HEIGHTUP_TYPE   m_eUpType = UP_TYPE_FLAT;
+	int		m_iTexType = 0;
 	Vector4 m_vColor = Vector4::Red;
 
 	//BYTE m_arrPixel[129 * 129] = {0};

@@ -58,6 +58,11 @@ bool CTexture::LoadTexture(const string & strKey, const vector<wstring>& vecFile
 
 	for (size_t i = 0; i < vecFileName.size(); ++i)
 	{
+		if (vecFileName[i] == L"")
+		{
+			continue;
+		}
+
 		string	strPath;
 
 		if (pPath)
@@ -102,6 +107,11 @@ bool CTexture::LoadTexture_Dynamic(const string & strKey, const vector<wstring>&
 
 	for (size_t i = 0; i < vecFileName.size(); ++i)
 	{
+		if (vecFileName[i] == L"")
+		{
+			continue;
+		}
+
 		string	strPath;
 
 		if (pPath)
