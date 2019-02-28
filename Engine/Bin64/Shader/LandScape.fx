@@ -251,6 +251,8 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 	for (int i = 0; i < g_iSplatCount; i++)
 	{
+		if (i == 4)
+			break;
 		// UV Splat
 		float3	vSplatUV;
 		vSplatUV.xy = input.vUV * (int)g_arrDetailLevelTex[i];

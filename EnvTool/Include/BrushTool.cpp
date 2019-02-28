@@ -72,7 +72,7 @@ void CBrushTool::SetSpeed(float Speed)
 	// up
 	if (m_fUpSpeed < 0.f)
 		m_fUpSpeed = -Speed;
-	
+
 	// down
 	if (m_fUpSpeed >= 0.f)
 		m_fUpSpeed = Speed;
@@ -177,112 +177,453 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 					float fAverValue = 0.2f;
 					float GAP = 4.f;
 
-					int iNumSizeX = int(node->vMax.x - node->vMin.x) + 1;
-
-					if (iter.vPos.x < node->vMax.x &&
-						iter.vPos.x > node->vMin.x)
+					CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+					POINT LandScapeSize = pLandScape->GetTerrainSize();
 					{
-						/*Left*/
-						if (0 < (iIndex - 1) &&
-							node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
+						float minDistance = 1000000.f;
+						Vector3 myNodePos = { node->fCenterX, 0.f, node->fCenterZ };
+						//주변 노드 찾기
+						// 상
+						QUADTREENODE* pUpNode = nullptr;
+						if (node->vMax.z < (float)LandScapeSize.y)
 						{
-							iScrIndex = iIndex - 1;
-							fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-							if (fGap > fAverValue)
+							for (const auto searchNode : *list)
 							{
-								fGap /= GAP;
+								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
 
-								if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+								float fDistance = myNodePos.Distance(otherNodePos);
+
+								if (otherNodePos.z > myNodePos.z &&
+									fDistance < minDistance)
 								{
-									node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
-									node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									minDistance = fDistance;
+									pUpNode = searchNode;
 								}
-								else
+							}
+						}
+						// 하
+						QUADTREENODE* pDownNode = nullptr;
+						minDistance = 1000000.f;
+						if (node->vMin.z > 0.f)
+						{
+							for (const auto searchNode : *list)
+							{
+								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+								float fDistance = myNodePos.Distance(otherNodePos);
+
+								if (otherNodePos.z < myNodePos.z &&
+									fDistance < minDistance)
 								{
-									node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									minDistance = fDistance;
+									pDownNode = searchNode;
+								}
+							}
+						}
+						// 좌
+						QUADTREENODE* pLeftNode = nullptr;
+						minDistance = 1000000.f;
+						if (node->vMin.x > 0.f)
+						{
+							for (const auto searchNode : *list)
+							{
+								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+								float fDistance = myNodePos.Distance(otherNodePos);
+
+								if (otherNodePos.x < myNodePos.x &&
+									fDistance < minDistance)
+								{
+									minDistance = fDistance;
+									pLeftNode = searchNode;
+								}
+							}
+						}
+						// 우
+						QUADTREENODE* pRightNode = nullptr;
+						minDistance = 1000000.f;
+						if (node->vMax.x < LandScapeSize.x)
+						{
+							for (const auto searchNode : *list)
+							{
+								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+								float fDistance = myNodePos.Distance(otherNodePos);
+
+								if (otherNodePos.x > myNodePos.x &&
+									fDistance < minDistance)
+								{
+									minDistance = fDistance;
+									pRightNode = searchNode;
 								}
 							}
 						}
 
-						/*Right*/
-						if (node->vecVtx.size() > (iIndex + 1) &&
-							node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
-						{
-							iScrIndex = iIndex + 1;
-							fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+						int iNumSizeX = int(node->vMax.x - node->vMin.x) + 1;
 
-							if (fGap > fAverValue)
+						// 노드 외곽
+						// 상 -> 하 좌 우
+						if (iter.vPos.z == node->vMax.z)
+						{ 
+							if (pUpNode)
 							{
-								fGap /= GAP;
-
-								if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+								Vector3* upPos_otherNode;
+								for (auto& iter_otherNode : pUpNode->vecVtx)
 								{
-									node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									if (iter_otherNode.vPos.z == iter.vPos.z + 1 &&
+										iter_otherNode.vPos.x == iter.vPos.x)
+									{
+										upPos_otherNode = &iter_otherNode.vPos;
+										break;
+									}
 								}
-								else
+								/*Up*/
+								fGap = abs(node->vecVtx[iIndex].vPos.y - (*upPos_otherNode).y);
+
+								if (fGap > fAverValue)
 								{
-									node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > (*upPos_otherNode).y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										(*upPos_otherNode).y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										(*upPos_otherNode).y -= fGap * fTime* 3.f;
+									}
 								}
 							}
 						}
+						// 하 -> 상 좌 우
+						if (iter.vPos.z == node->vMin.z)
+						{ 
+							if (pDownNode)
+							{
+								Vector3* downPos_otherNode;
+								for (auto& iter_otherNode : pDownNode->vecVtx)
+								{
+									if (iter_otherNode.vPos.z == iter.vPos.z - 1 &&
+										iter_otherNode.vPos.x == iter.vPos.x)
+									{
+										downPos_otherNode = &iter_otherNode.vPos;
+										break;
+									}
+								}
+								/*Down*/
+								fGap = abs(node->vecVtx[iIndex].vPos.y - (*downPos_otherNode).y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > (*downPos_otherNode).y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										(*downPos_otherNode).y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										(*downPos_otherNode).y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+						}
+						// 좌 -> 상 하 우
+						if (iter.vPos.x == node->vMin.x)
+						{ 
+							if (pLeftNode)
+							{
+								Vector3* leftPos_otherNode;
+								for (auto& iter_otherNode : pLeftNode->vecVtx)
+								{
+									if (iter_otherNode.vPos.x == iter.vPos.x - 1 &&
+										iter_otherNode.vPos.z == iter.vPos.z)
+									{
+										leftPos_otherNode = &iter_otherNode.vPos;
+										break;
+									}
+								}
+
+								/*Left*/
+								fGap = abs(node->vecVtx[iIndex].vPos.y - (*leftPos_otherNode).y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > (*leftPos_otherNode).y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
+										(*leftPos_otherNode).y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										(*leftPos_otherNode).y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+						}
+						// 우 -> 상 하 좌
+						if (iter.vPos.x == node->vMax.x)
+						{ 
+							if (pRightNode)
+							{
+								Vector3* rightPos_otherNode;
+								for (auto& iter_otherNode : pRightNode->vecVtx)
+								{
+									if (iter_otherNode.vPos.x == iter.vPos.x + 1 &&
+										iter_otherNode.vPos.z == iter.vPos.z)
+									{
+										rightPos_otherNode = &iter_otherNode.vPos;
+										break;
+									}
+								}
+
+								/*Right*/
+								fGap = abs(node->vecVtx[iIndex].vPos.y - (*rightPos_otherNode).y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > (*rightPos_otherNode).y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										(*rightPos_otherNode).y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										(*rightPos_otherNode).y -= fGap * fTime* 3.f;
+									}
+								}
+							}	
+						}
+						
+
+						// 노드 내부 정점 변화
+						if (iter.vPos.x < node->vMax.x &&
+							iter.vPos.x > node->vMin.x)
+						{
+							/*Left*/
+							if (0 < (iIndex - 1) &&
+								node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
+							{
+								iScrIndex = iIndex - 1;
+								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
+										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+
+							/*Right*/
+							if (node->vecVtx.size() > (iIndex + 1) &&
+								node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
+							{
+								iScrIndex = iIndex + 1;
+								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+						}
+
+						if (iter.vPos.z < node->vMax.z &&
+							iter.vPos.z > node->vMin.z)
+						{
+							/*Up*/
+							if (node->vecVtx.size() > (iIndex + iNumSizeX) &&
+								node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
+							{
+								iScrIndex = iIndex + iNumSizeX;
+								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+
+							/*Down*/
+							if (0 < (iIndex - iNumSizeX) &&
+								node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
+							{
+								iScrIndex = iIndex - iNumSizeX;
+								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+								if (fGap > fAverValue)
+								{
+									fGap /= GAP;
+
+									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+									{
+										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+									}
+									else
+									{
+										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+									}
+								}
+							}
+						}
+
 					}
-
-					if (iter.vPos.z < node->vMax.z &&
-						iter.vPos.z > node->vMin.z)
-					{
-						/*Up*/
-						if (node->vecVtx.size() > (iIndex + iNumSizeX) &&
-							node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
-						{
-							iScrIndex = iIndex + iNumSizeX;
-							fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-							if (fGap > fAverValue)
-							{
-								fGap /= GAP;
-
-								if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-								{
-									node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-								}
-								else
-								{
-									node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-								}
-							}
-						}
-
-						/*Down*/
-						if (0 < (iIndex - iNumSizeX) &&
-							node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
-						{
-							iScrIndex = iIndex - iNumSizeX;
-							fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-							if (fGap > fAverValue)
-							{
-								fGap /= GAP;
-
-								if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-								{
-									node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-								}
-								else
-								{
-									node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-									node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-								}
-							}
-						}
-					}
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
 					break;
+					{
+						//	int iNumSizeX = int(node->vMax.x - node->vMin.x) + 1;
+
+						//	if (iter.vPos.x < node->vMax.x &&
+						//		iter.vPos.x > node->vMin.x)
+						//	{
+						//		/*Left*/
+						//		if (0 < (iIndex - 1) &&
+						//			node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
+						//		{
+						//			iScrIndex = iIndex - 1;
+						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+						//			if (fGap > fAverValue)
+						//			{
+						//				fGap /= GAP;
+
+						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+						//				{
+						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+						//				}
+						//				else
+						//				{
+						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+						//				}
+						//			}
+						//		}
+
+						//		/*Right*/
+						//		if (node->vecVtx.size() > (iIndex + 1) &&
+						//			node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
+						//		{
+						//			iScrIndex = iIndex + 1;
+						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+						//			if (fGap > fAverValue)
+						//			{
+						//				fGap /= GAP;
+
+						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+						//				{
+						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+						//				}
+						//				else
+						//				{
+						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+						//				}
+						//			}
+						//		}
+						//	}
+
+						//	if (iter.vPos.z < node->vMax.z &&
+						//		iter.vPos.z > node->vMin.z)
+						//	{
+						//		/*Up*/
+						//		if (node->vecVtx.size() > (iIndex + iNumSizeX) &&
+						//			node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
+						//		{
+						//			iScrIndex = iIndex + iNumSizeX;
+						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+						//			if (fGap > fAverValue)
+						//			{
+						//				fGap /= GAP;
+
+						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+						//				{
+						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+						//				}
+						//				else
+						//				{
+						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+						//				}
+						//			}
+						//		}
+
+						//		/*Down*/
+						//		if (0 < (iIndex - iNumSizeX) &&
+						//			node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
+						//		{
+						//			iScrIndex = iIndex - iNumSizeX;
+						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+						//			if (fGap > fAverValue)
+						//			{
+						//				fGap /= GAP;
+
+						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+						//				{
+						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
+						//				}
+						//				else
+						//				{
+						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
+						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
+						//				}
+						//			}
+						//		}
+						//	}
+						//	break;
+					}
 				}
 
 				UpdateVtxBuffer(&node->MeshInfo, node->vecVtx);
@@ -417,26 +758,26 @@ void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mo
 					// A
 					BYTE a = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 0);
 
-					if (r + (BYTE)(power) > 255 ||
-						g + (BYTE)(power) > 255 ||
-						b + (BYTE)(power) > 255 ||
-						a + (BYTE)(power) > 255)
-					{
+					if (r + (BYTE)(power) > 255)
 						r = 255;
+					if (g + (BYTE)(power) > 255)
 						g = 255;
+					if (b + (BYTE)(power) > 255)
 						b = 255;
+					if (a + (BYTE)(power) > 255)
 						a = 255;
-					}
 
-					if (r < 255 || g < 255
-						|| b < 255 || a < 255)
-					{
+					if (r < 255)
 						r += (BYTE)(power);
+					if (g < 255)
 						g += (BYTE)(power);
+					if (b < 255)
 						b += (BYTE)(power);
+					if (a < 255)
 						a += (BYTE)(power);
-					}
-	
+
+
+
 					UINT32 tempR = (r << 8 * 3);
 					UINT32 tempG = (g << 8 * 2);
 					UINT32 tempB = (b << 8 * 1);
@@ -453,113 +794,113 @@ void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mo
 		SAFE_RELEASE(pLandScapeObj);
 	}
 
-//	{
-//	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
-//
-//	if (pLandScapeObj)
-//	{
-//		UINT Height = pTexture->GetTexDesc().Height;
-//		UINT Width = pTexture->GetTexDesc().Width;
-//
-//		if (m_pArrPixel == nullptr)
-//		{
-//			vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
-//
-//			for (size_t i = 0; i < vecTex.size(); ++i)
-//			{
-//				for (int iMipLevel = 0; iMipLevel < pTexture->GetTexDesc().MipLevels;
-//					++iMipLevel)
-//				{
-//					D3D11_MAPPED_SUBRESOURCE   tMap = {};
-//
-//					CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_READ,
-//						0, &tMap);
-//					//m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
-//					m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
-//					//memcpy(m_arrPixel2, tMap.pData, Height * Width * 4);
-//
-//					CONTEXT->Unmap(vecTex[i], iMipLevel);
-//				}
-//			}
-//		}
-//
-//		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-//
-//		POINT landSize = pLandScape->GetTerrainSize();
-//
-//		float fVal = (float)Height / landSize.x;
-//
-//		Vector3 vMouseUV;
-//
-//		vMouseUV.x = mousePos.x / (float)landSize.x;
-//		vMouseUV.z = ((float)landSize.y - mousePos.z) / landSize.y;
-//
-//		vMouseUV.x *= Width;
-//		vMouseUV.z *= Height;
-//
-//		for (UINT i = 0; i < Height; ++i)
-//		{
-//			for (UINT j = 0; j < Width; ++j)
-//			{
-//				// UV값
-//				int pixel = i * Width + (j * 1);
-//
-//				Vector3 vPixelPos;
-//				vPixelPos.x = (float)j;
-//				vPixelPos.y = 0.f;
-//				vPixelPos.z = (float)i;
-//
-//				float distance = vMouseUV.Distance(vPixelPos);
-//
-//				if (distance < m_fRange * fVal)
-//				{
-//					// 강제형변환은 오른쪽부터 크기만큼 짤림
-//					// R
-//					BYTE r = (BYTE)(m_pArrPixel[pixel] >> 8 * 3);
-//					// G
-//					BYTE g = (BYTE)(m_pArrPixel[pixel] >> 8 * 2);
-//					// B
-//					BYTE b = (BYTE)(m_pArrPixel[pixel] >> 8 * 1);
-//					// A
-//					BYTE a = (BYTE)(m_pArrPixel[pixel] >> 8 * 0);
-//
-//					if (r < 255 || g < 255
-//						|| b < 255 || a < 255)
-//					{
-//						r += (BYTE)(power);
-//						g += (BYTE)(power);
-//						b += (BYTE)(power);
-//						a += (BYTE)(power);
-//					}
-//
-//					if (r + (BYTE)(power) > 255 ||
-//						g + (BYTE)(power) > 255 ||
-//						b + (BYTE)(power) > 255 ||
-//						a + (BYTE)(power) > 255)
-//					{
-//						r = 255;
-//						g = 255;
-//						b = 255;
-//						a = 255;
-//					}
-//
-//					UINT32 tempR = (r << 8 * 3);
-//					UINT32 tempG = (g << 8 * 2);
-//					UINT32 tempB = (b << 8 * 1);
-//					UINT32 tempA = (a << 8 * 0);
-//					//
-//					m_pArrPixel[pixel] = tempR | tempG | tempB | tempA;
-//				}
-//			}
-//		}
-//
-//		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), 0, NULL, m_pArrPixel, Width * 4, Width * Height * 4);
-//
-//
-//		SAFE_RELEASE(pLandScape);
-//		SAFE_RELEASE(pLandScapeObj);
-//	}
-//}
+	//	{
+	//	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	//
+	//	if (pLandScapeObj)
+	//	{
+	//		UINT Height = pTexture->GetTexDesc().Height;
+	//		UINT Width = pTexture->GetTexDesc().Width;
+	//
+	//		if (m_pArrPixel == nullptr)
+	//		{
+	//			vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
+	//
+	//			for (size_t i = 0; i < vecTex.size(); ++i)
+	//			{
+	//				for (int iMipLevel = 0; iMipLevel < pTexture->GetTexDesc().MipLevels;
+	//					++iMipLevel)
+	//				{
+	//					D3D11_MAPPED_SUBRESOURCE   tMap = {};
+	//
+	//					CONTEXT->Map(vecTex[i], iMipLevel, D3D11_MAP_READ,
+	//						0, &tMap);
+	//					//m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
+	//					m_pArrPixel = reinterpret_cast<UINT32*>(tMap.pData);
+	//					//memcpy(m_arrPixel2, tMap.pData, Height * Width * 4);
+	//
+	//					CONTEXT->Unmap(vecTex[i], iMipLevel);
+	//				}
+	//			}
+	//		}
+	//
+	//		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+	//
+	//		POINT landSize = pLandScape->GetTerrainSize();
+	//
+	//		float fVal = (float)Height / landSize.x;
+	//
+	//		Vector3 vMouseUV;
+	//
+	//		vMouseUV.x = mousePos.x / (float)landSize.x;
+	//		vMouseUV.z = ((float)landSize.y - mousePos.z) / landSize.y;
+	//
+	//		vMouseUV.x *= Width;
+	//		vMouseUV.z *= Height;
+	//
+	//		for (UINT i = 0; i < Height; ++i)
+	//		{
+	//			for (UINT j = 0; j < Width; ++j)
+	//			{
+	//				// UV값
+	//				int pixel = i * Width + (j * 1);
+	//
+	//				Vector3 vPixelPos;
+	//				vPixelPos.x = (float)j;
+	//				vPixelPos.y = 0.f;
+	//				vPixelPos.z = (float)i;
+	//
+	//				float distance = vMouseUV.Distance(vPixelPos);
+	//
+	//				if (distance < m_fRange * fVal)
+	//				{
+	//					// 강제형변환은 오른쪽부터 크기만큼 짤림
+	//					// R
+	//					BYTE r = (BYTE)(m_pArrPixel[pixel] >> 8 * 3);
+	//					// G
+	//					BYTE g = (BYTE)(m_pArrPixel[pixel] >> 8 * 2);
+	//					// B
+	//					BYTE b = (BYTE)(m_pArrPixel[pixel] >> 8 * 1);
+	//					// A
+	//					BYTE a = (BYTE)(m_pArrPixel[pixel] >> 8 * 0);
+	//
+	//					if (r < 255 || g < 255
+	//						|| b < 255 || a < 255)
+	//					{
+	//						r += (BYTE)(power);
+	//						g += (BYTE)(power);
+	//						b += (BYTE)(power);
+	//						a += (BYTE)(power);
+	//					}
+	//
+	//					if (r + (BYTE)(power) > 255 ||
+	//						g + (BYTE)(power) > 255 ||
+	//						b + (BYTE)(power) > 255 ||
+	//						a + (BYTE)(power) > 255)
+	//					{
+	//						r = 255;
+	//						g = 255;
+	//						b = 255;
+	//						a = 255;
+	//					}
+	//
+	//					UINT32 tempR = (r << 8 * 3);
+	//					UINT32 tempG = (g << 8 * 2);
+	//					UINT32 tempB = (b << 8 * 1);
+	//					UINT32 tempA = (a << 8 * 0);
+	//					//
+	//					m_pArrPixel[pixel] = tempR | tempG | tempB | tempA;
+	//				}
+	//			}
+	//		}
+	//
+	//		CONTEXT->UpdateSubresource(pTexture->GetTexArr(), 0, NULL, m_pArrPixel, Width * 4, Width * Height * 4);
+	//
+	//
+	//		SAFE_RELEASE(pLandScape);
+	//		SAFE_RELEASE(pLandScapeObj);
+	//	}
+	//}
 }
 bool CBrushTool::Init()
 {
