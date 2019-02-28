@@ -50,6 +50,11 @@ void CLandScape::SetDetailLevel(int iDetailLevel)
 	m_iDetailLevel = iDetailLevel;
 }
 
+void CLandScape::SetDetailLevel_Splat(int index, int iDetailLevel)
+{
+	m_arrDetailLevel_Tex[index] = iDetailLevel;
+}
+
 void CLandScape::SetBrushCheck(bool check)
 {
 	m_bCheckBrush = check; 
@@ -1315,7 +1320,10 @@ void CLandScape::UpdateNode(QUADTREENODE * node)
 		LANDSCAPECBUFFER	tBuffer = {};
 		tBuffer.iDetailLevel = m_iDetailLevel;
 		tBuffer.iSplatCount = m_iSplatCount;
-
+		for (int i = 0; i < 4; i++)
+		{
+			tBuffer.arrDetailLevelTex[i] = m_arrDetailLevel_Tex[i];
+		}
 		// brush
 		if (m_bCheckBrush)
 		{

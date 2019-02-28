@@ -43,6 +43,7 @@ private:
 	vector<UINT> m_vecIndex;
 
 	int		m_iDetailLevel;
+	int     m_arrDetailLevel_Tex[4] = { 1, 1, 1, 1 };
 	int		m_iSplatCount;
 
 	// Brush
@@ -56,10 +57,11 @@ public:
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
 
 	POINT GetTerrainSize() { return POINT{ (LONG)m_iNumX, (LONG)m_iNumZ }; }
-
+	int   GetDetailLevel() { return m_iDetailLevel; }
+	int*  GetDetailLevel_Splat() { return m_arrDetailLevel_Tex; }
 public:
-
 	void SetDetailLevel(int iDetailLevel);
+	void SetDetailLevel_Splat(int index, int iDetailLevel);
 	void SetBrushCheck(bool check);
 	void SetBrushInformation(float range) { m_fRangeBrush = range; }
 	void SetBrushInformation(Vector4 color) { m_vColorBrush = color; }

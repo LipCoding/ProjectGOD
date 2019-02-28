@@ -16,6 +16,7 @@ cbuffer LandScapeCBuffer	: register(b12)
 	float3  g_vPosBrush;
 	float   g_fEmpty2;
 	float4  g_vColorBrush;
+	vector<float, 4>     g_arrDetailLevelTex;
 }
 
 Texture2DArray	g_SplatDif	: register(t11);
@@ -250,9 +251,11 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 	for (int i = 0; i < g_iSplatCount; i++)
 	{
+		if (i == 4)
+			break;
 		// UV Splat
 		float3	vSplatUV;
-		vSplatUV.xy = vUV;
+		vSplatUV.xy = input.vUV * (int)g_arrDetailLevelTex[i];
 		vSplatUV.z = i;
 		
 		// Diffuse Splat

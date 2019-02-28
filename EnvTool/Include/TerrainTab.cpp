@@ -333,18 +333,58 @@ void CTerrainTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 			}
 			case 1:
 			{
+				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+				if (pLandScapeObj)
+				{
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+					pLandScape->SetDetailLevel_Splat(0, iPos);
+
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
+				}
 				break;
 			}
 			case 2:
 			{
+				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+				if (pLandScapeObj)
+				{
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+					pLandScape->SetDetailLevel_Splat(1, iPos);
+
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
+				}
 				break;
 			}
 			case 3:
 			{
+				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+				if (pLandScapeObj)
+				{
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+					pLandScape->SetDetailLevel_Splat(2, iPos);
+
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
+				}
 				break;
 			}
 			case 4:
 			{
+				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+				if (pLandScapeObj)
+				{
+					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+					pLandScape->SetDetailLevel_Splat(3, iPos);
+
+					SAFE_RELEASE(pLandScape);
+					SAFE_RELEASE(pLandScapeObj);
+				}
 				break;
 			}
 			}
@@ -439,21 +479,81 @@ void CTerrainTab::OnRadioCheck_Texture(UINT id)
 	switch (m_iRadio_Texture)
 	{
 	case 0:
+	{
 		// Default
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			m_ctrSliderDetail_Default.SetPos(pLandScape->GetDetailLevel());
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 		break;
+	}
 	case 1:
+	{
 		// Tex
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			m_ctrSliderDetail_Default.SetPos((pLandScape->GetDetailLevel_Splat())[0]);
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 		pBrushTool->SetTexType(0);
 		break;
+	}
 	case 2:
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			m_ctrSliderDetail_Default.SetPos((pLandScape->GetDetailLevel_Splat())[1]);
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 		pBrushTool->SetTexType(1);
 		break;
+	}
 	case 3:
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			m_ctrSliderDetail_Default.SetPos((pLandScape->GetDetailLevel_Splat())[2]);
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 		pBrushTool->SetTexType(2);
 		break;
+	}
 	case 4:
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+			m_ctrSliderDetail_Default.SetPos((pLandScape->GetDetailLevel_Splat())[3]);
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 		pBrushTool->SetTexType(3);
 		break;
+	}
 	}
 
 	SAFE_RELEASE(pBrushTool);

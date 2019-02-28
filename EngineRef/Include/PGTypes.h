@@ -459,6 +459,7 @@ typedef struct PG_DLL _tagLandScapeCBuffer
 	Vector3 vPosBrush;
 	float   fEmpty2;
 	Vector4 vColorBrush;
+	float   arrDetailLevelTex[4];
 }LANDSCAPECBUFFER, *PLANDSCAPECBUFFER;
 
 typedef struct PG_DLL _tagMultiTextureCBuffer
