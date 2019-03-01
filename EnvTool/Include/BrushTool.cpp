@@ -581,87 +581,21 @@ void CBrushTool::SettingOriginPixelToTexture(int texType)
 	SAFE_RELEASE(pTexture);
 }
 
-void CBrushTool::Save_AlphaSplat_Bitmap(string fileName)
+void CBrushTool::Save_AlphaSplat_Bitmap(string fileName, int idx)
 {
 	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
-	if (pTexture == nullptr)
+	if (pTexture == nullptr || m_pArrPixel[idx] == nullptr)
 		return;
 
-	vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
-	D3D11_MAPPED_SUBRESOURCE   tMap = {};
 	fileName += ".bmp";
 
 	// 이미지 크기
 	UINT height = pTexture->GetTexDesc().Height;
 	UINT width = pTexture->GetTexDesc().Width;
 
-	// 이미지 픽셀형식
-	int bpp = 24;
-	const char* arrFileName = fileName.c_str();
-
-	// 정보를 저장할 버퍼 포인터
-	BYTE* pData;
-	// 헤더 정보를 저장할 포인터
-
-	/*HBITMAP my_bmp = CreateBitmap(width, height, 1, 24, m_pArrPixel[0]);
-
-	HBITMAP2BMP(my_bmp, fileName);*/
-
-	// pData에 RGB 데이터를 복사
-
-	CONTEXT->Map(vecTex[0], 0, D3D11_MAP_READ,
-		0, &tMap);
-
-	//pData = new BYTE[height * width * 4];
-	//for (int i = 0; i < height; i++)
-	//{
-	//	for (int j = 0; j < width; j++)
-	//	{
-	//		int idx = i * width + (j * 1);
-	//		int idx_byte = i * (width * 4) + (j * 4);
-
-	//		// 강제형변환은 오른쪽부터 크기만큼 짤림
-	//		// R
-	//		BYTE r = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 3);
-	//		// G
-	//		BYTE g = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 2);
-	//		// B
-	//		BYTE b = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 1);
-	//		// A
-	//		BYTE a = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 0);
-
-	//		pData[idx_byte] = r;
-	//		pData[idx_byte + 1] = g;
-	//		pData[idx_byte + 2] = b;
-	//		pData[idx_byte + 3] = a;
-	//	}
-	//}
-
-	
-	pData = reinterpret_cast<BYTE*>(tMap.pData);
-	
-
-	HBITMAP my_bmp = CreateBitmap(width, height, 1, 24, m_pArrPixel[0]);
+	HBITMAP my_bmp = CreateBitmap(width, height, 1, GetDeviceCaps(GetDC(NULL), BITSPIXEL), m_pArrPixel[idx]);
 
 	HBITMAP2BMP(my_bmp, fileName);
-
-	CONTEXT->Unmap(vecTex[0], 0);
-
-	// 이미지의 위, 아래를 뒤집어서 넣어준다.
-	/*for (int i = 0; i < height / 2; ++i)
-	{
-		memcpy(pLine, &pPixel[i * ih.biWidth], sizeof(DWORD) * ih.biWidth);
-		memcpy(&pPixel[i * ih.biWidth],
-			&pPixel[(ih.biWidth - 1 - i) * ih.biWidth],
-			sizeof(DWORD) * ih.biWidth);
-		memcpy(&pPixel[(ih.biWidth - 1 - i) * ih.biWidth],
-			pLine, sizeof(DWORD) * ih.biWidth);
-	}*/
-
-
-	//GlobalFree(pData);
-	/*delete[] pData;
-	pData = nullptr;*/
 
 	SAFE_RELEASE(pTexture);
 }

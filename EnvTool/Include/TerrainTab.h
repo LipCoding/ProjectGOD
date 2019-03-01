@@ -44,8 +44,9 @@ public:
 	afx_msg void OnBnClickedButtonTexLoad();
 	afx_msg void OnBnClickedButtonSplatLoad();
 public:
-	int SaveTextureName(string fileName);
-
+	int  SaveTextureName(string fileName);
+	void LoadTextureName(string fileName);
+	void LoadSplatAlphaName(string fileName);
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;

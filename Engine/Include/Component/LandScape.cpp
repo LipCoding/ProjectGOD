@@ -1332,8 +1332,12 @@ void CLandScape::Save_QuadTree(string fileName)
 	file.close();
 }
 
-void CLandScape::Load_QuadTree(ifstream * pFile)
+void CLandScape::Load_QuadTree(string fileName)
 {
+	ifstream file;
+	file.open(fileName + ".dat", ios::in);
+
+	
 }
 
 void CLandScape::UpdateNode(QUADTREENODE * node)

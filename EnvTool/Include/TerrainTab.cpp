@@ -124,62 +124,62 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 		L"Terrain/TerrainTex0_N.tga",
 		L"Terrain/TerrainTex0_S.tga");
 
-	vector<wstring>	vecSplatting;
+	//vector<wstring>	vecSplatting;
 
-	wchar_t	strSplatPath[MAX_PATH] = {};
+	//wchar_t	strSplatPath[MAX_PATH] = {};
 
-	// splatting
+	//// splatting
 
-	// Diffuse
-	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
-	vecSplatting.push_back(strSplatPath);
+	//// Diffuse
+	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
+	//vecSplatting.push_back(strSplatPath);
 
+	////vecSplatting.clear();
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
+	//vecSplatting.push_back(strSplatPath);
+
+
+	////pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
+
+
+	//// Normal
 	//vecSplatting.clear();
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
-	vecSplatting.push_back(strSplatPath);
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
+	//vecSplatting.push_back(strSplatPath);
+
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
+	//vecSplatting.push_back(strSplatPath);
 
 
-	//pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
+	////pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
 
 
-	// Normal
-	vecSplatting.clear();
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
-	vecSplatting.push_back(strSplatPath);
+	//// Specular
+	//vecSplatting.clear();
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
+	//vecSplatting.push_back(strSplatPath);
 
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
-	vecSplatting.push_back(strSplatPath);
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
+	//vecSplatting.push_back(strSplatPath);
 
+	////pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
 
-	//pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
+	//// File
+	//vecSplatting.clear();
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Splat.bmp");
+	//vecSplatting.push_back(strSplatPath);
 
+	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
+	//wsprintf(strSplatPath, L"LandScape/Splat2.bmp");
+	//vecSplatting.push_back(strSplatPath);
 
-	// Specular
-	vecSplatting.clear();
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	//pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
-
-	// File
-	vecSplatting.clear();
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Splat.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	wsprintf(strSplatPath, L"LandScape/Splat2.bmp");
-	vecSplatting.push_back(strSplatPath);
-
-	//pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecSplatting);
+	////pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecSplatting);
 
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
@@ -856,6 +856,14 @@ int CTerrainTab::SaveTextureName(string fileName)
 	return iFileCount;
 }
 
+void CTerrainTab::LoadTextureName(string fileName)
+{
+}
+
+void CTerrainTab::LoadSplatAlphaName(string fileName)
+{
+}
+
 
 void CTerrainTab::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
@@ -899,6 +907,7 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Terrain\\");
 
 	CString originPath = strPath;
 
@@ -935,24 +944,38 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 	string strFileName(pszConvertAnsiStringFileName);
 	string heightFileName = "Height_" + strFileName;
 	string textureFileName = "Texture_" + strFileName;
-	string alphaFileName = "Bitmap_" + strFileName + "_0";
+	
 	// 저장
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 	if (pLandScapeObj)
 	{
+		// 저장될 파일 이름 저장
+		ofstream mainFile;
+		mainFile.open(strFilePath + strFileName + ".bin", ios::out | ios::trunc /*| ios::binary*/);
+
 		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 		// 노드 정보 저장
-		ofstream* nodeFile = nullptr;
 		pLandScape->Save_QuadTree(strFilePath + heightFileName);
+		mainFile << strFilePath + heightFileName << endl;
 
 		// 텍스쳐이름, Splatting 개수 저장
 		int iCount = SaveTextureName(strFilePath + textureFileName);
+		mainFile << strFilePath + textureFileName << endl;
 
 		// 알파스플래팅 bmp 저장
 		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
 		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
-		pBrushTool->Save_AlphaSplat_Bitmap(strFilePath + alphaFileName);
+		mainFile << iCount << endl;
+
+		for (int i = 0; i < iCount; ++i)
+		{
+			string alphaFileName = "Bitmap_" + strFileName + to_string(i);
+			pBrushTool->Save_AlphaSplat_Bitmap(strFilePath + alphaFileName, i);
+			mainFile << strFilePath + alphaFileName << endl;
+		}
+
+		mainFile.close();
 
 		SAFE_RELEASE(pBrushTool);
 		SAFE_RELEASE(pBrushObj);
@@ -965,5 +988,69 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 void CTerrainTab::OnBnClickedButtonTerrainLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
 
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Terrain\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CT2CA pszConvertAnsiStringPathName(path);
+	string strFilePath(pszConvertAnsiStringPathName);
+
+	// 저장
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (!pLandScapeObj)
+	{
+		ifstream mainFile;
+		mainFile.open(strFilePath, ios::in);
+
+		if (!mainFile.is_open())
+			return;
+
+		// LandScapeObj 생성
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer* pLayer = pScene->GetLayer("Default");
+		
+		pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
+		
+		CTransform* pLandTr = pLandScapeObj->GetTransform();
+		SAFE_RELEASE(pLandTr);
+
+		// LandScape 만들기
+		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
+
+		// 노드 정보 불러오기
+		string heightFileName;
+		mainFile >> heightFileName;
+		pLandScape->Load_QuadTree(heightFileName);
+
+		// 텍스쳐 정보 불러오기
+
+		
+
+		// 알파스플래팅 bmp 불러오기
+		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+		mainFile.close();
+
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pBrushTool);
+		SAFE_RELEASE(pBrushObj);
+	}
+
+	SAFE_RELEASE(pLandScapeObj);
 }

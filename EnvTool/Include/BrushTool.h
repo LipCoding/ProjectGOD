@@ -42,7 +42,7 @@ public:
 
 	void SettingOriginPixelToTexture(int texType);
 
-	void Save_AlphaSplat_Bitmap(string fileName);
+	void Save_AlphaSplat_Bitmap(string fileName, int idx);
 	void HBITMAP2BMP(HBITMAP hBitmap, string fileName);
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
@@ -58,8 +58,6 @@ private:
 	int		m_iTexType = 0;
 	Vector4 m_vColor = Vector4::Red;
 
-	//BYTE m_arrPixel[129 * 129] = {0};
-	//UINT32 m_pArrPixel[743 * 743] = { 0 };
 	UINT32* m_pArrPixel[4] = { nullptr };
 	BYTE* m_pArrPixel_Byte = nullptr;
 public:

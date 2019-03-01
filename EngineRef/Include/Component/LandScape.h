@@ -142,7 +142,7 @@ public:
 	list<QUADTREENODE*>* FindNode_All();
 
 	void Save_QuadTree(string fileName);
-	void Load_QuadTree(ifstream* pFile);
+	void Load_QuadTree(string fileName);
 private:
 	// QuadTree
 	bool CreateQuadTree();
