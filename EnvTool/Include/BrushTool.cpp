@@ -543,7 +543,7 @@ void CBrushTool::ResetHeight()
 	{
 		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 
-		list<QUADTREENODE*>* listNode = pLandScape->FindNode_All();
+		list<QUADTREENODE*>* listNode = pLandScape->GetAllNodes();
 
 		for (auto& node : *listNode)
 		{

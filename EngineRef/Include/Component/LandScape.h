@@ -61,11 +61,13 @@ public:
 	int*  GetDetailLevel_Splat() { return m_arrDetailLevel_Tex; }
 public:
 	void SetDetailLevel(int iDetailLevel);
+	void SetSplatCount(int count);
 	void SetDetailLevel_Splat(int index, int iDetailLevel);
 	void SetBrushCheck(bool check);
 	void SetBrushInformation(float range) { m_fRangeBrush = range; }
 	void SetBrushInformation(Vector4 color) { m_vColorBrush = color; }
 	void SetBrushInformation(Vector3 pos) { m_vPosBrush = pos; }
+	void SetTerrainSize(int x, int z);
 public:
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump,
 		const string& strTexKey, const wchar_t* pFileName,
@@ -120,10 +122,11 @@ public:
 		const wchar_t* pNormalName,
 		const wchar_t* pSpecularName);
 	void SetMaterial_Splatting(
-		vector<wstring>& vecDif, 
-		vector<wstring>& vecNormal, 
+		vector<wstring>& vecDif,
+		vector<wstring>& vecNormal,
 		vector<wstring>& vecSpecular,
-		vector<wstring>& vecAlpha);
+		vector<wstring>& vecAlpha,
+		const string & strPathKey = TEXTURE_PATH);
 
 public:
 	virtual bool Init();
@@ -139,14 +142,17 @@ public:
 public:
 	list<QUADTREENODE*>* FindNode_ByMouse();
 	list<QUADTREENODE*>* FindNode_ByRadius(float radius);
-	list<QUADTREENODE*>* FindNode_All();
+
+	list<QUADTREENODE*>* GetAllNodes() { return &m_listAllNodes; };
+
+	void NodesToContainer();
 
 	void Save_QuadTree(string fileName);
 	void Load_QuadTree(string fileName);
 private:
 	// QuadTree
 	bool CreateQuadTree();
-	void CreateTreeNodeToObject(QUADTREENODE* node);
+	void CreateTreeNodeToObject();
 	void CreateTreeNode(QUADTREENODE* node, float positionX, float positionZ,
 		float width);
 	void CalculateMeshDimensions(int vtxCount,
@@ -157,10 +163,10 @@ private:
 	bool IsTriangleContaind_Vertex(int vtxIndex, Vector3 min, Vector3 max);
 
 	// Node Circulation
-	void UpdateNode(QUADTREENODE* node);
-	void NodeRayCollisionCheck(QUADTREENODE* node);
-	void NodeRadiusCollisionCheck(QUADTREENODE* node, float radius);
-	void NodeSphereCollisionCheck(QUADTREENODE* node, CGameObject* src);
+	void UpdateNode();
+	void NodeRayCollisionCheck();
+	void NodeRadiusCollisionCheck(float radius);
+	void NodeSphereCollisionCheck(CGameObject* src);
 	void NodeAll(QUADTREENODE* node);
 	void ReleaseNode(QUADTREENODE* node);
 
@@ -176,7 +182,7 @@ private:
 	QUADTREENODE* m_pParentNode = nullptr;
 	static int number;
 	list<QUADTREENODE*> m_listNode;
-
+	list<QUADTREENODE*> m_listAllNodes;
 	// 
 
 };

@@ -43,11 +43,25 @@ CLandScape::CLandScape(const CLandScape & landscape)	:
 
 CLandScape::~CLandScape()
 {
+	m_listNode.clear();
+	m_listAllNodes.clear();
+	
+	if (m_pParentNode)
+	{
+		ReleaseNode(m_pParentNode);
+		delete m_pParentNode;
+		m_pParentNode = nullptr;
+	}
 }
 
 void CLandScape::SetDetailLevel(int iDetailLevel)
 {
 	m_iDetailLevel = iDetailLevel;
+}
+
+void CLandScape::SetSplatCount(int count)
+{
+	m_iSplatCount = count;
 }
 
 void CLandScape::SetDetailLevel_Splat(int index, int iDetailLevel)
@@ -58,6 +72,12 @@ void CLandScape::SetDetailLevel_Splat(int index, int iDetailLevel)
 void CLandScape::SetBrushCheck(bool check)
 {
 	m_bCheckBrush = check; 
+}
+
+void CLandScape::SetTerrainSize(int x, int z)
+{
+	m_iNumX = x;
+	m_iNumZ = z;
 }
 
 bool CLandScape::CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump, const string& strTexKey,
@@ -428,10 +448,12 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey,
 
 	CreateQuadTree();
 
-	// 머테리얼 등록
-	list<QUADTREENODE*>* nodes = FindNode_All();
+	// 컨테이너에 보관
+	NodesToContainer();
+	CreateTreeNodeToObject();
 
-	for (auto& node : *nodes)
+	// 머테리얼 등록
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
 		CMaterial* pMaterial = pRenderer->GetMaterial();
@@ -463,9 +485,7 @@ bool CLandScape::CreateLandScapeQuadTree(const string & strMeshKey,
 
 bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
 {
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
 
@@ -498,9 +518,7 @@ bool CLandScape::SetDiffuseSplattingQuadTree(const string & strSmpKey, const str
 
 bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
 {
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
 
@@ -533,9 +551,7 @@ bool CLandScape::SetNormalSplattingQuadTree(const string & strSmpKey, const stri
 
 bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
 {
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
 
@@ -568,9 +584,7 @@ bool CLandScape::SetSpecularSplattingQuadTree(const string & strSmpKey, const st
 
 bool CLandScape::SetSplattingAlphaQuadTree(const string & strSmpKey, const string & strDifKey, const vector<wstring>* pvecPath, const string & strPathKey)
 {
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
 
@@ -728,13 +742,11 @@ bool CLandScape::SetSplattingAlpha(const string & strSmpKey,
 void CLandScape::SetMaterial_DNS_Default(const wchar_t * pFileName, const wchar_t * pNormalName, const wchar_t * pSpecularName)
 {
 	// 머테리얼 등록
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
 	/*CTexture* pDiffuseTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_D");
 	CTexture* pNormalTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_N");
 	CTexture* pSpecularTex = GET_SINGLE(CResourcesManager)->FindTexture("LandScape_S");
 	*/
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
 		CMaterial* pMaterial = pRenderer->GetMaterial();
@@ -751,7 +763,7 @@ void CLandScape::SetMaterial_DNS_Default(const wchar_t * pFileName, const wchar_
 	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("LandScape_S");
 
 
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
 		CMaterial* pMaterial = pRenderer->GetMaterial();
@@ -777,11 +789,10 @@ void CLandScape::SetMaterial_DNS_Default(const wchar_t * pFileName, const wchar_
 	}
 }
 
-void CLandScape::SetMaterial_Splatting(vector<wstring>& vecDif, vector<wstring>& vecNormal, vector<wstring>& vecSpecular, vector<wstring>& vecAlpha)
+void CLandScape::SetMaterial_Splatting(vector<wstring>& vecDif, vector<wstring>& vecNormal, vector<wstring>& vecSpecular, vector<wstring>& vecAlpha,
+	const string & strPathKey)
 {
-	list<QUADTREENODE*>* nodes = FindNode_All();
-
-	for (auto& node : *nodes)
+	for (auto& node : m_listAllNodes)
 	{
 		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
 		CMaterial* pMaterial = pRenderer->GetMaterial();
@@ -800,7 +811,7 @@ void CLandScape::SetMaterial_Splatting(vector<wstring>& vecDif, vector<wstring>&
 	SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecDif);
 	SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecNormal);
 	SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSpecular);
-	SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecAlpha);
+	SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecAlpha, strPathKey);
 }
 
 bool CLandScape::Init()
@@ -819,7 +830,7 @@ int CLandScape::Update(float fTime)
 
 int CLandScape::LateUpdate(float fTime)
 {
-	UpdateNode(m_pParentNode);	
+	UpdateNode();	
 
 	return 0;
 }
@@ -931,64 +942,52 @@ bool CLandScape::CreateQuadTree()
 	}
 
 	CreateTreeNode(m_pParentNode, fCenterX, fCenterZ, fWidth);
-	CreateTreeNodeToObject(m_pParentNode);
+
 
 	return true;
 }
 
-void CLandScape::CreateTreeNodeToObject(QUADTREENODE * node)
+void CLandScape::CreateTreeNodeToObject()
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
+	for (auto& node : m_listAllNodes)
 	{
-		if (node->pNodes[i] != 0)
+		//if (node->strNodeName == "Node0")
 		{
-			count++;
-			CreateTreeNodeToObject(node->pNodes[i]);
+			node->pGameObject = CGameObject::CreateObject(node->strNodeName, m_pLayer);
+
+			// Mesh
+			CRenderer*	pRenderer = node->pGameObject->AddComponent<CRenderer>("Renderer");
+			CMaterial*	pMaterial = pRenderer->CreateMaterial();
+
+			pRenderer->SetRenderState(LANDSCAPE_SHADER);
+			pRenderer->SetInputLayout("Bump");
+			// 추후에 고쳐야함
+			// Splatting
+
+			SAFE_RELEASE(pMaterial);
+
+			// Mesh 설정
+			CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
+				node->MeshInfo, node->strNodeName,
+				node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DYNAMIC,
+				D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
+				node->vecIndex.size(), 4, D3D11_USAGE_DYNAMIC,
+				DXGI_FORMAT_R32_UINT, &node->vecIndex[0]);
+
+			pMesh->SetShaderKey(LANDSCAPE_SHADER);
+			pMesh->SetInputLayoutKey("Bump");
+			pRenderer->SetMesh(pMesh);
+			pRenderer->SetRenderState(CULLING_BACK);
+
+			SAFE_RELEASE(pMesh);
+			SAFE_RELEASE(pRenderer);
+
+			CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
+			pCollider->SetAABB(node->vMin,
+				node->vMax);
+
+			SAFE_RELEASE(pCollider);
 		}
-	}
-
-	if (count != 0)
-	{
-		return;
-	}
-
-	//if (node->strNodeName == "Node0")
-	{
-		node->pGameObject = CGameObject::CreateObject(node->strNodeName, m_pLayer);
-
-		// Mesh
-		CRenderer*	pRenderer = node->pGameObject->AddComponent<CRenderer>("Renderer");
-		CMaterial*	pMaterial = pRenderer->CreateMaterial();
-
-		pRenderer->SetRenderState(LANDSCAPE_SHADER);
-		pRenderer->SetInputLayout("Bump");
-		// 추후에 고쳐야함
-		// Splatting
-
-		SAFE_RELEASE(pMaterial);
-
-		// Mesh 설정
-		CMesh*	pMesh = GET_SINGLE(CResourcesManager)->CreateMesh(
-			node->MeshInfo, node->strNodeName,
-			node->vecVtx.size(), sizeof(VERTEXBUMP), D3D11_USAGE_DYNAMIC,
-			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, &node->vecVtx[0],
-			node->vecIndex.size(), 4, D3D11_USAGE_DYNAMIC,
-			DXGI_FORMAT_R32_UINT, &node->vecIndex[0]);
-
-		pMesh->SetShaderKey(LANDSCAPE_SHADER);
-		pMesh->SetInputLayoutKey("Bump");
-		pRenderer->SetMesh(pMesh);
-		pRenderer->SetRenderState(CULLING_BACK);
-
-		SAFE_RELEASE(pMesh);
-		SAFE_RELEASE(pRenderer);
-
-		CColliderAABB*	pCollider = node->pGameObject->AddComponent<CColliderAABB>("Collider");
-		pCollider->SetAABB(node->vMin,
-			node->vMax);
-
-		SAFE_RELEASE(pCollider);	
 	}
 }
 
@@ -1264,7 +1263,7 @@ list<QUADTREENODE*>* CLandScape::FindNode_ByMouse()
 	// TODO: 여기에 반환 구문을 삽입합니다.
 	m_listNode.clear();
 
-	NodeRayCollisionCheck(m_pParentNode);
+	NodeRayCollisionCheck();
 
 	return &m_listNode;
 }
@@ -1273,18 +1272,16 @@ list<QUADTREENODE*>* CLandScape::FindNode_ByRadius(float radius)
 {
 	m_listNode.clear();
 
-	NodeRadiusCollisionCheck(m_pParentNode, radius);
+	NodeRadiusCollisionCheck(radius);
 
 	return &m_listNode;
 }
 
-list<QUADTREENODE*>* CLandScape::FindNode_All()
+void CLandScape::NodesToContainer()
 {
-	m_listNode.clear();
+	m_listAllNodes.clear();
 
 	NodeAll(m_pParentNode);
-
-	return &m_listNode;
 }
 
 void CLandScape::Save_QuadTree(string fileName)
@@ -1298,9 +1295,7 @@ void CLandScape::Save_QuadTree(string fileName)
 		return;
 
 	//
-	list<QUADTREENODE*>* allNodes = FindNode_All();
-
-	for (const auto node : *allNodes)
+	for (const auto node : m_listAllNodes)
 	{
 		file << node->strNodeName << endl;
 		file << node->iTriCount << endl;
@@ -1308,6 +1303,8 @@ void CLandScape::Save_QuadTree(string fileName)
 		file << node->vMin.x << ' ' << node->vMin.y << ' ' << node->vMin.z << endl;
 		file << node->vMax.x << ' ' << node->vMax.y << ' ' << node->vMax.z << endl;
 		file << node->iSizeX << ' ' << node->iSizeZ << endl;
+
+		file << node->vecVtx.size() << endl;
 
 		for (const auto iter : node->vecVtx)
 		{
@@ -1323,6 +1320,8 @@ void CLandScape::Save_QuadTree(string fileName)
 			file << iter.vTangent.x << ' ' << iter.vTangent.y << ' ' << iter.vTangent.z << endl;
 		}
 
+		file << node->vecIndex.size() << endl;
+
 		for (const auto iter : node->vecIndex)
 		{
 			file << iter << endl;
@@ -1334,159 +1333,182 @@ void CLandScape::Save_QuadTree(string fileName)
 
 void CLandScape::Load_QuadTree(string fileName)
 {
+	m_listAllNodes.clear();
+
 	ifstream file;
 	file.open(fileName + ".dat", ios::in);
 
-	
+	if (!file.is_open())
+		return;
+
+
+	while (!file.eof())
+	{	
+		QUADTREENODE* node = new QUADTREENODE;
+
+		file >> node->strNodeName;
+
+		// 임시 방편
+		if (node->strNodeName == "")
+			break;
+
+		file >> node->iTriCount;
+		file >> node->fCenterX >> node->fCenterZ >> node->fWidth;
+		file >> node->vMin.x >> node->vMin.y >> node->vMin.z;
+		file >> node->vMax.x >> node->vMax.y >> node->vMax.z;
+		file >> node->iSizeX >> node->iSizeZ;
+
+		int iVtxSize, iIdxSize = 0;
+		file >> iVtxSize;
+
+		for (int i = 0; i < iVtxSize; i++)
+		{
+			VERTEXBUMP tempVtx;
+			// pos
+			file >> tempVtx.vPos.x >> tempVtx.vPos.y >> tempVtx.vPos.z;
+			// UV
+			file >> tempVtx.vUV.x >> tempVtx.vUV.y;
+			// normal
+			file >> tempVtx.vNormal.x >> tempVtx.vNormal.y >> tempVtx.vNormal.z;
+			// binormal
+			file >> tempVtx.vBinormal.x >> tempVtx.vBinormal.y >> tempVtx.vBinormal.z;
+			// tangent
+			file >> tempVtx.vTangent.x >> tempVtx.vTangent.y >> tempVtx.vTangent.z;
+
+			node->vecVtx.push_back(tempVtx);
+		}
+
+		file >> iIdxSize;
+
+		for (int i = 0; i < iIdxSize; i++)
+		{
+			int iIdx;
+			file >> iIdx;
+			node->vecIndex.push_back(iIdx);
+		}
+
+		m_listAllNodes.push_back(node);
+	}
+
+	file.close();
+
+	CreateTreeNodeToObject();
 }
 
-void CLandScape::UpdateNode(QUADTREENODE * node)
+void CLandScape::UpdateNode()
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
+	for (auto& node : m_listAllNodes)
 	{
-		if (node->pNodes[i] != nullptr)
+		if (node->pGameObject->GetCulling() == true)
 		{
-			count++;
-			UpdateNode(node->pNodes[i]);
+			continue;
 		}
-	}
 
-	if (count != 0 ||
-		node->pGameObject->GetCulling() == true)
-	{
-		return;
-	}
+		CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
 
-	CRenderer*	pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+		if (pRenderer)
+		{
+			LANDSCAPECBUFFER	tBuffer = {};
+			tBuffer.iDetailLevel = m_iDetailLevel;
+			tBuffer.iSplatCount = m_iSplatCount;
+			for (int i = 0; i < 4; i++)
+			{
+				tBuffer.arrDetailLevelTex[i] = m_arrDetailLevel_Tex[i];
+			}
+			// brush
+			if (m_bCheckBrush)
+			{
+				tBuffer.fEmpty1 = 1.f;
+				tBuffer.fRangeBrush = m_fRangeBrush;
+				tBuffer.vPosBrush = m_vPosBrush;
+				tBuffer.vColorBrush = m_vColorBrush;
+			}
+			else
+			{
+				tBuffer.fEmpty1 = 0.f;
+			}
 
-	if (pRenderer)
-	{
-		LANDSCAPECBUFFER	tBuffer = {};
-		tBuffer.iDetailLevel = m_iDetailLevel;
-		tBuffer.iSplatCount = m_iSplatCount;
-		for (int i = 0; i < 4; i++)
-		{
-			tBuffer.arrDetailLevelTex[i] = m_arrDetailLevel_Tex[i];
+			pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
+				SCT_PIXEL, &tBuffer);
+			SAFE_RELEASE(pRenderer);
 		}
-		// brush
-		if (m_bCheckBrush)
-		{
- 			tBuffer.fEmpty1 = 1.f;
-			tBuffer.fRangeBrush = m_fRangeBrush;
-			tBuffer.vPosBrush = m_vPosBrush;
-			tBuffer.vColorBrush = m_vColorBrush;
-		}
-		else
-		{
-			tBuffer.fEmpty1 = 0.f;
-		}
-		
-		pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),
-			SCT_PIXEL, &tBuffer);
-		SAFE_RELEASE(pRenderer);
 	}
 }
 
-void CLandScape::NodeRayCollisionCheck(QUADTREENODE * node)
+void CLandScape::NodeRayCollisionCheck()
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
+	for (auto& node : m_listAllNodes)
 	{
-		if (node->pNodes[i] != nullptr)
+		if (node->pGameObject->GetCulling() == true)
 		{
-			count++;
-			NodeRayCollisionCheck(node->pNodes[i]);	
+			continue;
 		}
-	}
 
-	if (count != 0 ||
-		node->pGameObject->GetCulling() == true)
-	{
-		return;
-	}
+		CGameObject* pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		CMouse* pMouse = pMouseObj->FindComponentFromTag<CMouse>("Mouse");
+		CColliderRay* pRay = pMouse->FindComponentFromTag<CColliderRay>("MouseRay");
+		CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
 
-	CGameObject* pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	CMouse* pMouse = pMouseObj->FindComponentFromTag<CMouse>("Mouse");
-	CColliderRay* pRay = pMouse->FindComponentFromTag<CColliderRay>("MouseRay");
-	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-
-	if (pRay->Collision(pAABB))
-	{
-		m_listNode.push_back(node);
-		//_cprintf("Collide!\n");
-	}
-
-	SAFE_RELEASE(pRay);
-	SAFE_RELEASE(pAABB);
-	SAFE_RELEASE(pMouse);
-	SAFE_RELEASE(pMouseObj);
-
-	return;
-}
-
-void CLandScape::NodeRadiusCollisionCheck(QUADTREENODE * node, float radius)
-{
-	int count = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (node->pNodes[i] != nullptr)
-		{
-			count++;
-			NodeRadiusCollisionCheck(node->pNodes[i], radius);
-		}
-	}
-
-	if (count != 0 ||
-		node->pGameObject->GetCulling() == true)
-	{
-		return;
-	}
-	
-	for (const auto iter : node->vecVtx)
-	{
-		float fDistance = iter.vPos.Distance(m_vPosBrush);
-
-		if (fDistance < radius)
+		if (pRay->Collision(pAABB))
 		{
 			m_listNode.push_back(node);
-			break;
+			//_cprintf("Collide!\n");
+		}
+
+		SAFE_RELEASE(pRay);
+		SAFE_RELEASE(pAABB);
+		SAFE_RELEASE(pMouse);
+		SAFE_RELEASE(pMouseObj);
+	}
+
+	return;
+}
+
+void CLandScape::NodeRadiusCollisionCheck(float radius)
+{
+	for (auto& node : m_listAllNodes)
+	{
+		if (node->pGameObject->GetCulling() == true)
+		{
+			continue;
+		}
+
+		for (const auto iter : node->vecVtx)
+		{
+			float fDistance = iter.vPos.Distance(m_vPosBrush);
+
+			if (fDistance < radius)
+			{
+				m_listNode.push_back(node);
+				break;
+			}
 		}
 	}
 
 	return;
 }
 
-void CLandScape::NodeSphereCollisionCheck(QUADTREENODE * node, CGameObject * src)
+void CLandScape::NodeSphereCollisionCheck(CGameObject * src)
 {
-	int count = 0;
-	for (int i = 0; i < 4; i++)
+	for (auto& node : m_listAllNodes)
 	{
-		if (node->pNodes[i] != nullptr)
+		if (node->pGameObject->GetCulling() == true)
 		{
-			count++;
-			NodeSphereCollisionCheck(node->pNodes[i], src);
+			continue;
 		}
+
+		CColliderSphere* pSphere = src->FindComponentFromTag<CColliderSphere>("Collider");
+		CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+
+		if (pSphere->Collision(pAABB))
+		{
+			m_listNode.push_back(node);
+			//_cprintf("Collide!\n");
+		}
+
+		SAFE_RELEASE(pSphere);
+		SAFE_RELEASE(pAABB);
 	}
-
-	if (count != 0 ||
-		node->pGameObject->GetCulling() == true)
-	{
-		return;
-	}
-
-	CColliderSphere* pSphere = src->FindComponentFromTag<CColliderSphere>("Collider");
-	CColliderAABB* pAABB = node->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-
-	if (pSphere->Collision(pAABB))
-	{
-		m_listNode.push_back(node);
-		//_cprintf("Collide!\n");
-	}
-
-	SAFE_RELEASE(pSphere);
-	SAFE_RELEASE(pAABB);
-
 	return;
 }
 
@@ -1508,7 +1530,7 @@ void CLandScape::NodeAll(QUADTREENODE * node)
 		return;
 	}
 
-	m_listNode.push_back(node);
+	m_listAllNodes.push_back(node);
 
 	return;
 }

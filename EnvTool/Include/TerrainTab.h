@@ -69,6 +69,11 @@ private:
 	vector<wstring> m_vecSplattingNormal;
 	vector<wstring> m_vecSplattingSpecular;
 	vector<wstring> m_vecSplattingAlpha;
+
+	CString m_diffuseName = L"Terrain/TerrainTex0_D.tga";
+	CString m_normalName = L"Terrain/TerrainTex0_N.tga";
+	CString m_specularName = L"Terrain/TerrainTex0_S.tga";
+
 public:
 	afx_msg void OnBnClickedButtonTerrainSave();
 	afx_msg void OnBnClickedButtonTerrainLoad();

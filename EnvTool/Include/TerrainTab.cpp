@@ -120,66 +120,9 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
 	pLandScape->CreateLandScapeQuadTree("LandScapeMesh", m_iSizeX, m_iSizeZ, false, "LandScape",
-		L"Terrain/TerrainTex0_D.tga", 
-		L"Terrain/TerrainTex0_N.tga",
-		L"Terrain/TerrainTex0_S.tga");
-
-	//vector<wstring>	vecSplatting;
-
-	//wchar_t	strSplatPath[MAX_PATH] = {};
-
-	//// splatting
-
-	//// Diffuse
-	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05.dds");
-	//vecSplatting.push_back(strSplatPath);
-
-	////vecSplatting.clear();
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large.dds");
-	//vecSplatting.push_back(strSplatPath);
-
-
-	////pLandScape->SetDiffuseSplattingQuadTree("Linear", "SplatDif", &vecSplatting);
-
-
-	//// Normal
-	//vecSplatting.clear();
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_NRM.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_NRM.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-
-	////pLandScape->SetNormalSplattingQuadTree("Linear", "SplatNormal", &vecSplatting);
-
-
-	//// Specular
-	//vecSplatting.clear();
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/BD_Terrain_Cliff05_SPEC.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Terrain_Cliff_15_Large_SPEC.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-	////pLandScape->SetSpecularSplattingQuadTree("Linear", "SplatSpecular", &vecSplatting);
-
-	//// File
-	//vecSplatting.clear();
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Splat.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-	//memset(strSplatPath, 0, sizeof(wchar_t) * MAX_PATH);
-	//wsprintf(strSplatPath, L"LandScape/Splat2.bmp");
-	//vecSplatting.push_back(strSplatPath);
-
-	////pLandScape->SetSplattingAlphaQuadTree("Linear", "SplatAlpha", &vecSplatting);
+		m_diffuseName,
+		m_normalName,
+		m_specularName);
 
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
@@ -650,8 +593,11 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 			{
 			case 0:
 				// Default
+				m_diffuseName = diffuseName;
+				m_normalName = normalName;
+				m_specularName = specularName;
 				pLandScape->SetMaterial_DNS_Default(T2W(diffuseName.GetBuffer(0)), T2W(normalName.GetBuffer(0)), T2W(specularName.GetBuffer(0)));
-				m_editDetail_Default.SetWindowTextW(fileName);
+				m_editDetail_Default.SetWindowTextW(diffuseName);
 				break;
 			case 1:
 			{
@@ -681,7 +627,7 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 
 				pBrushTool->SetArrPixel(0);
 
-				m_editDetail_Tex1.SetWindowTextW(fileName);
+				m_editDetail_Tex1.SetWindowTextW(diffuseName);
 				break;
 			}
 			case 2:
@@ -715,7 +661,7 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 
 				pBrushTool->SetArrPixel(1);
 
-				m_editDetail_Tex2.SetWindowTextW(fileName);
+				m_editDetail_Tex2.SetWindowTextW(diffuseName);
 
 				break;
 			}
@@ -748,7 +694,7 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 					m_vecSplattingSpecular,
 					m_vecSplattingAlpha);
 
-				m_editDetail_Tex3.SetWindowTextW(fileName);
+				m_editDetail_Tex3.SetWindowTextW(diffuseName);
 
 				pBrushTool->SetArrPixel(2);
 
@@ -784,7 +730,7 @@ void CTerrainTab::OnBnClickedButtonTexLoad()
 					m_vecSplattingSpecular,
 					m_vecSplattingAlpha);
 
-				m_editDetail_Tex4.SetWindowTextW(fileName);
+				m_editDetail_Tex4.SetWindowTextW(diffuseName);
 
 				pBrushTool->SetArrPixel(3);
 
@@ -823,6 +769,18 @@ int CTerrainTab::SaveTextureName(string fileName)
 
 	file.open(fileName + ".dat", ios::out | ios::trunc /*| ios::binary*/);
 
+	CT2CA pszConvertAnsiStringDiffuse(m_diffuseName);
+	string strDiffuse(pszConvertAnsiStringDiffuse);
+	CT2CA pszConvertAnsiStringNormal(m_normalName);
+	string strNormal(pszConvertAnsiStringNormal);
+	CT2CA pszConvertAnsiStringSpecular(m_specularName);
+	string strSpecular(pszConvertAnsiStringSpecular);
+
+	// Deffuse Texture
+	file << strDiffuse << endl;
+	file << strNormal << endl;
+	file << strSpecular << endl;
+
 	int iFileCount = 0;
 
 	for (const auto iter : m_vecSplattingDiffuse)
@@ -858,6 +816,42 @@ int CTerrainTab::SaveTextureName(string fileName)
 
 void CTerrainTab::LoadTextureName(string fileName)
 {
+	ifstream file;
+	file.open(fileName + ".dat", ios::in);
+
+	string diffuseName, normalName, specularName;
+
+	file >> diffuseName;
+	file >> normalName;
+	file >> specularName;
+
+	m_diffuseName = diffuseName.c_str();
+	m_normalName = normalName.c_str();
+	m_specularName = specularName.c_str();
+
+	int iCount = 0;
+
+	file >> iCount;
+
+	for (int i = 0; i < iCount; i++)
+	{
+		string diffuse, normal, specular;
+		wstring wDiffuse, wNormal, wSpecular;
+
+		file >> diffuse;
+		file >> normal;
+		file >> specular;
+
+		wDiffuse.assign(diffuse.begin(), diffuse.end());
+		wNormal.assign(normal.begin(), normal.end());
+		wSpecular.assign(specular.begin(), specular.end());
+
+		m_vecSplattingDiffuse[i] = wDiffuse;
+		m_vecSplattingNormal[i] = wNormal;
+		m_vecSplattingSpecular[i] = wSpecular;
+	}
+
+	file.close();
 }
 
 void CTerrainTab::LoadSplatAlphaName(string fileName)
@@ -906,7 +900,9 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
+	wchar_t strDir[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscpy_s(strDir, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
 	wcscat_s(strPath, MAX_PATH, L"Terrain\\");
 
 	CString originPath = strPath;
@@ -972,8 +968,20 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 		{
 			string alphaFileName = "Bitmap_" + strFileName + to_string(i);
 			pBrushTool->Save_AlphaSplat_Bitmap(strFilePath + alphaFileName, i);
-			mainFile << strFilePath + alphaFileName << endl;
+			string saveDir = strFilePath + alphaFileName + ".bmp";
+			saveDir.erase(0, int(lstrlen(strDir) - 1));
+			saveDir.erase(0, 1);
+			mainFile << saveDir << endl;
+
+			// 디테일 수
+			mainFile << pLandScape->GetDetailLevel_Splat()[i] << endl;
 		}
+
+		// 디폴트 텍스쳐 디테일 수 
+		mainFile << pLandScape->GetDetailLevel() << endl;
+
+		// 랜드 크기
+		mainFile << pLandScape->GetTerrainSize().x << ' ' << pLandScape->GetTerrainSize().y << endl;
 
 		mainFile.close();
 
@@ -1010,7 +1018,7 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 	CT2CA pszConvertAnsiStringPathName(path);
 	string strFilePath(pszConvertAnsiStringPathName);
 
-	// 저장
+	// 불러오기
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 	if (!pLandScapeObj)
 	{
@@ -1038,12 +1046,80 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 		pLandScape->Load_QuadTree(heightFileName);
 
 		// 텍스쳐 정보 불러오기
-
+		string textureFileName;
+		mainFile >> textureFileName;
+		LoadTextureName(textureFileName);
 		
 
 		// 알파스플래팅 bmp 불러오기
 		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
 		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+		int iCount;
+
+		mainFile >> iCount;
+
+		for (int i = 0; i < iCount; i++)
+		{
+			string bmpFileName;
+			wstring wbmpFileName;
+			int iDetailLevel;
+
+			mainFile >> bmpFileName;
+			wbmpFileName.assign(bmpFileName.begin(), bmpFileName.end());
+
+			m_vecSplattingAlpha[i] = wbmpFileName;
+
+			mainFile >> iDetailLevel;
+			
+			pLandScape->SetDetailLevel_Splat(i, iDetailLevel);
+		}
+
+		int iDetailLeval_Default;
+		mainFile >> iDetailLeval_Default;
+		pLandScape->SetDetailLevel(iDetailLeval_Default);
+
+		int iSizeX, iSizeZ;
+		mainFile >> iSizeX >> iSizeZ;
+		pLandScape->SetTerrainSize(iSizeX, iSizeZ);
+
+		// 크기 에디트 박스 설정
+		CString numX, numZ;
+		numX.Format(_T("%d"), iSizeX);
+		numZ.Format(_T("%d"), iSizeZ);
+		m_editTerrainSizeX.SetWindowTextW(numX);
+		m_editTerrainSizeZ.SetWindowTextW(numZ);
+
+		// 텍스쳐 정보 에디트 박스 설정
+		CString strDefault, Tex1, Tex2, Tex3, Tex4 = L"";
+		
+		strDefault = m_diffuseName;
+		Tex1 = m_vecSplattingDiffuse[0].c_str();
+		Tex2 = m_vecSplattingDiffuse[1].c_str();
+		Tex3 = m_vecSplattingDiffuse[2].c_str();
+		Tex4 = m_vecSplattingDiffuse[3].c_str();
+
+		m_editDetail_Default.SetWindowTextW(strDefault);
+		m_editDetail_Tex1.SetWindowTextW(Tex1);
+		m_editDetail_Tex2.SetWindowTextW(Tex2);
+		m_editDetail_Tex3.SetWindowTextW(Tex3);
+		m_editDetail_Tex4.SetWindowTextW(Tex4);
+
+		pLandScape->SetMaterial_DNS_Default(T2W(m_diffuseName.GetBuffer(0)), T2W(m_normalName.GetBuffer(0)), T2W(m_specularName.GetBuffer(0)));
+
+		pLandScape->SetMaterial_Splatting(m_vecSplattingDiffuse, 
+			m_vecSplattingNormal, 
+			m_vecSplattingSpecular, 
+			m_vecSplattingAlpha, DATA_PATH);
+
+		pLandScape->SetSplatCount(iCount);
+
+		for (int i = 0; i < iCount; i++)
+		{
+			pBrushTool->SetArrPixel(i);
+			pBrushTool->SettingOriginPixelToTexture(i);
+			
+		}
 
 		mainFile.close();
 
