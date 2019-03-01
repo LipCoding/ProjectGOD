@@ -516,114 +516,6 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 					SAFE_RELEASE(pLandScape);
 					SAFE_RELEASE(pLandScapeObj);
 					break;
-					{
-						//	int iNumSizeX = int(node->vMax.x - node->vMin.x) + 1;
-
-						//	if (iter.vPos.x < node->vMax.x &&
-						//		iter.vPos.x > node->vMin.x)
-						//	{
-						//		/*Left*/
-						//		if (0 < (iIndex - 1) &&
-						//			node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
-						//		{
-						//			iScrIndex = iIndex - 1;
-						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-						//			if (fGap > fAverValue)
-						//			{
-						//				fGap /= GAP;
-
-						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-						//				{
-						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-						//				}
-						//				else
-						//				{
-						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-						//				}
-						//			}
-						//		}
-
-						//		/*Right*/
-						//		if (node->vecVtx.size() > (iIndex + 1) &&
-						//			node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
-						//		{
-						//			iScrIndex = iIndex + 1;
-						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-						//			if (fGap > fAverValue)
-						//			{
-						//				fGap /= GAP;
-
-						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-						//				{
-						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-						//				}
-						//				else
-						//				{
-						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-						//				}
-						//			}
-						//		}
-						//	}
-
-						//	if (iter.vPos.z < node->vMax.z &&
-						//		iter.vPos.z > node->vMin.z)
-						//	{
-						//		/*Up*/
-						//		if (node->vecVtx.size() > (iIndex + iNumSizeX) &&
-						//			node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
-						//		{
-						//			iScrIndex = iIndex + iNumSizeX;
-						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-						//			if (fGap > fAverValue)
-						//			{
-						//				fGap /= GAP;
-
-						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-						//				{
-						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-						//				}
-						//				else
-						//				{
-						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-						//				}
-						//			}
-						//		}
-
-						//		/*Down*/
-						//		if (0 < (iIndex - iNumSizeX) &&
-						//			node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
-						//		{
-						//			iScrIndex = iIndex - iNumSizeX;
-						//			fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-						//			if (fGap > fAverValue)
-						//			{
-						//				fGap /= GAP;
-
-						//				if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-						//				{
-						//					node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-						//				}
-						//				else
-						//				{
-						//					node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-						//					node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-						//				}
-						//			}
-						//		}
-						//	}
-						//	break;
-					}
 				}
 
 				UpdateVtxBuffer(&node->MeshInfo, node->vecVtx);
@@ -687,6 +579,139 @@ void CBrushTool::SettingOriginPixelToTexture(int texType)
 
 	CONTEXT->UpdateSubresource(pTexture->GetTexArr(), texType, NULL, (m_pArrPixel[texType]), Width * 4, Width * Height * 4);
 	SAFE_RELEASE(pTexture);
+}
+
+void CBrushTool::Save_AlphaSplat_Bitmap(string fileName)
+{
+	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
+	if (pTexture == nullptr)
+		return;
+
+	vector<ID3D11Texture2D*>&  vecTex = pTexture->getVecTex();
+	D3D11_MAPPED_SUBRESOURCE   tMap = {};
+	fileName += ".bmp";
+
+	// 이미지 크기
+	UINT height = pTexture->GetTexDesc().Height;
+	UINT width = pTexture->GetTexDesc().Width;
+
+	// 이미지 픽셀형식
+	int bpp = 24;
+	const char* arrFileName = fileName.c_str();
+
+	// 정보를 저장할 버퍼 포인터
+	BYTE* pData;
+	// 헤더 정보를 저장할 포인터
+
+	/*HBITMAP my_bmp = CreateBitmap(width, height, 1, 24, m_pArrPixel[0]);
+
+	HBITMAP2BMP(my_bmp, fileName);*/
+
+	// pData에 RGB 데이터를 복사
+
+	CONTEXT->Map(vecTex[0], 0, D3D11_MAP_READ,
+		0, &tMap);
+
+	//pData = new BYTE[height * width * 4];
+	//for (int i = 0; i < height; i++)
+	//{
+	//	for (int j = 0; j < width; j++)
+	//	{
+	//		int idx = i * width + (j * 1);
+	//		int idx_byte = i * (width * 4) + (j * 4);
+
+	//		// 강제형변환은 오른쪽부터 크기만큼 짤림
+	//		// R
+	//		BYTE r = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 3);
+	//		// G
+	//		BYTE g = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 2);
+	//		// B
+	//		BYTE b = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 1);
+	//		// A
+	//		BYTE a = (BYTE)((m_pArrPixel[0])[idx] >> 8 * 0);
+
+	//		pData[idx_byte] = r;
+	//		pData[idx_byte + 1] = g;
+	//		pData[idx_byte + 2] = b;
+	//		pData[idx_byte + 3] = a;
+	//	}
+	//}
+
+	
+	pData = reinterpret_cast<BYTE*>(tMap.pData);
+	
+
+	HBITMAP my_bmp = CreateBitmap(width, height, 1, 24, m_pArrPixel[0]);
+
+	HBITMAP2BMP(my_bmp, fileName);
+
+	CONTEXT->Unmap(vecTex[0], 0);
+
+	// 이미지의 위, 아래를 뒤집어서 넣어준다.
+	/*for (int i = 0; i < height / 2; ++i)
+	{
+		memcpy(pLine, &pPixel[i * ih.biWidth], sizeof(DWORD) * ih.biWidth);
+		memcpy(&pPixel[i * ih.biWidth],
+			&pPixel[(ih.biWidth - 1 - i) * ih.biWidth],
+			sizeof(DWORD) * ih.biWidth);
+		memcpy(&pPixel[(ih.biWidth - 1 - i) * ih.biWidth],
+			pLine, sizeof(DWORD) * ih.biWidth);
+	}*/
+
+
+	//GlobalFree(pData);
+	/*delete[] pData;
+	pData = nullptr;*/
+
+	SAFE_RELEASE(pTexture);
+}
+
+void CBrushTool::HBITMAP2BMP(HBITMAP hBitmap, string fileName)
+{
+	// DC를 얻어옴
+	HDC hdc = GetDC(NULL);
+
+	// bitmap info 를 얻어옴
+	BITMAPINFO bmpInfo;
+	ZeroMemory(&bmpInfo, sizeof(BITMAPINFO));
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	GetDIBits(hdc, hBitmap, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS);
+	if (bmpInfo.bmiHeader.biSizeImage <= 0)
+		bmpInfo.bmiHeader.biSizeImage = bmpInfo.bmiHeader.biWidth*abs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount + 7) / 8;
+
+	// 실제 image 내용을 얻어오기
+	LPVOID pBuf = NULL;
+	if ((pBuf = malloc(bmpInfo.bmiHeader.biSizeImage)) == NULL)
+	{
+		MessageBox(NULL, L"Unable to Allocate Bitmap Memory", L"Error", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	bmpInfo.bmiHeader.biCompression = BI_RGB;
+	GetDIBits(hdc, hBitmap, 0, bmpInfo.bmiHeader.biHeight, pBuf, &bmpInfo, DIB_RGB_COLORS);
+
+	// bitmap file header 만들기
+	BITMAPFILEHEADER bmpFileHeader;
+	bmpFileHeader.bfReserved1 = 0;
+	bmpFileHeader.bfReserved2 = 0;
+	bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bmpInfo.bmiHeader.biSizeImage;
+	bmpFileHeader.bfType = 'MB';
+	bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+	// 파일을 열고 쓰기
+	FILE* fp = fopen(fileName.c_str(), "wb");
+	if (fp == NULL)
+	{
+		MessageBox(NULL, L"Unable to Create Bitmap File", L"Error", MB_OK | MB_ICONERROR);
+		return;
+	}
+	fwrite(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, fp);
+	fwrite(&bmpInfo.bmiHeader, sizeof(BITMAPINFOHEADER), 1, fp);
+	fwrite(pBuf, bmpInfo.bmiHeader.biSizeImage, 1, fp);
+
+	if (hdc) ReleaseDC(NULL, hdc);
+	if (pBuf) free(pBuf);
+	if (fp) fclose(fp);
 }
 
 void CBrushTool::UpdateVtxBuffer(MESHCONTAINER * info, vector<VERTEXBUMP>& vtx)

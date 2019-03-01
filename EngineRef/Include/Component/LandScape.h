@@ -18,7 +18,7 @@ typedef struct _tagNodeQuadTree
 	vector<UINT> vecIndex;
 	CGameObject* pGameObject;
 	MESHCONTAINER MeshInfo;
-	DWORD*		 pPixel[4];
+	//DWORD*		 pPixel[4];
 	_tagNodeQuadTree* pNodes[4];
 }QUADTREENODE;
 
@@ -141,6 +141,8 @@ public:
 	list<QUADTREENODE*>* FindNode_ByRadius(float radius);
 	list<QUADTREENODE*>* FindNode_All();
 
+	void Save_QuadTree(string fileName);
+	void Load_QuadTree(ifstream* pFile);
 private:
 	// QuadTree
 	bool CreateQuadTree();

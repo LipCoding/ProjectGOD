@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <conio.h>
 #include <functional>
+#include <fstream>
 #include "PGTypes.h"
 
 #pragma comment(lib, "DirectXTex")

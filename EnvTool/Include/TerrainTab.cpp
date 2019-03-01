@@ -80,6 +80,8 @@ ON_BN_CLICKED(IDC_BUTTON_HEIGHT_RESET, &CTerrainTab::OnBnClickedButtonHeightRese
 ON_BN_CLICKED(IDC_BUTTON_TEX_LOAD, &CTerrainTab::OnBnClickedButtonTexLoad)
 ON_BN_CLICKED(IDC_BUTTON_SPLAT_LOAD, &CTerrainTab::OnBnClickedButtonSplatLoad)
 ON_WM_VSCROLL()
+ON_BN_CLICKED(IDC_BUTTON_TERRAIN_SAVE, &CTerrainTab::OnBnClickedButtonTerrainSave)
+ON_BN_CLICKED(IDC_BUTTON_TERRAIN_LOAD, &CTerrainTab::OnBnClickedButtonTerrainLoad)
 END_MESSAGE_MAP()
 
 // CTerrainTab 메시지 처리기
@@ -815,6 +817,45 @@ void CTerrainTab::OnBnClickedButtonSplatLoad()
 	
 }
 
+int CTerrainTab::SaveTextureName(string fileName)
+{
+	ofstream file;
+
+	file.open(fileName + ".dat", ios::out | ios::trunc /*| ios::binary*/);
+
+	int iFileCount = 0;
+
+	for (const auto iter : m_vecSplattingDiffuse)
+	{
+		if (iter != L"")
+			++iFileCount;
+	}
+
+	if (iFileCount == 0)
+		return iFileCount;
+
+	// 스플레팅 텍스쳐 갯수
+	file << iFileCount << endl;
+
+	// wchar_t* 저장
+	for (int i = 0; i < iFileCount; i++)
+	{
+		string diffuse;
+		string normal;
+		string specular;
+
+		diffuse.assign(m_vecSplattingDiffuse[i].begin(), (m_vecSplattingDiffuse[i].end()));
+		normal.assign(m_vecSplattingNormal[i].begin(), (m_vecSplattingNormal[i].end()));
+		specular.assign(m_vecSplattingSpecular[i].begin(), (m_vecSplattingSpecular[i].end()));
+
+		file << diffuse << endl;
+		file << normal << endl;
+		file << specular << endl;
+	}
+
+	return iFileCount;
+}
+
 
 void CTerrainTab::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
@@ -845,4 +886,84 @@ void CTerrainTab::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	}
 
 	CDialogEx::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+void CTerrainTab::OnBnClickedButtonTerrainSave()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(FALSE, NULL, NULL, OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString fileName = dlg.GetFileName();
+
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
+	{
+		if (fileName[i] == '.')
+		{
+			fileName.Delete(i, lstrlen(fileName) - 1);
+			break;
+		}
+	}
+	
+	CT2CA pszConvertAnsiStringPathName(path);
+	string strFilePath(pszConvertAnsiStringPathName);
+	CT2CA pszConvertAnsiStringFileName(fileName);
+	string strFileName(pszConvertAnsiStringFileName);
+	string heightFileName = "Height_" + strFileName;
+	string textureFileName = "Texture_" + strFileName;
+	string alphaFileName = "Bitmap_" + strFileName + "_0";
+	// 저장
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (pLandScapeObj)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		// 노드 정보 저장
+		ofstream* nodeFile = nullptr;
+		pLandScape->Save_QuadTree(strFilePath + heightFileName);
+
+		// 텍스쳐이름, Splatting 개수 저장
+		int iCount = SaveTextureName(strFilePath + textureFileName);
+
+		// 알파스플래팅 bmp 저장
+		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+		pBrushTool->Save_AlphaSplat_Bitmap(strFilePath + alphaFileName);
+
+		SAFE_RELEASE(pBrushTool);
+		SAFE_RELEASE(pBrushObj);
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
+}
+
+
+void CTerrainTab::OnBnClickedButtonTerrainLoad()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
 }

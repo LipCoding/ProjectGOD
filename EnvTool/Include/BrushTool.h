@@ -41,6 +41,9 @@ public:
 	void ResetHeight();
 
 	void SettingOriginPixelToTexture(int texType);
+
+	void Save_AlphaSplat_Bitmap(string fileName);
+	void HBITMAP2BMP(HBITMAP hBitmap, string fileName);
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
 	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power);

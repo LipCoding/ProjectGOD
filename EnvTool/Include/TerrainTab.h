@@ -43,6 +43,9 @@ public:
 	afx_msg void OnBnClickedButtonHeightReset();
 	afx_msg void OnBnClickedButtonTexLoad();
 	afx_msg void OnBnClickedButtonSplatLoad();
+public:
+	int SaveTextureName(string fileName);
+
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;
@@ -65,4 +68,7 @@ private:
 	vector<wstring> m_vecSplattingNormal;
 	vector<wstring> m_vecSplattingSpecular;
 	vector<wstring> m_vecSplattingAlpha;
+public:
+	afx_msg void OnBnClickedButtonTerrainSave();
+	afx_msg void OnBnClickedButtonTerrainLoad();
 };

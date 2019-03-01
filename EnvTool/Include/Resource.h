@@ -71,7 +71,9 @@
 #define IDC_BUTTON4                     1042
 #define IDC_BUTTON_SPLAT_LOAD           1042
 #define IDC_BUTTON5                     1043
+#define IDC_BUTTON_TERRAIN_SAVE         1043
 #define IDC_BUTTON6                     1044
+#define IDC_BUTTON_TERRAIN_LOAD         1044
 #define IDC_SLIDER_SPLAT_POWER          1045
 #define IDC_EDIT_SPLAT_POWER            1046
 

@@ -1047,9 +1047,7 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	for (int i = 0; i < 4; i++)
 	{
 		node->pNodes[i] = nullptr;
-		node->pPixel[i] = nullptr;
 	}
-		
 
 	int iNumTriangles = CountTriangles(positionX, positionZ, width);
 
@@ -1124,12 +1122,6 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	
 	node->iSizeZ = (int)node->vMax.z - (int)node->vMin.z;
 	node->iSizeX = (int)node->vMax.x - (int)node->vMin.x;
-
-	// pixel 할당
-	for (int i = 0; i < 4; i++)
-	{
-		node->pPixel[i] = new DWORD[(node->iSizeX + 1) * (node->iSizeZ + 1)];
-	}
 
 	// 정점 할당 
 	node->vecVtx.resize((node->iSizeZ + 1) * (node->iSizeX + 1));
@@ -1293,6 +1285,55 @@ list<QUADTREENODE*>* CLandScape::FindNode_All()
 	NodeAll(m_pParentNode);
 
 	return &m_listNode;
+}
+
+void CLandScape::Save_QuadTree(string fileName)
+{
+	// 파일을 오픈
+	ofstream file;
+	file.open(fileName + ".dat", ios::out | ios::trunc /*| ios::binary*/);
+
+	// open 되었는지 검사
+	if (!file.is_open())
+		return;
+
+	//
+	list<QUADTREENODE*>* allNodes = FindNode_All();
+
+	for (const auto node : *allNodes)
+	{
+		file << node->strNodeName << endl;
+		file << node->iTriCount << endl;
+		file << node->fCenterX << ' ' << node->fCenterZ << ' ' << node->fWidth << endl;
+		file << node->vMin.x << ' ' << node->vMin.y << ' ' << node->vMin.z << endl;
+		file << node->vMax.x << ' ' << node->vMax.y << ' ' << node->vMax.z << endl;
+		file << node->iSizeX << ' ' << node->iSizeZ << endl;
+
+		for (const auto iter : node->vecVtx)
+		{
+			// pos
+			file << iter.vPos.x << ' ' << iter.vPos.y << ' ' << iter.vPos.z << endl;
+			// UV
+			file << iter.vUV.x << ' ' << iter.vUV.y << endl;
+			// normal
+			file << iter.vNormal.x << ' ' << iter.vNormal.y << ' ' << iter.vNormal.z << endl;
+			// binormal
+			file << iter.vBinormal.x << ' ' << iter.vBinormal.y << ' ' << iter.vBinormal.z << endl;
+			// tangent
+			file << iter.vTangent.x << ' ' << iter.vTangent.y << ' ' << iter.vTangent.z << endl;
+		}
+
+		for (const auto iter : node->vecIndex)
+		{
+			file << iter << endl;
+		}
+	}
+
+	file.close();
+}
+
+void CLandScape::Load_QuadTree(ifstream * pFile)
+{
 }
 
 void CLandScape::UpdateNode(QUADTREENODE * node)
