@@ -1,7 +1,10 @@
+Terrain/TerrainTex0_D.tga
+Terrain/TerrainTex0_N.tga
+Terrain/TerrainTex0_S.tga
+4
 Tool\BranForest_Grass_D.tga
 Tool\BranForest_Grass_N.tga
 Tool\BranForest_Grass_S.tga
-4
 Tool\brickground01_D.tga
 Tool\brickground01_N.tga
 Tool\brickground01_S.tga
@@ -11,6 +14,3 @@ Tool\brickground02_S.tga
 Tool\Campagna_Tile_Mole01_D.tga
 Tool\Campagna_Tile_Mole01_N.tga
 Tool\Campagna_Tile_Mole01_S.tga
-Tool\BranForest_Grass_D.tga
-Tool\BranForest_Grass_N.tga
-Tool\BranForest_Grass_S.tga
