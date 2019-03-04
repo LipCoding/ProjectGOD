@@ -228,12 +228,37 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	
 	if (KEYPUSH("MouseLButton"))
 	{
-		switch (type)
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj != NULL)
 		{
-		case TAB_TERRAIN:
-		case TAB_OBJECT:
-		default:
-			break;
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			switch (type)
+			{
+			case TAB_TERRAIN:
+			{
+				CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+				if (!pBrushTool->GetBrushCheck())
+				{
+					SAFE_RELEASE(pBrushTool);
+					break;
+				}
+
+				if (pBrushTool->GetSplattingCheck())
+				{
+					pBrushTool->MovePixel(m_vPickPos, fTime, true);
+				}
+				SAFE_RELEASE(pBrushTool);
+				break;
+			}
+			case TAB_OBJECT:
+				break;
+			default:
+				break;
+			}
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
 		}
 	}
 	

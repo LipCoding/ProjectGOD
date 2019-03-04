@@ -525,13 +525,13 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 	}
 }
 
-void CBrushTool::MovePixel(Vector3 mousePos, const float & fTime)
+void CBrushTool::MovePixel(Vector3 mousePos, const float & fTime, bool erase)
 {
 	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");
 	if (pTexture == nullptr)
 		return;
 
-	UpdateTextureBuffer(m_iTexType, pTexture, mousePos, m_fPower * fTime);
+	UpdateTextureBuffer(m_iTexType, pTexture, mousePos, m_fPower * fTime, erase);
 	SAFE_RELEASE(pTexture);
 }
 
@@ -659,7 +659,7 @@ void CBrushTool::UpdateVtxBuffer(MESHCONTAINER * info, vector<VERTEXBUMP>& vtx)
 	CONTEXT->Unmap(info->tVB.pBuffer, 0);
 }
 
-void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power)
+void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power, bool erase)
 {
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 
@@ -717,23 +717,46 @@ void CBrushTool::UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mo
 					// A
 					BYTE a = (BYTE)((m_pArrPixel[texType])[pixel] >> 8 * 0);
 
-					if (r + (BYTE)(power) > 255)
-						r = 255;
-					if (g + (BYTE)(power) > 255)
-						g = 255;
-					if (b + (BYTE)(power) > 255)
-						b = 255;
-					if (a + (BYTE)(power) > 255)
-						a = 255;
+					if (erase)
+					{
+						if (r - (BYTE)(power) < 0)
+							r = 0;
+						if (g - (BYTE)(power) < 0)
+							g = 0;
+						if (b - (BYTE)(power) < 0)
+							b = 0;
+						if (a - (BYTE)(power) < 0)
+							a = 0;
 
-					if (r < 255)
-						r += (BYTE)(power);
-					if (g < 255)
-						g += (BYTE)(power);
-					if (b < 255)
-						b += (BYTE)(power);
-					if (a < 255)
-						a += (BYTE)(power);
+						if (r > 0)
+							r -= (BYTE)(power);
+						if (g > 0)
+							g -= (BYTE)(power);
+						if (b > 0)
+							b -= (BYTE)(power);
+						if (a > 0)
+							a -= (BYTE)(power);
+					}
+					else
+					{
+						if (r + (BYTE)(power) > 255)
+							r = 255;
+						if (g + (BYTE)(power) > 255)
+							g = 255;
+						if (b + (BYTE)(power) > 255)
+							b = 255;
+						if (a + (BYTE)(power) > 255)
+							a = 255;
+
+						if (r < 255)
+							r += (BYTE)(power);
+						if (g < 255)
+							g += (BYTE)(power);
+						if (b < 255)
+							b += (BYTE)(power);
+						if (a < 255)
+							a += (BYTE)(power);
+					}
 
 
 

@@ -914,7 +914,9 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 
 	CString path = dlg.GetPathName();
 	CString fileName = dlg.GetFileName();
+	CString flexiblePath = L"Terrain\\";
 
+	// 파일 이름 제거
 	for (int i = lstrlen(path) - 1; i >= 0; i--)
 	{
 		if (path[i] == '\\')
@@ -924,6 +926,7 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 		}
 	}
 
+	// 확장자명 제거(만약 확장자명이 세이브 이름으로 들어갈시)
 	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
 	{
 		if (fileName[i] == '.')
@@ -940,6 +943,9 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 	string heightFileName = "Height_" + strFileName;
 	string textureFileName = "Texture_" + strFileName;
 	
+	CT2CA pszConvertAnsiStringFlexiblePath(flexiblePath);
+	string strFlexiblePath(pszConvertAnsiStringFlexiblePath);
+
 	// 저장
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
 	if (pLandScapeObj)
@@ -951,11 +957,11 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 		// 노드 정보 저장
 		pLandScape->Save_QuadTree(strFilePath + heightFileName);
-		mainFile << strFilePath + heightFileName << endl;
+		mainFile << strFlexiblePath + heightFileName << endl;
 
 		// 텍스쳐이름, Splatting 개수 저장
 		int iCount = SaveTextureName(strFilePath + textureFileName);
-		mainFile << strFilePath + textureFileName << endl;
+		mainFile << strFlexiblePath + textureFileName << endl;
 
 		// 알파스플래팅 bmp 저장
 		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
@@ -965,7 +971,7 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 
 		for (int i = 0; i < iCount; ++i)
 		{
-			string alphaFileName = "Bitmap_" + strFileName + to_string(i);
+			string alphaFileName = "Bitmap_" + strFileName + "_" + to_string(i);
 			pBrushTool->Save_AlphaSplat_Bitmap(strFilePath + alphaFileName, i);
 			string saveDir = strFilePath + alphaFileName + ".bmp";
 			saveDir.erase(0, int(lstrlen(strDir) - 1));
@@ -1011,11 +1017,14 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 
 	// do modal error 해결
 	if (dlg.DoModal() != IDOK)
-		return;
+		return; 
 
 	CString path = dlg.GetPathName();
 	CT2CA pszConvertAnsiStringPathName(path);
 	string strFilePath(pszConvertAnsiStringPathName);
+
+	wstring wFlexiblePath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+	string  flexiblePath(wFlexiblePath.begin(), wFlexiblePath.end());
 
 	// 불러오기
 	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
@@ -1042,12 +1051,12 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 		// 노드 정보 불러오기
 		string heightFileName;
 		mainFile >> heightFileName;
-		pLandScape->Load_QuadTree(heightFileName);
+		pLandScape->Load_QuadTree(flexiblePath + heightFileName);
 
 		// 텍스쳐 정보 불러오기
 		string textureFileName;
 		mainFile >> textureFileName;
-		LoadTextureName(textureFileName);
+		LoadTextureName(flexiblePath + textureFileName);
 		
 
 		// 알파스플래팅 bmp 불러오기
