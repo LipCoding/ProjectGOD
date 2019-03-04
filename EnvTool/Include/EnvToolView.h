@@ -65,8 +65,7 @@ private:
 	//tab control
 	//void UpdateTerrainTab
 	void PickingProcess(TOOLTAB_TYPE type);
-private:
-	void SetTileColor(float x, float y);
+
 // 사용자 변수
 private:
 	CGameObject	*m_pCamera = nullptr;

@@ -8,17 +8,6 @@
 #include "MainFrm.h"
 #include "EnvToolView.h"
 #include "EditForm.h"
-//#include "AnimationEdit.h"
-//#include "ResourceEdit.h"
-//#include "TerrainEdit.h"
-
-#include "GameObject/GameObject.h"
-#include "Scene/Scene.h"
-#include "Scene/Layer.h"
-#include "Scene/SceneManager.h"
-#include "Component/Transform.h"
-#include "Component/Renderer2D.h"
-#include "Core.h"
 
 PG_USING
 

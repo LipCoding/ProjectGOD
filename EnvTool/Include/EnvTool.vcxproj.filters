@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Tab">
-      <UniqueIdentifier>{6b257c7c-c2bd-4203-babb-004a0b7017f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tab\Obj">
-      <UniqueIdentifier>{f28e3eb3-9903-4c3e-9cf8-95a0d5cd294f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Object">
-      <UniqueIdentifier>{a0ab2182-6883-44bb-b169-4174b9ba2d51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Default">
       <UniqueIdentifier>{20c67152-8f9a-4d7e-a252-4b4288b5bd8f}</UniqueIdentifier>
     </Filter>
@@ -25,7 +16,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Tab\Terrain">
+    <Filter Include="01.Object">
+      <UniqueIdentifier>{a0ab2182-6883-44bb-b169-4174b9ba2d51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Tab">
+      <UniqueIdentifier>{6b257c7c-c2bd-4203-babb-004a0b7017f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Tab\Obj">
+      <UniqueIdentifier>{f28e3eb3-9903-4c3e-9cf8-95a0d5cd294f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Tab\Terrain">
       <UniqueIdentifier>{f31e9a37-a978-4051-8897-4f2b12b38306}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -55,13 +55,13 @@
       <Filter>99.Default\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ObjTab.h">
-      <Filter>Tab\Obj</Filter>
+      <Filter>00.Tab\Obj</Filter>
     </ClInclude>
     <ClInclude Include="TerrainTab.h">
-      <Filter>Tab\Terrain</Filter>
+      <Filter>00.Tab\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="BrushTool.h">
-      <Filter>Object</Filter>
+      <Filter>01.Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -84,13 +84,13 @@
       <Filter>99.Default\소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ObjTab.cpp">
-      <Filter>Tab\Obj</Filter>
+      <Filter>00.Tab\Obj</Filter>
     </ClCompile>
     <ClCompile Include="TerrainTab.cpp">
-      <Filter>Tab\Terrain</Filter>
+      <Filter>00.Tab\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="BrushTool.cpp">
-      <Filter>Object</Filter>
+      <Filter>01.Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
