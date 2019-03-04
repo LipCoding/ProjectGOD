@@ -33,11 +33,10 @@ public:
 	void SetPower(float power);
 	void SetUpType(HEIGHTUP_TYPE type) { m_eUpType = type; }
 	void SetTexType(int type) { m_iTexType = type; }
-
 	void SetArrPixel(int type);
 public:
 	void MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
-	void MovePixel(Vector3 mousePos, const float& fTime);
+	void MovePixel(Vector3 mousePos, const float& fTime, bool erase = false);
 	void ResetHeight();
 
 	void SettingOriginPixelToTexture(int texType);
@@ -46,7 +45,7 @@ public:
 	void HBITMAP2BMP(HBITMAP hBitmap, string fileName);
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
-	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power);
+	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power, bool erase);
 private:
 	bool  m_bBrushCheck = false;
 	bool  m_bHeightCheck = true;
