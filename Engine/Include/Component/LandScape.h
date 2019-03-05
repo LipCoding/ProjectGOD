@@ -136,19 +136,22 @@ public:
 	virtual void Collision(float fTime);
 	virtual void Render(float fTime);
 	virtual CLandScape* Clone();
+	// 사용하지 않는다.
 	virtual void Save(FILE* pFile);
+	// 사용하지 않는다.
 	virtual void Load(FILE* pFile);
+	// Load
+	void Load_Terrain(string fileName);
+	void Save_QuadTree(string fileName);
+	void Load_QuadTree(string fileName);
+	void Load_TextureName(string fileName);
 
 public:
 	list<QUADTREENODE*>* FindNode_ByMouse();
 	list<QUADTREENODE*>* FindNode_ByRadius(float radius);
-
 	list<QUADTREENODE*>* GetAllNodes() { return &m_listAllNodes; };
 
 	void NodesToContainer();
-
-	void Save_QuadTree(string fileName);
-	void Load_QuadTree(string fileName);
 private:
 	// QuadTree
 	bool CreateQuadTree();
@@ -183,8 +186,14 @@ private:
 	static int number;
 	list<QUADTREENODE*> m_listNode;
 	list<QUADTREENODE*> m_listAllNodes;
-	// 
-
+	// Load
+	wstring				m_diffuseName;
+	wstring				m_normalName;
+	wstring				m_specularName;
+	vector<wstring>	m_vecSplattingDiffuse;
+	vector<wstring> m_vecSplattingNormal;
+	vector<wstring> m_vecSplattingSpecular;
+	vector<wstring> m_vecSplattingAlpha;
 };
 
 PG_END

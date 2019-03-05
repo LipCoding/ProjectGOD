@@ -8,6 +8,8 @@
 #include "MainFrm.h"
 #include "AnimToolView.h"
 
+#include "AnimSpeedTab.h"
+
 // CEditForm 대화 상자
 
 IMPLEMENT_DYNCREATE(CEditForm, CFormView)
@@ -20,6 +22,8 @@ CEditForm::CEditForm()
 
 CEditForm::~CEditForm()
 {
+	delete m_pAnimSpeedDlg;
+	m_pAnimSpeedDlg = nullptr;
 }
 
 BEGIN_MESSAGE_MAP(CEditForm, CView)
@@ -64,11 +68,44 @@ void CEditForm::OnInitialUpdate()
 	m_Tab.InsertItem(2, _T("Collider"));
 	m_Tab.InsertItem(3, _T("OnOff"));
 	m_Tab.InsertItem(4, _T("CamShake"));
+
+	CRect rect;
+	m_Tab.GetWindowRect(&rect);
+
+	m_Tab.SetCurSel(0);
+
+	m_pAnimSpeedDlg = new CAnimSpeedTab;
+	m_pAnimSpeedDlg->Create(IDD_DIALOG_ANIM_SPEED, &m_Tab);
+	m_pAnimSpeedDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
+	m_pAnimSpeedDlg->ShowWindow(SW_SHOW);
+
+	// 메인 프레임을 받아온다.
+	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
+	m_pView = (CAnimToolView*)pMain->GetActiveView();
 }
 
 
 void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	int sel = m_Tab.GetCurSel();
+
+	switch (sel)
+	{
+	case 0:
+		m_pAnimSpeedDlg->ShowWindow(SW_SHOW);
+		break;
+	case 1:
+		m_pAnimSpeedDlg->ShowWindow(SW_HIDE);
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	}
+
 	*pResult = 0;
 }

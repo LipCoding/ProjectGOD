@@ -789,9 +789,6 @@ int CTerrainTab::SaveTextureName(string fileName)
 			++iFileCount;
 	}
 
-	if (iFileCount == 0)
-		return iFileCount;
-
 	// 스플레팅 텍스쳐 갯수
 	file << iFileCount << endl;
 
@@ -1058,7 +1055,6 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 		mainFile >> textureFileName;
 		LoadTextureName(flexiblePath + textureFileName);
 		
-
 		// 알파스플래팅 bmp 불러오기
 		CGameObject* pBrushObj = CGameObject::FindObject("Brush");
 		CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");

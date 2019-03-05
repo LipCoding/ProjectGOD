@@ -31,11 +31,12 @@ public:
 
 private:	
 	CButton m_checkPlay;
+	class CAnimToolView		*m_pView = nullptr;
 
 	/// Tab 
 	CTabCtrl m_Tab;
 	// Speed
-
+	class CAnimSpeedTab		*m_pAnimSpeedDlg = nullptr;
 	// Movement
 
 	// Collider

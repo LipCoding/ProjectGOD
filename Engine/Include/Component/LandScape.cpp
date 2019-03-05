@@ -31,6 +31,11 @@ CLandScape::CLandScape()
 	m_fRangeBrush = 1.f;
 	m_vPosBrush = Vector3(0.f, 0.f, 0.f);
 	m_vColorBrush = Vector4::Red;
+
+	m_vecSplattingDiffuse.resize(4);
+	m_vecSplattingNormal.resize(4);
+	m_vecSplattingSpecular.resize(4);
+	m_vecSplattingAlpha.resize(4);
 }
 
 
@@ -45,7 +50,11 @@ CLandScape::~CLandScape()
 {
 	m_listNode.clear();
 	m_listAllNodes.clear();
-	
+	m_vecSplattingDiffuse.clear();
+	m_vecSplattingNormal.clear();
+	m_vecSplattingSpecular.clear();
+	m_vecSplattingAlpha.clear();
+
 	if (m_pParentNode)
 	{
 		ReleaseNode(m_pParentNode);
@@ -792,6 +801,15 @@ void CLandScape::SetMaterial_DNS_Default(const wchar_t * pFileName, const wchar_
 void CLandScape::SetMaterial_Splatting(vector<wstring>& vecDif, vector<wstring>& vecNormal, vector<wstring>& vecSpecular, vector<wstring>& vecAlpha,
 	const string & strPathKey)
 {
+	// 터짐 방지
+	if (*vecDif.begin()		  == L""||
+		*vecNormal.begin()	  == L""||
+		*vecSpecular.begin()  == L""||
+		*vecAlpha.begin()	  == L"")
+	{
+		return;
+	}
+
 	for (auto& node : m_listAllNodes)
 	{
 		CRenderer* pRenderer = node->pGameObject->FindComponentFromTag<CRenderer>("Renderer");
@@ -1284,6 +1302,69 @@ void CLandScape::NodesToContainer()
 	NodeAll(m_pParentNode);
 }
 
+void CLandScape::Load_Terrain(string fileName)
+{
+	string flexiblePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH);
+	string filePath = "Terrain\\" + fileName + ".bin";
+
+
+	ifstream mainFile;
+	mainFile.open(flexiblePath + filePath, ios::in);
+
+	if (!mainFile.is_open())
+		return;
+
+	// 노드 정보 불러오기
+	string heightFileName;
+	mainFile >> heightFileName;
+	Load_QuadTree(flexiblePath + heightFileName);
+
+	// 텍스쳐 정보 불러오기
+	string textureFileName;
+	mainFile >> textureFileName;
+	Load_TextureName(flexiblePath + textureFileName);
+
+	int iCount;
+
+	mainFile >> iCount;
+
+	for (int i = 0; i < iCount; i++)
+	{
+		string bmpFileName;
+		wstring wbmpFileName;
+		int iDetailLevel;
+
+		mainFile >> bmpFileName;
+		wbmpFileName.assign(bmpFileName.begin(), bmpFileName.end());
+
+		m_vecSplattingAlpha[i] = wbmpFileName;
+
+		mainFile >> iDetailLevel;
+
+		SetDetailLevel_Splat(i, iDetailLevel);
+	}
+
+	int iDetailLeval_Default;
+	mainFile >> iDetailLeval_Default;
+	SetDetailLevel(iDetailLeval_Default);
+
+	int iSizeX, iSizeZ;
+	mainFile >> iSizeX >> iSizeZ;
+	SetTerrainSize(iSizeX, iSizeZ);
+
+	SetMaterial_DNS_Default(m_diffuseName.c_str(), m_normalName.c_str(), m_specularName.c_str());
+
+	SetMaterial_Splatting(m_vecSplattingDiffuse,
+		m_vecSplattingNormal,
+		m_vecSplattingSpecular,
+		m_vecSplattingAlpha, DATA_PATH);
+
+	SetSplatCount(iCount);
+
+	mainFile.close();
+
+}
+
 void CLandScape::Save_QuadTree(string fileName)
 {
 	// 파일을 오픈
@@ -1393,6 +1474,46 @@ void CLandScape::Load_QuadTree(string fileName)
 	file.close();
 
 	CreateTreeNodeToObject();
+}
+
+void CLandScape::Load_TextureName(string fileName)
+{
+	ifstream file;
+	file.open(fileName + ".dat", ios::in);
+
+	string diffuseName, normalName, specularName;
+
+	file >> diffuseName;
+	file >> normalName;
+	file >> specularName;
+
+	m_diffuseName.assign(diffuseName.begin(), diffuseName.end());
+	m_normalName.assign(diffuseName.begin(), diffuseName.end());
+	m_specularName.assign(diffuseName.begin(), diffuseName.end());
+
+	int iCount = 0;
+
+	file >> iCount;
+
+	for (int i = 0; i < iCount; i++)
+	{
+		string diffuse, normal, specular;
+		wstring wDiffuse, wNormal, wSpecular;
+
+		file >> diffuse;
+		file >> normal;
+		file >> specular;
+
+		wDiffuse.assign(diffuse.begin(), diffuse.end());
+		wNormal.assign(normal.begin(), normal.end());
+		wSpecular.assign(specular.begin(), specular.end());
+
+		m_vecSplattingDiffuse[i] = wDiffuse;
+		m_vecSplattingNormal[i] = wNormal;
+		m_vecSplattingSpecular[i] = wSpecular;
+	}
+
+	file.close();
 }
 
 void CLandScape::UpdateNode()

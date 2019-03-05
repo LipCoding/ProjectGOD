@@ -21,8 +21,12 @@
 #include "Core/TimerManager.h"
 #include "Component/ColliderSphere.h"
 #include "MainFrm.h"
-#include "Scene/Scene.h"
 #include "Component/Camera.h"
+#include "Component/Material.h"
+#include "Resources/ResourcesManager.h"
+#include "Component/LandScape.h"
+#include "Component/Transform.h"
+#include "Core/PathManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -142,12 +146,31 @@ void CAnimToolView::OnInitialUpdate()
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer* pLayer = pScene->GetLayer("Default");
 
-	// Terrain
+	// SkyBox
+	CGameObject* pSky = CGameObject::FindObject("Sky");
+	CRenderer*   pRenderer = pSky->FindComponentFromTag<CRenderer>("SkyRenderer");
+	CMaterial*   pMaterial = pRenderer->GetMaterial();
+
+	pMaterial->ResetTextureInfo();
+	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
+	pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Skybox\\Skybox_6.dds");
+
+	SAFE_RELEASE(pMaterial);
+	SAFE_RELEASE(pRenderer);
+	SAFE_RELEASE(pSky);
+
+	// Load Terrain
+	CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
+	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
+
+	pLandScape->Load_Terrain("AnimTool");
+
+	SAFE_RELEASE(pLandScape);
+	SAFE_RELEASE(pLandScapeObj);
 
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 }
-
 
 int CAnimToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
