@@ -13,13 +13,10 @@
 #include "EnvToolView.h"
 #include "Core.h"
 #include "Core/Input.h"
-#include "Core/DirectInput.h"
 #include "Device.h"
 #include "Scene/Scene.h"
 #include "Scene/Layer.h"
 #include "Scene/SceneManager.h"
-#include "Component/Terrain2D.h"
-#include "Component/Tile.h"
 #include "Component/Renderer.h"
 #include "Core/TimerManager.h"
 #include "Component/LandScape.h"
@@ -167,6 +164,7 @@ void CEnvToolView::OnInitialUpdate()
 
 	m_vPickPos = Vector3{ 0.f, 0.f, 0.f };
 
+	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 }
@@ -400,11 +398,6 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 	}
-}
-
-void CEnvToolView::SetTileColor(float x, float y)
-{
-
 }
 
 int CEnvToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)

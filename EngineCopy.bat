@@ -22,11 +22,8 @@ xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Engine\Bin64\Sha
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Engine\Bin64_Debug\Shader\
 
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin_Debug\Shader\*.* .\Common\Shader\
-
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin\*.* .\EngineRef\Bin\
-
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin64_Debug\*.* .\EngineRef\Bin64_Debug\
-
 xcopy /s /y /d /exclude:Out.txt .\Engine\Bin64\*.* .\EngineRef\Bin64\
 
 xcopy /s /y /d .\EngineRef\Bin_Debug\*.* .\MonsterForest\Bin_Debug\
@@ -38,3 +35,8 @@ xcopy /s /y /d .\Engine\Bin_Debug\*.* .\EnvTool\Bin_Debug\
 xcopy /s /y /d .\Engine\Bin\*.* .\EnvTool\Bin\
 xcopy /s /y /d .\Engine\Bin64\*.* .\EnvTool\Bin64\
 xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\EnvTool\Bin64_Debug\
+
+xcopy /s /y /d .\Engine\Bin_Debug\*.* .\AnimTool\Bin_Debug\
+xcopy /s /y /d .\Engine\Bin\*.* .\AnimTool\Bin\
+xcopy /s /y /d .\Engine\Bin64\*.* .\AnimTool\Bin64\
+xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\AnimTool\Bin64_Debug\
