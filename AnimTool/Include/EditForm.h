@@ -28,5 +28,24 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
-	afx_msg void OnBnClickedOk();
+
+private:	
+	CButton m_checkPlay;
+
+	/// Tab 
+	CTabCtrl m_Tab;
+	// Speed
+
+	// Movement
+
+	// Collider
+
+	// OnOff
+
+	// CamShake
+
+
+public:
+	afx_msg void OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult);
+
 };

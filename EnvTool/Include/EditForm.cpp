@@ -115,6 +115,8 @@ void CEditForm::OnInitialUpdate()
 	// Tab Control에 사용할 탭을 추가
 	m_Tab.InsertItem(0, _T("Terrain"));
 	m_Tab.InsertItem(1, _T("Object"));
+	m_Tab.InsertItem(2, _T("Light"));
+	m_Tab.InsertItem(3, _T("Sky"));
 
 	CRect rect;
 	m_Tab.GetWindowRect(&rect);
