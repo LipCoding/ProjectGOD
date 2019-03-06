@@ -57,13 +57,14 @@ public:
 	void UpdateView();
 	void UpdateInput(const float& fTime);
 	void UpdateObject(const float& fTime);
-	void SetMainCamera();
 
 // 사용자 변수
 private:
 	CGameObject *m_pCamera = nullptr;
 	CTransform  *m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;
+public:
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 #ifndef _DEBUG  // AnimToolView.cpp의 디버그 버전

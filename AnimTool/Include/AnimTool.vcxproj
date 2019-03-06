@@ -76,25 +76,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../Engine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>../../Engine/Include/;../../Engine/Include/FBXSDK/;$(IncludePath)</IncludePath>
     <OutDir>../Bin64_Debug</OutDir>
     <LibraryPath>../Bin64_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../Engine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>../../Engine/Include/;../../Engine/Include/FBXSDK/;$(IncludePath)</IncludePath>
     <OutDir>../Bin_Debug</OutDir>
     <LibraryPath>../Bin_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../Engine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>../../Engine/Include/;../../Engine/Include/FBXSDK/;$(IncludePath)</IncludePath>
     <LibraryPath>../Bin/;$(LibraryPath)</LibraryPath>
     <OutDir>../Bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../Engine/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>../../Engine/Include/;../../Engine/Include/FBXSDK/;$(IncludePath)</IncludePath>
     <OutDir>../Bin64</OutDir>
     <LibraryPath>../Bin64/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -108,6 +108,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>Engine64_Debug.lib;libfbxsdk-md64_Debug.lib;</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -130,6 +131,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>Engine_Debug.lib;libfbxsdk-md_Debug.lib;</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -156,6 +158,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Engine.lib;libfbxsdk-md.lib;</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -182,6 +185,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Engine64.lib;libfbxsdk-md64.lib;</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

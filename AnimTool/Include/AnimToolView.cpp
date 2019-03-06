@@ -27,6 +27,7 @@
 #include "Component/LandScape.h"
 #include "Component/Transform.h"
 #include "Core/PathManager.h"
+#include "Component/Arm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,6 +44,7 @@ BEGIN_MESSAGE_MAP(CAnimToolView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_CREATE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // CAnimToolView 생성/소멸
@@ -137,11 +139,9 @@ void CAnimToolView::OnInitialUpdate()
 	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 900, true, true, false))
 		return;
 
+
 	// Timer
 	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
-
-	// Camera
-	SetMainCamera();
 
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer* pLayer = pScene->GetLayer("Default");
@@ -178,7 +178,6 @@ int CAnimToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
-
 	return 0;
 }
 
@@ -194,22 +193,18 @@ void CAnimToolView::UpdateInput(const float & fTime)
 {
 	if (KEYPUSH("MoveFront"))
 	{
-		//m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveBack"))
 	{
-		//m_pCamTr->MoveWorld(AXIS_Z, -30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveLeft"))
 	{
-		//m_pCamTr->MoveWorld(AXIS_X, -30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MoveRight"))
 	{
-		//m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
 	}
 
 	if (KEYPUSH("MouseLButton"))
@@ -222,21 +217,37 @@ void CAnimToolView::UpdateInput(const float & fTime)
 
 	if (KEYPUSH("MouseMButton"))
 	{
-		POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
-		POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+	}
 
-		if (ptMouseMove.x != 0)
+	if (GET_SINGLE(CInput)->GetWheel() == 1)
+	{
+		CGameObject* pMeshObj = CGameObject::FindObject("Mesh");
+
+		if (pMeshObj)
 		{
-			float fAngle = ptMouseMove.x / 2000.f * PG_PI;
+			CTransform *pTransform = pMeshObj->GetTransform();
+			CArm* pArm = pMeshObj->FindComponentFromTag<CArm>("Arm");
+			pArm->Zoom(pTransform->GetLocalAxis(AXIS_Z), 3.f);
 
-			m_pCamTr->RotateWorldY(fAngle);
+			SAFE_RELEASE(pTransform);
+			SAFE_RELEASE(pArm);
+			SAFE_RELEASE(pMeshObj);
 		}
+	}
 
-		if (ptMouseMove.y != 0)
+	if (GET_SINGLE(CInput)->GetWheel() == -1)
+	{
+		CGameObject* pMeshObj = CGameObject::FindObject("Mesh");
+
+		if (pMeshObj)
 		{
-			float fAngle = ptMouseMove.y / 2000.f * PG_PI;
+			CTransform *pTransform = pMeshObj->GetTransform();
+			CArm* pArm = pMeshObj->FindComponentFromTag<CArm>("Arm");
+			pArm->Zoom(pTransform->GetLocalAxis(AXIS_Z), -3.f);
 
-			m_pCamTr->RotateWorldX(fAngle);
+			SAFE_RELEASE(pTransform);
+			SAFE_RELEASE(pArm);
+			SAFE_RELEASE(pMeshObj);
 		}
 	}
 }
@@ -245,12 +256,13 @@ void CAnimToolView::UpdateObject(const float & fTime)
 {
 }
 
-void CAnimToolView::SetMainCamera()
+
+
+BOOL CAnimToolView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-	SAFE_RELEASE(m_pCamera);
-	SAFE_RELEASE(m_pCamTr);
-	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
-	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	GET_SINGLE(CInput)->SetWheel(zDelta);
+
+
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
-
-

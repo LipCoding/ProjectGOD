@@ -998,7 +998,6 @@ void CTerrainTab::OnBnClickedButtonTerrainSave()
 void CTerrainTab::OnBnClickedButtonTerrainLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	static TCHAR BASED_CODE szFilter[] =
 		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
