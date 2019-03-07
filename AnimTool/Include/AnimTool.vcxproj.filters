@@ -51,7 +51,7 @@
     <ClInclude Include="EditForm.h">
       <Filter>99.Default\헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="AnimSpeedTab.h">
+    <ClInclude Include="AnimMeshInfoTab.h">
       <Filter>00.Tab\Speed</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClCompile Include="EditForm.cpp">
       <Filter>99.Default\소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="AnimSpeedTab.cpp">
+    <ClCompile Include="AnimMeshInfoTab.cpp">
       <Filter>00.Tab\Speed</Filter>
     </ClCompile>
   </ItemGroup>

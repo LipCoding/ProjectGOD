@@ -171,7 +171,8 @@ public:
 	void LookAtY(Vector3 vPos);
 	void Save(FILE* pFile);
 	void Load(FILE* pFile);
-
+	void Save_Local(FILE* pFile);
+	void Load_Local(FILE* pFile);
 private:
 	bool	m_bUpdate;
 	bool	m_bStatic;

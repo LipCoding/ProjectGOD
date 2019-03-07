@@ -31,6 +31,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+public:
+	void MeshLoadFromMeshInfoTab(CString path, CString name);
+	void AnimationLoadFromMeshInfoTab(CString path, CString name);
+	
 
 private:	
 	CButton m_checkPlay;
@@ -43,7 +47,7 @@ private:
 	/// Tab 
 	CTabCtrl m_Tab;
 	// Speed
-	class CAnimSpeedTab		*m_pAnimSpeedDlg = nullptr;
+	class CAnimMeshInfoTab		*m_pAnimMeshInfoDlg = nullptr;
 	// Movement
 
 	// Collider

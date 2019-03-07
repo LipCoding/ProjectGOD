@@ -8,7 +8,7 @@
 #include "MainFrm.h"
 #include "AnimToolView.h"
 
-#include "AnimSpeedTab.h"
+#include "AnimMeshInfoTab.h"
 #include "Core/PathManager.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Scene.h"
@@ -33,8 +33,8 @@ CEditForm::CEditForm()
 
 CEditForm::~CEditForm()
 {
-	delete m_pAnimSpeedDlg;
-	m_pAnimSpeedDlg = nullptr;
+	delete m_pAnimMeshInfoDlg;
+	m_pAnimMeshInfoDlg = nullptr;
 
 	SAFE_RELEASE(m_pEditObj);
 }
@@ -87,7 +87,7 @@ void CEditForm::OnInitialUpdate()
 	CFormView::OnInitialUpdate();
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-	m_Tab.InsertItem(0, _T("Speed"));
+	m_Tab.InsertItem(0, _T("ObjInfo"));
 	m_Tab.InsertItem(1, _T("Movement"));
 	m_Tab.InsertItem(2, _T("Collider"));
 	m_Tab.InsertItem(3, _T("OnOff"));
@@ -98,14 +98,133 @@ void CEditForm::OnInitialUpdate()
 
 	m_Tab.SetCurSel(0);
 
-	m_pAnimSpeedDlg = new CAnimSpeedTab;
-	m_pAnimSpeedDlg->Create(IDD_DIALOG_ANIM_SPEED, &m_Tab);
-	m_pAnimSpeedDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
-	m_pAnimSpeedDlg->ShowWindow(SW_SHOW);
+	m_pAnimMeshInfoDlg = new CAnimMeshInfoTab;
+	m_pAnimMeshInfoDlg->Create(IDD_DIALOG_MESH_INFO, &m_Tab);
+	m_pAnimMeshInfoDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
+	m_pAnimMeshInfoDlg->ShowWindow(SW_SHOW);
 
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
 	m_pView = (CAnimToolView*)pMain->GetActiveView();
+}
+
+void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
+{
+	if (!m_pEditObj)
+	{
+		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("Default");
+
+		m_pEditObj = CGameObject::CreateObject("EditObj",
+			pLayer);
+		CTransform*	pTr = m_pEditObj->GetTransform();
+		pTr->SetWorldPos(5.f, 0.f, 5.f);
+		SAFE_RELEASE(pTr);
+
+		CRenderer*	pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
+
+		string	strTag = CT2CA(name.GetString());
+
+		pRenderer->SetMeshFromFullPath(strTag,
+			path.GetString());
+
+		CGameObject* pCameraObj = pScene->GetMainCameraObj();
+		CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+
+		CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+
+		pArm->SetTarget(m_pEditObj);
+		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
+
+		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
+		m_pAnimMeshInfoDlg->SetMeshInfo();
+
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pScene);
+		SAFE_RELEASE(pLayer);
+	}
+	else
+	{
+		CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
+		string tag = CT2CA(name);
+
+		pRenderer->SetMeshFromFullPath(tag, path);
+
+		SAFE_RELEASE(pRenderer);
+	}
+}
+
+void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
+{
+	if (!m_pEditObj)
+	{
+		/*CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("Default");
+
+		m_pEditObj = CGameObject::CreateObject("EditObj", pLayer);
+
+		CTransform*	pTr = m_pEditObj->GetTransform();
+		SAFE_RELEASE(pTr);
+
+		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("Animation");
+		pAnimation->LoadFromFullPath(path);
+
+		const unordered_map<string, class CAnimationClip*>*	pClips =
+			pAnimation->GetAllClip();
+
+		unordered_map<string, class CAnimationClip*>::const_iterator	iter;
+		unordered_map<string, class CAnimationClip*>::const_iterator	iterEnd = pClips->end();
+
+		for (iter = pClips->begin(); iter != iterEnd; ++iter)
+		{
+			ANIMATION3DCLIP tInfo = iter->second->GetClipInfo();
+			wstring	strName = CA2CT(tInfo.strName.c_str());
+
+			m_listClips.AddString(strName.c_str());
+
+			m_clipName = strName.c_str();
+			m_iStartFrame = tInfo.iStartFrame;
+			m_iEndFrame = tInfo.iEndFrame;
+			m_iRadioAnimType = (int)tInfo.eOption;
+		}
+
+		UpdateData(FALSE);
+
+		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
+
+		SAFE_RELEASE(pAnimation);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);*/
+	}
+	else
+	{
+		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("EditAnimation");
+
+		pAnimation->LoadFromFullPath(path);
+
+		const unordered_map<string, class CAnimationClip*>*	pClips =
+			pAnimation->GetAllClip();
+
+		unordered_map<string, class CAnimationClip*>::const_iterator	iter;
+		unordered_map<string, class CAnimationClip*>::const_iterator	iterEnd = pClips->end();
+
+		for (iter = pClips->begin(); iter != iterEnd; ++iter)
+		{
+			ANIMATION3DCLIP tInfo = iter->second->GetClipInfo();
+			wstring	strName = CA2CT(tInfo.strName.c_str());
+
+			m_listClips.AddString(strName.c_str());
+
+			m_clipName = strName.c_str();
+			m_iStartFrame = tInfo.iStartFrame;
+			m_iEndFrame = tInfo.iEndFrame;
+			m_iRadioAnimType = (int)tInfo.eOption;
+		}
+
+		UpdateData(FALSE);
+
+		SAFE_RELEASE(pAnimation);
+	}
 }
 
 
@@ -118,10 +237,10 @@ void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 	switch (sel)
 	{
 	case 0:
-		m_pAnimSpeedDlg->ShowWindow(SW_SHOW);
+		m_pAnimMeshInfoDlg->ShowWindow(SW_SHOW);
 		break;
 	case 1:
-		m_pAnimSpeedDlg->ShowWindow(SW_HIDE);
+		m_pAnimMeshInfoDlg->ShowWindow(SW_HIDE);
 		break;
 	case 2:
 		break;
@@ -162,9 +281,9 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	
 
 	m_pEditObj = CGameObject::CreateObject("EditObj", pLayer);
+
 	CTransform*	pTr = m_pEditObj->GetTransform();
 	pTr->SetWorldPos(5.f, 0.f, 5.f);
-	pTr->SetPivot(0.f, -0.5f, 0.f);
 	SAFE_RELEASE(pTr);
 
 	CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
@@ -203,6 +322,10 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 
 		pArm->SetTarget(m_pEditObj);
 		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
+
+		//Tab
+		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
+		m_pAnimMeshInfoDlg->SetMeshInfo();
 
 		UpdateData(FALSE);
 
@@ -333,18 +456,60 @@ void CEditForm::OnBnClickedButtonModifyClip()
 	m_listClips.InsertString(iPos, m_clipName);
 }
 
-
 void CEditForm::OnBnClickedButtonDeleteClip()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Error: You have to create Object first!");
+		return;
+	}
 
+	int iPos = m_listClips.GetCurSel();
+
+	if (iPos == -1)
+	{
+		AfxMessageBox(L"Error: You didn't select the clip!");
+		return;
+	}
+
+	CString listText;
+	m_listClips.GetText(iPos, listText);
+
+	string key = CT2CA(listText);
+
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->DeleteClip(key);
+	SAFE_RELEASE(pAnimation);
+	m_listClips.DeleteString(iPos);
+}
 
 void CEditForm::OnBnClickedButtonClipDefault()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Error: You have to create Object first!");
+		return;
+	}
 
+	int iPos = m_listClips.GetCurSel();
+
+	if (iPos == -1)
+	{
+		AfxMessageBox(L"Error: You didn't select the clip!");
+		return;
+	}
+
+	CString listText;
+	m_listClips.GetText(iPos, listText);
+
+	string key = CT2CA(listText);
+
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->SetDefaultClip(key);
+	SAFE_RELEASE(pAnimation);
+}
 
 void CEditForm::OnLbnSelchangeListClips()
 {

@@ -193,18 +193,6 @@
     <Filter Include="98. Headers">
       <UniqueIdentifier>{54381cf3-b5cd-4ac4-83fc-0c8f6c693806}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defaults">
-      <UniqueIdentifier>{051d041f-c906-4411-8105-949b3f4e6dca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. Defaults\리소스 파일">
-      <UniqueIdentifier>{7cdbbf92-342e-4f8a-999d-13d5556a4099}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. Defaults\소스 파일">
-      <UniqueIdentifier>{52ae908e-080e-4941-9161-ee0a55992ccb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. Defaults\헤더 파일">
-      <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\03. Camera">
       <UniqueIdentifier>{71a2fda0-346f-418b-b604-20c0fb8461f3}</UniqueIdentifier>
     </Filter>
@@ -216,6 +204,18 @@
     </Filter>
     <Filter Include="06. Component\16. Picking">
       <UniqueIdentifier>{9f79590f-8e5e-4fdb-9d3e-f5aef19ec53e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Headers\99. Defaults">
+      <UniqueIdentifier>{051d041f-c906-4411-8105-949b3f4e6dca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Headers\99. Defaults\리소스 파일">
+      <UniqueIdentifier>{7cdbbf92-342e-4f8a-999d-13d5556a4099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Headers\99. Defaults\소스 파일">
+      <UniqueIdentifier>{52ae908e-080e-4941-9161-ee0a55992ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Headers\99. Defaults\헤더 파일">
+      <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
