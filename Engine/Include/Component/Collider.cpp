@@ -9,6 +9,8 @@
 #include "../Core/Timer.h"
 #include "../Rendering/RenderManager.h"
 #include "../Rendering/RenderState.h"
+#include "Renderer.h"
+
 
 PG_USING
 
@@ -229,11 +231,16 @@ void CCollider::CheckCollisionSection(float fTime)
 
 bool CCollider::Init()
 {
+	CRenderer* pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+	pRenderer->AlphaEnable(true);
+	SAFE_RELEASE(pRenderer);
+
 	return true;
 }
 
 void CCollider::Input(float fTime)
 {
+
 }
 
 int CCollider::Update(float fTime)
