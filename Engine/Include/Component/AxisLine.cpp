@@ -14,45 +14,56 @@
 #include "../Scene/Layer.h"
 #include "../Component/Camera.h"
 #include "../Component/Renderer.h"
+#include "../Device.h"
 
 PG_USING
 
 CAxisLine::CAxisLine()
 {
-
 	SetTypeID<CAxisLine>();
 	m_eType = CT_AXIS;
-	m_pMesh = nullptr;
-	m_pShader = nullptr;
+	m_pMeshSphere = nullptr;
+	m_pShaderSphere = nullptr;
 	m_pLayout = nullptr;
 	m_bRednerCheck = false;
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_pFont[i] = GET_SINGLE(CDevice)->FindTextFormat("¹ÙÅÁ");
+		m_pBrush[i] = GET_SINGLE(CDevice)->FindTextBrush("Black");
+	}
+
+	m_strText[0] = L"X";
+	m_strText[1] = L"Y";
+	m_strText[2] = L"Z";
+
+	m_vecPosFont[0] = Vector3{ 0.25f, 0.f, 0.f };
+	m_vecPosFont[1] = Vector3{ 0.f, 0.25f, 0.f };
+	m_vecPosFont[2] = Vector3{ 0.f, 0.f, 0.25f };
 }
 
 CAxisLine::CAxisLine(const CAxisLine & axisLine)
 {
-	m_pMesh = axisLine.m_pMesh;
-	m_pShader = axisLine.m_pShader;
+	m_pMeshSphere = axisLine.m_pMeshSphere;
+	m_pShaderSphere = axisLine.m_pShaderSphere;
 	m_pLayout = axisLine.m_pLayout;
 
-	if (m_pMesh)
-		m_pMesh->AddRef();
+	if (m_pMeshSphere)
+		m_pMeshSphere->AddRef();
 
-	if (m_pShader)
-		m_pShader->AddRef();
+	if (m_pShaderSphere)
+		m_pShaderSphere->AddRef();
+
+	if (m_pMeshLine)
+		m_pMeshLine->AddRef();
 }
 
 
 CAxisLine::~CAxisLine()
 {
-	SAFE_RELEASE(m_pMesh);
-	SAFE_RELEASE(m_pShader);
-}
-
-void CAxisLine::SetObjVector(Vector3 scale, Vector3 rot, Vector3 pos)
-{
-	m_vecScale = scale;
-	m_vecRot = rot;
-	m_vecPos = pos;
+	SAFE_RELEASE(m_pMeshSphere);
+	SAFE_RELEASE(m_pShaderSphere);
+	SAFE_RELEASE(m_pMeshLine);
 }
 
 void CAxisLine::SetObjMatrix(Matrix matrix)
@@ -72,8 +83,9 @@ void CAxisLine::SetRenderCheck(bool check)
 
 bool CAxisLine::Init()
 {
-	m_pMesh = GET_SINGLE(CResourcesManager)->FindMesh("Line");
-	m_pShader = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
+	m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
+	m_pMeshLine = GET_SINGLE(CResourcesManager)->FindMesh("Line");
+	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
 
 
@@ -96,40 +108,6 @@ int CAxisLine::LateUpdate(float fTime)
 
 void CAxisLine::Render(float fTime)
 {
-	//Matrix	matScale, matTrans, matRot;
-
-	//matScale.mat = XMMatrixScaling(2.f, 2.f, 2.f);
-	//matTrans.mat = XMMatrixTranslation(5.f, 1.f, 5.f);
-
-	//CCamera*	pCamera = m_pScene->GetMainCamera();
-
-	//m_tTransform.matWorld = matScale *
-	//	matRot * matTrans;
-
-	//m_tTransform.matView = pCamera->GetViewMatrix();
-	//m_tTransform.matProj = pCamera->GetProjMatrix();
-	//m_tTransform.matWV = m_tTransform.matWorld * m_tTransform.matView;
-	//m_tTransform.matWVP = m_tTransform.matWV * m_tTransform.matProj;
-	//m_tTransform.matWP = m_tTransform.matWorld * m_tTransform.matProj;
-	//m_tTransform.vPivot = Vector3(0.f, 0.f, 0.f);
-	//m_tTransform.vLength = Vector3::One;
-	//m_tTransform.vLength.z = 0.f;
-
-	//m_tTransform.matWorld = XMMatrixTranspose(m_tTransform.matWorld.mat);
-	//m_tTransform.matView = XMMatrixTranspose(m_tTransform.matView.mat);
-	//m_tTransform.matProj = XMMatrixTranspose(m_tTransform.matProj.mat);
-	//m_tTransform.matWV = XMMatrixTranspose(m_tTransform.matWV.mat);
-	//m_tTransform.matWVP = XMMatrixTranspose(m_tTransform.matWVP.mat);
-	//m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
-
-	//SAFE_RELEASE(pCamera);
-
-	//GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
-	//	&m_tTransform, SCT_VERTEX | SCT_PIXEL);
-	//
-	//m_pShader->SetShader();
-	//GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
-	//m_pMesh->Render(fTime);
 }
 
 void CAxisLine::AxisRender(float fTime)
@@ -137,19 +115,12 @@ void CAxisLine::AxisRender(float fTime)
 	if (!m_bRednerCheck)
 		return;
 
-	Matrix	matScale, matTrans, matRot;
-
-	matScale.mat = XMMatrixScaling(m_vecScale.x/ 2.f,
-		m_vecScale.y/2.f,
-		m_vecScale.z/ 2.f);
-	matRot.mat = XMMatrixRotationX(m_vecRot.x)
-		* XMMatrixRotationY(m_vecRot.y)
-		* XMMatrixRotationZ(m_vecRot.z);
-	matTrans.mat = XMMatrixTranslation(m_vecPos.x, m_vecPos.y, m_vecPos.z);
-
 	CCamera*	pCamera = m_pScene->GetMainCamera();
 
-	m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;
+	Matrix matScale;
+	
+	matScale.mat = XMMatrixScaling(0.075f, 0.075f, 0.075f);
+	m_tTransform.matWorld = matScale * *m_matBoneWorld * m_matObjWorld;
 
 	/*m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;*/
 
@@ -169,17 +140,27 @@ void CAxisLine::AxisRender(float fTime)
 	m_tTransform.matWVP = XMMatrixTranspose(m_tTransform.matWVP.mat);
 	m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
 
-	SAFE_RELEASE(pCamera);
-
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
+	m_pShaderSphere->SetShader();
 
-	m_pShader->SetShader();
 	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
-	m_pMesh->Render(fTime);
+	
+	m_pMeshSphere->Render(fTime);
+	m_pMeshLine->Render(fTime);
+
+	SAFE_RELEASE(pCamera);
 }
 
 CAxisLine * CAxisLine::Clone()
 {
 	return nullptr;
+}
+
+void CAxisLine::RenderFont()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		
+	}
 }

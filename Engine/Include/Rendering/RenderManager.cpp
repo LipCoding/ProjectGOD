@@ -656,7 +656,7 @@ void CRenderManager::Render(float fTime)
 		{
 			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
 		}
-
+			
 		m_tRenderGroup[i].iSize = 0;
 	}
 
@@ -682,7 +682,6 @@ void CRenderManager::Render(float fTime)
 	}
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 		m_tRenderGroup[i].iSize = 0;
-
 
 	pDepthTarget->ResetShader(13);
 

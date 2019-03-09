@@ -190,11 +190,11 @@ bool CResourcesManager::Init()
 	{
 		// x
 		VERTEXCOLOR(0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
-		VERTEXCOLOR(0.5f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
+		VERTEXCOLOR(10.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
 		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f),
-		VERTEXCOLOR(0.f, 0.5f, 0.f, 0.f, 1.f, 0.f, 1.f),
+		VERTEXCOLOR(0.f, 10.f, 0.f, 0.f, 1.f, 0.f, 1.f),
 		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f),
-		VERTEXCOLOR(0.f, 0.f, 0.5f, 0.f, 0.f, 1.f, 1.f),
+		VERTEXCOLOR(0.f, 0.f, 10.f, 0.f, 0.f, 1.f, 1.f),
 	};
 
 	UINT	iLineIndex[6] = { 0, 1, 2, 3, 4, 5 };

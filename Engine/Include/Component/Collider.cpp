@@ -279,7 +279,7 @@ void CCollider::Render(float fTime)
 
 	//m_pShader->SetShader();
 	//GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
-	//m_pMesh->Render(fTime);
+	//m_pMeshSphere->Render(fTime);
 
 	//if (m_pWireFrame)
 	//	m_pWireFrame->ResetState();

@@ -12,21 +12,25 @@ public:
 	virtual ~CAxisLine();
 
 private:
-	class CMesh*		m_pMesh;
-	class CShader*		m_pShader;
+	class CMesh*		m_pMeshSphere;
+	class CMesh*		m_pMeshLine;
+	class CShader*		m_pShaderSphere;
 
 	Matrix				m_matObjWorld;
-	Vector3				m_vecScale;
-	Vector3				m_vecRot;
-	Vector3				m_vecPos;
 	Matrix*				m_matBoneWorld;
-
 	ID3D11InputLayout*	m_pLayout;
 	TRANSFORMCBUFFER	m_tTransform;
-
 	bool				m_bRednerCheck;
+
+private:
+	/* font */
+	IDWriteTextFormat*			m_pFont[3];
+	ID2D1SolidColorBrush*		m_pBrush[3];
+	RECTINFO					m_tArea[3];
+	wstring						m_strText[3];
+	Vector3						m_vecPosFont[3];
+
 public:
-	void SetObjVector(Vector3 scale, Vector3 rot, Vector3 pos);
 	void SetObjMatrix(Matrix matrix);
 	void SetBoneMatrix(Matrix* matrix);
 	void SetRenderCheck(bool check);
@@ -39,6 +43,7 @@ public:
 	virtual void AxisRender(float fTime);
 	virtual CAxisLine* Clone();
 
+	void RenderFont();
 };
 
 PG_END

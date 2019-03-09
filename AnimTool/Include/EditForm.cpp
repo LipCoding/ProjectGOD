@@ -21,6 +21,7 @@
 #include "Component/Animation.h"
 #include "Component/AnimationClip.h"
 #include "Component/AxisLine.h"
+#include "Resources/ResourcesManager.h"
 
 // CEditForm 대화 상자
 
@@ -295,6 +296,7 @@ void CEditForm::UpdateForm(const float & fTime)
 		m_ctrlSliderClipFrame.SetPos(iCurrentFrameNum);
 
 	CTransform* pTr = m_pEditObj->GetTransform();
+
 	CAxisLine* pAxisLine = m_pEditObj->FindComponentFromTag<CAxisLine>("AxisLine");
 	
 	if (pAxisLine)
@@ -359,9 +361,10 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	
 
 	m_pEditObj = CGameObject::CreateObject("EditObj", pLayer);
+	
 
 	CTransform*	pTr = m_pEditObj->GetTransform();
-	//pTr->SetWorldPos(5.f, 0.f, 5.f);
+	pTr->SetWorldPos(5.f, 0.5f, 5.f);
 
 
 	CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
@@ -738,5 +741,6 @@ void CEditForm::OnCbnSelchangeComboBoneInfo()
 	{
 		pAxis->SetRenderCheck(true);
 		pAxis->SetBoneMatrix(pBone->matBone);
+		SAFE_RELEASE(pAxis);
 	}
 }

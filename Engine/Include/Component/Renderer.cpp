@@ -217,9 +217,9 @@ void CRenderer::SetMesh(const string & strKey)
 	m_strInputLayoutKey = m_pMesh->GetInputLayoutKey();
 
 	SetShader(m_pMesh->GetShaderKey());
-	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMesh->GetShaderKey());
+	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMeshSphere->GetShaderKey());
 	m_pInputLayout = GET_SINGLE(CShaderManager)->FindInputLayout(m_pMesh->GetInputLayoutKey());
-	//SetShadowShader(m_pMesh->GetShadowShaderKey());
+	//SetShadowShader(m_pMeshSphere->GetShadowShaderKey());
 }
 
 void CRenderer::SetMesh(CMesh * pMesh)
@@ -243,7 +243,7 @@ void CRenderer::SetMesh(CMesh * pMesh)
 	m_strInputLayoutKey = m_pMesh->GetInputLayoutKey();
 
 	SetShader(m_pMesh->GetShaderKey());
-	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMesh->GetShaderKey());
+	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMeshSphere->GetShaderKey());
 	m_pInputLayout = GET_SINGLE(CShaderManager)->FindInputLayout(m_pMesh->GetInputLayoutKey());
 }
 
@@ -268,7 +268,7 @@ void CRenderer::SetMesh(const string & strKey, const wchar_t * pFileName,
 	m_strInputLayoutKey = m_pMesh->GetInputLayoutKey();
 
 	SetShader(m_pMesh->GetShaderKey());
-	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMesh->GetShaderKey());
+	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMeshSphere->GetShaderKey());
 	m_pInputLayout = GET_SINGLE(CShaderManager)->FindInputLayout(m_pMesh->GetInputLayoutKey());
 
 	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
@@ -314,7 +314,7 @@ void CRenderer::SetMeshFromFullPath(const string & strKey,
 	m_strInputLayoutKey = m_pMesh->GetInputLayoutKey();
 
 	SetShader(m_pMesh->GetShaderKey());
-	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMesh->GetShaderKey());
+	//m_pShader = GET_SINGLE(CShaderManager)->FindShader(m_pMeshSphere->GetShaderKey());
 	m_pInputLayout = GET_SINGLE(CShaderManager)->FindInputLayout(m_pMesh->GetInputLayoutKey());
 
 	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
