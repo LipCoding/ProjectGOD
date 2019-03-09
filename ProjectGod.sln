@@ -22,6 +22,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnvTool", "EnvTool\Include\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnimTool", "AnimTool\Include\AnimTool.vcxproj", "{2CFBC3BD-97A7-484A-B856-DD5BF38F2074}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6369D407-C79B-4D0E-BAB9-7762221E81CD} = {6369D407-C79B-4D0E-BAB9-7762221E81CD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
