@@ -24,7 +24,11 @@
 #include "../Component/AnimationClip.h"
 #include "../Component/Material.h"
 #include "../Resources/Mesh.h"
-
+#include"../Component/Collider.h"
+#include "../Component/ColliderRect.h"
+#include "../Component/ColliderSphere.h"
+#include "../Component/AxisLine.h"
+#include "../Component/ColliderAABB.h"
 PG_USING
 
 DEFINITION_SINGLE(CRenderManager)
@@ -656,6 +660,30 @@ void CRenderManager::Render(float fTime)
 		m_tRenderGroup[i].iSize = 0;
 	}
 
+	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
+	{
+		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+		{
+			CCollider* pCollider = nullptr;
+			pCollider = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CCollider>(CT_COLLIDER);
+			if (pCollider != nullptr)
+			{
+				pCollider->ColliderRender(fTime);
+				SAFE_RELEASE(pCollider);
+			}
+
+			CAxisLine* pAxis = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CAxisLine>(CT_AXIS);
+			if (pAxis != nullptr)
+			{
+				pAxis->AxisRender(fTime);
+				SAFE_RELEASE(pAxis);
+			}
+		}
+	}
+	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
+		m_tRenderGroup[i].iSize = 0;
+
+
 	pDepthTarget->ResetShader(13);
 
 	SAFE_RELEASE(pDepthTarget);
@@ -944,18 +972,40 @@ void CRenderManager::RenderGBuffer(float fTime)
 	pDepthTarget->SetShader(4);
 	m_pPointSmp->SetSampler(11, SCT_PIXEL);
 
+
+
+
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	{
 		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
 		{
 			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
 		}
-
-		m_tRenderGroup[i].iSize = 0;
 	}
+
+	/*for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
+	{
+		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+		{
+			CCollider* pCollider = nullptr;
+			pCollider = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CCollider>(CT_COLLIDER);
+			if (pCollider != nullptr)
+			{
+				pCollider->ColliderRender(fTime);
+				SAFE_RELEASE(pCollider);
+			}
+		}
+	}*/
+
+
+	//for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
+	//	m_tRenderGroup[i].iSize = 0;
+
 	pDepthTarget->ResetShader(4);
 	SAFE_RELEASE(pDepthTarget);
 	ResetMRT("GBuffer");
+
+	
 }
 
 void CRenderManager::RenderLightAcc(float fTime)
@@ -1091,6 +1141,7 @@ void CRenderManager::RenderLightBlend(float fTime)
 	SAFE_RELEASE(pLightDif);
 	SAFE_RELEASE(pLightSpc);
 	SAFE_RELEASE(pTarget);
+
 }
 
 void CRenderManager::RenderDeferredTarget(float fTime)
