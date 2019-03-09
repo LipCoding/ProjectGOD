@@ -30,6 +30,15 @@ PS_OUTPUT_SINGLE StandardColorPS(VS_OUTPUT_COLOR input)
 	return output;
 }
 
+PS_OUTPUT_SINGLE StandardColorForwardPS(VS_OUTPUT_COLOR input)
+{
+	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
+
+	output.vColor = input.vColor;
+
+	return output;
+}
+
 VS_OUTPUT_COLOR_NORMAL StandardColorNormalVS(VS_INPUT_COLOR_NORMAL input)
 {
 	VS_OUTPUT_COLOR_NORMAL	output = (VS_OUTPUT_COLOR_NORMAL)0;
