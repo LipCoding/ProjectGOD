@@ -96,9 +96,6 @@ int CAxisLine::LateUpdate(float fTime)
 
 void CAxisLine::Render(float fTime)
 {
-
-	if (!m_bRednerCheck)
-		return;
 	//Matrix	matScale, matTrans, matRot;
 
 	//matScale.mat = XMMatrixScaling(2.f, 2.f, 2.f);
@@ -137,6 +134,9 @@ void CAxisLine::Render(float fTime)
 
 void CAxisLine::AxisRender(float fTime)
 {
+	if (!m_bRednerCheck)
+		return;
+
 	Matrix	matScale, matTrans, matRot;
 
 	matScale.mat = XMMatrixScaling(m_vecScale.x/ 2.f,
