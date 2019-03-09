@@ -47,6 +47,7 @@
 #define SHADOWSTATICOBJECT_SHADER "ShadowStaticObjectShader"
 #define SHADOWCHARACTER_SHADER "ShadowCharacterShader"
 #define	STANDARD_COLOR_SHADER	"StandardColorShader"
+#define	STANDARD_COLOR_FORWARD_SHADER	"StandardColorForwardShader"
 #define	STANDARD_COLOR_NORMAL_SHADER	"StandardColorNormalShader"
 #define	STANDARD_TEX_SHADER		"StandardTexShader"
 #define	STANDARD_TEX_NORMAL_SHADER		"StandardTexNormalShader"

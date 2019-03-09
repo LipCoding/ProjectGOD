@@ -34,6 +34,14 @@ bool CShaderManager::Init()
 
 	SAFE_RELEASE(pShader);
 
+	pEntry[ST_VERTEX] = "StandardColorVS";
+	pEntry[ST_PIXEL] = "StandardColorForwardPS";
+	pEntry[ST_GEOMETRY] = NULL;
+	pShader = LoadShader(STANDARD_COLOR_FORWARD_SHADER, L"Standard.fx",
+		pEntry);
+
+	SAFE_RELEASE(pShader);
+
 	pEntry[ST_VERTEX] = "StandardColorNormalVS";
 	pEntry[ST_PIXEL] = "StandardColorNormalPS";
 	pEntry[ST_GEOMETRY] = NULL;

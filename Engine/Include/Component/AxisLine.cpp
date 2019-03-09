@@ -9,9 +9,11 @@
 #include "../Core/Timer.h"
 #include "../Rendering/RenderManager.h"
 #include "../Rendering/RenderState.h"
+#include "../Scene/SceneManager.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Layer.h"
 #include "../Component/Camera.h"
+#include "../Component/Renderer.h"
 
 PG_USING
 
@@ -29,7 +31,7 @@ CAxisLine::CAxisLine(const CAxisLine & axisLine)
 	m_pMesh = axisLine.m_pMesh;
 	m_pShader = axisLine.m_pShader;
 	m_pLayout = axisLine.m_pLayout;
-	
+
 	if (m_pMesh)
 		m_pMesh->AddRef();
 
@@ -109,7 +111,7 @@ void CAxisLine::AxisRender(float fTime)
 {
 	Matrix	matScale, matTrans, matRot;
 
-	matScale.mat = XMMatrixScaling(2.f, 2.f, 2.f);
+	matScale.mat = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 	matTrans.mat = XMMatrixTranslation(5.f, 1.f, 5.f);
 
 	CCamera*	pCamera = m_pScene->GetMainCamera();
