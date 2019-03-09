@@ -36,6 +36,7 @@ public:
 	virtual int Update(float fTime);
 	virtual int LateUpdate(float fTime);
 	virtual void Render(float fTime);
+	virtual void AxisRender(float fTime);
 	virtual CAxisLine* Clone();
 
 };

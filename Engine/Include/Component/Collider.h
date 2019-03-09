@@ -56,6 +56,7 @@ public:
 	virtual int LateUpdate(float fTime);
 	virtual void Collision(float fTime);
 	virtual void Render(float fTime);
+	virtual void ColliderRender(float fTime);
 	virtual CCollider* Clone() = 0;
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);

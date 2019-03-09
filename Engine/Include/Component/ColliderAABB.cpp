@@ -81,6 +81,42 @@ void CColliderAABB::Collision(float fTime)
 
 void CColliderAABB::Render(float fTime)
 {
+	/*Matrix	matScale, matTrans, matRot;
+
+	Vector3	vLength = m_tInfo.vMax - m_tInfo.vMin;
+	Vector3	vPos = (m_tInfo.vMax + m_tInfo.vMin) / 2.f;
+
+	matScale.mat = XMMatrixScaling(vLength.x, vLength.y, vLength.z);
+	matTrans.mat = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
+
+	CCamera*	pCamera = m_pScene->GetMainCamera();
+
+	m_tTransform.matWorld = matScale *
+		matRot * matTrans;
+
+	m_tTransform.matView = pCamera->GetViewMatrix();
+	m_tTransform.matProj = pCamera->GetProjMatrix();
+	m_tTransform.matWV = m_tTransform.matWorld * m_tTransform.matView;
+	m_tTransform.matWVP = m_tTransform.matWV * m_tTransform.matProj;
+	m_tTransform.matWP = m_tTransform.matWorld * m_tTransform.matProj;
+	m_tTransform.vPivot = Vector3(0.5f, 0.5f, 0.5f);
+	m_tTransform.vLength = Vector3::One;
+	m_tTransform.vLength.z = 0.f;
+
+	m_tTransform.matWorld = XMMatrixTranspose(m_tTransform.matWorld.mat);
+	m_tTransform.matView = XMMatrixTranspose(m_tTransform.matView.mat);
+	m_tTransform.matProj = XMMatrixTranspose(m_tTransform.matProj.mat);
+	m_tTransform.matWV = XMMatrixTranspose(m_tTransform.matWV.mat);
+	m_tTransform.matWVP = XMMatrixTranspose(m_tTransform.matWVP.mat);
+	m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
+
+	SAFE_RELEASE(pCamera);
+
+	CCollider::Render(fTime);*/
+}
+
+void CColliderAABB::ColliderRender(float fTime)
+{
 	Matrix	matScale, matTrans, matRot;
 
 	Vector3	vLength = m_tInfo.vMax - m_tInfo.vMin;
@@ -112,7 +148,7 @@ void CColliderAABB::Render(float fTime)
 
 	SAFE_RELEASE(pCamera);
 
-	CCollider::Render(fTime);
+	CCollider::ColliderRender(fTime);
 }
 
 CColliderAABB * CColliderAABB::Clone()

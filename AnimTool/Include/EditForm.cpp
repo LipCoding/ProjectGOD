@@ -365,7 +365,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 
 
 	CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
-	pRenderer->AlphaEnable(true);
+	//pRenderer->AlphaEnable(true);
 	CT2CA pszConvertAnsiStringName(name);
 	string tag(pszConvertAnsiStringName);
 	

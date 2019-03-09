@@ -29,6 +29,7 @@ public:
 	virtual int LateUpdate(float fTime);
 	virtual void Collision(float fTime);
 	virtual void Render(float fTime);
+	virtual void ColliderRender(float fTime);
 	virtual CColliderSphere* Clone();
 
 public:
