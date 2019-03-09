@@ -223,6 +223,9 @@
     <Filter Include="06. Component\17. Description\Axis">
       <UniqueIdentifier>{56e5b292-5f57-484a-9ecd-87ac5c4aba1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\18. Font">
+      <UniqueIdentifier>{e0ec24f7-e940-42d1-96d8-66a97fa7740f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -440,6 +443,9 @@
     </ClCompile>
     <ClCompile Include="Component\AxisLine.cpp">
       <Filter>06. Component\17. Description\Axis</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Font.cpp">
+      <Filter>06. Component\18. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -676,6 +682,9 @@
     </ClInclude>
     <ClInclude Include="Component\AxisLine.h">
       <Filter>06. Component\17. Description\Axis</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Font.h">
+      <Filter>06. Component\18. Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

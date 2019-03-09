@@ -28,7 +28,11 @@
 #include "Core/NavigationManager.h"
 #include "Core/NavigationMesh.h"
 #include "Resources/Mesh.h"
-
+#include "Component/Font.h"
+#include "Component/UIButton.h"
+#include "Component/Material.h"
+#include "Component/ColliderRect.h"
+#include "Component/Renderer2D.h"
 CMainScene::CMainScene()
 {
 }
@@ -103,6 +107,43 @@ bool CMainScene::Init()
 	SAFE_RELEASE(pArm);
 
 	SAFE_RELEASE(pCameraObj);
+
+	{
+		CLayer*	pLayer = m_pScene->GetLayer("UI");
+		CGameObject* pTestFontObject = CGameObject::CreateObject("UITestFont", pLayer);
+
+		CUIButton*	pButton = pTestFontObject->AddComponent<CUIButton>("UITestFont");
+		SAFE_RELEASE(pButton);
+
+		CTransform*	pButtonTr = pTestFontObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pButtonTr->SetWorldScale(200.f, 50.f, 1.f);
+		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+			DEVICE_RESOLUTION.iHeight / 2.f - 120.f, 0.f);
+
+		SAFE_RELEASE(pButtonTr);
+		CRenderer2D* pRenderer = pTestFontObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "FontTest",
+			0, 0, L"LoginEdit.bmp");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pTestFontObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 200, 50);
+
+		SAFE_RELEASE(pRC);
+
+		CFont* pUFontTest = pTestFontObject->AddComponent<CFont>("TextUI");
+		pUFontTest->SetFont("나눔고딕");
+		wstring pFontTestString = L"폰트 테스트";
+		pUFontTest->SetText(pFontTestString);
+		pUFontTest->SetArea(0, 0, 200, 30.f);
+	}
 
 	////무기
 	//CGameObject*    pSwordObj = CGameObject::CreateObject("Sword", pLayer);

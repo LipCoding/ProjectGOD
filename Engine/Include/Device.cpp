@@ -10,7 +10,12 @@ CDevice::CDevice()	:
 	m_pSwapChain(NULL),
 	m_pRTView(NULL),
 	m_pDepthBuffer(NULL),
-	m_pDSView(NULL)
+	m_pDSView(NULL),
+	m_p2DTarget(NULL),
+	m_pD2DFactory(NULL),
+	m_pWriteFactory(NULL),
+	m_pTextFormat(NULL),
+	m_pSolidBrush(NULL)
 {
 	memset(m_fClearColor, 0, sizeof(float) * 4);
 	m_fClearColor[2] = 1.f;
@@ -62,6 +67,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 #ifdef _DEBUG
 	iFlag = D3D11_CREATE_DEVICE_DEBUG;
 #endif // _DEBUG
+	iFlag |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 	DXGI_SWAP_CHAIN_DESC	tDesc = {};
 
@@ -135,6 +141,52 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 
 	m_pContext->RSSetViewports(1, &tVP);
 
+	D2D1_FACTORY_OPTIONS tOption;
+	tOption.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
+
+	if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, tOption,
+		&m_pD2DFactory)))
+		return false;
+
+	IDXGISurface* pBackBufferSurface = NULL;
+
+	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBufferSurface));
+
+	D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+		D2D1_RENDER_TARGET_TYPE_HARDWARE,
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
+
+	if (FAILED(m_pD2DFactory->CreateDxgiSurfaceRenderTarget(pBackBufferSurface, props, &m_p2DTarget)))
+		return false;
+
+	SAFE_RELEASE(pBackBufferSurface);
+
+	if (FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(m_pWriteFactory),
+		(IUnknown**)&m_pWriteFactory)))
+		return false;
+
+	CreateTextFormat("¹ÙÅÁ", L"¹ÙÅÁ", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko");
+
+	CreateTextFormat("³ª´®°íµñ", L"³ª´®°íµñ Light", DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko");
+
+	CreateTextFormat("¸¼Àº°íµñ", L"¸¼Àº °íµñ", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko");
+
+	CreateTextFormat("¸¼Àº°íµñ35", L"¸¼Àº °íµñ", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 30.F, L"ko");
+
+	CreateTextFormat("µ¸¿ò", L"µ¸¿ò", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 60.F, L"ko");
+
+	CreateTextBrush("White", 1.f, 1.f, 1.f, 1.f);
+	CreateTextBrush("Black", 0.f, 0.f, 0.f, 1.f);
+	CreateTextBrush("Yellow", 1.f, 1.f, 0.f, 1.f);
+	CreateTextBrush("Blue", 0.f, 0.f, 1.f, 0.5f);
+	CreateTextBrush("Red", 1.f, 0.f, 0.f, 1.0f);
+
+
 	return true;
 }
 
@@ -149,6 +201,100 @@ void CDevice::Present()
 {
 	m_pSwapChain->Present(0, 0);
 }
+
+IDWriteTextFormat * CDevice::GetTextFormat() const
+{
+	return m_pTextFormat;
+}
+
+ID2D1RenderTarget * CDevice::Get2DRenderTarget() const
+{
+	return m_p2DTarget;
+}
+
+ID2D1SolidColorBrush * CDevice::GetSolidBrush() const
+{
+	return m_pSolidBrush;
+}
+bool CDevice::CreateTextFormat(const string & strKey, const wchar_t * pFontName, int iWeight, int iStyle, int iStretch, float fSize, const wchar_t * pLocalName, int iHAlign, int iVAlign)
+{
+	IDWriteTextFormat* pFormat = FindTextFormat(strKey);
+
+	if (pFormat)
+		return false;
+
+	if (FAILED(m_pWriteFactory->CreateTextFormat(pFontName, NULL, (DWRITE_FONT_WEIGHT)iWeight,
+		(DWRITE_FONT_STYLE)iStyle, (DWRITE_FONT_STRETCH)iStretch, fSize, pLocalName, &pFormat)))
+		return false;
+
+
+	// ¹®ÀÚ °£°Ý
+	pFormat->SetTextAlignment((DWRITE_TEXT_ALIGNMENT)iHAlign);
+
+	//´Ü¶ô ¸ÂÃã
+	pFormat->SetParagraphAlignment((DWRITE_PARAGRAPH_ALIGNMENT)iVAlign);
+
+	m_mapText.insert(make_pair(strKey, pFormat));
+
+	return true;
+}
+
+bool CDevice::CreateTextBrush(const string & strKey, float r, float g, float b, float a)
+{
+	ID2D1SolidColorBrush* pBrush = FindTextBrush(strKey);
+
+	if (pBrush)
+		return false;
+
+	if (FAILED(m_p2DTarget->CreateSolidColorBrush(D2D1::ColorF(r, g, b, a), &pBrush)))
+		return false;
+
+	m_mapBrush.insert(make_pair(strKey, pBrush));
+
+	return true;
+}
+
+IDWriteTextFormat * CDevice::FindTextFormat(const string & strKey)
+{
+	unordered_map<string, IDWriteTextFormat*>::iterator iter = m_mapText.find(strKey);
+
+	if (iter == m_mapText.end())
+		return NULL;
+
+	return iter->second;
+}
+
+ID2D1SolidColorBrush * CDevice::FindTextBrush(const string & strKey)
+{
+	unordered_map<string, ID2D1SolidColorBrush*>::iterator iter = m_mapBrush.find(strKey);
+
+	if (iter == m_mapBrush.end())
+		return NULL;
+
+	return iter->second;
+}
+
+void CDevice::RenderText(const string & strTextKey, const string & strBrushKey, const wchar_t * pText, const Vector2 & vStart, const Vector2 & vEnd)
+{
+	m_p2DTarget->BeginDraw();
+
+	IDWriteTextFormat* pFormat = FindTextFormat(strTextKey);
+	ID2D1SolidColorBrush* pBrush = FindTextBrush(strBrushKey);
+
+	m_p2DTarget->DrawTextW(pText, lstrlen(pText), pFormat, D2D1::RectF(vStart.x, vStart.y, vEnd.x, vEnd.y), pBrush);
+
+	m_p2DTarget->EndDraw();
+}
+
+void CDevice::RenderText(IDWriteTextFormat * pFormat, ID2D1SolidColorBrush * pBrush, const wchar_t * pText, const Vector2 & vStart, const Vector2 & vEnd)
+{
+	m_p2DTarget->BeginDraw();
+
+	m_p2DTarget->DrawTextW(pText, lstrlen(pText), pFormat, D2D1::RectF(vStart.x, vStart.y, vEnd.x, vEnd.y), pBrush);
+
+	m_p2DTarget->EndDraw();
+}
+
 
 Vector2 CDevice::GetWindowDeviceResolution() const
 {

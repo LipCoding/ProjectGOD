@@ -13,10 +13,17 @@
 #include <fstream>
 #include "PGTypes.h"
 
+#include <d2d1.h> // 글자 출력
+#include <dwrite.h> // 글자 출력
+#include <fstream>
 #pragma comment(lib, "DirectXTex")
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+//----- 폰트엔진
+#pragma comment(lib, "d2d1")
+#pragma comment(lib, "dwrite")
+#pragma comment(lib,"msimg32")
 
 #define	PG_PI	3.141592f
 
