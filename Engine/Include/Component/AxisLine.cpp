@@ -19,9 +19,12 @@ PG_USING
 
 CAxisLine::CAxisLine()
 {
+	m_eType = CT_UI;
+
 	m_pMesh = nullptr;
 	m_pShader = nullptr;
 	m_pLayout = nullptr;
+	m_bRednerCheck = false;
 }
 
 CAxisLine::CAxisLine(const CAxisLine & axisLine)
@@ -44,11 +47,34 @@ CAxisLine::~CAxisLine()
 	SAFE_RELEASE(m_pShader);
 }
 
+void CAxisLine::SetObjVector(Vector3 scale, Vector3 rot, Vector3 pos)
+{
+	m_vecScale = scale;
+	m_vecRot = rot;
+	m_vecPos = pos;
+}
+
+void CAxisLine::SetObjMatrix(Matrix matrix)
+{
+	m_matObjWorld = matrix;
+}
+
+void CAxisLine::SetBoneMatrix(Matrix* matrix)
+{
+	m_matBoneWorld = matrix;
+}
+
+void CAxisLine::SetRenderCheck(bool check)
+{
+	m_bRednerCheck = check;
+}
+
 bool CAxisLine::Init()
 {
 	m_pMesh = GET_SINGLE(CResourcesManager)->FindMesh("Line");
 	m_pShader = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
+
 
 	return true;
 }
@@ -69,15 +95,24 @@ int CAxisLine::LateUpdate(float fTime)
 
 void CAxisLine::Render(float fTime)
 {
+	if (!m_bRednerCheck)
+		return;
+
 	Matrix	matScale, matTrans, matRot;
 
-	matScale.mat = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	matTrans.mat = XMMatrixTranslation(5.f, 1.f, 5.f);
+	matScale.mat = XMMatrixScaling(m_vecScale.x/ 2.f,
+		m_vecScale.y/2.f,
+		m_vecScale.z/ 2.f);
+	matRot.mat = XMMatrixRotationX(m_vecRot.x)
+		* XMMatrixRotationY(m_vecRot.y)
+		* XMMatrixRotationZ(m_vecRot.z);
+	matTrans.mat = XMMatrixTranslation(m_vecPos.x, m_vecPos.y, m_vecPos.z);
 
 	CCamera*	pCamera = m_pScene->GetMainCamera();
 
-	m_tTransform.matWorld = matScale *
-		matRot * matTrans;
+	m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;
+
+	/*m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;*/
 
 	m_tTransform.matView = pCamera->GetViewMatrix();
 	m_tTransform.matProj = pCamera->GetProjMatrix();

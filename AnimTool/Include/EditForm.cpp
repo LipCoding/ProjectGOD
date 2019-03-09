@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_BUTTON_PLAY_PAUSE, &CEditForm::OnBnClickedButtonPlay)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, &CEditForm::OnBnClickedButtonStop)
 	ON_WM_HSCROLL()
+	ON_CBN_SELCHANGE(IDC_COMBO_BONE_INFO, &CEditForm::OnCbnSelchangeComboBoneInfo)
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -126,14 +127,20 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 			pLayer);
 		CTransform*	pTr = m_pEditObj->GetTransform();
 		pTr->SetWorldPos(5.f, 0.f, 5.f);
-		SAFE_RELEASE(pTr);
+		
 
 		CRenderer*	pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
+		pRenderer->AlphaEnable(true);
 
 		string	strTag = CT2CA(name.GetString());
 
 		pRenderer->SetMeshFromFullPath(strTag,
 			path.GetString());
+
+		CAxisLine* pAxisLine = m_pEditObj->AddComponent<CAxisLine>("AxisLine");
+		pAxisLine->SetObjMatrix(pTr->GetWorldMatrix());
+		SAFE_RELEASE(pTr);
+		SAFE_RELEASE(pAxisLine);
 
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pScene);
@@ -146,6 +153,7 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 		SAFE_RELEASE(pTr);
 
 		CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
+		pRenderer->AlphaEnable(true);
 		string tag = CT2CA(name);
 
 		pRenderer->SetMeshFromFullPath(tag, path);
@@ -261,7 +269,6 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 
 void CEditForm::UpdateForm(const float & fTime)
 {
-
 	if (!m_pEditObj)
 		return;
 
@@ -287,9 +294,18 @@ void CEditForm::UpdateForm(const float & fTime)
 	if (!m_bStopCheck)
 		m_ctrlSliderClipFrame.SetPos(iCurrentFrameNum);
 
+	CTransform* pTr = m_pEditObj->GetTransform();
+	CAxisLine* pAxisLine = m_pEditObj->FindComponentFromTag<CAxisLine>("AxisLine");
+	
+	if (pAxisLine)
+	{
+		pAxisLine->SetObjMatrix(pTr->GetLocalMatrix() * pTr->GetWorldMatrix());
+		SAFE_RELEASE(pAxisLine);
+	}
+
+	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 }
-
 
 void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 {
@@ -315,7 +331,6 @@ void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 
 	*pResult = 0;
 }
-
 
 void CEditForm::OnBnClickedButtonLoadMesh()
 {
@@ -346,8 +361,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	m_pEditObj = CGameObject::CreateObject("EditObj", pLayer);
 
 	CTransform*	pTr = m_pEditObj->GetTransform();
-	pTr->SetWorldPos(5.f, 0.f, 5.f);
-	SAFE_RELEASE(pTr);
+	//pTr->SetWorldPos(5.f, 0.f, 5.f);
+
 
 	CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
 	pRenderer->AlphaEnable(true);
@@ -358,6 +373,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 
 	// Axis Line
 	CAxisLine* pAxisLine = m_pEditObj->AddComponent<CAxisLine>("AxisLine");
+	pAxisLine->SetObjMatrix(pTr->GetWorldMatrix());
+	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAxisLine);
 
 	CAnimation *pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
@@ -633,7 +650,6 @@ void CEditForm::OnLbnSelchangeListClips()
 		OnBnClickedButtonPlay();
 }
 
-
 void CEditForm::OnBnClickedButtonPlay()
 {
 	if (!m_pEditObj)
@@ -652,7 +668,6 @@ void CEditForm::OnBnClickedButtonPlay()
 
 	SAFE_RELEASE(pAnimation);
 }
-
 
 void CEditForm::OnBnClickedButtonStop()
 {
@@ -673,7 +688,6 @@ void CEditForm::OnBnClickedButtonStop()
 
 	SAFE_RELEASE(pAnimation);
 }
-
 
 void CEditForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
@@ -702,4 +716,27 @@ void CEditForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	}
 
 	CFormView::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+void CEditForm::OnCbnSelchangeComboBoneInfo()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+		return;
+
+	int iPos = m_comboBoxBoneInfo.GetCurSel();
+
+	CString boneName;
+	m_comboBoxBoneInfo.GetLBText(iPos, boneName);
+
+	string findName = CT2CA(boneName);
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	PBONE pBone = pAnimation->FindBone(findName);
+
+	CAxisLine* pAxis = m_pEditObj->FindComponentFromTag<CAxisLine>("AxisLine");
+	if (pAxis)
+	{
+		pAxis->SetRenderCheck(true);
+		pAxis->SetBoneMatrix(pBone->matBone);
+	}
 }

@@ -77,4 +77,5 @@ public:
 	afx_msg void OnBnClickedButtonPlay();
 	afx_msg void OnBnClickedButtonStop();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnCbnSelchangeComboBoneInfo();
 };

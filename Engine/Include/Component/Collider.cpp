@@ -231,9 +231,9 @@ void CCollider::CheckCollisionSection(float fTime)
 
 bool CCollider::Init()
 {
-	CRenderer* pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
-	pRenderer->AlphaEnable(true);
-	SAFE_RELEASE(pRenderer);
+	//CRenderer* pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+	//pRenderer->AlphaEnable(true);
+	//SAFE_RELEASE(pRenderer);
 
 	return true;
 }
