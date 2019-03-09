@@ -57,6 +57,7 @@ public:
 	void UpdateView();
 	void UpdateInput(const float& fTime);
 	void UpdateObject(const float& fTime);
+	void UpdateForm(const float& fTime);
 
 // 사용자 변수
 private:

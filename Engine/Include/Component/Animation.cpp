@@ -16,6 +16,7 @@ CAnimation::CAnimation()
 	m_fFrameTime = 0.f;
 	m_pBoneTex = NULL;
 	m_bEnd = false;
+	m_bStopCheck = false;
 	m_iCurChannel = 0;
 	m_iFrameMode = 0;
 	m_iNextChannel = -1;
@@ -25,6 +26,7 @@ CAnimation::CAnimation()
 	m_fChangeLimitTime = 0.25f;
 	m_pBoneRV = NULL;
 	m_pLastAddClip = NULL;
+	m_iCurrentFrame = 0;
 
 	SetTag("Animation");
 	SetTypeName("CAnimation");
@@ -36,6 +38,7 @@ CAnimation::CAnimation(const CAnimation & animation) :
 	CComponent(animation)
 {
 	m_bEnd = false;
+	m_bStopCheck = false;
 	m_pLastAddClip = NULL;
 	m_iFrameMode = animation.m_iFrameMode;
 	m_fFrameTime = animation.m_fFrameTime;
@@ -140,6 +143,77 @@ const unordered_map<string, class CAnimationClip*>* CAnimation::GetAllClip() con
 	return &m_mapClip;
 }
 
+const int & CAnimation::GetClipFrame() const
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return m_iCurrentFrame;
+}
+const vector<PBONE>& CAnimation::GetBoneVector() const
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return m_vecBones;
+}
+void CAnimation::SetClipFrame(const int & frame)
+{
+	m_iCurrentFrame = frame;
+
+	float fAnimationTime = (float)m_iCurrentFrame / m_iFrameMode;
+	m_fAnimationGlobalTime = fAnimationTime - m_vecChannel[m_iCurChannel].pClip->m_tInfo.fStartTime;
+
+	vector<Matrix>	vecBones;
+	vecBones.reserve(m_vecBones.size());
+
+	// 본 수만큼 반복한다.
+	for (size_t i = 0; i < m_vecBones.size(); ++i)
+	{
+		// 키프레임이 없을 경우
+		if (m_vecChannel[m_iCurChannel].pClip->IsEmptyFrame(i))
+		{
+			vecBones.push_back(*m_vecBones[i]->matBone);
+			continue;
+		}
+
+		const PKEYFRAME pCurKey = m_vecChannel[m_iCurChannel].pClip->GetKeyFrame(i, m_iCurrentFrame);
+		const PKEYFRAME pNextKey = m_vecChannel[m_iCurChannel].pClip->GetKeyFrame(i, m_iCurrentFrame + 1);
+
+		// 현재 프레임의 시간을 얻어온다.
+		double	 dFrameTime = pCurKey->dTime;
+
+		float	fPercent = (fAnimationTime - dFrameTime) / m_fFrameTime;
+
+		XMVECTOR	vS = XMVectorLerp(pCurKey->vScale.Convert(),
+			pNextKey->vScale.Convert(), fPercent);
+		XMVECTOR	vT = XMVectorLerp(pCurKey->vPos.Convert(),
+			pNextKey->vPos.Convert(), fPercent);
+		XMVECTOR	vR = XMQuaternionSlerp(pCurKey->vRot.Convert(),
+			pNextKey->vRot.Convert(), fPercent);
+
+		XMVECTOR	vZero = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+		Matrix	matBone = XMMatrixAffineTransformation(vS, vZero,
+			vR, vT);
+
+		*m_vecBones[i]->matBone = matBone;
+
+		matBone = *m_vecBones[i]->matOffset * matBone;
+
+		//*m_vecBones[i]->matBone = matBone;
+
+		vecBones.push_back(matBone);
+	}
+
+
+	D3D11_MAPPED_SUBRESOURCE	tMap = {};
+	CONTEXT->Map(m_pBoneTex, 0, D3D11_MAP_WRITE_DISCARD, 0, &tMap);
+
+	memcpy(tMap.pData, &vecBones[0], sizeof(Matrix) * vecBones.size());
+
+	CONTEXT->Unmap(m_pBoneTex, 0);
+}
+void CAnimation::SetStopCheck(bool check)
+{
+	m_bStopCheck = check;
+}
 PBONE CAnimation::FindBone(const string & strBoneName)
 {
 	for (size_t i = 0; i < m_vecBones.size(); ++i)
@@ -787,7 +861,7 @@ void CAnimation::Input(float fTime)
 
 int CAnimation::Update(float fTime)
 {
-	if (m_mapClip.empty())
+	if (m_mapClip.empty() || m_bStopCheck)
 		return 0;
 
 	/*if (GetAsyncKeyState('Y') & 0x8000)
@@ -911,6 +985,7 @@ int CAnimation::Update(float fTime)
 		vecBones.reserve(m_vecBones.size());
 
 		int	iFrameIndex = (int)(fAnimationTime * m_iFrameMode);
+		m_iCurrentFrame = iFrameIndex;
 
 		if (m_bEnd)
 		{

@@ -22,7 +22,7 @@
     <Filter Include="01.Object">
       <UniqueIdentifier>{1b3798b4-14cc-40e4-8dee-16f89dc5fece}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Tab\Speed">
+    <Filter Include="00.Tab\Mesh">
       <UniqueIdentifier>{8b18c562-09d9-4337-996f-86c12a416f2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -52,7 +52,7 @@
       <Filter>99.Default\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="AnimMeshInfoTab.h">
-      <Filter>00.Tab\Speed</Filter>
+      <Filter>00.Tab\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +75,7 @@
       <Filter>99.Default\소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="AnimMeshInfoTab.cpp">
-      <Filter>00.Tab\Speed</Filter>
+      <Filter>00.Tab\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

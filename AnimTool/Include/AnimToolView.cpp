@@ -28,6 +28,7 @@
 #include "Component/Transform.h"
 #include "Core/PathManager.h"
 #include "Component/Arm.h"
+#include "EditForm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -148,16 +149,19 @@ void CAnimToolView::OnInitialUpdate()
 
 	// SkyBox
 	CGameObject* pSky = CGameObject::FindObject("Sky");
-	CRenderer*   pRenderer = pSky->FindComponentFromTag<CRenderer>("SkyRenderer");
-	CMaterial*   pMaterial = pRenderer->GetMaterial();
+	if (pSky)
+	{
+		CRenderer*   pRenderer = pSky->FindComponentFromTag<CRenderer>("SkyRenderer");
+		CMaterial*   pMaterial = pRenderer->GetMaterial();
 
-	pMaterial->ResetTextureInfo();
-	GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
-	pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Skybox\\Skybox_6.dds");
+		pMaterial->ResetTextureInfo();
+		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
+		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Skybox\\Skybox_6.dds");
 
-	SAFE_RELEASE(pMaterial);
-	SAFE_RELEASE(pRenderer);
-	SAFE_RELEASE(pSky);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pSky);
+	}
 
 	// Load Terrain
 	CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
@@ -187,6 +191,7 @@ void CAnimToolView::UpdateView()
 
 	UpdateInput(fTime);
 	UpdateObject(fTime);
+	UpdateForm(fTime);
 }
 
 void CAnimToolView::UpdateInput(const float & fTime)
@@ -254,6 +259,11 @@ void CAnimToolView::UpdateInput(const float & fTime)
 
 void CAnimToolView::UpdateObject(const float & fTime)
 {
+}
+
+void CAnimToolView::UpdateForm(const float & fTime)
+{
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateForm(fTime);
 }
 
 

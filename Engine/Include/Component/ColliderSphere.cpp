@@ -134,7 +134,7 @@ bool CColliderSphere::Collision(CCollider * pDest)
 	case CT_RAY:
 		return CollisionRayToSphere(((CColliderRay*)pDest)->GetRayAddress(), m_tSphere);
 	case CT_SPHERE:
-		return CollisionSphereToSphere(((CColliderSphere*)pDest)->m_tSphere, m_tSphere);\
+		return CollisionSphereToSphere(((CColliderSphere*)pDest)->m_tSphere, m_tSphere);
 	case CT_AABB:
 		return CollisionSphereToAABB(((CColliderAABB*)pDest)->GetInfo(), m_tSphere);
 	}

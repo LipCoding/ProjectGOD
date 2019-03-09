@@ -34,16 +34,17 @@ public:
 public:
 	void MeshLoadFromMeshInfoTab(CString path, CString name);
 	void AnimationLoadFromMeshInfoTab(CString path, CString name);
-	
+	void UpdateForm(const float& fTime);
 
 private:	
 	CButton m_checkPlay;
 	class CAnimToolView		*m_pView = nullptr;
 	CGameObject *m_pEditObj = nullptr;
+	CSliderCtrl m_ctrlSliderClipFrame;
 	CString m_clipName;
 	int		m_iStartFrame = 0;
 	int		m_iEndFrame = 0;
-
+	CEdit	m_editFramePosition;
 	/// Tab 
 	CTabCtrl m_Tab;
 	// Speed
@@ -56,13 +57,15 @@ private:
 
 	// CamShake
 
-
+	bool m_bStopCheck = false;
+	CComboBox m_comboBoxBoneInfo;
 public:
 	afx_msg void OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLoadMesh();
 	afx_msg void OnRadioAnimTypeCheck(UINT id);
 private:
 	CListBox m_listClips;
+	int		 m_iPos = 0;
 	int		 m_iRadioAnimType = 0;
 public:
 	afx_msg void OnBnClickedButtonAddClip();
@@ -70,4 +73,8 @@ public:
 	afx_msg void OnBnClickedButtonDeleteClip();
 	afx_msg void OnBnClickedButtonClipDefault();
 	afx_msg void OnLbnSelchangeListClips();
+
+	afx_msg void OnBnClickedButtonPlay();
+	afx_msg void OnBnClickedButtonStop();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };

@@ -20,6 +20,7 @@
 #include "Resources/Mesh.h"
 #include "Component/Animation.h"
 #include "Component/AnimationClip.h"
+#include "Component/AxisLine.h"
 
 // CEditForm 대화 상자
 
@@ -47,6 +48,9 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_BUTTON_DELETE_CLIP, &CEditForm::OnBnClickedButtonDeleteClip)
 	ON_BN_CLICKED(IDC_BUTTON_CLIP_DEFAULT, &CEditForm::OnBnClickedButtonClipDefault)
 	ON_LBN_SELCHANGE(IDC_LIST_CLIPS, &CEditForm::OnLbnSelchangeListClips)
+	ON_BN_CLICKED(IDC_BUTTON_PLAY_PAUSE, &CEditForm::OnBnClickedButtonPlay)
+	ON_BN_CLICKED(IDC_BUTTON_STOP, &CEditForm::OnBnClickedButtonStop)
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -78,6 +82,9 @@ void CEditForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_START_FRAME_CLIP, m_iStartFrame);
 	DDX_Text(pDX, IDC_EDIT_END_FRAME_CLIP, m_iEndFrame);
 	DDX_Radio(pDX, IDC_RADIO_CLIP_TYPE_1, (int&)m_iRadioAnimType);
+	DDX_Control(pDX, IDC_SLIDER_CLIP_INFO, m_ctrlSliderClipFrame);
+	DDX_Control(pDX, IDC_EDIT_POS_CLIP, m_editFramePosition);
+	DDX_Control(pDX, IDC_COMBO_BONE_INFO, m_comboBoxBoneInfo);
 }
 
 
@@ -128,23 +135,16 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 		pRenderer->SetMeshFromFullPath(strTag,
 			path.GetString());
 
-		CGameObject* pCameraObj = pScene->GetMainCameraObj();
-		CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
-
-		CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
-
-		pArm->SetTarget(m_pEditObj);
-		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
-
-		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
-		m_pAnimMeshInfoDlg->SetMeshInfo();
-
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pScene);
 		SAFE_RELEASE(pLayer);
 	}
 	else
 	{
+		CTransform*	pTr = m_pEditObj->GetTransform();
+		pTr->SetWorldPos(5.f, 0.f, 5.f);
+		SAFE_RELEASE(pTr);
+
 		CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
 		string tag = CT2CA(name);
 
@@ -152,13 +152,33 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 
 		SAFE_RELEASE(pRenderer);
 	}
+
+	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer*	pLayer = pScene->GetLayer("Default");
+
+	CGameObject* pCameraObj = pScene->GetMainCameraObj();
+	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+
+	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+
+	pArm->SetTarget(m_pEditObj);
+	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
+
+	m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
+	m_pAnimMeshInfoDlg->SetMeshInfo();
+	
+	SAFE_RELEASE(pArm);
+	SAFE_RELEASE(pThirdCam);
+	SAFE_RELEASE(pCameraObj);
+	SAFE_RELEASE(pScene);
+	SAFE_RELEASE(pLayer);
 }
 
 void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 {
 	if (!m_pEditObj)
 	{
-		/*CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("Default");
 
 		m_pEditObj = CGameObject::CreateObject("EditObj", pLayer);
@@ -188,17 +208,15 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 			m_iRadioAnimType = (int)tInfo.eOption;
 		}
 
-		UpdateData(FALSE);
-
 		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
 
 		SAFE_RELEASE(pAnimation);
 		SAFE_RELEASE(pLayer);
-		SAFE_RELEASE(pScene);*/
+		SAFE_RELEASE(pScene);
 	}
 	else
 	{
-		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("EditAnimation");
+		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("Animation");
 
 		pAnimation->LoadFromFullPath(path);
 
@@ -221,10 +239,55 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 			m_iRadioAnimType = (int)tInfo.eOption;
 		}
 
-		UpdateData(FALSE);
-
 		SAFE_RELEASE(pAnimation);
 	}
+
+	CAnimation*	pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	// Bone Info
+	const vector<PBONE> boneInfo = pAnimation->GetBoneVector();
+
+	for (const auto iter : boneInfo)
+	{
+		CString boneName = CA2CT(iter->strName.c_str());
+		m_comboBoxBoneInfo.AddString(boneName);
+	}
+
+	UpdateData(FALSE);
+
+	SAFE_RELEASE(pAnimation);
+
+	m_listClips.SetCurSel(m_iPos);
+}
+
+void CEditForm::UpdateForm(const float & fTime)
+{
+
+	if (!m_pEditObj)
+		return;
+
+	CAnimation*	pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+
+	if (!pAnimation)
+		return;
+
+	CAnimationClip* pClip = pAnimation->GetCurrentClip();
+	ANIMATION3DCLIP clipInfo = pClip->GetClipInfo();
+
+	CString num;
+
+	// Range
+	int iCurrentFrameNum = pAnimation->GetClipFrame();
+	num.Format(_T("%d"), iCurrentFrameNum);
+	m_editFramePosition.SetWindowTextW(num);
+
+	m_ctrlSliderClipFrame.SetRange(clipInfo.iStartFrame, clipInfo.iEndFrame);
+	m_ctrlSliderClipFrame.SetTicFreq(5);
+	m_ctrlSliderClipFrame.SetLineSize(1);
+
+	if (!m_bStopCheck)
+		m_ctrlSliderClipFrame.SetPos(iCurrentFrameNum);
+
+	SAFE_RELEASE(pAnimation);
 }
 
 
@@ -292,6 +355,10 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	
 	pRenderer->SetMeshFromFullPath(tag, path);
 
+	// Axis Line
+	CAxisLine* pAxisLine = m_pEditObj->AddComponent<CAxisLine>("AxisLine");
+	SAFE_RELEASE(pAxisLine);
+
 	CAnimation *pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
 
 	if (pAnimation)
@@ -323,9 +390,18 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 		pArm->SetTarget(m_pEditObj);
 		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
 
-		//Tab
+		// Tab
 		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
 		m_pAnimMeshInfoDlg->SetMeshInfo();
+
+		// Bone Info
+		const vector<PBONE> boneInfo = pAnimation->GetBoneVector();
+
+		for (const auto iter : boneInfo)
+		{
+			CString boneName = CA2CT(iter->strName.c_str());
+			m_comboBoxBoneInfo.AddString(boneName);
+		}
 
 		UpdateData(FALSE);
 
@@ -348,6 +424,8 @@ void CEditForm::OnRadioAnimTypeCheck(UINT id)
 	case 0:
 		break;
 	case 1:
+		break;
+	case 2:
 		break;
 	}
 }
@@ -423,22 +501,25 @@ void CEditForm::OnBnClickedButtonAddClip()
 		SAFE_RELEASE(pClip);
 	}
 
+	m_listClips.SetCurSel(m_iPos);
+
 	SAFE_RELEASE(pAnimation);
 }
 
 void CEditForm::OnBnClickedButtonModifyClip()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	int iPos = m_listClips.GetCurSel();
+	m_iPos = m_listClips.GetCurSel();
 
-	if (iPos == -1)
+	if (m_iPos == -1)
 	{
 		AfxMessageBox(L"Error: You didn't select the clip!");
+		m_iPos = 0;
 		return;
 	}
 
 	CString listText;
-	m_listClips.GetText(iPos, listText);
+	m_listClips.GetText(m_iPos, listText);
 
 	UpdateData(TRUE);
 
@@ -452,8 +533,9 @@ void CEditForm::OnBnClickedButtonModifyClip()
 
 	SAFE_RELEASE(pAnimation);
 
-	m_listClips.DeleteString(iPos);
-	m_listClips.InsertString(iPos, m_clipName);
+	m_listClips.DeleteString(m_iPos);
+	m_listClips.InsertString(m_iPos, m_clipName);
+	m_listClips.SetCurSel(m_iPos);
 }
 
 void CEditForm::OnBnClickedButtonDeleteClip()
@@ -465,23 +547,24 @@ void CEditForm::OnBnClickedButtonDeleteClip()
 		return;
 	}
 
-	int iPos = m_listClips.GetCurSel();
+	m_iPos = m_listClips.GetCurSel();
 
-	if (iPos == -1)
+	if (m_iPos == -1)
 	{
 		AfxMessageBox(L"Error: You didn't select the clip!");
+		m_iPos = 0;
 		return;
 	}
 
 	CString listText;
-	m_listClips.GetText(iPos, listText);
+	m_listClips.GetText(m_iPos, listText);
 
 	string key = CT2CA(listText);
 
 	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
 	pAnimation->DeleteClip(key);
 	SAFE_RELEASE(pAnimation);
-	m_listClips.DeleteString(iPos);
+	m_listClips.DeleteString(m_iPos);
 }
 
 void CEditForm::OnBnClickedButtonClipDefault()
@@ -514,16 +597,17 @@ void CEditForm::OnBnClickedButtonClipDefault()
 void CEditForm::OnLbnSelchangeListClips()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	int iPos = m_listClips.GetCurSel();
+	m_iPos = m_listClips.GetCurSel();
 
-	if (iPos == -1)
+	if (m_iPos == -1)
 	{
 		AfxMessageBox(L"Error: You didn't select the clip!");
+		m_iPos = 0;
 		return;
 	}
 
 	CString	strClip;
-	m_listClips.GetText(iPos, strClip);
+	m_listClips.GetText(m_iPos, strClip);
 
 	string	strKey = CT2CA(strClip);
 
@@ -541,7 +625,80 @@ void CEditForm::OnLbnSelchangeListClips()
 	// 모션 변경 
 	pAnimation->ChangeClip(strKey);
 
-
 	SAFE_RELEASE(pAnimation);
 
+	// 정지되어 있다면 Update를 위해 강제 Play
+	if(m_bStopCheck)
+		OnBnClickedButtonPlay();
+}
+
+
+void CEditForm::OnBnClickedButtonPlay()
+{
+	if (!m_pEditObj)
+		return;
+	
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(COMPONENT_TYPE::CT_ANIMATION);
+
+	if (!pAnimation)
+		return;
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_bStopCheck)
+		m_bStopCheck = false;
+
+	pAnimation->SetStopCheck(m_bStopCheck);
+
+	SAFE_RELEASE(pAnimation);
+}
+
+
+void CEditForm::OnBnClickedButtonStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+		return;
+
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(COMPONENT_TYPE::CT_ANIMATION);
+
+	if (!pAnimation)
+		return;
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_bStopCheck)
+		m_bStopCheck = true;
+
+	pAnimation->SetStopCheck(m_bStopCheck);
+
+	SAFE_RELEASE(pAnimation);
+}
+
+
+void CEditForm::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (!m_bStopCheck)
+		return;
+
+	if (pScrollBar)
+	{
+		if (pScrollBar == (CScrollBar*)&m_ctrlSliderClipFrame)
+		{
+			int iPos = m_ctrlSliderClipFrame.GetPos();
+			
+			if (!m_pEditObj)
+				return;
+
+			CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(COMPONENT_TYPE::CT_ANIMATION);
+
+			if (!pAnimation)
+				return;
+
+			pAnimation->SetClipFrame(iPos);
+
+			SAFE_RELEASE(pAnimation);
+		}
+	}
+
+	CFormView::OnHScroll(nSBCode, nPos, pScrollBar);
 }

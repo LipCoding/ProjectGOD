@@ -217,6 +217,12 @@
     <Filter Include="98. Headers\99. Defaults\헤더 파일">
       <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\17. Description">
+      <UniqueIdentifier>{af1c715a-b926-420a-b838-139d83a78777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\17. Description\Axis">
+      <UniqueIdentifier>{56e5b292-5f57-484a-9ecd-87ac5c4aba1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -431,6 +437,9 @@
     </ClCompile>
     <ClCompile Include="Component\Picking.cpp">
       <Filter>06. Component\16. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\AxisLine.cpp">
+      <Filter>06. Component\17. Description\Axis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -664,6 +673,9 @@
     </ClInclude>
     <ClInclude Include="Component\Picking.h">
       <Filter>06. Component\16. Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\AxisLine.h">
+      <Filter>06. Component\17. Description\Axis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

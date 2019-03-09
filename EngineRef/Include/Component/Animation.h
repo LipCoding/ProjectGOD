@@ -50,11 +50,12 @@ private:
 	int					m_iNextChannel;
 	float				m_fFrameTime;
 	bool				m_bEnd;
+	bool				m_bStopCheck;
 	float				m_fAnimationGlobalTime;
 	float				m_fClipProgress;
 	float				m_fChangeTime;
 	float				m_fChangeLimitTime;
-
+	int					m_iCurrentFrame;
 private:
 	string		m_strDefaultClip;
 	string		m_strCurrentClip;
@@ -66,7 +67,12 @@ public:
 	class CAnimationClip* GetCurrentClip()	const;
 	class CAnimationClip* GetLastAddClip()	const;
 	const unordered_map<string, class CAnimationClip*>* GetAllClip()	const;
+	const int& GetClipFrame() const;
 
+	const vector<PBONE>& GetBoneVector() const;
+
+	void SetClipFrame(const int& frame);
+	void SetStopCheck(bool check);
 
 public:
 	PBONE FindBone(const string& strBoneName);

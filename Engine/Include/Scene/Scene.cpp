@@ -296,11 +296,11 @@ bool CScene::Init()
 	m_pLightCameraTr->SetWorldRotY(PG_PI / 4.f);
 
 	//// UI 카메라 생성
-	//m_pUICameraObj = CreateOrthoCamera("UICamera",
-	//	Vector3(0.f, 0.f, 0.f), DEVICE_RESOLUTION, 0.f, 5000.f);
-	//m_pUICamera = m_pUICameraObj->FindComponentFromTypeID<CCamera>();
-	//m_pUICameraTr = m_pUICameraObj->GetTransform();
-	////m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
+	m_pUICameraObj = CreateOrthoCamera("UICamera",
+		Vector3(0.f, 0.f, 0.f), DEVICE_RESOLUTION, 0.f, 5000.f);
+	m_pUICamera = m_pUICameraObj->FindComponentFromTypeID<CCamera>();
+	m_pUICameraTr = m_pUICameraObj->GetTransform();
+	//m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
 
 	// 전역 조명을 생성한다.
 	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
@@ -323,7 +323,6 @@ bool CScene::Init()
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
 	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
 	pLightTr->SetWorldPos(0.f, 1000.f, 0.f);
 	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 

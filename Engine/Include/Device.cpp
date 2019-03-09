@@ -13,7 +13,7 @@ CDevice::CDevice()	:
 	m_pDSView(NULL)
 {
 	memset(m_fClearColor, 0, sizeof(float) * 4);
-	//m_fClearColor[1] = 1.f;
+	m_fClearColor[2] = 1.f;
 }
 
 CDevice::~CDevice()

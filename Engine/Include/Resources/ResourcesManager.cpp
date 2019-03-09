@@ -184,6 +184,27 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pMesh);
 
+	// Line
+
+	VERTEXCOLOR	tLine[6] =
+	{
+		// x
+		VERTEXCOLOR(0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
+		VERTEXCOLOR(0.5f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
+		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f),
+		VERTEXCOLOR(0.f, 0.5f, 0.f, 0.f, 1.f, 0.f, 1.f),
+		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f),
+		VERTEXCOLOR(0.f, 0.f, 0.5f, 0.f, 0.f, 1.f, 1.f),
+	};
+
+	UINT	iLineIndex[6] = { 0, 1, 2, 3, 4, 5 };
+
+	pMesh = CreateMesh("Line", 6, sizeof(VERTEXCOLOR), D3D11_USAGE_DEFAULT,
+		D3D11_PRIMITIVE_TOPOLOGY_LINELIST, tLine, 6, 4,
+		D3D11_USAGE_DEFAULT, DXGI_FORMAT_R32_UINT, iLineIndex);
+
+	SAFE_RELEASE(pMesh);
+
 	// Liner
 	CSampler*	pSampler = CreateSampler(SAMPLER_LINEAR);
 

@@ -7,9 +7,9 @@ PG_BEGIN
 class PG_DLL CShaderManager
 {
 private:
-	unordered_map<string, class CShader*>	m_mapShader;
+	unordered_map<string, class CShader*>		m_mapShader;
 	unordered_map<string, ID3D11InputLayout*>	m_mapLayout;
-	unordered_map<string, PCONSTANTBUFFER>	m_mapCBuffer;
+	unordered_map<string, PCONSTANTBUFFER>		m_mapCBuffer;
 	vector<D3D11_INPUT_ELEMENT_DESC>	m_vecInputDesc;
 	int			m_iInputSize;
 
