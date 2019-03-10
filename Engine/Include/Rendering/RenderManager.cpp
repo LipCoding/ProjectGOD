@@ -634,6 +634,7 @@ void CRenderManager::Render(float fTime)
 
 	// 조명 누적버퍼를 만든다.
 	RenderLightAcc(fTime);
+	// 2path - n path
 
 	// 조명 누적버퍼를 이용하여 Albedo에 조명을 처리한다.
 	RenderLightBlend(fTime);
@@ -672,12 +673,14 @@ void CRenderManager::Render(float fTime)
 				SAFE_RELEASE(pCollider);
 			}
 
+			m_pDepthDisable->SetState();
 			CAxisLine* pAxis = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CAxisLine>(CT_AXIS);
 			if (pAxis != nullptr)
 			{
 				pAxis->AxisRender(fTime);
 				SAFE_RELEASE(pAxis);
 			}
+			//m_pDepthDisable->ResetState();
 		}
 	}
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
