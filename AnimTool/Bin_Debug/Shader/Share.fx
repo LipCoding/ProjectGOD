@@ -197,7 +197,6 @@ cbuffer Light	: register(b2)
 	float	g_fLightEmpty;
 }
 
-
 cbuffer Animation2D	: register(b10)
 {
 	int		g_iAniType;

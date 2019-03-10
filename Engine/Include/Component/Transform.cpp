@@ -1482,7 +1482,7 @@ void CTransform::Load(FILE * pFile)
 void CTransform::Save_Local(FILE * pFile)
 {
 	// Local
-	fwrite(&m_vPivot, sizeof(Vector3), 1, pFile);
+	//fwrite(&m_vPivot, sizeof(Vector3), 1, pFile);
 	fwrite(&m_vLocalScale, sizeof(Vector3), 1, pFile);
 	fwrite(&m_vLocalRot, sizeof(Vector3), 1, pFile);
 	fwrite(&m_vLocalPos, sizeof(Vector3), 1, pFile);
@@ -1491,12 +1491,12 @@ void CTransform::Save_Local(FILE * pFile)
 void CTransform::Load_Local(FILE * pFile)
 {
 	// Local
-	fread(&m_vPivot, sizeof(Vector3), 1, pFile);
+	//fread(&m_vPivot, sizeof(Vector3), 1, pFile);
 	fread(&m_vLocalScale, sizeof(Vector3), 1, pFile);
 	fread(&m_vLocalRot, sizeof(Vector3), 1, pFile);
 	fread(&m_vLocalPos, sizeof(Vector3), 1, pFile);
 
-	SetPivot(m_vPivot);
+	//SetPivot(m_vPivot);
 	SetLocalScale(m_vLocalScale);
 	SetLocalRot(m_vLocalRot);
 	SetLocalPos(m_vLocalPos);

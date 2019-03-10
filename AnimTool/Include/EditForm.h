@@ -36,7 +36,8 @@ public:
 	void ArmMeshLoadFromMeshInfoTab(CString path, CString name);
 	void AnimationLoadFromMeshInfoTab(CString path, CString name);
 	
-	void SetBoneMatrix();
+	void	SetBoneMatrix(const string& bone = "");
+	const string&  GetBoneName();
 	
 	
 	void UpdateForm(const float& fTime);
@@ -69,7 +70,7 @@ private:
 
 	bool m_bStopCheck = false;
 	CComboBox m_comboBoxBoneInfo;
-
+	string m_boneNameAttachTo = "";
 public:
 	afx_msg void OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLoadMesh();

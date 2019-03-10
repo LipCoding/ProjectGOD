@@ -143,7 +143,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"Create Object First!");
+		AfxMessageBox(L"Error : Create Object First!");
 		return;
 	}
 
@@ -169,6 +169,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 	
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->ArmMeshLoadFromMeshInfoTab(path, name);
 
+	m_armMeshPath = path;
 	m_armObjName = name;
 
 	m_sliderCtrlArmRotX.SetPos(0);
@@ -181,8 +182,21 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 void CAnimMeshInfoTab::OnBnClickedButtonArmAttachBone()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Error : Create Object First!");
+		return;
+	}
+
+	if (!m_pArmObj)
+	{
+		AfxMessageBox(L"Error : Create Arm Object First!");
+		return;
+	}
+
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetBoneMatrix();
 }
+
 
 void CAnimMeshInfoTab::OnRadioAnimTypeCheck(UINT id)
 {
@@ -205,13 +219,13 @@ void CAnimMeshInfoTab::OnBnClickedButtonArmUp()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"Create Object First!");
+		AfxMessageBox(L"Error : Create Object First!");
 		return;
 	}
 
 	if (!m_pArmObj)
 	{
-		AfxMessageBox(L"Create Arm Object First!");
+		AfxMessageBox(L"Error : Create Arm Object First!");
 		return;
 	}
 
@@ -250,13 +264,13 @@ void CAnimMeshInfoTab::OnBnClickedButtonArmDown()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"Create Object First!");
+		AfxMessageBox(L"Error : Create Object First!");
 		return;
 	}
 
 	if (!m_pArmObj)
 	{
-		AfxMessageBox(L"Create Arm Object First!");
+		AfxMessageBox(L"Error : Create Arm Object First!");
 		return;
 	}
 
@@ -300,20 +314,167 @@ void CAnimMeshInfoTab::OnBnClickedButtonSpeedModify()
 void CAnimMeshInfoTab::OnBnClickedButtonSaveArm()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pArmObj)
+	{
+		AfxMessageBox(L"Error : No Arm Mesh to save!");
+		return;
+	}
+
+	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(FALSE, L".DAT", L"Data",
+		OFN_OVERWRITEPROMPT, strFilter);
+
+	// 경로 지정
+	wchar_t wstrPath[MAX_PATH] = {};
+	wcscpy_s(wstrPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	CString originPath = wstrPath;
+
+	dlg.m_ofn.lpstrInitialDir = wstrPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+	FILE* pFile = nullptr;
+
+	char	strPath[MAX_PATH] = {};
+	WideCharToMultiByte(CP_ACP, 0, path, -1,
+		strPath, lstrlen(path), 0, 0);
+
+	fopen_s(&pFile, strPath, "wb");
+
+	if (!pFile)
+		return;
+
+	wstring armPath = m_armMeshPath;
+	armPath.erase(0, lstrlen(originPath) - 1 + 1);
+	wchar_t wstrArmPath[MAX_PATH] = {};
+	wcscpy_s(wstrArmPath, MAX_PATH, armPath.c_str());
+	
+	wstring armName = m_armObjName;
+	wchar_t wstrArmName[MAX_PATH] = {};
+	wcscpy_s(wstrArmName, MAX_PATH, armName.c_str());
+
+	// 메쉬 파일 경로, 메쉬 이름
+	size_t pathSize = wcslen(wstrArmPath);
+	fwrite(&pathSize, sizeof(size_t), 1, pFile);
+	fwrite(&wstrArmPath, sizeof(wchar_t), pathSize, pFile);
+	size_t nameSize = wcslen(wstrArmName);
+	fwrite(&nameSize, sizeof(size_t), 1, pFile);
+	fwrite(&wstrArmName, sizeof(wchar_t), nameSize, pFile);
+
+	// 뼈정보
+	string boneName = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetBoneName();
+	char strBoneName[MAX_PATH] = {};
+	strcpy_s(strBoneName, MAX_PATH, boneName.c_str());
+	size_t boneSize = strlen(strBoneName);
+	fwrite(&boneSize, sizeof(size_t), 1, pFile);
+	fwrite(&strBoneName, sizeof(char), boneSize, pFile);
+
+	CTransform* pTr = m_pArmObj->GetTransform();
+	pTr->Save_Local(pFile);
+
+	SAFE_RELEASE(pTr);
+
+	fclose(pFile);
 }
 
 
 void CAnimMeshInfoTab::OnBnClickedButtonLoadArm()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Error : Make Edit Object first!");
+		return;
+	}
+
+	if (m_pArmObj)
+	{
+		AfxMessageBox(L"Error : Already have Arm Mesh!");
+		return;
+	}
+
+	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(TRUE, L".DAT", L"Data",
+		OFN_HIDEREADONLY, strFilter);
+
+	// 경로 지정
+	wchar_t wstrPath[MAX_PATH] = {};
+	wcscpy_s(wstrPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	CString originPath = wstrPath;
+
+	dlg.m_ofn.lpstrInitialDir = wstrPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+
+	FILE* pFile = nullptr;
+
+	char	strPath[MAX_PATH] = {};
+	WideCharToMultiByte(CP_ACP, 0, path, -1,
+		strPath, lstrlen(path), 0, 0);
+
+	fopen_s(&pFile, strPath, "rb");
+
+	if (!pFile)
+		return;
+
+	// 메쉬 파일 경로, 메쉬 이름
+	wchar_t wstrArmPath[MAX_PATH] = {};
+	size_t pathSize;
+	fread(&pathSize, sizeof(size_t), 1, pFile);
+	fread(&wstrArmPath, sizeof(wchar_t), pathSize, pFile);
+	wchar_t wstrArmName[MAX_PATH] = {};
+	size_t nameSize;
+	fread(&nameSize, sizeof(size_t), 1, pFile);
+	fread(&wstrArmName, sizeof(wchar_t), nameSize, pFile);
+
+	m_armMeshPath = originPath + wstrArmPath;
+	m_armObjName = wstrArmName;
+
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->ArmMeshLoadFromMeshInfoTab(m_armMeshPath, m_armObjName);
+
+	// 뼈정보
+	char strBoneName[MAX_PATH] = {};
+	size_t boneSize;
+	fread(&boneSize, sizeof(size_t), 1, pFile);
+	fread(&strBoneName, sizeof(char), boneSize, pFile);
+
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetBoneMatrix(strBoneName);
+
+	CTransform* pTr = m_pArmObj->GetTransform();
+	pTr->Load_Local(pFile);
+
+	Vector3 vecCurrentRot = pTr->GetLocalRot();
+
+	m_sliderCtrlArmRotX.SetPos(int(XMConvertToDegrees(vecCurrentRot.x)));
+	m_sliderCtrlArmRotY.SetPos(int(XMConvertToDegrees(vecCurrentRot.y)));
+	m_sliderCtrlArmRotZ.SetPos(int(XMConvertToDegrees(vecCurrentRot.z)));
+
+	UpdateData(FALSE);
+	SAFE_RELEASE(pTr);
+
+	fclose(pFile);
 }
+
 
 void CAnimMeshInfoTab::OnBnClickedButtonSaveMesh()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"No Mesh to save!");
+		AfxMessageBox(L"Error : No Mesh to save!");
 		return;
 	}
 
@@ -376,7 +537,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveAnimation()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"No Animation to save!");
+		AfxMessageBox(L"Error : No Animation to save!");
 		return;
 	}
 
@@ -436,7 +597,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveLocalInfo()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 	{
-		AfxMessageBox(L"No Mesh to save!");
+		AfxMessageBox(L"Error : No Mesh to save!");
 		return;
 	}
 

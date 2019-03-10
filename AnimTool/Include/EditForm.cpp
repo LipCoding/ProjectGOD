@@ -129,7 +129,7 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 			pLayer);
 		CTransform*	pTr = m_pEditObj->GetTransform();
 		pTr->SetWorldPos(5.f, 0.f, 5.f);
-		
+		SAFE_RELEASE(pTr);
 
 		CRenderer*	pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
 
@@ -137,11 +137,6 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 
 		pRenderer->SetMeshFromFullPath(strTag,
 			path.GetString());
-
-		CAxisLine* pAxisLine = m_pEditObj->AddComponent<CAxisLine>("AxisLine");
-		pAxisLine->SetObjMatrix(pTr->GetWorldMatrix());
-		SAFE_RELEASE(pTr);
-		SAFE_RELEASE(pAxisLine);
 
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pScene);
@@ -281,6 +276,10 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 
 		SAFE_RELEASE(pAnimation);
 	}
+	
+	// AxisLine
+	CAxisLine* pAxisLine = m_pEditObj->AddComponent<CAxisLine>("AxisLine");
+	SAFE_RELEASE(pAxisLine);
 
 	CAnimation*	pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
 	// Bone Info
@@ -299,28 +298,50 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 	m_listClips.SetCurSel(m_iPos);
 }
 
-void CEditForm::SetBoneMatrix()
+void CEditForm::SetBoneMatrix(const string& bone)
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (!m_pEditObj)
 		return;
 
-	int iPos = m_comboBoxBoneInfo.GetCurSel();
-
-	if (iPos == -1)
+	if (bone == "")
 	{
-		AfxMessageBox(L"Error : Select Bone First!");
-		return;
+		int iPos = m_comboBoxBoneInfo.GetCurSel();
+
+		if (iPos == -1)
+		{
+			AfxMessageBox(L"Error : Select Bone First!");
+			return;
+		}
+
+		CString boneName;
+		m_comboBoxBoneInfo.GetLBText(iPos, boneName);
+
+		string findName = CT2CA(boneName);
+		CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		PBONE pBone = pAnimation->FindBone(findName);
+
+		m_boneNameAttachTo = pBone->strName;
+		m_pBoneMatrix = pBone->matBone;
+		
+		SAFE_RELEASE(pAnimation);
 	}
+	else
+	{
+		CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		PBONE pBone = pAnimation->FindBone(bone);
 
-	CString boneName;
-	m_comboBoxBoneInfo.GetLBText(iPos, boneName);
+		m_boneNameAttachTo = pBone->strName;
+		m_pBoneMatrix = pBone->matBone;
 
-	string findName = CT2CA(boneName);
-	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
-	PBONE pBone = pAnimation->FindBone(findName);
+		SAFE_RELEASE(pAnimation);
+	}
+}
 
-	m_pBoneMatrix = pBone->matBone;
+const string & CEditForm::GetBoneName()
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return m_boneNameAttachTo;
 }
 
 void CEditForm::UpdateForm(const float & fTime)

@@ -56,6 +56,7 @@ private:
 	float m_fPositionZ;
 	float m_fPivot;
 
+	CString		m_armMeshPath;
 	CString		m_armObjName;
 	CSliderCtrl m_sliderCtrlArmRotX;
 	CSliderCtrl m_sliderCtrlArmRotY;
