@@ -172,7 +172,7 @@ bool CResourcesManager::Init()
 	SAFE_RELEASE(pMesh);
 
 	// 구 메쉬를 생성한다.
-	pMesh = CreateSphere("Sphere", 1.f, 1);
+	pMesh = CreateSphere("Sphere", 1.f, 10);
 
 	SAFE_RELEASE(pMesh);
 
@@ -190,11 +190,13 @@ bool CResourcesManager::Init()
 	{
 		// x
 		VERTEXCOLOR(0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
-		VERTEXCOLOR(10.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
+		VERTEXCOLOR(20.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f),
+		// y
 		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 1.f),
-		VERTEXCOLOR(0.f, 10.f, 0.f, 0.f, 1.f, 0.f, 1.f),
+		VERTEXCOLOR(0.f, 20.f, 0.f, 0.f, 1.f, 0.f, 1.f),
+		// z
 		VERTEXCOLOR(0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 1.f),
-		VERTEXCOLOR(0.f, 0.f, 10.f, 0.f, 0.f, 1.f, 1.f),
+		VERTEXCOLOR(0.f, 0.f, 20.f, 0.f, 0.f, 1.f, 1.f),
 	};
 
 	UINT	iLineIndex[6] = { 0, 1, 2, 3, 4, 5 };

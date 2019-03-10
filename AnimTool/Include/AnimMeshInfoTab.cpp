@@ -31,6 +31,7 @@ CAnimMeshInfoTab::CAnimMeshInfoTab(CWnd* pParent /*=nullptr*/)
 	, m_armObjName(_T(""))
 	, m_fSpeed(0)
 	, m_fPivot(0)
+	, m_fArmScale(0)
 {
 
 }
@@ -38,6 +39,7 @@ CAnimMeshInfoTab::CAnimMeshInfoTab(CWnd* pParent /*=nullptr*/)
 CAnimMeshInfoTab::~CAnimMeshInfoTab()
 {
 	m_pEditObj = nullptr;
+	m_pArmObj = nullptr;
 }
 
 void CAnimMeshInfoTab::DoDataExchange(CDataExchange* pDX)
@@ -59,6 +61,7 @@ void CAnimMeshInfoTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_ARM_SPEED, m_fSpeed);
 	DDX_Radio(pDX, IDC_RADIO_ARM_AXIS_1, (int&)m_iRadioAxisType);
 	DDX_Text(pDX, IDC_EDIT_MESH_PIVOT, m_fPivot);
+	DDX_Text(pDX, IDC_EDIT_SCALE_ARM, m_fArmScale);
 }
 
 
@@ -77,6 +80,8 @@ BEGIN_MESSAGE_MAP(CAnimMeshInfoTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ARM_ATTACH_BONE, &CAnimMeshInfoTab::OnBnClickedButtonArmAttachBone)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_LOCAL_INFO, &CAnimMeshInfoTab::OnBnClickedButtonSaveLocalInfo)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_LOCAL_INFO, &CAnimMeshInfoTab::OnBnClickedButtonLoadLocalLoad)
+	ON_BN_CLICKED(IDC_BUTTON_ADJUST_SCALE_ARM, &CAnimMeshInfoTab::OnBnClickedButtonAdjustScaleArm)
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -136,12 +141,47 @@ void CAnimMeshInfoTab::OnBnClickedButtonModifyLocalInfo()
 void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Create Object First!");
+		return;
+	}
 
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	wchar_t	strFilter[] = L"MESHFile(*.FBX)|*.fbx|모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(TRUE, L".FBX", L"Mesh",
+		OFN_HIDEREADONLY, strFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+	
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->ArmMeshLoadFromMeshInfoTab(path, name);
+
+	m_armObjName = name;
+
+	m_sliderCtrlArmRotX.SetPos(0);
+	m_sliderCtrlArmRotY.SetPos(0);
+	m_sliderCtrlArmRotZ.SetPos(0);
+
+	UpdateData(FALSE);
+}
 
 void CAnimMeshInfoTab::OnBnClickedButtonArmAttachBone()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetBoneMatrix();
 }
 
 void CAnimMeshInfoTab::OnRadioAnimTypeCheck(UINT id)
@@ -163,18 +203,97 @@ void CAnimMeshInfoTab::OnRadioAnimTypeCheck(UINT id)
 void CAnimMeshInfoTab::OnBnClickedButtonArmUp()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Create Object First!");
+		return;
+	}
+
+	if (!m_pArmObj)
+	{
+		AfxMessageBox(L"Create Arm Object First!");
+		return;
+	}
+
+	CTransform* pTr = m_pArmObj->GetTransform();
+
+	Vector3 vecModifyPos = pTr->GetLocalPos();
+
+	UpdateData(TRUE);
+	switch (m_iRadioAxisType)
+	{
+	case 0:
+	{
+		vecModifyPos.x += m_fSpeed;
+		break;
+	}
+	case 1:
+	{
+		vecModifyPos.y += m_fSpeed;
+		break;
+	}
+	case 2:
+	{
+		vecModifyPos.z += m_fSpeed;
+		break;
+	}
+	}
+
+	pTr->SetLocalPos(vecModifyPos);
+
+	SAFE_RELEASE(pTr);
 }
 
 
 void CAnimMeshInfoTab::OnBnClickedButtonArmDown()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Create Object First!");
+		return;
+	}
+
+	if (!m_pArmObj)
+	{
+		AfxMessageBox(L"Create Arm Object First!");
+		return;
+	}
+
+	CTransform* pTr = m_pArmObj->GetTransform();
+	
+	Vector3 vecModifyPos = pTr->GetLocalPos();
+
+	UpdateData(TRUE);
+	switch (m_iRadioAxisType)
+	{
+	case 0:
+	{
+		vecModifyPos.x -= m_fSpeed;
+		break;
+	}
+	case 1:
+	{
+		vecModifyPos.y -= m_fSpeed;
+		break;
+	}
+	case 2:
+	{
+		vecModifyPos.z -= m_fSpeed;
+		break;
+	}
+	}
+
+	pTr->SetLocalPos(vecModifyPos);
+
+	SAFE_RELEASE(pTr);
 }
 
 
 void CAnimMeshInfoTab::OnBnClickedButtonSpeedModify()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
 }
 
 
@@ -403,4 +522,87 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadLocalLoad()
 
 		fclose(pFile);
 	}
+}
+
+
+void CAnimMeshInfoTab::OnBnClickedButtonAdjustScaleArm()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	if (!m_pArmObj)
+	{
+		AfxMessageBox(L"Error : Create Arm Object First!");
+		return;
+	}
+
+	CTransform* pTr = m_pArmObj->GetTransform();
+	pTr->SetLocalScale(m_fArmScale, m_fArmScale, m_fArmScale);
+	SAFE_RELEASE(pTr);
+}
+
+
+BOOL CAnimMeshInfoTab::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	m_sliderCtrlArmRotX.SetRange(0, 360);
+	m_sliderCtrlArmRotY.SetRange(0, 360);
+	m_sliderCtrlArmRotZ.SetRange(0, 360);
+
+	m_sliderCtrlArmRotX.SetTicFreq(45);
+	m_sliderCtrlArmRotY.SetTicFreq(45);
+	m_sliderCtrlArmRotZ.SetTicFreq(45);
+
+	m_sliderCtrlArmRotX.SetLineSize(1);
+	m_sliderCtrlArmRotY.SetLineSize(1);
+	m_sliderCtrlArmRotZ.SetLineSize(1);
+
+	m_fSpeed = 0.1f;
+
+	UpdateData(FALSE);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
+
+
+void CAnimMeshInfoTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (!m_pArmObj)
+		return;
+
+	if (pScrollBar)
+	{
+		if (pScrollBar == (CScrollBar*)&m_sliderCtrlArmRotX)
+		{
+			int iPos = m_sliderCtrlArmRotX.GetPos();
+
+			CTransform* pTr = m_pArmObj->GetTransform();
+			pTr->SetLocalRotX(XMConvertToRadians((float)iPos));
+			SAFE_RELEASE(pTr);
+		}
+		
+		else if (pScrollBar == (CScrollBar*)&m_sliderCtrlArmRotY)
+		{
+			int iPos = m_sliderCtrlArmRotY.GetPos();
+
+			CTransform* pTr = m_pArmObj->GetTransform();
+			pTr->SetLocalRotY(XMConvertToRadians((float)iPos));
+			SAFE_RELEASE(pTr);
+		}
+		
+		else if (pScrollBar == (CScrollBar*)&m_sliderCtrlArmRotZ)
+		{
+			int iPos = m_sliderCtrlArmRotZ.GetPos();
+
+			CTransform* pTr = m_pArmObj->GetTransform();
+			pTr->SetLocalRotZ(XMConvertToRadians((float)iPos));
+			SAFE_RELEASE(pTr);
+		}
+	}
+
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 }

@@ -37,8 +37,9 @@ CEditForm::~CEditForm()
 {
 	delete m_pAnimMeshInfoDlg;
 	m_pAnimMeshInfoDlg = nullptr;
-
+	m_pBoneMatrix = nullptr;
 	SAFE_RELEASE(m_pEditObj);
+	SAFE_RELEASE(m_pArmObj);
 }
 
 BEGIN_MESSAGE_MAP(CEditForm, CView)
@@ -131,7 +132,6 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 		
 
 		CRenderer*	pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
-		pRenderer->AlphaEnable(true);
 
 		string	strTag = CT2CA(name.GetString());
 
@@ -154,7 +154,6 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 		SAFE_RELEASE(pTr);
 
 		CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
-		pRenderer->AlphaEnable(true);
 		string tag = CT2CA(name);
 
 		pRenderer->SetMeshFromFullPath(tag, path);
@@ -181,6 +180,38 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 	SAFE_RELEASE(pCameraObj);
 	SAFE_RELEASE(pScene);
 	SAFE_RELEASE(pLayer);
+}
+
+void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
+{
+	if (!m_pArmObj)
+	{
+		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("Default");
+
+		m_pArmObj = CGameObject::CreateObject("ArmObj",
+			pLayer);
+		
+		CTransform*	pTr = m_pArmObj->GetTransform();
+		SAFE_RELEASE(pTr);
+
+		CRenderer*	pRenderer = m_pArmObj->AddComponent<CRenderer>("Renderer");
+
+		string	strTag = CT2CA(name.GetString());
+
+		pRenderer->SetMeshFromFullPath(strTag,
+			path.GetString());
+
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pScene);
+		SAFE_RELEASE(pLayer);
+	}
+	else
+	{
+		// 지우고 다시 만들기?
+	}
+
+	m_pAnimMeshInfoDlg->SetArmObj(m_pArmObj);
 }
 
 void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
@@ -268,6 +299,30 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 	m_listClips.SetCurSel(m_iPos);
 }
 
+void CEditForm::SetBoneMatrix()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+		return;
+
+	int iPos = m_comboBoxBoneInfo.GetCurSel();
+
+	if (iPos == -1)
+	{
+		AfxMessageBox(L"Error : Select Bone First!");
+		return;
+	}
+
+	CString boneName;
+	m_comboBoxBoneInfo.GetLBText(iPos, boneName);
+
+	string findName = CT2CA(boneName);
+	CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	PBONE pBone = pAnimation->FindBone(findName);
+
+	m_pBoneMatrix = pBone->matBone;
+}
+
 void CEditForm::UpdateForm(const float & fTime)
 {
 	if (!m_pEditObj)
@@ -305,6 +360,13 @@ void CEditForm::UpdateForm(const float & fTime)
 		SAFE_RELEASE(pAxisLine);
 	}
 
+	if (m_pArmObj && m_pBoneMatrix)
+	{
+		CTransform* pArmTr = m_pArmObj->GetTransform();
+		pArmTr->SetParentMatrix(*m_pBoneMatrix * pTr->GetLocalMatrix() * pTr->GetWorldMatrix());
+		SAFE_RELEASE(pArmTr);
+	}
+
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 }
@@ -337,6 +399,12 @@ void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 void CEditForm::OnBnClickedButtonLoadMesh()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pEditObj)
+	{
+		AfxMessageBox(L"Error : Already have Edit Obj!");
+		return;
+	}
+
 	static TCHAR BASED_CODE szFilter[] =
 		_T("메쉬 파일(*.FBX) | *.fbx;|모든파일(*.*)|*.*||");
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
@@ -403,18 +471,6 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 			m_iRadioAnimType = (int)tInfo.eOption;
 		}
 
-		CGameObject* pCameraObj = pScene->GetMainCameraObj();
-		CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
-
-		CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
-
-		pArm->SetTarget(m_pEditObj);
-		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
-
-		// Tab
-		m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
-		m_pAnimMeshInfoDlg->SetMeshInfo();
-
 		// Bone Info
 		const vector<PBONE> boneInfo = pAnimation->GetBoneVector();
 
@@ -426,14 +482,25 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 
 		UpdateData(FALSE);
 
-		SAFE_RELEASE(pArm);
-		SAFE_RELEASE(pThirdCam);
-		SAFE_RELEASE(pCameraObj);
 		SAFE_RELEASE(pAnimation);
 		SAFE_RELEASE(pRenderer);
-		SAFE_RELEASE(pLayer);
-		SAFE_RELEASE(pScene);
 	}
+
+	CGameObject* pCameraObj = pScene->GetMainCameraObj();
+	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+
+	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+
+	pArm->SetTarget(m_pEditObj);
+	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
+
+	// Tab
+	m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
+	m_pAnimMeshInfoDlg->SetMeshInfo();
+
+	SAFE_RELEASE(pArm);
+	SAFE_RELEASE(pThirdCam);
+	SAFE_RELEASE(pCameraObj);
 }
 
 void CEditForm::OnRadioAnimTypeCheck(UINT id)
@@ -728,6 +795,9 @@ void CEditForm::OnCbnSelchangeComboBoneInfo()
 		return;
 
 	int iPos = m_comboBoxBoneInfo.GetCurSel();
+
+	if (iPos == -1)
+		return;
 
 	CString boneName;
 	m_comboBoxBoneInfo.GetLBText(iPos, boneName);

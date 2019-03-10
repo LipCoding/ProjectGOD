@@ -24,12 +24,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void SetScale(float x, float y, float z);
-	void SetRotation(float x, float y, float z);
-	void SetPosition(float x, float y, float z);
 	void SetEditObj(CGameObject* editObj) { m_pEditObj = editObj; }
+	void SetArmObj(CGameObject* armObj) { m_pArmObj = armObj; }
 	void SetMeshInfo();
 public:
+	afx_msg void OnRadioAnimTypeCheck(UINT id);
 	afx_msg void OnBnClickedButtonModifyLocalInfo();
 	afx_msg void OnBnClickedButtonCreateArmObj();
 	afx_msg void OnBnClickedButtonArmUp();
@@ -37,7 +36,6 @@ public:
 	afx_msg void OnBnClickedButtonSpeedModify();
 	afx_msg void OnBnClickedButtonSaveArm();
 	afx_msg void OnBnClickedButtonLoadArm();
-	afx_msg void OnRadioAnimTypeCheck(UINT id);
 	afx_msg void OnBnClickedButtonSaveMesh();
 	afx_msg void OnBnClickedButtonLoadMesh();
 	afx_msg void OnBnClickedButtonSaveAnimation();
@@ -45,6 +43,7 @@ public:
 	afx_msg void OnBnClickedButtonArmAttachBone();
 	afx_msg void OnBnClickedButtonSaveLocalInfo();
 	afx_msg void OnBnClickedButtonLoadLocalLoad();
+	afx_msg void OnBnClickedButtonAdjustScaleArm();
 private:
 	float m_fScaleX;
 	float m_fScaleY;
@@ -65,4 +64,9 @@ private:
 
 	int			m_iRadioAxisType = 0;
 	CGameObject*	m_pEditObj = nullptr;
+	CGameObject*	m_pArmObj = nullptr;
+	float m_fArmScale;
+public:
+	virtual BOOL OnInitDialog();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };

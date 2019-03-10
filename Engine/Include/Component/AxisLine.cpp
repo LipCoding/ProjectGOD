@@ -119,7 +119,7 @@ void CAxisLine::AxisRender(float fTime)
 
 	Matrix matScale;
 	
-	matScale.mat = XMMatrixScaling(0.075f, 0.075f, 0.075f);
+	matScale.mat = XMMatrixScaling(0.03f, 0.03f, 0.03f);
 	m_tTransform.matWorld = matScale * *m_matBoneWorld * m_matObjWorld;
 
 	/*m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;*/

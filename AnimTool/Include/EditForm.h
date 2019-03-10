@@ -33,22 +33,32 @@ public:
 	virtual void OnInitialUpdate();
 public:
 	void MeshLoadFromMeshInfoTab(CString path, CString name);
+	void ArmMeshLoadFromMeshInfoTab(CString path, CString name);
 	void AnimationLoadFromMeshInfoTab(CString path, CString name);
+	
+	void SetBoneMatrix();
+	
+	
 	void UpdateForm(const float& fTime);
 
 private:	
 	CButton m_checkPlay;
 	class CAnimToolView		*m_pView = nullptr;
-	CGameObject *m_pEditObj = nullptr;
 	CSliderCtrl m_ctrlSliderClipFrame;
 	CString m_clipName;
 	int		m_iStartFrame = 0;
 	int		m_iEndFrame = 0;
 	CEdit	m_editFramePosition;
+	CListBox m_listClips;
+	int		 m_iPos = 0;
+	int		 m_iRadioAnimType = 0;
 	/// Tab 
 	CTabCtrl m_Tab;
-	// Speed
+	// MeshInfo
 	class CAnimMeshInfoTab		*m_pAnimMeshInfoDlg = nullptr;
+	CGameObject *m_pEditObj = nullptr;
+	CGameObject *m_pArmObj = nullptr;
+	Matrix *m_pBoneMatrix = nullptr;
 	// Movement
 
 	// Collider
@@ -59,15 +69,12 @@ private:
 
 	bool m_bStopCheck = false;
 	CComboBox m_comboBoxBoneInfo;
+
 public:
 	afx_msg void OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLoadMesh();
 	afx_msg void OnRadioAnimTypeCheck(UINT id);
-private:
-	CListBox m_listClips;
-	int		 m_iPos = 0;
-	int		 m_iRadioAnimType = 0;
-public:
+
 	afx_msg void OnBnClickedButtonAddClip();
 	afx_msg void OnBnClickedButtonModifyClip();
 	afx_msg void OnBnClickedButtonDeleteClip();

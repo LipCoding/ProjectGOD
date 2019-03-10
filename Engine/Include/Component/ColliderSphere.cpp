@@ -19,7 +19,6 @@ CColliderSphere::CColliderSphere()
 	m_strGroup = "Default";
 
 	m_pWireFrame = GET_SINGLE(CRenderManager)->FindRenderState(WIRE_FRAME);
-
 }
 
 CColliderSphere::CColliderSphere(const CColliderSphere & collider) :
