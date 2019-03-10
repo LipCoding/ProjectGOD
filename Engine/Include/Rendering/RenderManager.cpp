@@ -634,6 +634,7 @@ void CRenderManager::Render(float fTime)
 
 	// 조명 누적버퍼를 만든다.
 	RenderLightAcc(fTime);
+	// 2path - n path
 
 	// 조명 누적버퍼를 이용하여 Albedo에 조명을 처리한다.
 	RenderLightBlend(fTime);
