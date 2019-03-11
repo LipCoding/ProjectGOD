@@ -120,7 +120,7 @@ void CEditForm::OnInitialUpdate()
 
 void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 {
-	if (!m_pEditObj)
+ 	if (!m_pEditObj)
 	{
 		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("Default");

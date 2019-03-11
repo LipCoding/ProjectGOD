@@ -108,6 +108,7 @@ int CAxisLine::LateUpdate(float fTime)
 
 void CAxisLine::Render(float fTime)
 {
+	
 }
 
 void CAxisLine::AxisRender(float fTime)
