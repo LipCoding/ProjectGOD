@@ -116,10 +116,32 @@ void CEditForm::OnInitialUpdate()
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
 	m_pView = (CAnimToolView*)pMain->GetActiveView();
+
+	// Third Cam Component Add
+	CScene*		 pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CGameObject* pCameraObj = pScene->GetMainCameraObj();
+	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+
+	SAFE_RELEASE(pArm);
+	SAFE_RELEASE(pThirdCam);
+	SAFE_RELEASE(pCameraObj);
+	SAFE_RELEASE(pScene);
 }
 
 void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 {
+	if (m_pEditObj)
+	{
+		CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		if (pAnimation)
+		{
+			SAFE_RELEASE(pAnimation);
+			DeleteEditObject();
+			InitForm();
+		}
+	}
+
  	if (!m_pEditObj)
 	{
 		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -160,9 +182,9 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 	CLayer*	pLayer = pScene->GetLayer("Default");
 
 	CGameObject* pCameraObj = pScene->GetMainCameraObj();
-	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+	CThirdCamera* pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
 
-	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+	CArm*	pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
 
 	pArm->SetTarget(m_pEditObj);
 	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
@@ -179,6 +201,14 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 
 void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
 {
+	if (m_pArmObj)
+	{
+		// 지우고 다시 만들기?
+		m_pArmObj->Die();
+		CGameObject::EraseObj(m_pArmObj);
+		SAFE_RELEASE(m_pArmObj);
+	}
+
 	if (!m_pArmObj)
 	{
 		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -201,16 +231,22 @@ void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
 		SAFE_RELEASE(pScene);
 		SAFE_RELEASE(pLayer);
 	}
-	else
-	{
-		// 지우고 다시 만들기?
-	}
+	
 
 	m_pAnimMeshInfoDlg->SetArmObj(m_pArmObj);
 }
 
 void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 {
+	CAnimation*	pAnimationCheck = m_pEditObj->FindComponentFromTag<CAnimation>("Animation");
+
+	if (pAnimationCheck)
+	{
+		AfxMessageBox(L"Error : Your object already have Animation!");
+		SAFE_RELEASE(pAnimationCheck);
+		return;
+	}
+
 	if (!m_pEditObj)
 	{
 		CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -392,6 +428,30 @@ void CEditForm::UpdateForm(const float & fTime)
 	SAFE_RELEASE(pAnimation);
 }
 
+void CEditForm::DeleteEditObject()
+{
+	if(m_pEditObj)
+		m_pEditObj->Die();
+	if (m_pArmObj)
+		m_pArmObj->Die();
+
+	CGameObject::EraseObj(m_pEditObj);
+	CGameObject::EraseObj(m_pArmObj);
+	SAFE_RELEASE(m_pEditObj);
+	SAFE_RELEASE(m_pArmObj);
+	m_pBoneMatrix = nullptr;
+}
+
+void CEditForm::InitForm()
+{
+	m_iStartFrame = 0;
+	m_iEndFrame = 0;
+	m_listClips.ResetContent();
+	m_comboBoxBoneInfo.ResetContent();
+	m_boneNameAttachTo = "";
+	m_bStopCheck = false;
+}
+
 void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -422,8 +482,11 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (m_pEditObj)
 	{
-		AfxMessageBox(L"Error : Already have Edit Obj!");
-		return;
+		DeleteEditObject();
+		InitForm();
+
+		//AfxMessageBox(L"Error : Already have Edit Obj!");
+		//return;
 	}
 
 	static TCHAR BASED_CODE szFilter[] =
@@ -453,11 +516,9 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	
 
 	CTransform*	pTr = m_pEditObj->GetTransform();
-	pTr->SetWorldPos(5.f, 0.5f, 5.f);
-
+	pTr->SetWorldPos(10.f, 0.f, 10.f);
 
 	CRenderer* pRenderer = m_pEditObj->AddComponent<CRenderer>("Renderer");
-	//pRenderer->AlphaEnable(true);
 	CT2CA pszConvertAnsiStringName(name);
 	string tag(pszConvertAnsiStringName);
 	
@@ -508,9 +569,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	}
 
 	CGameObject* pCameraObj = pScene->GetMainCameraObj();
-	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
-
-	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+	CThirdCamera* pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
+	CArm*	pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
 
 	pArm->SetTarget(m_pEditObj);
 	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
@@ -522,6 +582,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	SAFE_RELEASE(pArm);
 	SAFE_RELEASE(pThirdCam);
 	SAFE_RELEASE(pCameraObj);
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 }
 
 void CEditForm::OnRadioAnimTypeCheck(UINT id)
@@ -653,6 +715,15 @@ void CEditForm::OnBnClickedButtonDeleteClip()
 	if (!m_pEditObj)
 	{
 		AfxMessageBox(L"Error: You have to create Object first!");
+		return;
+	}
+
+	// 애니메이션이 하나밖에 없는경우.
+	// 그냥 Edit객체를 지워버린다.
+	if (m_listClips.GetCount() == 1)
+	{
+		DeleteEditObject();
+		InitForm();
 		return;
 	}
 

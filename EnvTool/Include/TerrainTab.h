@@ -43,10 +43,14 @@ public:
 	afx_msg void OnBnClickedButtonHeightReset();
 	afx_msg void OnBnClickedButtonTexLoad();
 	afx_msg void OnBnClickedButtonSplatLoad();
+	afx_msg void OnBnClickedButtonTerrainSave();
+	afx_msg void OnBnClickedButtonTerrainLoad();
 public:
 	int  SaveTextureName(string fileName);
 	void LoadTextureName(string fileName);
 	void LoadSplatAlphaName(string fileName);
+
+	void Process_ChangeTab();
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;
@@ -73,8 +77,4 @@ private:
 	CString m_diffuseName = L"Terrain/TerrainTex0_D.tga";
 	CString m_normalName = L"Terrain/TerrainTex0_N.tga";
 	CString m_specularName = L"Terrain/TerrainTex0_S.tga";
-
-public:
-	afx_msg void OnBnClickedButtonTerrainSave();
-	afx_msg void OnBnClickedButtonTerrainLoad();
 };

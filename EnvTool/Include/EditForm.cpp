@@ -97,6 +97,7 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		break;
 	case 1:
 		m_eTabType = TAB_OBJECT;
+		m_pTerrainDlg->Process_ChangeTab();
 		m_pTerrainDlg->ShowWindow(SW_HIDE);
 		m_pObjDlg->ShowWindow(SW_SHOW);
 		break;

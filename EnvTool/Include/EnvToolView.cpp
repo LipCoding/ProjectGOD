@@ -384,6 +384,7 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 					}
 					case TAB_OBJECT:
 					{
+
 						break;
 					}
 					default:

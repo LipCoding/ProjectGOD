@@ -52,8 +52,11 @@
 #define IDC_RADIO_HEIGHT_DIR_2          1024
 #define IDC_BUTTON1                     1025
 #define IDC_BUTTON_HEIGHT_RESET         1025
+#define IDC_BUTTON_DELETE_OBJ           1025
 #define IDC_BUTTON2                     1026
+#define IDC_BUTTON_DELETE_ALLOBJ        1026
 #define IDC_CHECK1                      1027
+#define IDC_BUTTON_FILEPATH_OBJ         1027
 #define IDC_CHECK_HEIGHT                1028
 #define IDC_RADIO_MODE_1                1029
 #define IDC_RADIO_MODE_2                1030
@@ -76,6 +79,10 @@
 #define IDC_BUTTON_TERRAIN_LOAD         1044
 #define IDC_SLIDER_SPLAT_POWER          1045
 #define IDC_EDIT_SPLAT_POWER            1046
+#define IDC_LIST_OBJECTS                1047
+#define IDC_LIST_OBJECT_TYPE            1048
+#define IDC_BUTTON_OBJECT_SAVE          1050
+#define IDC_BUTTON_OBJECT_LOAD          1051
 
 // Next default values for new objects
 // 
@@ -83,7 +90,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        330
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1047
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -141,7 +141,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 
 	m_pContext->RSSetViewports(1, &tVP);
 
-	D2D1_FACTORY_OPTIONS tOption;
+	/*D2D1_FACTORY_OPTIONS tOption;
 	tOption.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
 
 	if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, tOption,
@@ -184,7 +184,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	CreateTextBrush("Black", 0.f, 0.f, 0.f, 1.f);
 	CreateTextBrush("Yellow", 1.f, 1.f, 0.f, 1.f);
 	CreateTextBrush("Blue", 0.f, 0.f, 1.f, 0.5f);
-	CreateTextBrush("Red", 1.f, 0.f, 0.f, 1.0f);
+	CreateTextBrush("Red", 1.f, 0.f, 0.f, 1.0f);*/
 
 
 	return true;

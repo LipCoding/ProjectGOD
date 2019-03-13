@@ -105,7 +105,6 @@ void CTerrainTab::OnBnClickedButtonAdjSize()
 	if (pLandScapeFind)
 	{
 		AfxMessageBox(L"Error : You already have terrain!");
-		SAFE_RELEASE(pLandScapeFind);
 		return;
 	}
 
@@ -853,6 +852,19 @@ void CTerrainTab::LoadTextureName(string fileName)
 
 void CTerrainTab::LoadSplatAlphaName(string fileName)
 {
+}
+
+void CTerrainTab::Process_ChangeTab()
+{
+	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+	m_checkBoxHeightCheck.SetCheck(0);
+	pBrushTool->SetBrushCheck(false);
+	pBrushTool->SetBrushInformation(Vector3{ 0.f, 0.f, 0.f });
+	
+	SAFE_RELEASE(pBrushTool);
+	SAFE_RELEASE(pBrushObj);
 }
 
 void CTerrainTab::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)

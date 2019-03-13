@@ -42,6 +42,9 @@ public:
 	
 	void UpdateForm(const float& fTime);
 
+	void DeleteEditObject();
+	void InitForm();
+
 private:	
 	CButton m_checkPlay;
 	class CAnimToolView		*m_pView = nullptr;
@@ -68,6 +71,7 @@ private:
 
 	// CamShake
 
+	//
 	bool m_bStopCheck = false;
 	CComboBox m_comboBoxBoneInfo;
 	string m_boneNameAttachTo = "";

@@ -148,8 +148,8 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 	}
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	wchar_t	strFilter[] = L"MESHFile(*.FBX)|*.fbx|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".FBX", L"Mesh",
+	wchar_t	strFilter[] = L"MESHFile(*.MSH)|*.msh|모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -390,12 +390,6 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadArm()
 	if (!m_pEditObj)
 	{
 		AfxMessageBox(L"Error : Make Edit Object first!");
-		return;
-	}
-
-	if (m_pArmObj)
-	{
-		AfxMessageBox(L"Error : Already have Arm Mesh!");
 		return;
 	}
 
