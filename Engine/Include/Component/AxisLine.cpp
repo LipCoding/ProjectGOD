@@ -22,7 +22,7 @@ CAxisLine::CAxisLine()
 {
 	SetTypeID<CAxisLine>();
 	m_eType = CT_AXIS;
-	m_pMeshSphere = nullptr;
+	//m_pMeshSphere = nullptr;
 	m_pShaderSphere = nullptr;
 	m_pLayout = nullptr;
 	m_bRednerCheck = false;
@@ -44,12 +44,12 @@ CAxisLine::CAxisLine()
 
 CAxisLine::CAxisLine(const CAxisLine & axisLine)
 {
-	m_pMeshSphere = axisLine.m_pMeshSphere;
+	//m_pMeshSphere = axisLine.m_pMeshSphere;
 	m_pShaderSphere = axisLine.m_pShaderSphere;
 	m_pLayout = axisLine.m_pLayout;
 
-	if (m_pMeshSphere)
-		m_pMeshSphere->AddRef();
+	//if (m_pMeshSphere)
+		//m_pMeshSphere->AddRef();
 
 	if (m_pShaderSphere)
 		m_pShaderSphere->AddRef();
@@ -61,7 +61,7 @@ CAxisLine::CAxisLine(const CAxisLine & axisLine)
 
 CAxisLine::~CAxisLine()
 {
-	SAFE_RELEASE(m_pMeshSphere);
+	//SAFE_RELEASE(m_pMeshSphere);
 	SAFE_RELEASE(m_pShaderSphere);
 	SAFE_RELEASE(m_pMeshLine);
 }
@@ -83,7 +83,7 @@ void CAxisLine::SetRenderCheck(bool check)
 
 bool CAxisLine::Init()
 {
-	m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
+	//m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
 	m_pMeshLine = GET_SINGLE(CResourcesManager)->FindMesh("Line");
 	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
@@ -120,7 +120,8 @@ void CAxisLine::AxisRender(float fTime)
 
 	Matrix matScale;
 	
-	matScale.mat = XMMatrixScaling(0.03f, 0.03f, 0.03f);
+	/*matScale.mat = XMMatrixScaling(0.03f, 0.03f, 0.03f);*/
+	matScale.mat = XMMatrixScaling(1.75f, 1.75f, 1.75f);
 	m_tTransform.matWorld = matScale * *m_matBoneWorld * m_matObjWorld;
 
 	/*m_tTransform.matWorld = m_matObjWorld * *m_matBoneWorld;*/
@@ -147,7 +148,7 @@ void CAxisLine::AxisRender(float fTime)
 
 	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
 	
-	m_pMeshSphere->Render(fTime);
+	//m_pMeshSphere->Render(fTime);
 	m_pMeshLine->Render(fTime);
 
 	SAFE_RELEASE(pCamera);

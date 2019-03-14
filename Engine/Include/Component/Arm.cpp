@@ -100,9 +100,12 @@ void CArm::RotationY(float fAngle)
 		memcpy(&matRot.m[3][0], &m_pTarget->GetWorldPos(), sizeof(Vector3));
 	}
 
+
 	Vector3	vPos = m_vDist.TransformCoord(matRot.mat);
 
 	m_vDist = vPos - m_pTarget->GetWorldPos();
+
+	
 }
 
 void CArm::RotationAxis(const Vector3 & vRotAxis, float fAngle)

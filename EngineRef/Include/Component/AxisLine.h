@@ -12,7 +12,7 @@ public:
 	virtual ~CAxisLine();
 
 private:
-	class CMesh*		m_pMeshSphere;
+	//class CMesh*		m_pMeshSphere;
 	class CMesh*		m_pMeshLine;
 	class CShader*		m_pShaderSphere;
 

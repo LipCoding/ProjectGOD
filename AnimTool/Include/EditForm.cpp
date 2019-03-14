@@ -116,17 +116,6 @@ void CEditForm::OnInitialUpdate()
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
 	m_pView = (CAnimToolView*)pMain->GetActiveView();
-
-	// Third Cam Component Add
-	CScene*		 pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CGameObject* pCameraObj = pScene->GetMainCameraObj();
-	CThirdCamera* pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
-	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
-
-	SAFE_RELEASE(pArm);
-	SAFE_RELEASE(pThirdCam);
-	SAFE_RELEASE(pCameraObj);
-	SAFE_RELEASE(pScene);
 }
 
 void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
@@ -181,10 +170,21 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer*	pLayer = pScene->GetLayer("Default");
 
-	CGameObject* pCameraObj = pScene->GetMainCameraObj();
-	CThirdCamera* pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
+	CThirdCamera* pThirdCam = nullptr;
+	CArm* pArm = nullptr;
 
-	CArm*	pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
+	CGameObject* pCameraObj = pScene->GetMainCameraObj();
+	pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
+	if (pThirdCam)
+	{
+		pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
+	}
+	else
+	{
+		pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+		pArm = pCameraObj->AddComponent<CArm>("Arm");
+	}
+	
 
 	pArm->SetTarget(m_pEditObj);
 	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
@@ -479,16 +479,6 @@ void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CEditForm::OnBnClickedButtonLoadMesh()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	if (m_pEditObj)
-	{
-		DeleteEditObject();
-		InitForm();
-
-		//AfxMessageBox(L"Error : Already have Edit Obj!");
-		//return;
-	}
-
 	static TCHAR BASED_CODE szFilter[] =
 		_T("메쉬 파일(*.FBX) | *.fbx;|모든파일(*.*)|*.*||");
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
@@ -504,6 +494,16 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	// do modal error 해결
 	if (dlg.DoModal() != IDOK)
 		return;
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pEditObj)
+	{
+		DeleteEditObject();
+		InitForm();
+
+		//AfxMessageBox(L"Error : Already have Edit Obj!");
+		//return;
+	}
 
 	CString path = dlg.GetPathName();
 	CString name = dlg.GetFileTitle();
@@ -568,9 +568,20 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 		SAFE_RELEASE(pRenderer);
 	}
 
+	CThirdCamera* pThirdCam = nullptr;
+	CArm* pArm = nullptr;
+
 	CGameObject* pCameraObj = pScene->GetMainCameraObj();
-	CThirdCamera* pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
-	CArm*	pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
+	pThirdCam = pCameraObj->FindComponentFromTag<CThirdCamera>("ThirdCamera");
+	if (pThirdCam)
+	{
+		pArm = pCameraObj->FindComponentFromTag<CArm>("Arm");
+	}
+	else
+	{
+		pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+		pArm = pCameraObj->AddComponent<CArm>("Arm");
+	}
 
 	pArm->SetTarget(m_pEditObj);
 	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
