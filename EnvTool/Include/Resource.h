@@ -56,7 +56,6 @@
 #define IDC_BUTTON2                     1026
 #define IDC_BUTTON_DELETE_ALLOBJ        1026
 #define IDC_CHECK1                      1027
-#define IDC_BUTTON_FILEPATH_OBJ         1027
 #define IDC_CHECK_HEIGHT                1028
 #define IDC_RADIO_MODE_1                1029
 #define IDC_RADIO_MODE_2                1030

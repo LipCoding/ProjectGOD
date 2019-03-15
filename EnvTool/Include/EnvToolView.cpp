@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CEnvToolView, CView)
 	ON_WM_CREATE()
 	ON_WM_KEYDOWN()
 	ON_WM_KEYUP()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // CEnvToolView 생성/소멸
@@ -325,6 +326,168 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			m_pCamTr->RotateWorldX(fAngle);
 		}
 	}
+
+	
+	if (type == TAB_OBJECT)
+	{
+		if (KEYPUSH("Z"))
+		{
+			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
+
+			if (pTempObject)
+			{
+				CTransform* pTr = pTempObject->GetTransform();
+				
+				// Scale
+				Vector3 vScale = pTr->GetWorldScale();
+				short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+				if (GET_SINGLE(CInput)->GetWheel() == 1)
+				{
+					vScale.x += 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+				else if (GET_SINGLE(CInput)->GetWheel() == -1)
+				{
+					vScale.x -= 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+
+				if (KEYPUSH("MouseLButton"))
+				{
+					// Rotation
+					Vector3 vRot = pTr->GetWorldRot();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.y != 0)
+					{
+						vRot.x -= ptMouseMove.y / 500.f * PG_PI;
+
+						pTr->SetWorldRot(vRot);
+					}
+				}
+
+				SAFE_RELEASE(pTr);
+				SAFE_RELEASE(pTempObject);
+			}
+		}
+		if (KEYPUSH("X"))
+		{
+			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
+
+			if (pTempObject)
+			{
+				CTransform* pTr = pTempObject->GetTransform();
+			
+				// Scale
+				Vector3 vScale = pTr->GetWorldScale();
+				short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+				if (wheelStatus > 0)
+				{
+					vScale.y += 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+				else if (wheelStatus < 0)
+				{
+					vScale.y -= 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+
+				if (KEYPUSH("MouseLButton"))
+				{
+					// Rotation
+					Vector3 vRot = pTr->GetWorldRot();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.x != 0)
+					{
+						vRot.y += ptMouseMove.x / 500.f * PG_PI;
+
+						pTr->SetWorldRot(vRot);
+					}
+				}
+
+				SAFE_RELEASE(pTr);
+				SAFE_RELEASE(pTempObject);
+			}
+		}
+		if (KEYPUSH("C"))
+		{
+			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
+
+			if (pTempObject)
+			{
+				CTransform* pTr = pTempObject->GetTransform();
+			
+				// Scale
+				Vector3 vScale = pTr->GetWorldScale();
+				short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+				if (wheelStatus > 0)
+				{
+					vScale.z += 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+				else if (wheelStatus < 0)
+				{
+					vScale.z -= 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+
+				if (KEYPUSH("MouseLButton"))
+				{
+					// Rotation
+					Vector3 vRot = pTr->GetWorldRot();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.x != 0)
+					{
+						vRot.z -= ptMouseMove.x / 500.f * PG_PI;
+
+						pTr->SetWorldRot(vRot);
+					}
+				}
+
+				SAFE_RELEASE(pTr);
+				SAFE_RELEASE(pTempObject);
+			}
+		}
+		if (KEYPUSH("V"))
+		{
+			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
+
+			if (pTempObject)
+			{
+				CTransform* pTr = pTempObject->GetTransform();
+			
+				// Scale
+				Vector3 vScale = pTr->GetWorldScale();
+				short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+				if (wheelStatus > 0)
+				{
+					vScale.x += 0.1f;
+					vScale.y += 0.1f;
+					vScale.z += 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+				else if (wheelStatus < 0)
+				{
+					vScale.x -= 0.1f;
+					vScale.y -= 0.1f;
+					vScale.z -= 0.1f;
+					pTr->SetWorldScale(vScale);
+				}
+
+				SAFE_RELEASE(pTr);
+				SAFE_RELEASE(pTempObject);
+			}
+		}
+	}
 }
 
 void CEnvToolView::UpdateObject(const float & fTime)
@@ -384,7 +547,24 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 					}
 					case TAB_OBJECT:
 					{
-
+						if (KEYPUSH("Z") ||
+							KEYPUSH("X") ||
+							KEYPUSH("C") ||
+							KEYPUSH("V"))
+						{
+							break;
+						}
+						else
+						{
+							CGameObject* pTempObject = CGameObject::FindObject("TempObj");
+							if (pTempObject)
+							{
+								CTransform* pTr = pTempObject->GetTransform();
+								pTr->SetWorldPos(m_vPickPos);
+								SAFE_RELEASE(pTr);
+								SAFE_RELEASE(pTempObject);
+							}
+						}
 						break;
 					}
 					default:
@@ -423,4 +603,12 @@ void CEnvToolView::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CView::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
+BOOL CEnvToolView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	GET_SINGLE(CInput)->SetWheel(zDelta);
+
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }

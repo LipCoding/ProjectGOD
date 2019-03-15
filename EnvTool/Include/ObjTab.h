@@ -1,6 +1,8 @@
 ﻿#pragma once
 
+#include "GameObject/GameObject.h"
 
+PG_USING
 // CObjTab 대화 상자
 
 class CObjTab : public CDialogEx
@@ -20,4 +22,18 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+
+public:
+	static int g_iObjNumber;
+private:
+	vector<CGameObject*> m_vecObjects;
+	//vector<string>       m_vecStringObjTypePath;
+	CGameObject*		 m_pTempObject = nullptr;
+public:
+	virtual BOOL OnInitDialog();
+private:
+	CListBox m_listObjType;
+	CListBox m_listObjList;
+public:
+	afx_msg void OnLbnSelchangeListObjectType();
 };

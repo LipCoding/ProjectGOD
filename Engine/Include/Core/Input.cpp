@@ -110,6 +110,17 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	CreateKey(VK_LBUTTON, "MouseLButton");
 	CreateKey(VK_RBUTTON, "MouseRButton");
 	CreateKey(VK_MBUTTON, "MouseMButton");
+
+	CreateKey("Z", 'Z');
+	CreateKey("X", 'X');
+	CreateKey("C", 'C');
+	CreateKey("V", 'V');
+
+	CreateKey("1", '1');
+	CreateKey("2", '2');
+	CreateKey("3", '3');
+
+
 	//CreateKey("Attack", 'X');
 	// 아래 함수는 스크린좌표로 나온다.
 	GetCursorPos(&m_ptMousePos);

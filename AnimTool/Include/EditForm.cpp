@@ -123,7 +123,7 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 	if (m_pEditObj)
 	{
 		CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
-		if (pAnimation)
+		//if (pAnimation)
 		{
 			SAFE_RELEASE(pAnimation);
 			DeleteEditObject();

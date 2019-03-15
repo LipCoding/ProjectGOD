@@ -191,9 +191,8 @@ BOOL CEnvToolApp::OnIdle(LONG lCount)
 		return FALSE;
 	else
 	{
-		GET_SINGLE(CCore)->RunTool();
-		
 		m_pView->UpdateView();
+		GET_SINGLE(CCore)->RunTool();
 	}
 
 	return TRUE;
