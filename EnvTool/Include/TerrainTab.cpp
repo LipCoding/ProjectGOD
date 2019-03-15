@@ -859,10 +859,29 @@ void CTerrainTab::Process_ChangeTab()
 	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
 	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
-	m_checkBoxHeightCheck.SetCheck(0);
-	pBrushTool->SetBrushCheck(false);
-	pBrushTool->SetBrushInformation(Vector3{ 0.f, 0.f, 0.f });
-	
+	int iCheck = m_checkBoxHeightCheck.GetCheck();
+	if (iCheck)
+	{
+		pBrushTool->SetBrushCheck(false);
+		// 한번 Update위한 함수(이렇게 해야 Brush모양이 사라짐)
+		pBrushTool->SetBrushInformation(Vector3{ 0.f, 0.f, 0.f });
+	}
+
+	SAFE_RELEASE(pBrushTool);
+	SAFE_RELEASE(pBrushObj);
+}
+
+void CTerrainTab::Process_ShowTab()
+{
+	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+	int iCheck = m_checkBoxHeightCheck.GetCheck();
+	if (iCheck)
+	{
+		pBrushTool->SetBrushCheck(true);
+	}
+
 	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pBrushObj);
 }

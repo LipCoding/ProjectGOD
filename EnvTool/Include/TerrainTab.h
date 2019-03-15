@@ -51,6 +51,7 @@ public:
 	void LoadSplatAlphaName(string fileName);
 
 	void Process_ChangeTab();
+	void Process_ShowTab();
 private:
 	CEdit m_editTerrainSizeX;
 	CEdit m_editTerrainSizeZ;

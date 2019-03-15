@@ -31,9 +31,11 @@ private:
 	CGameObject*		 m_pTempObject = nullptr;
 public:
 	virtual BOOL OnInitDialog();
+	afx_msg void OnLbnSelchangeListObjectType();
+public:
+	void Process_ChangeTab();
+	void Process_ShowTab();
 private:
 	CListBox m_listObjType;
-	CListBox m_listObjList;
-public:
-	afx_msg void OnLbnSelchangeListObjectType();
+	CListBox m_listObjList;	
 };

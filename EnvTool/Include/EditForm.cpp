@@ -92,13 +92,19 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 	case 0:
 		m_eTabType = TAB_TERRAIN;
+
+		m_pTerrainDlg->Process_ShowTab();
 		m_pTerrainDlg->ShowWindow(SW_SHOW);
+
+		m_pObjDlg->Process_ChangeTab();
 		m_pObjDlg->ShowWindow(SW_HIDE);
 		break;
 	case 1:
 		m_eTabType = TAB_OBJECT;
 		m_pTerrainDlg->Process_ChangeTab();
 		m_pTerrainDlg->ShowWindow(SW_HIDE);
+
+		m_pObjDlg->Process_ShowTab();
 		m_pObjDlg->ShowWindow(SW_SHOW);
 		break;
 	}

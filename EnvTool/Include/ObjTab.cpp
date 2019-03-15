@@ -148,3 +148,19 @@ void CObjTab::OnLbnSelchangeListObjectType()
 	SAFE_RELEASE(pScene);
 	SAFE_RELEASE(pLayer);
 }
+
+void CObjTab::Process_ChangeTab()
+{
+	if (m_pTempObject)
+	{
+		m_pTempObject->Enable(false);
+	}
+}
+
+void CObjTab::Process_ShowTab()
+{
+	if (m_pTempObject)
+	{
+		m_pTempObject->Enable(true);
+	}
+}
