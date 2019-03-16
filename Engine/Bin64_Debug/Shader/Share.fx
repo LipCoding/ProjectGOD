@@ -1,4 +1,9 @@
 
+cbuffer ShareCBuffer	: register(b8)
+{
+	float4  g_vColor;
+}
+
 struct VS_INPUT_POS
 {
 	float3	vPos	: POSITION;

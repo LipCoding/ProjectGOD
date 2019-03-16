@@ -58,6 +58,7 @@ public:
 	void UpdateView();
 	void UpdateInput(const float& fTime);
 	void UpdateObject(const float& fTime);
+	void UpdateForm(const float& fTime);
 	void SetMainCamera();
 	void SetLightCamera();
 

@@ -29,7 +29,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	TOOLTAB_TYPE GetTabType() { return m_eTabType; }
+	const TOOLTAB_TYPE GetTabType() { return m_eTabType; }
+	
+	class CObjTab* GetObjectTab() { return m_pObjDlg; }
 
 private:
 	CTabCtrl m_Tab;

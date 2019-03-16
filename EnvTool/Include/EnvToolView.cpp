@@ -29,6 +29,7 @@
 
 #include "BrushTool.h"
 //#include "TarrainEdit.h"
+#include "ObjTab.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -190,6 +191,7 @@ void CEnvToolView::UpdateView()
 
 	this->UpdateInput(fTime);
 	this->UpdateObject(fTime);
+	this->UpdateForm(fTime);
 }
 
 void CEnvToolView::UpdateInput(const float& fTime)
@@ -261,6 +263,39 @@ void CEnvToolView::UpdateInput(const float& fTime)
 		}
 	}
 	
+	if (KEYDOWN("MouseRButton"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj != NULL)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			switch (type)
+			{
+			case TAB_TERRAIN:
+			{
+				break;
+			}
+			case TAB_OBJECT:
+			{
+				if (KEYPUSH("Space"))
+				{
+					((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->Undo();
+				}
+				else
+				{
+					((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->AddObject();
+				}
+				break;
+			}
+			default:
+				break;
+			}
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
 	if (KEYPUSH("MouseRButton"))
 	{
 		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
@@ -492,6 +527,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 void CEnvToolView::UpdateObject(const float & fTime)
 {
+}
+
+void CEnvToolView::UpdateForm(const float & fTime)
+{
+	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
 }
 
 void CEnvToolView::SetMainCamera()

@@ -25,7 +25,7 @@ PS_OUTPUT_SINGLE StandardColorPS(VS_OUTPUT_COLOR input)
 {
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
 
-	output.vColor = input.vColor;
+	output.vColor = input.vColor + g_vColor;
 
 	return output;
 }
@@ -34,7 +34,7 @@ PS_OUTPUT_SINGLE StandardColorForwardPS(VS_OUTPUT_COLOR input)
 {
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
 
-	output.vColor = input.vColor;
+	output.vColor = input.vColor + g_vColor;
 
 	return output;
 }
@@ -63,7 +63,7 @@ PS_OUTPUT StandardColorNormalPS(VS_OUTPUT_COLOR_NORMAL input)
 	//_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal, float2(0.f, 0.f));
 
 	//output.vColor = input.vColor * (tLight.vDif + tLight.vAmb) + tLight.vSpc;
-	output.vColor = input.vColor;
+	output.vColor = input.vColor + g_vColor;
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.xyz = (float3)(input.vProjPos.z / input.vProjPos.w);
@@ -127,12 +127,12 @@ PS_OUTPUT_SINGLE StandardTexPS(VS_OUTPUT_TEX input)
 		float3	vUV;
 		vUV.xy = input.vUV;
 		vUV.z = g_iAniFrameX;
-		output.vColor = g_DifArrTex.Sample(g_DifSmp, vUV);
+		output.vColor = g_DifArrTex.Sample(g_DifSmp, vUV) + g_vColor;
 	}
 
 	else
 	{
-		output.vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
+		output.vColor = g_DifTex.Sample(g_DifSmp, input.vUV) + g_vColor;
 	}
 
 	// clip : 픽셀값을 쓰지 않고 폐기한다.
@@ -180,7 +180,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	output.vColor5.w = (float)input.iDecal;
 
-	output.vColor = vColor;
+	output.vColor = vColor + g_vColor;
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
@@ -306,7 +306,7 @@ PS_OUTPUT StandardBumpPS(VS_OUTPUT_BUMP input)
 	float3	vViewNormal = normalize(mul(vBumpNormal, mat));
 	
 
-	output.vColor = vColor;
+	output.vColor = vColor + g_vColor;
 	output.vColor1.xyz = vViewNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.x = (input.vProjPos.z / input.vProjPos.w);
@@ -374,7 +374,7 @@ PS_OUTPUT_SINGLE StandardBumpForwardPS(VS_OUTPUT_BUMP input)
 
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, vViewNormal, input.vUV);
 
-	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz;
+	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz + g_vColor;
 	output.vColor.w = vColor.w;
 
 	return output;
@@ -391,7 +391,7 @@ PS_OUTPUT_SINGLE StandardTexNormalForwardPS(VS_OUTPUT_TEX_NORMAL input)
 
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal, input.vUV);
 
-	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz;
+	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz + g_vColor;
 	output.vColor.w = vColor.w;
 
 	return output;

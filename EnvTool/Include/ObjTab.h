@@ -27,7 +27,7 @@ public:
 	static int g_iObjNumber;
 private:
 	vector<CGameObject*> m_vecObjects;
-	//vector<string>       m_vecStringObjTypePath;
+	vector<string>       m_vecStringObjTypePath;
 	CGameObject*		 m_pTempObject = nullptr;
 public:
 	virtual BOOL OnInitDialog();
@@ -35,7 +35,18 @@ public:
 public:
 	void Process_ChangeTab();
 	void Process_ShowTab();
+	void UpdateForm();
+public:
+	void AddObject();
+	void Undo();
 private:
 	CListBox m_listObjType;
 	CListBox m_listObjList;	
+	CString  m_currentTypePath;
+public:
+	afx_msg void OnBnClickedButtonDeleteAllobj();
+	afx_msg void OnBnClickedButtonDeleteObj();
+	afx_msg void OnLbnSelchangeListObjects();
+	afx_msg void OnBnClickedButtonObjectSave();
+	afx_msg void OnBnClickedButtonObjectLoad();
 };

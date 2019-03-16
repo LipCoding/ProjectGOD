@@ -392,6 +392,10 @@ bool CShaderManager::Init()
 
 	CreateCBuffer("MultiTexture", 12, sizeof(MULTITEXTURECBUFFER));
 
+
+	//
+	CreateCBuffer("Share", 8, sizeof(SHARECBUFFER));
+
 	return true;
 }
 

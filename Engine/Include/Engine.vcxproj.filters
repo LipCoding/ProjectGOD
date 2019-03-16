@@ -226,6 +226,9 @@
     <Filter Include="06. Component\18. Font">
       <UniqueIdentifier>{e0ec24f7-e940-42d1-96d8-66a97fa7740f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\17. Description\Sphere">
+      <UniqueIdentifier>{83bdab40-f5a4-421e-b0fd-3c4c601af70e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
