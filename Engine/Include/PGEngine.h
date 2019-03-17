@@ -1,8 +1,10 @@
 
 #pragma once
 
+#include <WinSock2.h>
 #include <Windows.h>
 #include <unordered_map>
+#include <queue>
 #include <list>
 #include <vector>
 #include <stack>
@@ -12,6 +14,7 @@
 #include <functional>
 #include <fstream>
 #include "PGTypes.h"
+#include "Protocol.h"
 
 #include <d2d1.h> // 글자 출력
 #include <dwrite.h> // 글자 출력
@@ -20,6 +23,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+#pragma comment(lib, "ws2_32")
 //----- 폰트엔진
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite")
@@ -27,6 +31,9 @@
 
 #define	PG_PI	3.141592f
 
+#define WIN32_LEAN_AND_MEAN
+#define INITGUID
+#define	WM_SOCKET				WM_USER + 1
 
 // Path Key
 #define	BASE_PATH	"BasePath"

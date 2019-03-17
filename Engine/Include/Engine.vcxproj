@@ -64,6 +64,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\NavigationManager.cpp" />
     <ClCompile Include="Core\NavigationMesh.cpp" />
+    <ClCompile Include="Core\NetworkManager.cpp" />
     <ClCompile Include="Core\PathManager.cpp" />
     <ClCompile Include="Core\Scheduler.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\NavigationManager.h" />
     <ClInclude Include="Core\NavigationMesh.h" />
+    <ClInclude Include="Core\NetworkManager.h" />
     <ClInclude Include="Core\PathManager.h" />
     <ClInclude Include="Core\Scheduler.h" />
     <ClInclude Include="Core\Timer.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="PGVector2.h" />
     <ClInclude Include="PGVector3.h" />
     <ClInclude Include="PGVector4.h" />
+    <ClInclude Include="Protocol.h" />
     <ClInclude Include="Rendering\BlendState.h" />
     <ClInclude Include="Rendering\DepthStencilState.h" />
     <ClInclude Include="Rendering\RasterizerState.h" />

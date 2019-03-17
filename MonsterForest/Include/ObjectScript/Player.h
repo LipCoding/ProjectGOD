@@ -28,6 +28,8 @@ private:
 	CAnimation*		m_pAnimation;
 	CNavigation3D*	m_pNavigation;
 	CArm*			m_pArm;
+public:
+	void setAnimation(CAnimation* pAnimation) { this->m_pAnimation = pAnimation; }
 
 public:
 	virtual bool Init();
