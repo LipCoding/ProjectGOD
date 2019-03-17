@@ -324,3 +324,8 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
+void CCore::setWindowProc(LRESULT(*wndProc)(HWND, UINT, WPARAM, LPARAM))
+{
+
+	oldProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(this->m_hWnd, GWLP_WNDPROC, (LONG_PTR)wndProc));
+}

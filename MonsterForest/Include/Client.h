@@ -18,3 +18,6 @@
 #endif
 #endif // _DEBUG
 
+class CStartScene*	pStartScene;
+
+LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

@@ -229,6 +229,9 @@
     <Filter Include="06. Component\17. Description\Sphere">
       <UniqueIdentifier>{83bdab40-f5a4-421e-b0fd-3c4c601af70e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Core\07. NetworkManager">
+      <UniqueIdentifier>{2999675a-39b4-4207-aebd-2f1c019855d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -449,6 +452,9 @@
     </ClCompile>
     <ClCompile Include="Component\Font.cpp">
       <Filter>06. Component\18. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NetworkManager.cpp">
+      <Filter>00. Core\07. NetworkManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -688,6 +694,12 @@
     </ClInclude>
     <ClInclude Include="Component\Font.h">
       <Filter>06. Component\18. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NetworkManager.h">
+      <Filter>00. Core\07. NetworkManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>98. Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

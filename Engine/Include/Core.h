@@ -13,6 +13,7 @@ private:
 	HINSTANCE		m_hInst;
 	HWND			m_hWnd;
 	RESOLUTION		m_tResolution;
+	WNDPROC	 oldProc;
 
 public:
 	HWND GetWindowHandle()	const;
@@ -24,7 +25,8 @@ public:
 		UINT iHeight, bool bWindowMode, bool bOnMouseRenderer = true, bool bDirectInput = true);
 	int Run();
 	int RunTool();
-
+	void setWindowProc(LRESULT(*wndProc)(HWND, UINT, WPARAM, LPARAM));
+	WNDPROC& getOldProc() { return this->oldProc; }
 private:
 	void Logic();
 	void Input(float fTime);

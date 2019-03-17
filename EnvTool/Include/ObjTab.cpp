@@ -319,7 +319,6 @@ void CObjTab::OnBnClickedButtonDeleteObj()
 			SAFE_RELEASE(pRenderer);
 		}
 	}
-
 	// 아닌경우
 	else
 	{
@@ -441,12 +440,15 @@ void CObjTab::OnBnClickedButtonObjectSave()
 
 		// -> Transform(World)
 		CTransform* pTr = iter->GetTransform();
+		
 		// Scale
 		Vector3 vScale = pTr->GetWorldScale();
 		file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
+		
 		// Rotation
 		Vector3 vRotation = pTr->GetWorldRot();
 		file << vRotation.x << ' ' << vRotation.y << ' ' << vRotation.z << endl;
+
 		// Position
 		Vector3 vPosition = pTr->GetWorldPos();
 		file << vPosition.x << ' ' << vPosition.y << ' ' << vPosition.z << endl;
