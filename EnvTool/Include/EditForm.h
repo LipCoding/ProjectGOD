@@ -40,14 +40,16 @@ private:
 	class CEnvToolView  *m_pView = nullptr;
 
 	TOOLTAB_TYPE m_eTabType = TAB_END;
+
+	CButton m_checkCollider;
 public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual void OnInitialUpdate();
 	afx_msg void OnBnClickedButtonCamMain();
 	afx_msg void OnBnClickedButtonCamLight();
-	afx_msg void OnBnClickedButtonAdjCamspeed();
 	CEdit m_editCamSpeed;
+	afx_msg void OnBnClickedCheckCollider();
 };
 
 

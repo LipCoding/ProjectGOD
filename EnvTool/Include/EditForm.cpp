@@ -14,6 +14,10 @@
 
 // EditForm
 
+#include "Component/LandScape.h"
+#include "Component/Collider.h"
+#include "Component/ColliderAABB.h"
+
 IMPLEMENT_DYNCREATE(CEditForm, CFormView)
 
 CEditForm::CEditForm()
@@ -41,7 +45,7 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CEditForm::OnTcnSelchangeTab1)
 	ON_BN_CLICKED(IDC_BUTTON_CAM_MAIN, &CEditForm::OnBnClickedButtonCamMain)
 	ON_BN_CLICKED(IDC_BUTTON_CAM_LIGHT, &CEditForm::OnBnClickedButtonCamLight)
-	ON_BN_CLICKED(IDC_BUTTON_ADJ_CAMSPEED, &CEditForm::OnBnClickedButtonAdjCamspeed)
+	ON_BN_CLICKED(IDC_CHECK_COLLIDER, &CEditForm::OnBnClickedCheckCollider)
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -67,7 +71,7 @@ void CEditForm::DoDataExchange(CDataExchange * pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_Tab);
-	DDX_Control(pDX, IDC_EDIT_CAMSPEED, m_editCamSpeed);
+	DDX_Control(pDX, IDC_CHECK_COLLIDER, m_checkCollider);
 }
 
 //int CEditForm::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -147,6 +151,8 @@ void CEditForm::OnInitialUpdate()
 	m_pView = (CEnvToolView*)pMain->GetActiveView();
 
 	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
+
+	m_checkCollider.SetCheck(1);
 }
 
 
@@ -163,8 +169,36 @@ void CEditForm::OnBnClickedButtonCamLight()
 	m_pView->SetLightCamera();
 }
 
-
-void CEditForm::OnBnClickedButtonAdjCamspeed()
+void CEditForm::OnBnClickedCheckCollider()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int check = m_checkCollider.GetCheck();
+
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+	if (pLandScapeObj)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+		if (check)
+		{
+			for (auto& iter : *nodes)
+			{
+				CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+				pCollider->SetColliderRenderCheck(true);
+				SAFE_RELEASE(pCollider);
+			}
+		}
+		else
+		{
+			for (auto& iter : *nodes)
+			{
+				CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+				pCollider->SetColliderRenderCheck(false);
+				SAFE_RELEASE(pCollider);
+			}
+		}
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
 }

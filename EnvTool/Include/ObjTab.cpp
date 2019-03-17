@@ -441,7 +441,7 @@ void CObjTab::OnBnClickedButtonObjectSave()
 		// -> Transform(World)
 		CTransform* pTr = iter->GetTransform();
 		
-		// Scale
+		// Scalea
 		Vector3 vScale = pTr->GetWorldScale();
 		file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
 		

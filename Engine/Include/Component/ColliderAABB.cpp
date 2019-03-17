@@ -117,6 +117,9 @@ void CColliderAABB::Render(float fTime)
 
 void CColliderAABB::ColliderRender(float fTime)
 {
+	if (m_bColliderRenderCheck == false)
+		return;
+
 	Matrix	matScale, matTrans, matRot;
 
 	Vector3	vLength = m_tInfo.vMax - m_tInfo.vMin;

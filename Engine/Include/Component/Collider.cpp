@@ -28,6 +28,7 @@ CCollider::CCollider()
 	m_strGroup = "Default";
 	m_vecSectionIndex.reserve(8);
 
+	m_bColliderRenderCheck = true;
 }
 
 CCollider::CCollider(const CCollider & coll) :
@@ -227,6 +228,11 @@ void CCollider::CheckCollisionSection(float fTime)
 		else
 			++iter;
 	}
+}
+
+void CCollider::SetColliderRenderCheck(bool check)
+{
+	m_bColliderRenderCheck = check;
 }
 
 bool CCollider::Init()

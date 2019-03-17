@@ -31,7 +31,7 @@ protected:
 	VIEW_TYPE			m_eViewType;
 	class CRenderState*	m_pWireFrame;
 
-
+	bool			m_bColliderRenderCheck;
 public:
 	Vector3 GetColliderMin()	const;
 	Vector3 GetColliderMax()	const;
@@ -48,7 +48,7 @@ public:
 	void AddSectionIndex(int iIndex);
 	void ClearSectionIndex();
 	void CheckCollisionSection(float fTime);
-
+	void SetColliderRenderCheck(bool check);
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

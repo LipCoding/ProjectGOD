@@ -165,7 +165,7 @@ BOOL CTerrainTab::OnInitDialog()
 	CString num;
 
 	// Range
-	m_ctrSliderBrushRange.SetRange(1, 50);
+	m_ctrSliderBrushRange.SetRange(1, 100);
 	m_ctrSliderBrushRange.SetPos(1);
 	num.Format(_T("%d"), 1);
 	m_editBrushRange.SetWindowTextW(num);
@@ -177,7 +177,7 @@ BOOL CTerrainTab::OnInitDialog()
 	m_ctrSliderBrushRange.SetLineSize(1);
 
 	// Height Power
-	m_ctrSliderHeightPower.SetRange(1, 100);
+	m_ctrSliderHeightPower.SetRange(1, 1000);
 	m_ctrSliderHeightPower.SetPos(10);
 	num.Format(_T("%f"), 10 / 10.f);
 	m_editHeightPower.SetWindowTextW(num);
@@ -186,8 +186,8 @@ BOOL CTerrainTab::OnInitDialog()
 	m_ctrSliderHeightPower.SetLineSize(1);
 
 	// Splat Power
-	m_ctrSlideSplatPower.SetRange(50, 500);
-	m_ctrSlideSplatPower.SetPos(50);
+	m_ctrSlideSplatPower.SetRange(100, 500);
+	m_ctrSlideSplatPower.SetPos(100);
 	num.Format(_T("%d"), 50);
 	m_editSplatPower.SetWindowTextW(num);
 
