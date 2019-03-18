@@ -6,7 +6,7 @@
 PG_BEGIN
 
 const int MAX_TRIANGLES = 10000;
-const int MAX_RANGE = 128;
+const int MAX_RANGE = 64;
 
 typedef struct _tagNodeQuadTree
 {
