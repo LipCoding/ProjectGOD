@@ -6,7 +6,7 @@
 PG_BEGIN
 
 const int MAX_TRIANGLES = 10000;
-const int MAX_RANGE = 128;
+const int MAX_RANGE = 64;
 
 typedef struct _tagNodeQuadTree
 {
@@ -173,6 +173,10 @@ private:
 	void CreateTreeNodeCorrectly(QUADTREENODE* node, float positionX, float positionZ,
 		float width);
 	bool RangeCheck(float positionX, float positionZ, float width);
+
+	bool IsTriangleContaind_Index_Other(int index, float positionX, float positionZ, float width);
+	bool IsTriangleContaind_Vertex_Other(int vtxIndex, Vector3 min, Vector3 max);
+
 
 	// Node Circulation
 	void UpdateNode();

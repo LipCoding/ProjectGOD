@@ -16,9 +16,20 @@ typedef struct _tagQuadTreeInfo
 
 class PG_DLL CQuadTreeManager
 {
+private:
+	unordered_map<string, PQUADTREEINFO> m_mapQuadTreeInfo;
+	
 public:
-	CQuadTreeManager();
-	~CQuadTreeManager();
+	void AddQuadTreeInfo(const string& key, int numX, int numY,
+		Vector3 min, Vector3 max,
+		class CGameObject* object);
+	void DeleteQuadTreeInfo(class CScene* scene);
+	PQUADTREEINFO FindQuadTreeInfo(const string& key);
+	PQUADTREEINFO FindQuadTreeInfo(const Vector3& pos);
+	float GetY(const Vector3& vPos);
+
+
+	DECLARE_SINGLE(CQuadTreeManager)
 };
 
 PG_END

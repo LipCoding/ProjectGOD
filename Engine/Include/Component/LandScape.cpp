@@ -951,7 +951,9 @@ bool CLandScape::CreateQuadTree()
 
 	m_iTriCount = indexCount;
 
+	//Old
 	//CalculateMeshDimensions(vertexCount, fCenterX, fCenterZ, fWidth);
+	//New
 	CalculateCorrectly(fCenterX, fCenterZ, fWidth);
 
 	m_pParentNode = new QUADTREENODE;
@@ -960,7 +962,9 @@ bool CLandScape::CreateQuadTree()
 		return false;
 	}
 
+	//Old
 	//CreateTreeNode(m_pParentNode, fCenterX, fCenterZ, fWidth);
+	//New
 	CreateTreeNodeCorrectly(m_pParentNode, fCenterX, fCenterZ, fWidth);
 
 	return true;
@@ -1116,7 +1120,7 @@ void CLandScape::CreateTreeNode(QUADTREENODE * node, float positionX, float posi
 	// Index 를 돌며 min max를 구한다.
 	for (int i = 0; i < m_iTriCount; i += 3)
 	{
-		if (this->IsTriangleContaind_Index(i, positionX, positionZ, width))
+		if (this->IsTriangleContaind_Index_Other(i, positionX, positionZ, width))
 		{
 			int iIndexCount = i;
 
@@ -1312,20 +1316,22 @@ void CLandScape::CreateTreeNodeCorrectly(QUADTREENODE * node, float positionX, f
 		for (int i = 0; i < 4; i++)
 		{
 			// 새로운 자식 노드에 대한 위치 오프셋을 계산
-			float fOffsetX = (((i % 2) < 1) ? -1.f : 1.f) * (width / 4.f);
-			float fOffsetZ = (((i % 4) < 2) ? -1.f : 1.f) * (width / 4.f);
+			int fOffsetX = (((i % 2) < 1) ? -1 : 1) * ((int)width / 4);
+			int fOffsetZ = (((i % 4) < 2) ? -1 : 1) * ((int)width / 4);
 
-			// 새 노드에 삼각형이 있는지 확인한다.
-			bool bCheck = RangeCheck(positionX + fOffsetX, positionZ + fOffsetZ, width / 2.f);
+			
+			/*bool bCheck_Other = RangeCheck(positionX + fOffsetX, positionZ + fOffsetZ, (int)width / 2);
 
-			if (!bCheck)
+			if (bCheck_Other)
 			{
-				// 이 새 노드가 있는 삼각형이 있는 경우 자식 노드로 만든다.
-				node->pNodes[i] = new QUADTREENODE;
+				
+			}*/
 
-				// 이제 새 자식 노드에서 시작하는 트리를 확장한다.
-				this->CreateTreeNodeCorrectly(node->pNodes[i], (positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
-			}
+			// 이 새 노드가 있는 삼각형이 있는 경우 자식 노드로 만든다.
+			node->pNodes[i] = new QUADTREENODE;
+
+			// 이제 새 자식 노드에서 시작하는 트리를 확장한다.
+			this->CreateTreeNodeCorrectly(node->pNodes[i], (positionX + fOffsetX), (positionZ + fOffsetZ), ((int)width / 2));
 		}
 		return;
 	}
@@ -1351,6 +1357,8 @@ void CLandScape::CreateTreeNodeCorrectly(QUADTREENODE * node, float positionX, f
 	int iIndex = 0;
 	int iVertexIndex = 0;
 
+	int ij = 0;
+
 	// Index 를 돌며 min max를 구한다.
 	for (int i = 0; i < m_iTriCount; i += 3)
 	{
@@ -1366,6 +1374,8 @@ void CLandScape::CreateTreeNodeCorrectly(QUADTREENODE * node, float positionX, f
 			iIndex++;
 			node->vecIndex.push_back(m_vecIndex[iIndexCount]);
 			iIndex++;
+
+			++ij;
 		}
 	}
 
@@ -1427,7 +1437,7 @@ void CLandScape::CreateTreeNodeCorrectly(QUADTREENODE * node, float positionX, f
 
 bool CLandScape::RangeCheck(float positionX, float positionZ, float width)
 {
-	if (width > MAX_RANGE)
+	if ((int)width > MAX_RANGE)
 		return false;
 	
 	return true;
@@ -1435,41 +1445,41 @@ bool CLandScape::RangeCheck(float positionX, float positionZ, float width)
 
 bool CLandScape::IsTriangleContaind_Index_Other(int index, float positionX, float positionZ, float width)
 {
-	float fRadius = width / 2.f;
+	int iRadius = (int)width / 2.f;
 
 	int iIndex = index;
 
-	float fX1 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
-	float fZ1 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+	int fX1 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	int fZ1 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.z;
 	iIndex++;
 
-	float fX2 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
-	float fZ2 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+	int fX2 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	int fZ2 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.z;
 	iIndex++;
 
-	float fX3 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
-	float fZ3 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+	int fX3 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	int fZ3 = (int)m_vecVtx[m_vecIndex[iIndex]].vPos.z;
 
-	float fMinimumX = min(fX1, min(fX2, fX3));
-	if (fMinimumX > (positionX + fRadius))
+	int fMinimumX = min(fX1, min(fX2, fX3));
+	if (fMinimumX >= (positionX + iRadius))
 	{
 		return false;
 	}
 
-	float fMaximumX = max(fX1, max(fX2, fX3));
-	if (fMaximumX < (positionX - fRadius))
+	int fMaximumX = max(fX1, max(fX2, fX3));
+	if (fMaximumX <= (positionX - iRadius))
 	{
 		return false;
 	}
 
-	float fMinimumZ = min(fZ1, min(fZ2, fZ3));
-	if (fMinimumZ > (positionZ + fRadius))
+	int fMinimumZ = min(fZ1, min(fZ2, fZ3));
+	if (fMinimumZ >= (positionZ + iRadius))
 	{
 		return false;
 	}
 
-	float fMaximumZ = max(fZ1, max(fZ2, fZ3));
-	if (fMaximumZ < (positionZ - fRadius))
+	int fMaximumZ = max(fZ1, max(fZ2, fZ3));
+	if (fMaximumZ <= (positionZ - iRadius))
 	{
 		return false;
 	}
@@ -1479,8 +1489,8 @@ bool CLandScape::IsTriangleContaind_Index_Other(int index, float positionX, floa
 
 bool CLandScape::IsTriangleContaind_Vertex_Other(int vtxIndex, Vector3 min, Vector3 max)
 {
-	float fX = m_vecVtx[vtxIndex].vPos.x;
-	float fZ = m_vecVtx[vtxIndex].vPos.z;
+	int fX = (int)m_vecVtx[vtxIndex].vPos.x;
+	int fZ = (int)m_vecVtx[vtxIndex].vPos.z;
 
 	if (fX > max.x)
 	{
