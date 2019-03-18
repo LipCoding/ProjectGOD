@@ -66,6 +66,7 @@
     <ClCompile Include="Core\NavigationMesh.cpp" />
     <ClCompile Include="Core\NetworkManager.cpp" />
     <ClCompile Include="Core\PathManager.cpp" />
+    <ClCompile Include="Core\QuadTreeManager.cpp" />
     <ClCompile Include="Core\Scheduler.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Core\TimerManager.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Core\NavigationMesh.h" />
     <ClInclude Include="Core\NetworkManager.h" />
     <ClInclude Include="Core\PathManager.h" />
+    <ClInclude Include="Core\QuadTreeManager.h" />
     <ClInclude Include="Core\Scheduler.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Core\TimerManager.h" />

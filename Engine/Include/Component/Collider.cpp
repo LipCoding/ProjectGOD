@@ -28,7 +28,7 @@ CCollider::CCollider()
 	m_strGroup = "Default";
 	m_vecSectionIndex.reserve(8);
 
-	m_bColliderRenderCheck = true;
+	m_bColliderRenderCheck = false;
 }
 
 CCollider::CCollider(const CCollider & coll) :

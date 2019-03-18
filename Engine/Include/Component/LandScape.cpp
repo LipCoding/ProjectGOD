@@ -951,7 +951,8 @@ bool CLandScape::CreateQuadTree()
 
 	m_iTriCount = indexCount;
 
-	CalculateMeshDimensions(vertexCount, fCenterX, fCenterZ, fWidth);
+	//CalculateMeshDimensions(vertexCount, fCenterX, fCenterZ, fWidth);
+	CalculateCorrectly(fCenterX, fCenterZ, fWidth);
 
 	m_pParentNode = new QUADTREENODE;
 	if (!m_pParentNode)
@@ -959,8 +960,8 @@ bool CLandScape::CreateQuadTree()
 		return false;
 	}
 
-	CreateTreeNode(m_pParentNode, fCenterX, fCenterZ, fWidth);
-
+	//CreateTreeNode(m_pParentNode, fCenterX, fCenterZ, fWidth);
+	CreateTreeNodeCorrectly(m_pParentNode, fCenterX, fCenterZ, fWidth);
 
 	return true;
 }
@@ -1276,6 +1277,235 @@ bool CLandScape::IsTriangleContaind_Vertex(int vtxIndex, Vector3 min, Vector3 ma
 	return true;
 }
 
+void CLandScape::CalculateCorrectly(float & centerX, float & centerZ, float & meshWidth)
+{
+	centerX = (float)m_iNumX / 2;
+	centerZ = (float)m_iNumZ / 2;
+
+	meshWidth = (float)m_iNumX;
+}
+
+void CLandScape::CreateTreeNodeCorrectly(QUADTREENODE * node, float positionX, float positionZ, float width)
+{
+	node->fCenterX = positionX;
+	node->fCenterZ = positionZ;
+	node->fWidth = width;
+
+	node->vMin = Vector3(0.f, 0.f, 0.f);
+	node->vMax = Vector3(0.f, 0.f, 0.f);
+
+	node->iSizeX = 0;
+	node->iSizeZ = 0;
+
+	node->iTriCount = 0;
+	node->pGameObject = nullptr;
+
+	for (int i = 0; i < 4; i++)
+	{
+		node->pNodes[i] = nullptr;
+	}
+
+	bool bCheck = RangeCheck(positionX, positionZ, width);
+
+	if (!bCheck)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			// 새로운 자식 노드에 대한 위치 오프셋을 계산
+			float fOffsetX = (((i % 2) < 1) ? -1.f : 1.f) * (width / 4.f);
+			float fOffsetZ = (((i % 4) < 2) ? -1.f : 1.f) * (width / 4.f);
+
+			// 새 노드에 삼각형이 있는지 확인한다.
+			bool bCheck = RangeCheck(positionX + fOffsetX, positionZ + fOffsetZ, width / 2.f);
+
+			if (!bCheck)
+			{
+				// 이 새 노드가 있는 삼각형이 있는 경우 자식 노드로 만든다.
+				node->pNodes[i] = new QUADTREENODE;
+
+				// 이제 새 자식 노드에서 시작하는 트리를 확장한다.
+				this->CreateTreeNodeCorrectly(node->pNodes[i], (positionX + fOffsetX), (positionZ + fOffsetZ), (width / 2.f));
+			}
+		}
+		return;
+	}
+
+	// Tag 설정
+	string nodeName = "Node";
+	char str[64];
+
+	string appendName = itoa(number, str, 10);
+	nodeName = nodeName + appendName;
+
+	node->strNodeName = nodeName;
+	_cprintf("Node%d\n", number);
+
+	number++;
+
+	node->iTriCount = MAX_RANGE * MAX_RANGE * 2;
+	_cprintf("TriCount : %d\n", node->iTriCount);
+
+	_cprintf("CenterX : %f, CenterZ : %f, width : %f\n", node->fCenterX, node->fCenterZ, node->fWidth);
+
+	// Max, Min, Index, Vtx설정
+	int iIndex = 0;
+	int iVertexIndex = 0;
+
+	// Index 를 돌며 min max를 구한다.
+	for (int i = 0; i < m_iTriCount; i += 3)
+	{
+		if (this->IsTriangleContaind_Index_Other(i, positionX, positionZ, width))
+		{
+			int iIndexCount = i;
+
+			node->vecIndex.push_back(m_vecIndex[iIndexCount]);
+			iIndexCount++;
+			iIndex++;
+			node->vecIndex.push_back(m_vecIndex[iIndexCount]);
+			iIndexCount++;
+			iIndex++;
+			node->vecIndex.push_back(m_vecIndex[iIndexCount]);
+			iIndex++;
+		}
+	}
+
+	// min
+	node->vMin = m_vecVtx[node->vecIndex[2]].vPos;
+	node->vMin.y = -100.f;
+	// max
+	node->vMax = m_vecVtx[node->vecIndex[iIndex - 1 - 1]].vPos;
+	node->vMax.y = 100.f;
+
+	node->iSizeZ = (int)node->vMax.z - (int)node->vMin.z;
+	node->iSizeX = (int)node->vMax.x - (int)node->vMin.x;
+
+	// 정점 할당 
+	node->vecVtx.resize((node->iSizeZ + 1) * (node->iSizeX + 1));
+
+	for (int i = 0; i <= m_iNumZ; i++)
+	{
+		for (int j = 0; j <= m_iNumX; j++)
+		{
+			int iOriginIdx = i * (m_iNumX + 1) + j;
+
+			if (this->IsTriangleContaind_Vertex_Other(iOriginIdx, node->vMin, node->vMax))
+			{
+				//node->vecVtx.push_back(m_vecVtx[iVertexIndex]);
+				node->vecVtx[iVertexIndex] = m_vecVtx[iOriginIdx];
+				iVertexIndex++;
+			}
+		}
+	}
+
+	// vMax.x, vMax.z를 바탕으로 새로운 인덱스를 구한다.
+	node->vecIndex.clear();
+
+	for (int i = 0; i < node->iSizeZ; i++)
+	{
+		for (int j = 0; j < node->iSizeX; j++)
+		{
+			// 좌상단 정점의 인덱스를 구해준다.
+			int	idx = (i + 1) * (node->iSizeX + 1) + j;
+
+			// 좌상단 삼각형 인덱스
+			node->vecIndex.push_back(idx);
+			node->vecIndex.push_back(idx + 1);
+			node->vecIndex.push_back(idx - (node->iSizeX + 1));
+
+			// 우하단 삼각형 인덱스
+			node->vecIndex.push_back(idx - (node->iSizeX + 1));
+			node->vecIndex.push_back(idx + 1);
+			node->vecIndex.push_back(idx - (node->iSizeX + 1) + 1);
+		}
+	}
+
+	_cprintf("MIN --> X : %f, Z : %f\n", node->vMin.x, node->vMin.z);
+	_cprintf("MAX --> X : %f, Z : %f\n", node->vMax.x, node->vMax.z);
+
+	return;
+}
+
+bool CLandScape::RangeCheck(float positionX, float positionZ, float width)
+{
+	if (width > MAX_RANGE)
+		return false;
+	
+	return true;
+}
+
+bool CLandScape::IsTriangleContaind_Index_Other(int index, float positionX, float positionZ, float width)
+{
+	float fRadius = width / 2.f;
+
+	int iIndex = index;
+
+	float fX1 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	float fZ1 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+	iIndex++;
+
+	float fX2 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	float fZ2 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+	iIndex++;
+
+	float fX3 = m_vecVtx[m_vecIndex[iIndex]].vPos.x;
+	float fZ3 = m_vecVtx[m_vecIndex[iIndex]].vPos.z;
+
+	float fMinimumX = min(fX1, min(fX2, fX3));
+	if (fMinimumX > (positionX + fRadius))
+	{
+		return false;
+	}
+
+	float fMaximumX = max(fX1, max(fX2, fX3));
+	if (fMaximumX < (positionX - fRadius))
+	{
+		return false;
+	}
+
+	float fMinimumZ = min(fZ1, min(fZ2, fZ3));
+	if (fMinimumZ > (positionZ + fRadius))
+	{
+		return false;
+	}
+
+	float fMaximumZ = max(fZ1, max(fZ2, fZ3));
+	if (fMaximumZ < (positionZ - fRadius))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool CLandScape::IsTriangleContaind_Vertex_Other(int vtxIndex, Vector3 min, Vector3 max)
+{
+	float fX = m_vecVtx[vtxIndex].vPos.x;
+	float fZ = m_vecVtx[vtxIndex].vPos.z;
+
+	if (fX > max.x)
+	{
+		return false;
+	}
+
+	if (fX < min.x)
+	{
+		return false;
+	}
+
+	if (fZ > max.z)
+	{
+
+		return false;
+	}
+
+	if (fZ < min.z)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 list<QUADTREENODE*>* CLandScape::FindNode_ByMouse()
 {
 	// TODO: 여기에 반환 구문을 삽입합니다.
@@ -1306,7 +1536,6 @@ void CLandScape::Load_Terrain(string fileName)
 {
 	string flexiblePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH);
 	string filePath = "Terrain\\" + fileName + ".bin";
-
 
 	ifstream mainFile;
 	mainFile.open(flexiblePath + filePath, ios::in);
@@ -1488,8 +1717,8 @@ void CLandScape::Load_TextureName(string fileName)
 	file >> specularName;
 
 	m_diffuseName.assign(diffuseName.begin(), diffuseName.end());
-	m_normalName.assign(diffuseName.begin(), diffuseName.end());
-	m_specularName.assign(diffuseName.begin(), diffuseName.end());
+	m_normalName.assign(normalName.begin(), normalName.end());
+	m_specularName.assign(specularName.begin(), specularName.end());
 
 	int iCount = 0;
 

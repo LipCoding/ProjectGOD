@@ -152,7 +152,7 @@ void CEditForm::OnInitialUpdate()
 
 	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
 
-	m_checkCollider.SetCheck(1);
+	m_checkCollider.SetCheck(0);
 }
 
 
