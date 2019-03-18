@@ -144,6 +144,7 @@ float CQuadTreeManager::GetY(const Vector3 & vPos)
 	fX = (vPos.x - (*pvecPos)[iIndex].x) / fWidth;
 	fY = (vPos.z - (*pvecPos)[iIndex].z) / fHeight;
 
+	delete pvecPos;
 	SAFE_RELEASE(pTransform);
 
 	// 우상단 삼각형에 존재할 경우
