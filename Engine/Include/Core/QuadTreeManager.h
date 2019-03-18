@@ -12,12 +12,13 @@ typedef struct _tagQuadTreeInfo
 	int iSizeX;
 	int iSizeY;
 	class CGameObject* pGameObject;
+	//vector<VERTEXBUMP>* vecVtx;
 }QUADTREEINFO, *PQUADTREEINFO;
 
 class PG_DLL CQuadTreeManager
 {
 private:
-	unordered_map<string, PQUADTREEINFO> m_mapQuadTreeInfo;
+	map<string, PQUADTREEINFO> m_mapQuadTreeInfo;
 	
 public:
 	void AddQuadTreeInfo(const string& key, int numX, int numY,

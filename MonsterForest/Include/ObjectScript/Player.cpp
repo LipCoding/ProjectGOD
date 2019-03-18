@@ -9,6 +9,7 @@
 #include "Gun.h"
 #include "Scene/Scene.h"
 #include "../ObjectScript/Effect.h"
+#include "Core/QuadTreeManager.h"
 
 CPlayer::CPlayer()
 {
@@ -48,9 +49,9 @@ bool CPlayer::Init()
 {
 	//m_pTransform->SetLocalRotY(-PG_PI / 2.f);
 	//m_pTransform->SetLocalRotX(PG_PI);
-	m_pTransform->SetLocalScale(2.f, 2.f, 2.f);
-	m_pTransform->SetLocalRotY(PG_PI);
-	m_pTransform->SetPivot(0.f, -0.55f, 0.f);
+	//m_pTransform->SetLocalScale(2.f, 2.f, 2.f);
+	//m_pTransform->SetLocalRotY(PG_PI);
+	//m_pTransform->SetPivot(0.f, -0.55f, 0.f);
 	//m_pTransform->SetLocalPos(0.f, 0.5f, 0.f);
 	//m_pTransform->SetOriginAxis(AXIS_Y);
 	//m_pTransform->SetWorldScale(0.05f, 0.05f, 0.05f);
@@ -62,7 +63,6 @@ bool CPlayer::Init()
 
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	//
 	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Player.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
@@ -71,7 +71,7 @@ bool CPlayer::Init()
 
 	// Sword 추가
 
-	m_pNavigation = m_pGameObject->AddComponent<CNavigation3D>("Navigation");
+	//m_pNavigation = m_pGameObject->AddComponent<CNavigation3D>("Navigation");
 
 
 	////무기
@@ -210,7 +210,7 @@ bool CPlayer::Init()
 
 	SAFE_RELEASE(pChild);*/
 
-	m_pArm = NULL;
+	//m_pArm = NULL;
 
 	return true;
 }
@@ -270,6 +270,13 @@ void CPlayer::Input(float fTime)
 		*/
 		
 		m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
+		Vector3 vPos = m_pTransform->GetWorldPos();
+
+		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+		vPos.y = fPosY;
+
+		m_pTransform->SetWorldPos(vPos);
+
 		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 		Vector3 LightPos = m_pTransform->GetWorldPos();
 		LightPos = LightPos + Vector3{ -15, 15, -15 };
@@ -289,6 +296,14 @@ void CPlayer::Input(float fTime)
 		//CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 		//pLightTransform->MoveWorld(Vector3{ -1, 0, -1 }, m_fMoveSpeed * 2.f, fTime);
 		m_pTransform->MoveWorld(AXIS_Z, -m_fMoveSpeed, fTime);
+
+		Vector3 vPos = m_pTransform->GetWorldPos();
+
+		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+		vPos.y = fPosY;
+
+		m_pTransform->SetWorldPos(vPos);
+
 		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 		Vector3 LightPos = m_pTransform->GetWorldPos();
 		LightPos = LightPos + Vector3{ -15, 15, -15 };

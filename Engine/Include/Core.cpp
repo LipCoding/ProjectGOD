@@ -15,6 +15,7 @@
 #include "GameObject\GameObject.h"
 #include "Core\Scheduler.h"
 #include "Core\NavigationManager.h"
+#include "Core\QuadTreeManager.h"
 
 PG_USING
 
@@ -48,6 +49,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CTimerManager);
 	DESTROY_SINGLE(CPathManager);
 	DESTROY_SINGLE(CDevice);
+	DESTROY_SINGLE(CQuadTreeManager);
 
 //#ifdef _DEBUG
 	FreeConsole();
