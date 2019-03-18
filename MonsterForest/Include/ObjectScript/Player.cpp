@@ -62,40 +62,43 @@ bool CPlayer::Init()
 
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("Player2.anm");
-	m_pAnimation->SetDefaultClip("IDLE");
+	//
+	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Player.anm");
+	m_pAnimation->SetDefaultClip("Idle");
 
 	//m_pAnimation->AddSocket("RightHand", "Gun");
-	m_pAnimation->AddSocket("mixamorig:RightHand", "Sword");
+	//m_pAnimation->AddSocket("mixamorig:RightHand", "Sword");
+
+	// Sword 추가
 
 	m_pNavigation = m_pGameObject->AddComponent<CNavigation3D>("Navigation");
 
 
-	//무기
-	CGameObject*    pSwordObj = CGameObject::CreateObject("Sword", m_pLayer);
-	CTransform*     pSwordTr = pSwordObj->GetTransform();
+	////무기
+	//CGameObject*    pSwordObj = CGameObject::CreateObject("Sword", m_pLayer);
+	//CTransform*     pSwordTr = pSwordObj->GetTransform();
 
-	pSwordTr->SetPivot(0.f, 0.f, 0.f);
-	pSwordTr->SetLocalScale(Vector3(0.05f, 0.05f, 0.05f));
+	//pSwordTr->SetPivot(0.f, 0.f, 0.f);
+	//pSwordTr->SetLocalScale(Vector3(0.05f, 0.05f, 0.05f));
 
-	//pSwordTr->SetWorldPos(Vector3(66.f, 0.f, 170.f));
+	////pSwordTr->SetWorldPos(Vector3(66.f, 0.f, 170.f));
 
-	SAFE_RELEASE(pSwordTr);
+	//SAFE_RELEASE(pSwordTr);
 
-	CRenderer* pSwordRenderer = pSwordObj->AddComponent<CRenderer>("SwordRenderer");
-	//CNavigation3D* pSwordNavigation = pSwordObj->AddComponent<CNavigation3D>("Navigation");
+	//CRenderer* pSwordRenderer = pSwordObj->AddComponent<CRenderer>("SwordRenderer");
+	////CNavigation3D* pSwordNavigation = pSwordObj->AddComponent<CNavigation3D>("Navigation");
 
-	pSwordRenderer->SetMesh("Sword", L"Sword.FBX");
+	//pSwordRenderer->SetMesh("Sword", L"Sword.FBX");
 
-	m_pAnimation->SetSocketTarget("mixamorig:RightHand", "Sword", pSwordObj);
+	//m_pAnimation->SetSocketTarget("mixamorig:RightHand", "Sword", pSwordObj);
 
-	CGun*	pGun = pSwordObj->AddComponent<CGun>("Sword");
+	//CGun*	pGun = pSwordObj->AddComponent<CGun>("Sword");
 
-	SAFE_RELEASE(pGun);
+	//SAFE_RELEASE(pGun);
 
-	SAFE_RELEASE(pSwordRenderer);
-	//SAFE_RELEASE(pSwordNavigation);
-	SAFE_RELEASE(pSwordObj);
+	//SAFE_RELEASE(pSwordRenderer);
+	////SAFE_RELEASE(pSwordNavigation);
+	//SAFE_RELEASE(pSwordObj);
 	// 무기
 	//CGameObject*	pGunObj = CGameObject::CreateObject("Gun", m_pLayer);
 
@@ -272,7 +275,7 @@ void CPlayer::Input(float fTime)
 		LightPos = LightPos + Vector3{ -15, 15, -15 };
 		pLightTransform->SetWorldPos(LightPos);
 		//pLightTransform->MoveWorld(Vector3{ 1, 0, 1 }, m_fMoveSpeed * 2.f, fTime);
-		m_pAnimation->ChangeClip("MOVE");
+		m_pAnimation->ChangeClip("Run");
 	}
 
 	if (KEYUP("MoveFront"))
@@ -290,7 +293,7 @@ void CPlayer::Input(float fTime)
 		Vector3 LightPos = m_pTransform->GetWorldPos();
 		LightPos = LightPos + Vector3{ -15, 15, -15 };
 		pLightTransform->SetWorldPos(LightPos);
-		m_pAnimation->ChangeClip("MOVE");
+		m_pAnimation->ChangeClip("Run");
 	}
 
 	if (KEYUP("MoveBack"))
@@ -418,7 +421,7 @@ void CPlayer::Input(float fTime)
 	if (KEYDOWN("Attack"))
 	{
 		//m_pAnimation->ChangeClip("Fire1");
-		m_pAnimation->ChangeClip("ATTACK");
+		m_pAnimation->ChangeClip("Attack_S");
 
 //#pragma region Effect
 //		char str[64];

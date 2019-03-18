@@ -7,9 +7,6 @@
     <Filter Include="01. Scene">
       <UniqueIdentifier>{c1018f74-2995-4c7b-ab63-36bf331880fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject">
-      <UniqueIdentifier>{e60bb62c-652b-4b14-bcfa-6ed5e7a7454b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99. Defaults">
       <UniqueIdentifier>{6453c673-fd3c-4945-a694-fe1e5c9b4d51}</UniqueIdentifier>
     </Filter>
@@ -21,6 +18,9 @@
     </Filter>
     <Filter Include="99. Defaults\리소스 파일">
       <UniqueIdentifier>{3552934c-413b-4130-98b6-05fa6e4e6c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject">
+      <UniqueIdentifier>{a70eb36c-a2d2-4427-8431-ae37ff90dc85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,52 +39,55 @@
     <ClInclude Include="SceneScript\MainScene.h">
       <Filter>01. Scene</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectScript\Sword.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
     <ClInclude Include="ObjectScript\Shield.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectScript\PlayerState.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\PlayerMove.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\PlayerIdle.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\PlayerAttack.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Player.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Gun.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemState.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemMove.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemIdle.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemDie.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemAttack.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Golem.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Effect.h">
+    <ClInclude Include="ObjectScript\Bullet.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\CharacterPanel.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectScript\Bullet.h">
+    <ClInclude Include="ObjectScript\Effect.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Golem.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemAttack.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemDie.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemIdle.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemMove.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemState.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Gun.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Player.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\PlayerAttack.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\PlayerIdle.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\PlayerMove.h">
+      <Filter>02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\PlayerState.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,46 +104,49 @@
     <ClCompile Include="SceneScript\MainScene.cpp">
       <Filter>01. Scene</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectScript\Shield.cpp">
+    <ClCompile Include="ObjectScript\Sword.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectScript\PlayerMove.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\PlayerIdle.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\PlayerAttack.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Player.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Gun.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\GolemMove.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\GolemIdle.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\GolemDie.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\GolemAttack.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Golem.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Effect.cpp">
+    <ClCompile Include="ObjectScript\Bullet.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\CharacterPanel.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectScript\Bullet.cpp">
+    <ClCompile Include="ObjectScript\Effect.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Golem.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\GolemAttack.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\GolemDie.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\GolemIdle.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\GolemMove.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Gun.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Player.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\PlayerAttack.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\PlayerIdle.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\PlayerMove.cpp">
+      <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Shield.cpp">
       <Filter>02. GameObject</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,7 +22,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
-	CStartScene*	pStartScene = pScene->CreateSceneScript<CStartScene>("MainScene");
+	CMainScene*	pStartScene = pScene->CreateSceneScript<CMainScene>("MainScene");
+
+
+	//CStartScene*	pStartScene = pScene->CreateSceneScript<CStartScene>("MainScene");
 
 	SAFE_RELEASE(pStartScene);
 

@@ -170,6 +170,7 @@
     <ClInclude Include="ObjectScript\PlayerMove.h" />
     <ClInclude Include="ObjectScript\PlayerState.h" />
     <ClInclude Include="ObjectScript\Shield.h" />
+    <ClInclude Include="ObjectScript\Sword.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneScript\MainScene.h" />
     <ClInclude Include="SceneScript\StartScene.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="ObjectScript\PlayerIdle.cpp" />
     <ClCompile Include="ObjectScript\PlayerMove.cpp" />
     <ClCompile Include="ObjectScript\Shield.cpp" />
+    <ClCompile Include="ObjectScript\Sword.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
     <ClCompile Include="SceneScript\StartScene.cpp" />
     <ClCompile Include="SceneScript\TownScene.cpp" />

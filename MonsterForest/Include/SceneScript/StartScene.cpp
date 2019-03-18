@@ -231,7 +231,7 @@ bool CStartScene::Init()
 
 
 
-	NetworkManager::getInstance()->initialize();
+	//NetworkManager::getInstance()->initialize();
 
 	return true;
 }

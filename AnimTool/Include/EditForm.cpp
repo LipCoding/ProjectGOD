@@ -238,13 +238,16 @@ void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
 
 void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 {
-	CAnimation*	pAnimationCheck = m_pEditObj->FindComponentFromTag<CAnimation>("Animation");
-
-	if (pAnimationCheck)
+	if (m_pEditObj)
 	{
-		AfxMessageBox(L"Error : Your object already have Animation!");
-		SAFE_RELEASE(pAnimationCheck);
-		return;
+		CAnimation*	pAnimationCheck = m_pEditObj->FindComponentFromTag<CAnimation>("Animation");
+
+		if (pAnimationCheck)
+		{
+			AfxMessageBox(L"Error : Your object already have Animation!");
+			SAFE_RELEASE(pAnimationCheck);
+			return;
+		}
 	}
 
 	if (!m_pEditObj)

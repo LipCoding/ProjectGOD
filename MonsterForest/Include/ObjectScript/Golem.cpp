@@ -34,10 +34,10 @@ Golem::Golem(const Golem & goblin)	:
 	GolemMove* pMoveState = new GolemMove;
 	GolemDie* pDieState = new GolemDie;
 
-	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_ATTACK, GOLEMSTATE{ "ATTACK",pAttackState }));
-	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_IDLE, GOLEMSTATE{ "IDLE", pIdleState }));
-	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_MOVE, GOLEMSTATE{ "MOVE", pMoveState }));
-	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_DIE, GOLEMSTATE{ "DIE", pDieState }));
+	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_ATTACK, GOLEMSTATE{ "Attack_J",pAttackState }));
+	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_IDLE, GOLEMSTATE{ "Idle2", pIdleState }));
+	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_MOVE, GOLEMSTATE{ "Walk", pMoveState }));
+	stateMap.insert(make_pair(GOLEM_STATE::GOLEM_STATE_DIE, GOLEMSTATE{ "Death", pDieState }));
 
 	pState = getState(GOLEM_STATE::GOLEM_STATE_IDLE);
 	currentAnimation = GOLEM_STATE::GOLEM_STATE_IDLE;
