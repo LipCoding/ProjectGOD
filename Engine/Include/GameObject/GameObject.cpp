@@ -397,7 +397,7 @@ CGameObject::CGameObject(const CGameObject & obj)
 	m_pTransform = obj.m_pTransform->Clone();
 	m_pTransform->SetGameObject(this);
 	m_pTransform->SetTransform(m_pTransform);
-
+	this->objectSetType = obj.objectSetType;
 	m_ComList.clear();
 
 	list<CComponent*>::const_iterator	iter;

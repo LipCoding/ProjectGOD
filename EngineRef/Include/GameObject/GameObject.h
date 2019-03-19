@@ -3,12 +3,17 @@
 
 PG_BEGIN
 
+
+
 class PG_DLL CGameObject :
 	public CObj
 {
 private:
 	friend class CScene;
-
+	OBJECT_SET_TYPE objectSetType = OBJECT_SET_TYPE::NONE;
+public:
+	OBJECT_SET_TYPE getObjectSetType() { return objectSetType; }
+	void setObjectSetType(OBJECT_SET_TYPE type) { this->objectSetType = type; }
 private:
 	static list<CGameObject*>	m_ObjList;
 	static list<CGameObject*>	m_FindObjectList;

@@ -5,6 +5,7 @@
 PG_USING
 // CObjTab 대화 상자
 
+
 class CObjTab : public CDialogEx
 {
 	DECLARE_DYNAMIC(CObjTab)
@@ -24,7 +25,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	string typeName;
 	static int g_iObjNumber;
+	int currentType = -1;
 private:
 	vector<CGameObject*> m_vecObjects;
 	vector<string>       m_vecStringObjTypePath;

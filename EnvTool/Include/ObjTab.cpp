@@ -14,7 +14,7 @@
 #include "Resources/ResourcesManager.h"
 #include "Resources/Mesh.h"
 #include "Rendering/ShaderManager.h"
-
+#include "Component/Animation.h"
 
 // CObjTab 대화 상자
 int CObjTab::g_iObjNumber = 0;
@@ -128,26 +128,26 @@ void CObjTab::OnLbnSelchangeListObjectType()
 	localDataPath = meshPath + meshRestPath + L".dat";
 
 	FILE* pFile = nullptr;
-	
+
 	char strPath[MAX_PATH] = {};
 	WideCharToMultiByte(CP_ACP, 0, localDataPath, -1,
 		strPath, lstrlen(localDataPath), 0, 0);
 
 	fopen_s(&pFile, strPath, "rb");
 
-	if (!pFile)
-		return;
+	CTransform* pTr = nullptr;
+	pTr = m_pTempObject->GetTransform();
+	if (pFile)
+	{
+		pTr->Load_Local(pFile);
+		pTr->SetWorldPos(vOldPos);
+		//SAFE_RELEASE(pTr);
 
-	CTransform* pTr = m_pTempObject->GetTransform();
-	pTr->Load_Local(pFile);
-	pTr->SetWorldPos(vOldPos);
-	SAFE_RELEASE(pTr);
-
-	fclose(pFile);
+		fclose(pFile);
+	}
 
 	// Mesh Data
 	CString meshDataPath;
-
 	meshDataPath = meshPath + meshRestPath + L".msh";
 
 	CRenderer* pRenderer = m_pTempObject->AddComponent<CRenderer>("Renderer");
@@ -156,7 +156,38 @@ void CObjTab::OnLbnSelchangeListObjectType()
 
 	pRenderer->SetMeshFromFullPath(tag, meshDataPath);
 
-	m_currentTypePath = meshRestPath;
+	CString animationDataPath;
+	animationDataPath = meshPath + meshRestPath + L".anm";
+
+	ifstream animationInfoFile(animationDataPath);
+
+	if (animationInfoFile)
+	{
+		CAnimation* pAnimation = m_pTempObject->AddComponent<CAnimation>("animation");
+		pAnimation->Load(string(meshRestPath + ".anm").c_str());
+	}
+	char tempTypeName[_MAX_FNAME];
+	_splitpath(tag.c_str(), NULL, NULL, tempTypeName, NULL);
+	
+	typeName = tempTypeName;
+	/*CString dataPath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+
+	ofstream out(string(dataPath + "InitializePosInfoByNPCObject.txt"));
+	
+
+
+	Vector3 pos = pTr->GetWorldPos();
+	*/
+	if (typeName == "npc")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::NPC1);
+	}
+	else if (typeName == "golem")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::GOLEM);
+	}
+	else
+		currentType = -1;
 
 	SAFE_RELEASE(pRenderer);
 	SAFE_RELEASE(pScene);
@@ -195,6 +226,7 @@ void CObjTab::UpdateForm()
 	}*/
 }
 
+// 마우스 우클릭하면 오브젝트 생성.
 void CObjTab::AddObject()
 {
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -207,7 +239,7 @@ void CObjTab::AddObject()
 	m_listObjList.AddString(objName);
 
 	CGameObject *pObj = CGameObject::CreateObject(string(CT2CA(objName)), pLayer);
-	
+	pObj->setObjectSetType(m_pTempObject->getObjectSetType());
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 
@@ -236,6 +268,16 @@ void CObjTab::AddObject()
 	SAFE_RELEASE(pRenderer);
 	SAFE_RELEASE(pOriginRenderer);
 
+	// Mesh
+	CAnimation* pOriginAnimation = m_pTempObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	if (nullptr != pOriginAnimation)
+	{
+		CAnimation* pAnimation = pOriginAnimation->Clone();
+		pObj->AddComponent(pAnimation);
+
+		SAFE_RELEASE(pAnimation);
+		SAFE_RELEASE(pOriginAnimation);
+	}
 	// CBuffer
 	pRenderer = pObj->FindComponentFromType<CRenderer>(CT_RENDERER);
 	pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
@@ -249,6 +291,7 @@ void CObjTab::AddObject()
 	SAFE_RELEASE(pRenderer);
 
 	m_vecObjects.push_back(pObj);
+	
 	m_vecStringObjTypePath.push_back(string(CT2CA(m_currentTypePath)));
 	g_iObjNumber++;
 }
@@ -455,6 +498,25 @@ void CObjTab::OnBnClickedButtonObjectSave()
 		SAFE_RELEASE(pTr);
 
 		iIndex++;
+	}
+	
+
+	CString dataPath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+
+	ofstream out(string(dataPath + "InitializePosInfoByNPCObject.txt"));
+
+	for (int i = 0; i < m_vecObjects.size(); ++i)
+	{
+		if (m_vecObjects[i]->getObjectSetType() != OBJECT_SET_TYPE::NONE)
+		{
+			CTransform* pTr = m_vecObjects[i]->GetTransform();
+			Vector3 pos = pTr->GetWorldPos();
+			out << m_vecObjects[i]->getObjectSetType() << endl;
+			out << pos.x << endl;
+			out << pos.y << endl;
+			out << pos.z << endl;
+			SAFE_RELEASE(pTr);
+		}
 	}
 
 	file.close();
