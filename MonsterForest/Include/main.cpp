@@ -5,6 +5,7 @@
 #include "Scene/Scene.h"
 #include "SceneScript\MainScene.h"
 #include "SceneScript\StartScene.h"
+#include "SceneScript\TestScene.h"
 
 PG_USING
 
@@ -22,8 +23,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
-	CMainScene*	pStartScene = pScene->CreateSceneScript<CMainScene>("MainScene");
+	//CMainScene*	pStartScene = pScene->CreateSceneScript<CMainScene>("MainScene");
 
+	CTestScene*	pStartScene = pScene->CreateSceneScript<CTestScene>("MainScene");
 
 	//CStartScene*	pStartScene = pScene->CreateSceneScript<CStartScene>("MainScene");
 

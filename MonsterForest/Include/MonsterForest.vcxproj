@@ -174,6 +174,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneScript\MainScene.h" />
     <ClInclude Include="SceneScript\StartScene.h" />
+    <ClInclude Include="SceneScript\TestScene.h" />
     <ClInclude Include="SceneScript\TownScene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +202,7 @@
     <ClCompile Include="ObjectScript\Sword.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
     <ClCompile Include="SceneScript\StartScene.cpp" />
+    <ClCompile Include="SceneScript\TestScene.cpp" />
     <ClCompile Include="SceneScript\TownScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

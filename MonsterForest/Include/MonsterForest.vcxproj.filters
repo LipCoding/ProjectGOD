@@ -90,13 +90,13 @@
     <ClInclude Include="ObjectScript\PlayerState.h">
       <Filter>02. GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="SceneScript\TestScene.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>99. Defaults\소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneScript\TownScene.cpp">
-      <Filter>01. Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneScript\StartScene.cpp">
       <Filter>01. Scene</Filter>
@@ -148,6 +148,12 @@
     </ClCompile>
     <ClCompile Include="ObjectScript\Shield.cpp">
       <Filter>02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneScript\TownScene.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneScript\TestScene.cpp">
+      <Filter>01. Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

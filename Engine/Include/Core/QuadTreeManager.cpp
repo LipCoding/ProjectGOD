@@ -147,9 +147,11 @@ float CQuadTreeManager::GetY(const Vector3 & vPos)
 	delete pvecPos;
 	SAFE_RELEASE(pTransform);
 
-	// 우상단 삼각형에 존재할 경우
+	// 우하단 삼각형에 존재할 경우
 	if (fX >= fY)
 		return fLandScapeY[0] + (fLandScapeY[1] - fLandScapeY[0]) * fX + (fLandScapeY[3] - fLandScapeY[1]) * fY;
 
+	// 좌상단
 	return fLandScapeY[0] + (fLandScapeY[3] - fLandScapeY[2]) * fX + (fLandScapeY[2] - fLandScapeY[0]) * fY;
 }
+ 
