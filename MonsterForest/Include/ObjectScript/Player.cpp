@@ -133,8 +133,8 @@ bool CPlayer::Init()
 	m_pAnimation->SetCurrentClip("Walk");
 	m_pAnimation->ChangeClip("Idle");*/
 
-	GET_SINGLE(CInput)->CreateKey("RotInvX", 'Q');
-	GET_SINGLE(CInput)->CreateKey("RotX", 'E');
+	GET_SINGLE(CInput)->CreateKey("RotInvY", 'Q');
+	GET_SINGLE(CInput)->CreateKey("RotY", 'E');
 
 	GET_SINGLE(CInput)->CreateKey("RotInvZ", 'T');
 	GET_SINGLE(CInput)->CreateKey("RotZ", 'G');

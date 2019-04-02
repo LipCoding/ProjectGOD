@@ -160,6 +160,7 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalVS(VS_INPUT_TEX_NORMAL input)
 	return output;
 }
 
+// GameObject
 PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 {
 	PS_OUTPUT	output = (PS_OUTPUT)0;
@@ -394,6 +395,7 @@ PS_OUTPUT_SINGLE StandardTexNormalForwardPS(VS_OUTPUT_TEX_NORMAL input)
 	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz + g_vColor;
 	output.vColor.w = vColor.w;
 
+
 	return output;
 }
 
@@ -494,7 +496,6 @@ PS_OUTPUT_SINGLE ShadowCharacterPS(VS_OUTPUT_SHADOW_TEX input)
 	float depthValue;
 	depthValue = input.vDepthPosition.z / input.vDepthPosition.w;
 
-	//output.vColor = float4(depthValue, depthValue, depthValue, 1.f);
 	output.vColor = float4(depthValue, depthValue, depthValue, 1.f);
 
 	return output;
