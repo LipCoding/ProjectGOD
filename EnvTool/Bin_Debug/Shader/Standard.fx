@@ -174,12 +174,19 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	output.vColor.w = vColor.w;*/
 
 	float4	vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
+
 	// clip : 픽셀값을 쓰지 않고 폐기한다.
 	// 이경우 깊이버퍼에도 값을 안쓴다.
 	if (vColor.a == 0.f)
 		clip(-1);
 
-	output.vColor5.w = (float)input.iDecal;
+	if (input.iDecal == 1)
+	{
+		vColor = float4(0.f, 0.f, 0.f, 1.f);
+	}
+
+	//output.vColor5.w = (float)input.iDecal;
+	output.vColor5.w = 0.f;
 
 	output.vColor = vColor + g_vColor;
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
@@ -237,9 +244,23 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 		input.vIndices);
 
 	tSkinning.vPos = tSkinning.vPos - g_vTrLength * g_vPivot;
+
 	/*_tagSkinning tSkinning;
 	tSkinning.vNormal = input.vNormal;
 	tSkinning.vPos = input.vPos - g_vTrLength * g_vPivot;*/
+
+	float3 vNormal = mul(float4(tSkinning.vNormal, 0.f), g_matWorld);
+	float3 vCam = mul(float4(g_vCameraPos, 0.f), g_matWorld);
+	float dotResult = saturate(dot(normalize(vNormal), normalize(vCam)));
+
+	if (dotResult < 0.3f)
+	{
+		output.iDecal = 1;
+	}
+	else
+	{
+		output.iDecal = 0;
+	}
 
 	output.vProjPos = mul(float4(tSkinning.vPos, 1.f), g_matWVP);
 	output.vPos = output.vProjPos;
@@ -247,8 +268,16 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 	output.vNormal = mul(float4(tSkinning.vNormal, 0.f), g_matWV);
 
 	output.vUV = input.vUV;
-	output.iDecal = 0;
-
+		
+	/*if (g_fEmpty == 1.f)
+	{
+		output.iDecal = 1;
+	}
+	else
+	{
+		output.iDecal = 0;
+	}*/
+	
 	return output;
 }
 

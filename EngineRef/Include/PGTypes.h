@@ -471,6 +471,8 @@ typedef struct PG_DLL _tagMultiTextureCBuffer
 typedef struct PG_DLL _tagShareCBuffer
 {
 	Vector4 vColor;
+	Vector3 vCameraPos;
+	float   fEmpty;
 }SHARECBUFFER, *PSHARECBUFFER;
 
 PG_END

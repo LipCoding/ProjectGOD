@@ -36,6 +36,7 @@ CPlayer::CPlayer(const CPlayer & player)	:
 
 CPlayer::~CPlayer()
 {
+	SAFE_RELEASE(m_pThirdCamera);
 	SAFE_RELEASE(m_pArm);
 	SAFE_RELEASE(m_pNavigation);
 	SAFE_RELEASE(m_pAnimation);
@@ -210,7 +211,8 @@ bool CPlayer::Init()
 
 	SAFE_RELEASE(pChild);*/
 
-	//m_pArm = NULL;
+	m_pArm = NULL;
+	m_pThirdCamera = NULL;
 
 	return true;
 }
@@ -226,11 +228,19 @@ void CPlayer::Input(float fTime)
 		SAFE_RELEASE(pCam);
 	}
 
+	if (!m_pThirdCamera)
+	{
+		CGameObject*	pCam = m_pScene->GetMainCameraObj();
+
+		m_pThirdCamera = pCam->FindComponentFromType<CThirdCamera>(CT_THIRDCAMERA);
+
+		SAFE_RELEASE(pCam);
+	}
+
 	if (KEYPUSH("RotY"))
 	{
 		m_pTransform->RotateWorldY(m_fRotSpeed, fTime);
 		m_fRecentRot += m_fRotSpeed * fTime;
-
 		m_pArm->RotationY(m_fRotSpeed * fTime);
 	}
 
@@ -533,8 +543,25 @@ void CPlayer::Input(float fTime)
 
 int CPlayer::Update(float fTime)
 {
-
 	//_cprintf("x :  %f     z :  %f     angle :  %f\n", m_pTransform->GetWorldPos().x, m_pTransform->GetWorldPos().z, m_fRecentRot);
+
+	// Camera Update
+	if (m_pThirdCamera)
+	{
+		CGameObject* pPlayerObj = CGameObject::FindObject("PlayerCharacter");
+		CRenderer* pRenderer = pPlayerObj->FindComponentFromTag<CRenderer>("PlayerRenderer");
+
+		SHARECBUFFER tShareBuffer = {};
+		tShareBuffer.vCameraPos = m_pThirdCamera->GetTransform()->GetWorldAxis(AXIS_Z);
+		//_cprintf("x : %f, y : %f, z : %f\n", tShareBuffer.vCameraPos.x, tShareBuffer.vCameraPos.y, tShareBuffer.vCameraPos.z);
+		tShareBuffer.vColor = Vector4{1.f, 0.f, 0.f, 1.f};
+		tShareBuffer.fEmpty = 1.f;
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_VERTEX, &tShareBuffer);
+		
+
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pPlayerObj);
+	}
 
 	return 0;
 }

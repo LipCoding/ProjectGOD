@@ -91,6 +91,15 @@ bool CTestScene::Init()
 		pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
 		pRenderer->SetForwardShader();
 
+		pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_VERTEX);
+		SHARECBUFFER tShareBuffer = {};
+
+		tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 1.f };
+		tShareBuffer.fEmpty = 1.f;
+		tShareBuffer.vCameraPos = Vector3{ 0.f, 0.f, 0.f };
+
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_VERTEX, &tShareBuffer);
+
 		string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 		string animPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.anm";
@@ -119,6 +128,7 @@ bool CTestScene::Init()
 		pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
 
 		//SAFE_RELEASE(pAnimation);
+		SAFE_RELEASE(pArm);
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pTr);
 		SAFE_RELEASE(pPlayerObj);

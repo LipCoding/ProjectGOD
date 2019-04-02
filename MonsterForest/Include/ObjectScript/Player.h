@@ -7,6 +7,7 @@
 #include "Component/Animation.h"
 #include "Component/Navigation3D.h"
 #include "Component/Arm.h"
+#include "Component/ThirdCamera.h"
 
 PG_USING
 
@@ -28,6 +29,7 @@ private:
 	CAnimation*		m_pAnimation;
 	CNavigation3D*	m_pNavigation;
 	CArm*			m_pArm;
+	CThirdCamera*   m_pThirdCamera;
 public:
 	void setAnimation(CAnimation* pAnimation) { this->m_pAnimation = pAnimation; }
 
