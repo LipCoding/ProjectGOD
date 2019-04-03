@@ -643,6 +643,7 @@ void CRenderer::UpdateTransform()
 	matProj = XMMatrixPerspectiveFovLH(PG_PI / 3.f, 1280.f / 720.f,
 	0.3f, 1000.f);*/
 	CCamera*	pCamera = m_pScene->GetMainCamera();
+	CTransform* pCameraTransform = pCamera->GetTransform();
 	CCamera*    pLightCamera = m_pScene->GetLightCamera();
 	CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 
@@ -652,7 +653,8 @@ void CRenderer::UpdateTransform()
 	matLightWorld = pLightTransform->GetWorldMatrix().mat;
 	matLightView = pLightCamera->GetViewMatrix().mat;
 	matLightProj = pLightCamera->GetProjMatrix().mat;
-	SAFE_RELEASE(pCamera);
+	
+	
 
 	tBuffer.matWorld = m_pTransform->GetLocalMatrix() *
 		m_pTransform->GetWorldMatrix();
@@ -674,6 +676,9 @@ void CRenderer::UpdateTransform()
 	tBuffer.vPivot = m_pTransform->GetPivot();
 	tBuffer.vLength = m_pMesh->GetLength();
 
+	tBuffer.matCameraWorld = pCameraTransform->GetLocalMatrix() *
+					pCameraTransform->GetWorldMatrix();
+
 	tBuffer.matWorld = XMMatrixTranspose(tBuffer.matWorld.mat);
 	tBuffer.matView = XMMatrixTranspose(tBuffer.matView.mat);
 	tBuffer.matProj = XMMatrixTranspose(tBuffer.matProj.mat);
@@ -688,8 +693,13 @@ void CRenderer::UpdateTransform()
 	tBuffer.matLightView = XMMatrixTranspose(tBuffer.matLightView.mat);
 	tBuffer.matLightProj = XMMatrixTranspose(tBuffer.matLightProj.mat);
 
+	tBuffer.matCameraWorld = XMMatrixTranspose(tBuffer.matCameraWorld.mat);
+
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&tBuffer, SCT_VERTEX | SCT_PIXEL | SCT_GEOMETRY);
+
+	SAFE_RELEASE(pCamera);
+	SAFE_RELEASE(pCameraTransform);
 }
 
 void CRenderer::UpdateShadowMapTransform()

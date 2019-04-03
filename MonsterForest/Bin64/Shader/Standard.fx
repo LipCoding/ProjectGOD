@@ -165,7 +165,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 {
 	PS_OUTPUT	output = (PS_OUTPUT)0;
 
-	/*_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal, 
+	/*_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
 		input.vUV);
 
 	float4	vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
@@ -180,13 +180,38 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	if (vColor.a == 0.f)
 		clip(-1);
 
-	if (input.iDecal == 1)
+	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
+	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
+	// View World를 기준으로 픽셀점에서  카메라를 바라보는 방향을 구한다.
+	float3 vCamDir = vCamPos - input.vViewPos;
+
+	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	float degree = float(degrees(acos(dotProduct)));
+
+	/*if (degree > 70.f)
 	{
-		vColor = float4(0.f, 0.f, 0.f, 1.f);
+		vColor *= float4(1.f, 0.f, 0.f, 1.f);
+	}*/
+
+	if (dotProduct < 0.3f)
+	{
+		vColor = float4(1.f, 0.f, 0.f, 1.f);
 	}
 
-	//output.vColor5.w = (float)input.iDecal;
-	output.vColor5.w = 0.f;
+
+	//float3 vCam = mul(float4(g_vCameraPos, 0.f), g_matView);
+	/*float3 vCam = mul(float4(0.f, 0.f, 1.f, 0.f), g_matCameraWorld);
+	vCam = mul(float4(vCam, 0.f), g_matView);
+
+	float dotProduct = saturate(dot(normalize(input.vNormal), -normalize(vCam)));
+
+	if (dotProduct < 0.3f)
+	{
+		vColor *= float4(0.f, 0.f, 0.f, 1.f);
+	}*/
+
+	output.vColor5.w = (float)input.iDecal;
+
 
 	output.vColor = vColor + g_vColor;
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
@@ -249,9 +274,8 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 	tSkinning.vNormal = input.vNormal;
 	tSkinning.vPos = input.vPos - g_vTrLength * g_vPivot;*/
 
-	float3 vNormal = mul(float4(tSkinning.vNormal, 0.f), g_matWorld);
-	float3 vCam = mul(float4(g_vCameraPos, 0.f), g_matWorld);
-	float dotResult = saturate(dot(normalize(vNormal), normalize(vCam)));
+	/*float3 vNormal = mul(float4(tSkinning.vNormal, 0.f), g_matWorld);
+	float dotResult = saturate(dot(normalize(vNormal), normalize(-g_vCameraPos)));
 
 	if (dotResult < 0.3f)
 	{
@@ -260,7 +284,7 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 	else
 	{
 		output.iDecal = 0;
-	}
+	}*/
 
 	output.vProjPos = mul(float4(tSkinning.vPos, 1.f), g_matWVP);
 	output.vPos = output.vProjPos;
@@ -268,24 +292,18 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 	output.vNormal = mul(float4(tSkinning.vNormal, 0.f), g_matWV);
 
 	output.vUV = input.vUV;
-		
-	/*if (g_fEmpty == 1.f)
-	{
-		output.iDecal = 1;
-	}
-	else
-	{
-		output.iDecal = 0;
-	}*/
-	
+	output.iDecal = 0;
+
 	return output;
 }
+
+
 
 VS_OUTPUT_BUMP StandardBumpAnimVS(VS_INPUT_BUMP_ANIM input)
 {
 	VS_OUTPUT_BUMP	output = (VS_OUTPUT_BUMP)0;
 
-	_tagSkinning tSkinning = Skinning(input.vPos, input.vNormal, 
+	_tagSkinning tSkinning = Skinning(input.vPos, input.vNormal,
 		input.vTangent, input.vBinormal, input.vWeights,
 		input.vIndices);
 
@@ -334,7 +352,7 @@ PS_OUTPUT StandardBumpPS(VS_OUTPUT_BUMP input)
 	vBumpNormal = vBumpNormal * 2.f - 1.f;
 
 	float3	vViewNormal = normalize(mul(vBumpNormal, mat));
-	
+
 
 	output.vColor = vColor + g_vColor;
 	output.vColor1.xyz = vViewNormal * 0.5f + 0.5f;
@@ -490,7 +508,7 @@ VS_OUTPUT_SHADOW_TEX ShadowStaticObjectVS(VS_INPUT_TEX input)
 
 	float3	vPos = input.vPos - g_vTrLength * g_vPivot;
 
-	output.vPos= mul(float4(vPos, 1.f), g_matWorld);
+	output.vPos = mul(float4(vPos, 1.f), g_matWorld);
 	output.vPos = mul(output.vPos, g_matLightView);
 	output.vPos = mul(output.vPos, g_matLightProj);
 	output.vDepthPosition = output.vPos;

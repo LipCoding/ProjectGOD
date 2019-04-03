@@ -289,6 +289,7 @@ typedef struct _tagTransformCBuffer
 	float	fEmpty;
 	Vector3	vLength;
 	float	fEmpty1;
+	Matrix  matCameraWorld;
 }TRANSFORMCBUFFER, *PTRANSFORMCBUFFER;
 
 typedef struct PG_DLL _tagAnimationClip2D

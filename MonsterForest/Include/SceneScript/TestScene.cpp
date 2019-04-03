@@ -91,14 +91,14 @@ bool CTestScene::Init()
 		pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
 		pRenderer->SetForwardShader();
 
-		pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_VERTEX);
+		pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
 		SHARECBUFFER tShareBuffer = {};
 
 		tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 1.f };
 		tShareBuffer.fEmpty = 1.f;
 		tShareBuffer.vCameraPos = Vector3{ 0.f, 0.f, 0.f };
 
-		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_VERTEX, &tShareBuffer);
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
 
 		string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 

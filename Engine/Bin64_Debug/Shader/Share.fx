@@ -179,6 +179,7 @@ cbuffer Transform	: register(b0)
 	float	g_fTrEmpty;
 	float3	g_vTrLength;
 	float	g_fTrEmpty1;
+	matrix  g_matCameraWorld;
 }
 
 cbuffer Material	: register(b1)
@@ -459,3 +460,13 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 
 	return tSkinning;
 }
+
+float mask[9] =
+{
+	-1, -1, -1,
+	-1, 8, -1,
+	-1, -1, -1
+};		// Laplacian Filter
+
+float coord[3] = { -1, 0, 1 };
+float divider = 1;
