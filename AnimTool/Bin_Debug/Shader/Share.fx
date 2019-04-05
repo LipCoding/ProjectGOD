@@ -460,13 +460,3 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 
 	return tSkinning;
 }
-
-float mask[9] =
-{
-	-1, -1, -1,
-	-1, 8, -1,
-	-1, -1, -1
-};		// Laplacian Filter
-
-float coord[3] = { -1, 0, 1 };
-float divider = 1;

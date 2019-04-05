@@ -183,20 +183,34 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
 	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
 	// View World를 기준으로 픽셀점에서  카메라를 바라보는 방향을 구한다.
-	float3 vCamDir = vCamPos - input.vViewPos;
+	float3 vCamDir = normalize(vCamPos - input.vViewPos);
 
-	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
-	float degree = float(degrees(acos(dotProduct)));
+	// smoothstep(min, max, x)
+	// x가 min보다 작으면 0을 리턴하고 max보다 크다면 1을 리턴한다.
+	// 1
+	float rimWidth = 0.75f;
+	float fRimLightColor = smoothstep(1.f - rimWidth, 1.f, 1 - max(0, saturate(dot(input.vNormal,
+		vCamDir))));
+
+	vColor += pow(fRimLightColor, 1.f) * 1.f;
+
+	// 2
+	/*float fRim = 1.0f - saturate((dot(input.vNormal, vCamDir)));
+	float4 rc = float4(1.f, 1.f, 1.f, 1.f) * 0.75f;
+	vColor += pow(fRim, 2.f) * rc;*/
+
+	/*float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	float degree = float(degrees(acos(dotProduct)));*/
 
 	/*if (degree > 70.f)
 	{
 		vColor *= float4(1.f, 0.f, 0.f, 1.f);
 	}*/
 
-	if (dotProduct < 0.3f)
+	/*if (dotProduct == 0.f)
 	{
-		vColor = float4(1.f, 0.f, 0.f, 1.f);
-	}
+		vColor = float4(0.f, 0.f, 0.f, 1.f);
+	}*/
 
 
 	//float3 vCam = mul(float4(g_vCameraPos, 0.f), g_matView);
