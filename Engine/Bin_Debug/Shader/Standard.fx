@@ -199,15 +199,15 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	float4 rc = float4(1.f, 1.f, 1.f, 1.f) * 0.75f;
 	vColor += pow(fRim, 2.f) * rc;*/
 
-	/*float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
-	float degree = float(degrees(acos(dotProduct)));*/
+	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	float degree = float(degrees(acos(dotProduct)));
 
 	/*if (degree > 70.f)
 	{
 		vColor *= float4(1.f, 0.f, 0.f, 1.f);
 	}*/
 
-	/*if (dotProduct == 0.f)
+	/*if (dotProduct < 0.3f)
 	{
 		vColor = float4(0.f, 0.f, 0.f, 1.f);
 	}*/
@@ -226,9 +226,26 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	output.vColor5.w = (float)input.iDecal;
 
-
 	output.vColor = vColor + g_vColor;
-	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
+
+
+	//1
+	/*float3 vLightCamDir = mul(float4(0.f, 0.f, 1.f, 0.f), g_matLightWorld);
+	vLightCamDir = mul(float4(vLightCamDir, 0.f), g_matView);
+
+	float fDot = max(0, dot(normalize(input.vNormal), normalize(-vLightCamDir)));*/
+
+	//2
+	float3 vLightCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matLightWorld);
+	vLightCamPos = mul(float4(vLightCamPos, 1.f), g_matView);
+	float3 vLightCamDir = normalize(vLightCamPos - input.vViewPos);
+	float fDot = max(0, dot(normalize(input.vNormal), normalize(vLightCamDir)));
+
+	fDot = (ceil(fDot * 3) / 3.f);
+
+	output.vColor1.xyz = (input.vNormal * 0.5f + 0.5f) * fDot;
+
+	//output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
 	output.vColor2.w = input.vProjPos.w;
