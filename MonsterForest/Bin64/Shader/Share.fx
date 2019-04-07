@@ -20,6 +20,8 @@ struct VS_OUTPUT_SHADOW_TEX
 {
 	float4	vPos	: SV_POSITION;
 	float4	vDepthPosition		: TEXCOORD;
+	float4  vNormal : NORMAL;
+	float4  vLightPos : POSITION1;
 };
 
 // 정점버퍼에서 넘어오는 정점정보를 받아오기 위한 구조체
@@ -160,6 +162,8 @@ Texture2DArray	g_DifArrTex	: register(t10);
 Texture2D		g_Shadow_Map	: register(t4);
 SamplerState	g_Depth_Smp	: register(s11);
 
+Texture2D		g_SampleTypeClamp : register(t5);
+Texture2D		g_SampleTypeWrap : register(t6);
 
 cbuffer Transform	: register(b0)
 {
@@ -459,4 +463,26 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 	tSkinning.vNormal = normalize(tSkinning.vNormal);
 
 	return tSkinning;
+}
+
+SamplerComparisonState cmpSampler : register(s2)
+{
+	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+	AddressU = BORDER;
+	AddressV = BORDER;
+	AddressW = BORDER;
+	BorderColor = float4(0.f, 0.f, 0.f, 0.f);
+
+	ComparisonFunc = LESS_EQUAL;
+};
+
+float2 texOffset(int u, int v)
+{
+	float SizeX;
+	float SizeY;
+
+	g_Shadow_Map.GetDimensions(SizeX, SizeY);
+
+	return float2(u * 1.f / SizeX,
+				  v * 1.f / SizeY);
 }

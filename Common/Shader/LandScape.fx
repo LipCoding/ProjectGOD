@@ -289,12 +289,59 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	float depthValue;
 	float lightDepthValue;
 	float lightIntensity;
+	
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
-	bias = 0.000001f;
+	
+	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
+	bias = 0.00001f;
 
+	projectTexCoord = float2(0.f, 0.f);
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
 	projectTexCoord.y = -input.vPosLight.y / input.vPosLight.w / 2.f + 0.5f;
 
+	// 16 PCF
+	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	//{
+	//	depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+	//	lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+
+	//	lightDepthValue = lightDepthValue - bias;
+
+	//	float sum = 0.0;
+	//	float x, y;
+	//	
+	//	for (y = -1.5; y <= 1.5; y += 1.0)
+	//	{
+	//		for (x = -1.5; x <= 1.5; x += 1.0)
+	//		{
+	//			sum += g_Shadow_Map.SampleCmpLevelZero(cmpSampler,
+	//				projectTexCoord.xy + texOffset(x, y), lightDepthValue);
+	//		}
+	//	}
+
+	//	float shadowFactor = sum / 16.0;
+
+	//	if (lightDepthValue < depthValue)
+	//	{
+	//		float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+
+	//		//// 조명 방향을 구해준다.
+	//		float3 vLightDir = vLightPos - input.vViewPos;
+	//		vLightDir = normalize(vLightDir);
+
+	//		lightIntensity = saturate(dot(input.vNormal, vLightDir));
+
+	//		if (lightIntensity > 0.f)
+	//		{
+	//			//vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//			float4 vAmb = float4(1.f, 1.f, 1.f, 1.f);
+	//			vColor = vAmb + shadowFactor * vColor * lightIntensity;
+	//			vColor = saturate(vColor);
+	//		}
+	//	}
+	//}
+
+	// 4 PCF
 	if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
 	{
 		depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
@@ -302,11 +349,14 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 		lightDepthValue = lightDepthValue - bias;
 
+		float shadowFactor = g_Shadow_Map.SampleCmpLevelZero(cmpSampler, 
+			projectTexCoord, lightDepthValue);
+
 		if (lightDepthValue < depthValue)
 		{
 			float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
 
-			// 조명 방향을 구해준다.
+			//// 조명 방향을 구해준다.
 			float3 vLightDir = vLightPos - input.vViewPos;
 			vLightDir = normalize(vLightDir);
 
@@ -314,8 +364,9 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 			if (lightIntensity > 0.f)
 			{
-				//vColor = float4(0.f, 1.f, 1.f, 1.f);
-				vColor += vColor * lightIntensity;
+				//vColor = float4(1.f, 1.f, 1.f, 1.f);
+				float4 vAmb = float4(1.f, 1.f, 1.f, 1.f);
+				vColor = vAmb + shadowFactor * vColor * lightIntensity;
 				vColor = saturate(vColor);
 			}
 		}
