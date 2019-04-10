@@ -289,7 +289,8 @@ void CPlayer::Input(float fTime)
 
 		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 		Vector3 LightPos = m_pTransform->GetWorldPos();
-		LightPos = LightPos + Vector3{ -15, 15, -15 };
+		LightPos = LightPos + Vector3{ -15, 30, -15 };
+		//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
 		pLightTransform->SetWorldPos(LightPos);
 		//pLightTransform->MoveWorld(Vector3{ 1, 0, 1 }, m_fMoveSpeed * 2.f, fTime);
 		m_pAnimation->ChangeClip("Run");
@@ -316,7 +317,8 @@ void CPlayer::Input(float fTime)
 
 		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 		Vector3 LightPos = m_pTransform->GetWorldPos();
-		LightPos = LightPos + Vector3{ -15, 15, -15 };
+		LightPos = LightPos + Vector3{ -15, 30, -15 };
+		//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
 		pLightTransform->SetWorldPos(LightPos);
 		m_pAnimation->ChangeClip("Run");
 	}

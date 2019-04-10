@@ -36,7 +36,7 @@ struct PS_OUTPUT_LIGHTACC
 };
 
 _tagLightInfo ComputeLightAcc(float3 vViewPos, float3 vViewNormal,
-	float2 vUV, float4 vMtrlDif, float4 vMtrlAmb)
+	float2 vUV, float4 vMtrlDif, float4 vMtrlAmb, float3 vViewDirection)
 {
 	_tagLightInfo	tInfo = (_tagLightInfo)0;
 
@@ -151,24 +151,38 @@ _tagLightInfo ComputeLightAcc(float3 vViewPos, float3 vViewNormal,
 	//vViewNormal = vLightDir;
 	//vLightDir = vViewNormal;
 
+	//1
+	float3 vLightCamDir = mul(float4(0.f, 0.f, 1.f, 0.f), g_matLightWorld);
+	vLightCamDir = mul(float4(vLightCamDir, 0.f), g_matView);
+	float fDot = max(0, dot(normalize(vViewNormal), normalize(vLightDir)));
+
+	fDot = (ceil(fDot * 3) / 3.f);
+
 	// 위에서 구해준 뷰 공간의 조명의 역방향과 정점의 뷰공간의 노말을 내적해서 cos 세타를 구해
 	// 준다. 이 값을 이용해서 조명의 강도로 처리를 하는데 이 값이 - 값이 나오게 되면 조명이
 	// 뒤에서 비춘다는 의미이다. 그래서 음수가 나온다면 0으로 처리해준다.
 	// 이 조명강도를 이용해서 Diffuse 에 적용해준다.
 	// Diffuse는 조명의 Diffuse * 재질의 Diffuse * 조명강도가 된다.
 	tInfo.vDif = g_vLightDiffuse * vMtrlDif *
-		max(0, dot(vViewNormal, vLightDir)) * fLightIntensity;
+		/*max(0, dot(vViewNormal, vLightDir)) **/ fDot * fLightIntensity;
 	tInfo.vAmb = g_vLightAmbient * vMtrlAmb * fLightIntensity;
 
 	// 정반사광 처리를 하기 위해서는 조명이 해당 정점에 부딪혔을때 반사되는 벡터가 필요하다.
-	float3	vR = 2.f * vViewNormal * dot(vViewNormal, vLightDir) - vLightDir;
-	float3	vView = -normalize(vViewPos);
+	//float3	vR = normalize(2.f * vViewNormal * dot(vViewNormal, -vLightDir) - vLightDir);
+	//float3	vView = -normalize(vViewPos);
 
 	//float	fPower = g_vMtrlSpecular.w;
 	float4	vMtrlSpc = g_GBufferSpc.Sample(g_LightSmp, vUV);
 
-	tInfo.vSpc = g_vLightSpecular * vMtrlSpc *
-		pow(max(0, dot(vR, vView)), vMtrlSpc.w) * fLightIntensity;
+	/*tInfo.vSpc = g_vLightSpecular * vMtrlSpc *
+		pow(max(0, dot(vR, vView)), vMtrlSpc.w) * fLightIntensity;*/
+
+	float3 reflection = normalize(2.f * vViewNormal * fLightIntensity - vLightDir);
+	float4 specular = pow(saturate(dot(reflection, vViewDirection)), vMtrlSpc.w);
+
+	specular = specular * vMtrlSpc;
+
+	tInfo.vSpc = saturate(specular);
 
 	//tInfo.vDif.xyz = float3(1.f, 1.f, 1.f);
 	//tInfo.vSpc.xyz = float3(0.f, 0.f, 0.f);
@@ -217,10 +231,29 @@ PS_OUTPUT_LIGHTACC LightAccPS(VS_OUTPUT_TEX input)
 	float4	vMtrlDif = (float4)vDepthTex.y;
 	float4	vMtrlAmb = (float4)vDepthTex.z;
 
-	_tagLightInfo	tLightInfo = ComputeLightAcc(vViewPos, vViewNormal,
-		input.vUV, vMtrlDif, vMtrlAmb);
+	//1
+	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
+	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
+	float3 vCamDir = normalize(vCamPos - vViewPos);
 
-	output.vDif = tLightInfo.vDif + tLightInfo.vAmb;
+	_tagLightInfo	tLightInfo = ComputeLightAcc(vViewPos, vViewNormal,
+		input.vUV, vMtrlDif, vMtrlAmb, vCamDir);
+
+	//1
+	float3 vLightCamDir = mul(float4(0.f, 0.f, 1.f, 0.f), g_matLightWorld);
+	vLightCamDir = mul(float4(vLightCamDir, 0.f), g_matView);
+
+	float fDot = max(0, dot(normalize(vViewNormal), normalize(-vLightCamDir)));
+
+	//2
+	/*float3 vLightCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matLightWorld);
+	vLightCamPos = mul(float4(vLightCamPos, 1.f), g_matView);
+	float3 vLightCamDir = normalize(vLightCamPos - vViewPos);
+	float fDot = max(0, dot(normalize(vViewNormal), normalize(vLightCamDir)));*/
+
+	fDot = (ceil(fDot * 3) / 3.f);
+
+	output.vDif = (tLightInfo.vDif + tLightInfo.vAmb);
 	output.vSpc = tLightInfo.vSpc;
 
 	return output;

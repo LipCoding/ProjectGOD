@@ -246,7 +246,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	// Normal 텍스쳐에서 픽셀을 얻어와서 법선벡터로 변환한다.
 	// 색상은 0 ~ 1 사이의 값이므로 이 값을 단위벡터의 값인 -1 ~ 1 사이로
 	// 변환해주려면 * 2 - 1 을 해주면 된다.
-	float3	vBumpNormal	= g_NormalTex.Sample(g_DifSmp, vUV).xyz;
+	float3	vBumpNormal = g_NormalTex.Sample(g_DifSmp, vUV).xyz;
 	vBumpNormal = vBumpNormal * 2.f - 1.f;
 
 	for (int i = 0; i < g_iSplatCount; i++)
@@ -257,16 +257,16 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		float3	vSplatUV;
 		vSplatUV.xy = input.vUV * (int)g_arrDetailLevelTex[i];
 		vSplatUV.z = i;
-		
+
 		// Diffuse Splat
-		float4	vSplatColor	= g_SplatDif.Sample(g_SplatSmp, vSplatUV);
+		float4	vSplatColor = g_SplatDif.Sample(g_SplatSmp, vSplatUV);
 		// Normal Splat
 		float3	vSplatNormal = g_SplatNrm.Sample(g_SplatSmp, vSplatUV).xyz;
 		vSplatUV.xy = input.vUV;
 		//
 		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
-		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) + 
-						(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
+		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
+			(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
 		vBumpNormal += vSplatNormal;
 
@@ -289,9 +289,9 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	float depthValue;
 	float lightDepthValue;
 	float lightIntensity;
-	
+
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
-	
+
 	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
 	bias = 0.00001f;
 
@@ -299,6 +299,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
 	projectTexCoord.y = -input.vPosLight.y / input.vPosLight.w / 2.f + 0.5f;
 
+	{
 	// 16 PCF
 	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
 	//{
@@ -341,16 +342,49 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//	}
 	//}
 
-	// 4 PCF
+	//// 4 PCF
+	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	//{
+	//	depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+	//	lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+
+	//	lightDepthValue = lightDepthValue - bias;
+
+	//	float shadowFactor = g_Shadow_Map.SampleCmpLevelZero(cmpSampler, 
+	//		projectTexCoord, lightDepthValue);
+
+	//	if (lightDepthValue < depthValue)
+	//	{
+	//		float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+
+	//		//// 조명 방향을 구해준다.
+	//		float3 vLightDir = vLightPos - input.vViewPos;
+	//		vLightDir = normalize(vLightDir);
+
+	//		lightIntensity = saturate(dot(input.vNormal, vLightDir));
+
+	//		if (lightIntensity > 0.f)
+	//		{
+	//			//vColor = float4(1.f, 1.f, 1.f, 1.f);
+	//			float4 vAmb = float4(1.f, 1.f, 1.f, 1.f);
+	//			vColor = vAmb + shadowFactor * vColor * lightIntensity;
+	//			vColor = saturate(vColor);
+	//		}
+	//	}
+	//	//else
+	//	//{
+	//	//	//vColor *= float4(0.4f, 0.4f, 0.4f, 1.f);
+	//	//}
+	//}
+}
+
+	// Normal
 	if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
 	{
 		depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
 		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 
 		lightDepthValue = lightDepthValue - bias;
-
-		float shadowFactor = g_Shadow_Map.SampleCmpLevelZero(cmpSampler, 
-			projectTexCoord, lightDepthValue);
 
 		if (lightDepthValue < depthValue)
 		{
@@ -364,16 +398,11 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 			if (lightIntensity > 0.f)
 			{
-				//vColor = float4(1.f, 1.f, 1.f, 1.f);
-				float4 vAmb = float4(1.f, 1.f, 1.f, 1.f);
-				vColor = vAmb + shadowFactor * vColor * lightIntensity;
+				//vColor += float4(1.f, 1.f, 1.f, 1.f);
+				vColor += vColor * lightIntensity;
 				vColor = saturate(vColor);
 			}
 		}
-		//else
-		//{
-		//	//vColor *= float4(0.4f, 0.4f, 0.4f, 1.f);
-		//}
 	}
 
 	if (vColor.a == 0.f)
