@@ -16,6 +16,8 @@
 #include "Core\Scheduler.h"
 #include "Core\NavigationManager.h"
 #include "Core\QuadTreeManager.h"
+#include "Core\NaviManager.h"
+#include "Core\NaviMesh.h"
 
 PG_USING
 
@@ -50,6 +52,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CPathManager);
 	DESTROY_SINGLE(CDevice);
 	DESTROY_SINGLE(CQuadTreeManager);
+	DESTROY_SINGLE(CNaviManager);
 
 //#ifdef _DEBUG
 	FreeConsole();
@@ -239,6 +242,8 @@ void CCore::Render(float fTime)
 
 	GET_SINGLE(CRenderManager)->Render(fTime);
 	
+	GET_SINGLE(CNaviManager)->Render(fTime);
+
 	/*CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	pMouseObj->Render(fTime);
 	SAFE_RELEASE(pMouseObj);*/

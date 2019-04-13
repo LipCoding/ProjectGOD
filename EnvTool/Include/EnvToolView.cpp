@@ -543,6 +543,7 @@ void CEnvToolView::UpdateObject(const float & fTime)
 void CEnvToolView::UpdateForm(const float & fTime)
 {
 	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
+	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->UpdateForm();
 }
 
 void CEnvToolView::SetMainCamera()

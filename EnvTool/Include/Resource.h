@@ -89,7 +89,6 @@
 #define IDC_BUTTON_OBJECT_LOAD          1051
 #define IDC_BUTTON_NAVI_SAVE            1052
 #define IDC_BUTTON_NAVI_LOAD            1053
-#define IDC_LIST1                       1054
 #define IDC_LIST_NAVI_POINT             1054
 #define IDC_LIST_NAVI_CELL              1055
 #define IDC_BUTTON_NAVI_CLEARALL        1056

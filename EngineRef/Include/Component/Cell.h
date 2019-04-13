@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "../Resources/Mesh.h"
 
 PG_BEGIN
 
@@ -7,39 +8,45 @@ class PG_DLL CCell
 {
 public:
 	CCell();
-	CCell(const CCell& axisLine);
+	CCell(const CCell& cell);
 	~CCell();
 
 private:
-	class CMesh*		m_pMesh;
 	class CShader*		m_pShader;
 
 	Vector3		        m_points[3];
-	ID3D11InputLayout*	m_pLayout;
 	TRANSFORMCBUFFER	m_tTransform;
-	bool				m_bRenderCheck = true;
+
+	VERTEXBUFFER m_tVB;
+	INDEXBUFFER m_tIB;
 
 public:
-	void SetPoints(const vector<Vector3>& vecPoints)
+	bool Init(const vector<NAVIPOINT>& vecPoints);
+	int Update();
+	int LateUpdate();
+	void Render();
+	CCell* Clone();
+
+public:
+	bool CreateVertexBuffer(UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
+		D3D11_PRIMITIVE_TOPOLOGY ePrimitive, void* pVtxData);
+	bool CreateIndexBuffer(UINT iIdxCount = 0, UINT iIdxSize = 0,
+		D3D11_USAGE eIdxUsage = D3D11_USAGE_DEFAULT,
+		DXGI_FORMAT eFmt = DXGI_FORMAT_R32_UINT,
+		void* pIdxData = NULL);
+
+private:
+	bool SetPoints(const vector<NAVIPOINT>& vecPoints)
 	{
 		if (vecPoints.size() < 3)
-			return;
+			return false;
 
-		m_points[0] = vecPoints[0];
-		m_points[1] = vecPoints[1];
-		m_points[2] = vecPoints[2];
-	}
-	void SetRenderCheck(const bool& check)
-	{
-		m_bRenderCheck = check;
-	}
+		m_points[0] = vecPoints[0].vPosition;
+		m_points[1] = vecPoints[1].vPosition;
+		m_points[2] = vecPoints[2].vPosition;
 
-public:
-	bool Init(const vector<Vector3>& vecPoints);
-	int Update(float fTime);
-	int LateUpdate(float fTime);
-	void Render(float fTime);
-	CCell* Clone();
+		return true;
+	}
 };
 
 PG_END

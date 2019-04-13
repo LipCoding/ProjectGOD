@@ -11,9 +11,15 @@ public:
 
 private:
 	vector<CCell*> m_Cells;
+	class CRenderState*	m_pDepthDisable;
+
+public:
+	void AddCell(const vector<NAVIPOINT>& points);
 
 public:
 	bool Init();
+	int  Update();
+	void Render();
 };
 
 PG_END

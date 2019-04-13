@@ -683,6 +683,7 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 		m_tRenderGroup[i].iSize = 0;
 

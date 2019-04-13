@@ -882,6 +882,9 @@ void CTerrainTab::Process_ShowTab()
 		pBrushTool->SetBrushCheck(true);
 	}
 
+	int iPos = m_ctrSliderBrushRange.GetPos();
+	pBrushTool->SetBrushInformation((float)iPos);
+
 	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pBrushObj);
 }

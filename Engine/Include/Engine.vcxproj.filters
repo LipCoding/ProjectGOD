@@ -241,6 +241,9 @@
     <Filter Include="00. Core\06. NavigationManager\Visualization\Cell">
       <UniqueIdentifier>{596db022-c7c7-4f63-a3ac-c7579a2ef504}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Core\06. NavigationManager\Old">
+      <UniqueIdentifier>{59c6f85c-3ef6-4fb1-bb0e-1c84935f1130}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -471,14 +474,14 @@
     <ClCompile Include="Core\NaviMesh.cpp">
       <Filter>00. Core\06. NavigationManager</Filter>
     </ClCompile>
-    <ClCompile Include="Core\NavigationMesh.cpp">
-      <Filter>00. Core\06. NavigationManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\NavigationManager.cpp">
-      <Filter>00. Core\06. NavigationManager</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Cell.cpp">
       <Filter>00. Core\06. NavigationManager\Visualization\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NavigationMesh.cpp">
+      <Filter>00. Core\06. NavigationManager\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NavigationManager.cpp">
+      <Filter>00. Core\06. NavigationManager\Old</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -731,14 +734,14 @@
     <ClInclude Include="Core\NaviManager.h">
       <Filter>00. Core\06. NavigationManager</Filter>
     </ClInclude>
-    <ClInclude Include="Core\NavigationMesh.h">
-      <Filter>00. Core\06. NavigationManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\NavigationManager.h">
-      <Filter>00. Core\06. NavigationManager</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Cell.h">
       <Filter>00. Core\06. NavigationManager\Visualization\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NavigationMesh.h">
+      <Filter>00. Core\06. NavigationManager\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NavigationManager.h">
+      <Filter>00. Core\06. NavigationManager\Old</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
