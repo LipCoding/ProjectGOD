@@ -25,7 +25,7 @@ CAxisLine::CAxisLine()
 	//m_pMeshSphere = nullptr;
 	m_pShaderSphere = nullptr;
 	m_pLayout = nullptr;
-	m_bRednerCheck = false;
+	m_bRenderCheck = false;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -78,7 +78,7 @@ void CAxisLine::SetBoneMatrix(Matrix* matrix)
 
 void CAxisLine::SetRenderCheck(bool check)
 {
-	m_bRednerCheck = check;
+	m_bRenderCheck = check;
 }
 
 bool CAxisLine::Init()
@@ -113,7 +113,7 @@ void CAxisLine::Render(float fTime)
 
 void CAxisLine::AxisRender(float fTime)
 {
-	if (!m_bRednerCheck)
+	if (!m_bRenderCheck)
 		return;
 
 	CCamera*	pCamera = m_pScene->GetMainCamera();

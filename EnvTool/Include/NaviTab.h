@@ -1,7 +1,40 @@
 ﻿#pragma once
 
+#include "PGEngine.h"
+
+PG_USING
 
 // CNaviTab 대화 상자
+typedef struct _tagNaviPoint
+{
+	Vector3 vPosition;
+	//Type
+
+	_tagNaviPoint(float x, float y, float z)
+	{ 
+	vPosition.x = x;
+	vPosition.y = y;
+	vPosition.z = z;
+	}
+
+	_tagNaviPoint(Vector3 vPos)
+	{
+		vPosition.x = vPos.x;
+		vPosition.y = vPos.y;
+		vPosition.z = vPos.z;
+	}
+}NAVIPOINT;
+
+typedef struct _tagNaviCell
+{
+	vector<NAVIPOINT> vecPoints;
+	//Type
+
+	_tagNaviCell(vector<NAVIPOINT>& points)
+	{
+		vecPoints = move(points);
+	}
+}NAVICELL;
 
 class CNaviTab : public CDialogEx
 {
@@ -27,4 +60,15 @@ public:
 	void Process_ChangeTab();
 	void Process_ShowTab();
 	void UpdateForm();
+
+public:
+	void Add_Point(const Vector3& vPoint);
+
+private:
+	vector<NAVIPOINT> m_vecNaviPoint;
+	vector<NAVICELL>  m_vecNaviCell;
+	CListBox m_listNaviPoint;
+	CListBox m_listNaviCell;
+
+	int m_NumCell = 0;
 };

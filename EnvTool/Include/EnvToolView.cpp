@@ -30,6 +30,7 @@
 #include "BrushTool.h"
 //#include "TarrainEdit.h"
 #include "ObjTab.h"
+#include "NaviTab.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -287,6 +288,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				}
 				break;
 			}
+			case TAB_NAVI:
+			{
+				// AddPoint();
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Add_Point(m_vPickPos);
+				break;
+			}
 			default:
 				break;
 			}
@@ -330,6 +337,10 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				break;
 			}
 			case TAB_OBJECT:
+			{
+				break;
+			}
+			case TAB_NAVI:
 			{
 				break;
 			}
@@ -605,6 +616,15 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 								SAFE_RELEASE(pTempObject);
 							}
 						}
+						break;
+					}
+					case TAB_NAVI:
+					{
+						CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+						pBrushTool->SetBrushInformation(m_vPickPos);
+						SAFE_RELEASE(pBrushTool);
+						bFirstCheck = true;
 						break;
 					}
 					default:
