@@ -11,6 +11,7 @@
 // Tab
 #include "TerrainTab.h"
 #include "ObjTab.h"
+#include "NaviTab.h"
 
 // EditForm
 
@@ -24,6 +25,7 @@ CEditForm::CEditForm()
 	: CFormView(IDD_DIALOG_FORM)
 	, m_pTerrainDlg(nullptr)
 	, m_pObjDlg(nullptr)
+	, m_pNaviDlg(nullptr)
 	, m_pView(nullptr)
 	, m_eTabType(TAB_END)
 {
@@ -36,6 +38,8 @@ CEditForm::~CEditForm()
 	m_pTerrainDlg = nullptr;
 	delete m_pObjDlg;
 	m_pObjDlg = nullptr;
+	delete m_pNaviDlg;
+	m_pNaviDlg = nullptr;
 	m_pView = nullptr;
 	
 }
@@ -102,6 +106,9 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 		m_pObjDlg->Process_ChangeTab();
 		m_pObjDlg->ShowWindow(SW_HIDE);
+
+		m_pNaviDlg->Process_ChangeTab();
+		m_pNaviDlg->ShowWindow(SW_HIDE);
 		break;
 	case 1:
 		m_eTabType = TAB_OBJECT;
@@ -110,6 +117,21 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 		m_pObjDlg->Process_ShowTab();
 		m_pObjDlg->ShowWindow(SW_SHOW);
+
+		m_pNaviDlg->Process_ChangeTab();
+		m_pNaviDlg->ShowWindow(SW_HIDE);
+		break;
+	case 2:
+		m_eTabType = TAB_NAVI;
+
+		m_pTerrainDlg->Process_ChangeTab();
+		m_pTerrainDlg->ShowWindow(SW_HIDE);
+
+		m_pObjDlg->Process_ChangeTab();
+		m_pObjDlg->ShowWindow(SW_HIDE);
+
+		m_pNaviDlg->Process_ShowTab();
+		m_pNaviDlg->ShowWindow(SW_SHOW);
 		break;
 	}
 
@@ -126,8 +148,9 @@ void CEditForm::OnInitialUpdate()
 	// Tab Control에 사용할 탭을 추가
 	m_Tab.InsertItem(0, _T("Terrain"));
 	m_Tab.InsertItem(1, _T("Object"));
-	m_Tab.InsertItem(2, _T("Light"));
-	m_Tab.InsertItem(3, _T("Sky"));
+	m_Tab.InsertItem(2, _T("Navigation"));
+	m_Tab.InsertItem(3, _T("Light"));
+	m_Tab.InsertItem(4, _T("Sky"));
 
 	CRect rect;
 	m_Tab.GetWindowRect(&rect);
@@ -145,6 +168,11 @@ void CEditForm::OnInitialUpdate()
 	m_pObjDlg->Create(IDD_DIALOG2, &m_Tab);
 	m_pObjDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_pObjDlg->ShowWindow(SW_HIDE);
+
+	m_pNaviDlg = new CNaviTab;
+	m_pNaviDlg->Create(IDD_DIALOG3, &m_Tab);
+	m_pNaviDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
+	m_pNaviDlg->ShowWindow(SW_HIDE);
 
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();

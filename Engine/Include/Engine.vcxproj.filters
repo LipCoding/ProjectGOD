@@ -19,9 +19,6 @@
     <Filter Include="00. Core\05. Scheduler">
       <UniqueIdentifier>{cd589a1a-f5f7-43e4-9210-95de481974e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Core\06. Navigation">
-      <UniqueIdentifier>{3f9f958e-f474-40c0-98e6-1c4a82790579}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Core\04. CollisionManager">
       <UniqueIdentifier>{ed3020f3-5365-486e-a1cb-0beb06eb58ce}</UniqueIdentifier>
     </Filter>
@@ -235,6 +232,9 @@
     <Filter Include="00. Core\08. QuadTreeManager">
       <UniqueIdentifier>{687e4c00-22b3-4008-aee9-094fdc111277}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Core\06. NavigationManager">
+      <UniqueIdentifier>{8c0c6441-0256-4f4d-a202-4ea6cbacf546}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -263,12 +263,6 @@
     </ClCompile>
     <ClCompile Include="Core\CollisionManager.cpp">
       <Filter>00. Core\04. CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\NavigationManager.cpp">
-      <Filter>00. Core\06. Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\NavigationMesh.cpp">
-      <Filter>00. Core\06. Navigation</Filter>
     </ClCompile>
     <ClCompile Include="Core\Scheduler.cpp">
       <Filter>00. Core\05. Scheduler</Filter>
@@ -462,6 +456,21 @@
     <ClCompile Include="Core\QuadTreeManager.cpp">
       <Filter>00. Core\08. QuadTreeManager</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Navi.cpp">
+      <Filter>06. Component\10. Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NaviManager.cpp">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NaviMesh.cpp">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NavigationMesh.cpp">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NavigationManager.cpp">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PGMath.h">
@@ -496,12 +505,6 @@
     </ClInclude>
     <ClInclude Include="Core\Scheduler.h">
       <Filter>00. Core\05. Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\NavigationManager.h">
-      <Filter>00. Core\06. Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\NavigationMesh.h">
-      <Filter>00. Core\06. Navigation</Filter>
     </ClInclude>
     <ClInclude Include="Obj.h">
       <Filter>00. Core</Filter>
@@ -709,6 +712,21 @@
     </ClInclude>
     <ClInclude Include="Core\QuadTreeManager.h">
       <Filter>00. Core\08. QuadTreeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Navi.h">
+      <Filter>06. Component\10. Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NaviMesh.h">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NaviManager.h">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NavigationMesh.h">
+      <Filter>00. Core\06. NavigationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\NavigationManager.h">
+      <Filter>00. Core\06. NavigationManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

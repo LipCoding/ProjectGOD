@@ -30,14 +30,16 @@ protected:
 
 public:
 	const TOOLTAB_TYPE GetTabType() { return m_eTabType; }
-	
 	class CObjTab* GetObjectTab() { return m_pObjDlg; }
+	class CNaviTab* GetNaviTab() { return m_pNaviDlg; }
 
 private:
 	CTabCtrl m_Tab;
 	class CTerrainTab	*m_pTerrainDlg = nullptr;
 	class CObjTab		*m_pObjDlg = nullptr;
+	class CNaviTab		*m_pNaviDlg = nullptr;
 	class CEnvToolView  *m_pView = nullptr;
+	
 
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 

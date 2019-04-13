@@ -42,6 +42,7 @@
 #include <afxwin.h>
 #include <afxcontrolbars.h>
 #include <afxcontrolbars.h>
+#include <afxcontrolbars.h>
 
 
 
@@ -83,6 +84,7 @@ enum TOOLTAB_TYPE
 {
 	TAB_TERRAIN,
 	TAB_OBJECT,
+	TAB_NAVI,
 	TAB_END
 };
 

@@ -197,6 +197,7 @@
     <ClInclude Include="EnvToolDoc.h" />
     <ClInclude Include="EnvToolView.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="NaviTab.h" />
     <ClInclude Include="ObjTab.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="EnvToolDoc.cpp" />
     <ClCompile Include="EnvToolView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="NaviTab.cpp" />
     <ClCompile Include="ObjTab.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

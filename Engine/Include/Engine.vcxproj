@@ -44,6 +44,7 @@
     <ClCompile Include="Component\LightSpot.cpp" />
     <ClCompile Include="Component\Material.cpp" />
     <ClCompile Include="Component\Mouse.cpp" />
+    <ClCompile Include="Component\Navi.cpp" />
     <ClCompile Include="Component\Navigation.cpp" />
     <ClCompile Include="Component\Navigation3D.cpp" />
     <ClCompile Include="Component\ParticleSingle.cpp" />
@@ -64,6 +65,8 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\NavigationManager.cpp" />
     <ClCompile Include="Core\NavigationMesh.cpp" />
+    <ClCompile Include="Core\NaviManager.cpp" />
+    <ClCompile Include="Core\NaviMesh.cpp" />
     <ClCompile Include="Core\NetworkManager.cpp" />
     <ClCompile Include="Core\PathManager.cpp" />
     <ClCompile Include="Core\QuadTreeManager.cpp" />
@@ -121,6 +124,7 @@
     <ClInclude Include="Component\LightSpot.h" />
     <ClInclude Include="Component\Material.h" />
     <ClInclude Include="Component\Mouse.h" />
+    <ClInclude Include="Component\Navi.h" />
     <ClInclude Include="Component\Navigation.h" />
     <ClInclude Include="Component\Navigation3D.h" />
     <ClInclude Include="Component\ParticleSingle.h" />
@@ -141,6 +145,8 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\NavigationManager.h" />
     <ClInclude Include="Core\NavigationMesh.h" />
+    <ClInclude Include="Core\NaviManager.h" />
+    <ClInclude Include="Core\NaviMesh.h" />
     <ClInclude Include="Core\NetworkManager.h" />
     <ClInclude Include="Core\PathManager.h" />
     <ClInclude Include="Core\QuadTreeManager.h" />
