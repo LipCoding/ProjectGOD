@@ -25,7 +25,7 @@ CNaviMesh * CNaviManager::CreateNaviMesh(const string & strKey)
 
 	pNavi = new CNaviMesh;
 
-	if (!pNavi->Init())
+	if (!pNavi->InitNavi())
 	{
 		SAFE_DELETE(pNavi);
 		return nullptr;
@@ -62,6 +62,6 @@ void CNaviManager::Render(float fTime)
 
 	if (pNavi)
 	{
-		pNavi->Render();
+		pNavi->RenderNavi();
 	}
 }

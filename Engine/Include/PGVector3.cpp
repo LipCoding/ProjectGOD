@@ -258,6 +258,16 @@ _tagVector3 _tagVector3::operator -(int i[3])	const
 	return v1;
 }
 
+_tagVector3 _tagVector3::operator-() const
+{
+	_tagVector3 v1;
+	v1.x = -x;
+	v1.y = -y;
+	v1.z = -z;
+
+	return v1;
+}
+
 // ============== -=    ==============================
 void _tagVector3::operator -=(const _tagVector3& v)
 {

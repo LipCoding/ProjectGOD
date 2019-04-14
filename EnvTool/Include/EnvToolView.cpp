@@ -182,6 +182,26 @@ void CEnvToolView::OnMouseMove(UINT nFlags, CPoint point)
 void CEnvToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	TOOLTAB_TYPE type = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTabType();
+
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (pLandScapeObj != NULL)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		switch (type)
+		{
+		case TAB_NAVI:
+		{
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+			break;
+		}
+		default:
+			break;
+		}
+
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -228,6 +248,32 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 	}
 	
+	if (KEYDOWN("MouseLButton"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj != NULL)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			switch (type)
+			{
+			case TAB_TERRAIN:
+				break;
+			case TAB_OBJECT:
+				break;
+			case TAB_NAVI:
+			{
+				//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+				break;
+			}
+			default:
+				break;
+			}
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
 	if (KEYPUSH("MouseLButton"))
 	{
 		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
@@ -255,6 +301,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			}
 			case TAB_OBJECT:
 				break;
+			case TAB_NAVI:
+			{
+				//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+				break;
+			}
 			default:
 				break;
 			}

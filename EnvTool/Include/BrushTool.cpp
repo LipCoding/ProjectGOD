@@ -67,6 +67,22 @@ void CBrushTool::SetBrushInformation(Vector3 mousePos)
 	}
 }
 
+void CBrushTool::SetBrushInformation_Other(Vector3 pos)
+{
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+	if (pLandScapeObj)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+
+		pLandScape->SetBrushCheck_Other(m_bBrushCheck_Other);
+		pLandScape->SetBrushInformation_Other(pos);
+
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
+}
+
 void CBrushTool::SetSpeed(float Speed)
 {
 	// up

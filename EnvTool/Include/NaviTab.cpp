@@ -18,6 +18,8 @@
 #include "Core/NaviManager.h"
 #include "Core/NaviMesh.h"
 
+#include "Core/PathManager.h"
+
 PG_USING
 
 // CNaviTab 대화 상자
@@ -45,6 +47,11 @@ void CNaviTab::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CNaviTab, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_NAVI, &CNaviTab::OnBnClickedCheckNavi)
+	ON_BN_CLICKED(IDC_BUTTON_NAVI_UNDO, &CNaviTab::OnBnClickedButtonNaviUndo)
+	ON_BN_CLICKED(IDC_BUTTON_NAVI_SAVE, &CNaviTab::OnBnClickedButtonNaviSave)
+	ON_BN_CLICKED(IDC_BUTTON_NAVI_LOAD, &CNaviTab::OnBnClickedButtonNaviLoad)
+	ON_BN_CLICKED(IDC_BUTTON_NAVI_DELETE, &CNaviTab::OnBnClickedButtonNaviDelete)
+	ON_BN_CLICKED(IDC_BUTTON_NAVI_CLEARALL, &CNaviTab::OnBnClickedButtonNaviClearall)
 END_MESSAGE_MAP()
 
 
@@ -72,8 +79,10 @@ void CNaviTab::Process_ChangeTab()
 	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
 	pBrushTool->SetBrushCheck(false);
+	pBrushTool->SetBrushCheck_Other(false);
 	// 한번 Update위한 함수(이렇게 해야 Brush모양이 사라짐)
 	pBrushTool->SetBrushInformation(Vector3{ 0.f, 0.f, 0.f });
+	pBrushTool->SetBrushInformation_Other(Vector3{ 0.f, 0.f, 0.f });
 
 	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pBrushObj);
@@ -85,7 +94,8 @@ void CNaviTab::Process_ShowTab()
 	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
 
 	pBrushTool->SetBrushCheck(true);
-	pBrushTool->SetBrushInformation(1.f);
+	pBrushTool->SetBrushCheck_Other(true);
+	pBrushTool->SetBrushInformation(m_BrushSize);
 
 	SAFE_RELEASE(pBrushTool);
 	SAFE_RELEASE(pBrushObj);
@@ -98,20 +108,25 @@ void CNaviTab::UpdateForm()
 void CNaviTab::Add_Point(const Vector3 & vPoint)
 {
 	// Vector
-	NAVIPOINT tPoint(vPoint);
+	Vector3 vP = vPoint;
+	Find_NearPoint(vP);
+
+	NAVIPOINT tPoint(vP);
 
 	// listBox
 	m_vecNaviPoint.push_back(tPoint);
 
-	if (m_vecNaviPoint.size() >= 3)
+	if (m_vecNaviPoint.size() == 3)
 	{	
 		CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
 
+		// Clock, ReverseClock Check And Modify To Clock
+		Check_Direction();
 		pNavi->AddCell(m_vecNaviPoint);
 
 		m_vecNaviPoint.clear();
 		m_listNaviPoint.ResetContent();
-		m_listNaviCell.AddString(CString(to_string(m_NumCell).c_str()));
+		m_listNaviCell.AddString(L"Cell_" + CString(to_string(m_NumCell).c_str()));
 		m_NumCell++;
 	}	
 	else
@@ -120,6 +135,145 @@ void CNaviTab::Add_Point(const Vector3 & vPoint)
 	}
 }
 
+void CNaviTab::Find_NearPoint(Vector3 & vPoint)
+{
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	if (pNavi->GetCellIsEmpty())
+		return;
+
+	float fDist = 0.f;
+
+	for (const auto& cell : *pNavi->GetCells())
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			fDist = fabs((cell->Get_Point(i) - vPoint).Length());
+
+			if (fDist <= m_BrushSize)
+			{
+				vPoint = cell->Get_Point(i);
+				return;
+			}
+		}
+	}
+}
+
+void CNaviTab::Check_Direction()
+{
+	if (m_vecNaviPoint.size() != 3)
+		return;
+
+	Vector3 vDirZeroToOne = (m_vecNaviPoint[1].vPosition - m_vecNaviPoint[0].vPosition).Normalize();
+	Vector3 vDirZeroToTwo = (m_vecNaviPoint[2].vPosition - m_vecNaviPoint[0].vPosition).Normalize();
+
+	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CCamera* pCamera = pScene->GetMainCamera();
+	CTransform* pCamTr = pCamera->GetTransform();
+
+	Vector3 vCamDir = pCamTr->GetWorldAxis(AXIS_Z).Normalize();
+
+	Vector3 vCross = vDirZeroToOne.Cross(vDirZeroToTwo);
+
+	float fDot = vCamDir.Dot(vCross);
+
+	// 시계 반대방향
+	if (fDot > 0.f)
+	{
+		Vector3 vTemp = m_vecNaviPoint[1].vPosition;
+
+		m_vecNaviPoint[1].vPosition = m_vecNaviPoint[2].vPosition;
+		m_vecNaviPoint[2].vPosition = vTemp;
+	}
+
+	SAFE_RELEASE(pCamTr);
+	SAFE_RELEASE(pCamera);
+	SAFE_RELEASE(pScene);
+
+	return;
+
+	// 대안코드 (이해 불가)
+	/*auto& iter = m_vecNaviPoint.begin();
+
+	Vector3 vCenterPoint = Vector3{ ((*iter).vPosition.x + (*(iter + 1)).vPosition.x + (*(iter + 2)).vPosition.x) / 3,
+									((*iter).vPosition.y + (*(iter + 1)).vPosition.y + (*(iter + 2)).vPosition.y) / 3,
+									((*iter).vPosition.z + (*(iter + 1)).vPosition.z + (*(iter + 2)).vPosition.z) / 3 };
+
+	Vector3 vDirection[3];
+	vDirection[0] = (*(iter + 1)).vPosition - (*iter).vPosition;
+	vDirection[1] = (*(iter + 2)).vPosition - (*(iter + 1)).vPosition;
+	vDirection[2] = (*iter).vPosition - (*(iter + 2)).vPosition;
+
+	Vector3 vNormal[3];
+	vNormal[0] = Vector3{ -vDirection[0].z, vDirection[0].y, vDirection[0].x };
+	vNormal[1] = Vector3{ -vDirection[1].z, vDirection[1].y, vDirection[1].x };
+	vNormal[2] = Vector3{ -vDirection[2].z, vDirection[2].y, vDirection[2].x };
+
+	for (int i = 0; i < 3; ++i)
+		vNormal[i] = vNormal[i].Normalize();
+
+	for (int i = 0; i < 3; ++i)
+	{
+		Vector3 vTemp = (vCenterPoint - (*(iter + i)).vPosition).Normalize();
+
+		float fDotProduct = vTemp.Dot(vNormal[i]);
+
+		if (fDotProduct > 0.f)
+		{
+			Vector3 vTmp = (*(iter + 1)).vPosition;
+
+			(*(iter + 1)).vPosition = (*(iter + 2)).vPosition;
+			(*(iter + 2)).vPosition = vTmp;
+
+			return;
+		}
+	}*/
+}
+
+void CNaviTab::Pick_NaviMeshCell(const Vector3 & vPos)
+{
+	m_pSelectCell = nullptr;
+
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	for (const auto& cell : *pNavi->GetCells())
+	{
+		UINT iCount = 0;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			Vector3 vTemp = (vPos - cell->Get_Point(i)).Normalize();
+
+			float fDot = vTemp.Dot(cell->Get_Normal(i));
+
+			// In
+			if (fDot < 0.f)
+				++iCount;
+
+			if (iCount == 3)
+			{
+				m_pSelectCell = cell;	
+			}
+		}
+	}
+
+	CGameObject* pBrushObj = CGameObject::FindObject("Brush");
+	CBrushTool* pBrushTool = pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+
+	if (m_pSelectCell)
+	{
+		pBrushTool->SetBrushCheck_Other(true);
+		pBrushTool->SetBrushInformation_Other(vPos);
+	}
+	else
+	{
+		pBrushTool->SetBrushCheck_Other(false);
+		pBrushTool->SetBrushInformation_Other(vPos);
+	}
+
+	SAFE_RELEASE(pBrushTool);
+	SAFE_RELEASE(pBrushObj);
+}
 
 void CNaviTab::OnBnClickedCheckNavi()
 {
@@ -134,4 +288,200 @@ void CNaviTab::OnBnClickedCheckNavi()
 	{
 		GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 	}
+}
+
+
+void CNaviTab::OnBnClickedButtonNaviUndo()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	if (pNavi->GetCellIsEmpty())
+		return;
+
+	auto& iter_end = pNavi->GetCells()->rbegin();
+	SAFE_DELETE(*iter_end);
+	pNavi->GetCells()->pop_back();
+
+	m_listNaviCell.DeleteString(m_listNaviCell.GetCount() - 1);
+	--m_NumCell;
+}
+
+
+void CNaviTab::OnBnClickedButtonNaviSave()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(FALSE, NULL, NULL, OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wchar_t strDir[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscpy_s(strDir, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Navi\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString fileName = dlg.GetFileName();
+	CString flexiblePath = L"Navi\\";
+
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	// 확장자명 제거(만약 확장자명이 세이브 이름으로 들어갈시)
+	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
+	{
+		if (fileName[i] == '.')
+		{
+			fileName.Delete(i, lstrlen(fileName) - 1);
+			break;
+		}
+	}
+
+	CT2CA pszConvertAnsiStringPathName(path);
+	string strFilePath(pszConvertAnsiStringPathName);
+	CT2CA pszConvertAnsiStringFileName(fileName);
+	string strFileName(pszConvertAnsiStringFileName);
+
+	ofstream mainFile;
+	mainFile.open(strFilePath + strFileName + ".bin", ios::out | ios::trunc);
+	
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	vector<CCell*>* pVecCellInfo = pNavi->GetCells();
+
+	// Cell 크기
+	UINT iCellSize = (UINT)pVecCellInfo->size();
+	mainFile << iCellSize << endl;
+
+	// Cell을 순회돌며
+	// vPosition을 저장한다.
+	for (const auto& cell : *pVecCellInfo)
+	{
+		mainFile << cell->Get_Point(0).x << ' ' << cell->Get_Point(0).y << ' ' << cell->Get_Point(0).z << endl;
+		mainFile << cell->Get_Point(1).x << ' ' << cell->Get_Point(1).y << ' ' << cell->Get_Point(1).z << endl;
+		mainFile << cell->Get_Point(2).x << ' ' << cell->Get_Point(2).y << ' ' << cell->Get_Point(2).z << endl;
+	}
+
+	mainFile.close();
+}
+
+
+void CNaviTab::OnBnClickedButtonNaviLoad()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Navi\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CT2CA pszConvertAnsiStringPathName(path);
+	string strFilePath(pszConvertAnsiStringPathName);
+
+	wstring wFlexiblePath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+	string  flexiblePath(wFlexiblePath.begin(), wFlexiblePath.end());
+
+	// 불러오기
+	ifstream mainFile;
+	mainFile.open(strFilePath, ios::in);
+
+	if (!mainFile.is_open())
+		return;
+
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+	
+	// Cell 다 지우고
+	OnBnClickedButtonNaviClearall();
+
+	// Cell 크기를 불러오고
+	UINT iCellSize = 0;
+	mainFile >> iCellSize;
+
+	// 크기만큼 순회돌며
+	for (UINT i = 0; i < iCellSize; ++i)
+	{
+		Vector3 pVec[3];
+
+		mainFile >> pVec[0].x >> pVec[0].y >> pVec[0].z;
+		mainFile >> pVec[1].x >> pVec[1].y >> pVec[1].z;
+		mainFile >> pVec[2].x >> pVec[2].y >> pVec[2].z;
+
+		pNavi->AddCell(pVec);
+		m_listNaviCell.AddString(L"Cell_" + CString(to_string(m_NumCell).c_str()));
+		m_NumCell++;
+	}
+	// vPosition을 불러오고 Cell을 만든다.
+	// NaviMesh를 계산한다.
+
+	pNavi->Compute_Neighbor();
+
+	mainFile.close();
+}
+
+
+void CNaviTab::OnBnClickedButtonNaviDelete()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	if (pNavi->GetCellIsEmpty() ||
+		m_pSelectCell == nullptr)
+		return;
+
+	vector<CCell*>* pVecCells = pNavi->GetCells();
+
+	auto& cell = remove_if(pVecCells->begin(), pVecCells->end(),
+						 [&](CCell* cell) {return m_pSelectCell == cell; });
+
+	if (cell == pVecCells->end())
+		return;
+
+	pVecCells->erase(cell, pVecCells->end());
+
+
+	m_listNaviCell.DeleteString(m_listNaviCell.GetCount() - 1);
+	--m_NumCell;
+}
+
+
+void CNaviTab::OnBnClickedButtonNaviClearall()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CNaviMesh* pNavi = GET_SINGLE(CNaviManager)->FindNaviMesh("test");
+
+	if (pNavi->GetCellIsEmpty())
+		return;
+
+	pNavi->FreeCell();
+	m_listNaviCell.ResetContent();
+	m_NumCell = 0;
 }

@@ -71,6 +71,8 @@ typedef struct PG_DLL _tagVector3	:
 
 	_tagVector3 operator -(int i[3])	const;
 
+	_tagVector3 operator -() const;
+
 	// ============== -=    ==============================
 	void operator -=(const _tagVector3& v);
 

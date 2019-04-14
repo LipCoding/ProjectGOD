@@ -49,10 +49,12 @@ private:
 
 	// Brush
 	bool m_bCheckBrush = false;
+	bool m_bCheckBrush_Other = false;
 	Vector3 m_vPosBrush;
+	Vector3 m_vPosBrush_Other = Vector3{ 10.f, 10.f, 10.f };
 	Vector4 m_vColorBrush;
 	float   m_fRangeBrush = 1.f;
-
+	float   m_fRangeBrush_Other = 1.5f;
 public:
 	vector<VERTEXBUMP>& getVecVtx() { return m_vecVtx; }
 	vector<UINT>& getVecIndex() { return m_vecIndex; }
@@ -65,9 +67,11 @@ public:
 	void SetSplatCount(int count);
 	void SetDetailLevel_Splat(int index, int iDetailLevel);
 	void SetBrushCheck(bool check);
+	void SetBrushCheck_Other(bool check);
 	void SetBrushInformation(float range) { m_fRangeBrush = range; }
 	void SetBrushInformation(Vector4 color) { m_vColorBrush = color; }
 	void SetBrushInformation(Vector3 pos) { m_vPosBrush = pos; }
+	void SetBrushInformation_Other(Vector3 pos) { m_vPosBrush_Other = pos; }
 	void SetTerrainSize(int x, int z);
 public:
 	bool CreateLandScape(const string& strMeshKey, int iVtxCount, bool bBump,
