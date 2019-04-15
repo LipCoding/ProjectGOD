@@ -232,7 +232,7 @@ bool CCell::Compute_NeighborCell(const Vector3 & pPoint1, const Vector3 & pPoint
 	return false;
 }
 
-bool CCell::InitCell(const vector<NAVIPOINT>& vecPoints, CCell::CELL_OPT eCellOpt)
+bool CCell::InitCell(const vector<Vector3>& vecPoints, CCell::CELL_OPT eCellOpt)
 {
 	ZeroMemory(m_pNeighbor, sizeof(CCell*)*DIR_END);
 	ZeroMemory(m_vPoints, sizeof(Vector3)*POINT_END);
@@ -244,7 +244,7 @@ bool CCell::InitCell(const vector<NAVIPOINT>& vecPoints, CCell::CELL_OPT eCellOp
 		return false;
 
 	m_eOption = eCellOpt;
-	Calc_Point(vecPoints[0].vPosition, vecPoints[1].vPosition, vecPoints[2].vPosition);
+	Calc_Point(vecPoints[0], vecPoints[1], vecPoints[2]);
 
 	VERTEXCOLOR tLine[6] =
 	{

@@ -63,7 +63,7 @@ private:
 
 public:
 	/* Default */
-	bool InitCell(const vector<NAVIPOINT>& vecPoints, CCell::CELL_OPT eCellOpt = OPT_TERRAIN);
+	bool InitCell(const vector<Vector3>& vecPoints, CCell::CELL_OPT eCellOpt = OPT_TERRAIN);
 	bool InitCell(const Vector3* vecPoints, CCell::CELL_OPT eCellOpt = OPT_TERRAIN);
 	int UpdateCell();
 	int LateUpdateCell();

@@ -478,24 +478,4 @@ typedef struct PG_DLL _tagShareCBuffer
 	float   fEmpty;
 }SHARECBUFFER, *PSHARECBUFFER;
 
-typedef struct _tagNaviPoint
-{
-	Vector3 vPosition;
-	//Type
-
-	_tagNaviPoint(float x, float y, float z)
-	{
-		vPosition.x = x;
-		vPosition.y = y;
-		vPosition.z = z;
-	}
-
-	_tagNaviPoint(Vector3 vPos)
-	{
-		vPosition.x = vPos.x;
-		vPosition.y = vPos.y;
-		vPosition.z = vPos.z;
-	}
-}NAVIPOINT;
-
 PG_END

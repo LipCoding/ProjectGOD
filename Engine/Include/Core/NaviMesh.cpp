@@ -10,7 +10,7 @@ CNaviMesh::CNaviMesh()
 
 CNaviMesh::~CNaviMesh()
 {
-	Safe_Delete_VecList(m_Cells);
+	FreeCell();
 	SAFE_RELEASE(m_pDepthDisable);
 }
 
@@ -32,7 +32,7 @@ UINT CNaviMesh::Get_PositionIndex(const Vector3 & vPos)
 	return -1;
 }
 
-void CNaviMesh::AddCell(const vector<NAVIPOINT>& points)
+void CNaviMesh::AddCell(const vector<Vector3>& points)
 {
 	CCell* pCell = new CCell;
 

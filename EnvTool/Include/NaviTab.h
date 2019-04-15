@@ -38,7 +38,7 @@ public:
 	void Pick_NaviMeshCell(const Vector3& vPos);
 
 private:
-	vector<NAVIPOINT> m_vecNaviPoint;
+	vector<Vector3> m_vecNaviPoint;
 	CListBox m_listNaviPoint;
 	CListBox m_listNaviCell;
 	CButton m_checkBoxNaviOn;

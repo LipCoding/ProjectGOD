@@ -63,7 +63,7 @@ private:
 	UINT				m_iCurIndex = 0;
 
 public:
-	void AddCell(const vector<NAVIPOINT>& points);
+	void AddCell(const vector<Vector3>& points);
 	void AddCell(const Vector3* points);
 	void Compute_Neighbor(void);
 
