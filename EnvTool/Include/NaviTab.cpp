@@ -390,18 +390,26 @@ void CNaviTab::OnBnClickedButtonNaviLoad()
 		return;
 
 	CString path = dlg.GetPathName();
-	CT2CA pszConvertAnsiStringPathName(path);
-	string strFilePath(pszConvertAnsiStringPathName);
+	CString fileName = dlg.GetFileName();
 
-	wstring wFlexiblePath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
-	string  flexiblePath(wFlexiblePath.begin(), wFlexiblePath.end());
+	// 확장자명 제거(만약 확장자명이 세이브 이름으로 들어갈시)
+	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
+	{
+		if (fileName[i] == '.')
+		{
+			fileName.Delete(i, lstrlen(fileName) - 1);
+			break;
+		}
+	}
 
+	CT2CA pszConvertAnsiStringName(fileName);
+	string strFileName(pszConvertAnsiStringName);
 
 	// Cell 다 지우고
 	OnBnClickedButtonNaviClearall();
 
 	// 불러오기
-	if (!GET_SINGLE(CNaviManager)->CreateNaviMesh(strFilePath))
+	if (!GET_SINGLE(CNaviManager)->CreateNaviMesh(strFileName))
 		return;
 
 	UINT iCellSize = (UINT)GET_SINGLE(CNaviManager)->GetNaviCells()->size();

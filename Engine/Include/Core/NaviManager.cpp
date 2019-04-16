@@ -2,6 +2,7 @@
 #include "../Scene/Scene.h"
 #include "../Component/Transform.h"
 #include "NaviMesh.h"
+#include "../Core/PathManager.h"
 
 PG_USING
 
@@ -77,6 +78,14 @@ const vector<class CCell*>* CNaviManager::GetNaviCells()
 	return m_pCurrentNaviMesh->GetCells();
 }
 
+float CNaviManager::GetY(const Vector3& vPos)
+{
+	if(m_pCurrentNaviMesh == nullptr)
+		return 0.0f;
+
+	return m_pCurrentNaviMesh->Get_y(vPos);
+}
+
 CNaviMesh * CNaviManager::CreateNaviMesh()
 {
 	FreeNaviMesh();
@@ -92,8 +101,11 @@ CNaviMesh * CNaviManager::CreateNaviMesh()
 	return m_pCurrentNaviMesh;
 }
 
-CNaviMesh * CNaviManager::CreateNaviMesh(const string & filePath)
+CNaviMesh * CNaviManager::CreateNaviMesh(const string & fileName)
 {
+	string flexiblePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH);
+	string filePath = "Navi\\" + fileName + ".bin";
+
 	FreeNaviMesh();
 	
 	m_pCurrentNaviMesh = new CNaviMesh;
@@ -106,7 +118,7 @@ CNaviMesh * CNaviManager::CreateNaviMesh(const string & filePath)
 
 	// 파일 불러오기
 	ifstream mainFile;
-	mainFile.open(filePath, ios::in);
+	mainFile.open(flexiblePath + filePath, ios::in);
 
 	if (!mainFile.is_open())
 	{
@@ -164,6 +176,14 @@ void CNaviManager::UndoCell()
 	auto& iter_end = pVecCells->rbegin();
 	SAFE_DELETE(*iter_end);
 	pVecCells->pop_back();
+}
+
+bool CNaviManager::CheckPosition(const Vector3 & vPos, Vector3 * vDir)
+{
+	if (m_pCurrentNaviMesh == nullptr)
+		return false;
+
+	return m_pCurrentNaviMesh->Check_Position(vPos, vDir);
 }
 
 void CNaviManager::FreeNaviMesh()

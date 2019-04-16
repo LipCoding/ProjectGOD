@@ -14,12 +14,14 @@ public:
 	{
 		m_bRenderCheck = check;
 	}
+	float GetY(const Vector3& vPos);
+
 
 public:
 	/* Default */
 	class CNaviMesh * CreateNaviMesh();
 	/* Load */
-	class CNaviMesh * CreateNaviMesh(const string& filePath);
+	class CNaviMesh * CreateNaviMesh(const string& fileName);
 	
 	/* Add Cell, */
 	void AddCell(const vector<Vector3>& vPoint);
@@ -28,6 +30,9 @@ public:
 	/* Erase */
 	void EraseCell(const CCell* searchCell);
 	void UndoCell();
+
+	/* Check Navi Index */
+	bool CheckPosition(const Vector3& vPos, Vector3* vDir);
 
 	void FreeNaviMesh();
 

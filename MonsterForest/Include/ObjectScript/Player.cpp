@@ -10,6 +10,7 @@
 #include "Scene/Scene.h"
 #include "../ObjectScript/Effect.h"
 #include "Core/QuadTreeManager.h"
+#include "Core/NaviManager.h"
 
 CPlayer::CPlayer()
 {
@@ -278,12 +279,43 @@ void CPlayer::Input(float fTime)
 
 		m_pTransform->SetWorldPos(vPos);
 		*/
-		
-		m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
-		Vector3 vPos = m_pTransform->GetWorldPos();
 
-		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
-		vPos.y = fPosY;
+		
+	
+		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+
+		vPos += vDir * m_fMoveSpeed * 2.f * fTime;
+
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
+			vPos = m_pTransform->GetWorldPos();
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+			{
+				m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
+				vPos = m_pTransform->GetWorldPos();
+				float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				vPos.y = fPosY;
+			}
+			else
+			{
+				Vector3 vOpposite = -vdirection;
+				Vector3 vSlide = vDir * vOpposite.Dot(vDir);
+				vSlide = vDir + vSlide;
+
+				vPos = m_pTransform->GetWorldPos();
+				vPos += vSlide * m_fMoveSpeed * 2.f * fTime;
+
+				//vPos = 
+			}
+		}
 
 		m_pTransform->SetWorldPos(vPos);
 
@@ -310,8 +342,16 @@ void CPlayer::Input(float fTime)
 
 		Vector3 vPos = m_pTransform->GetWorldPos();
 
-		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
-		vPos.y = fPosY;
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
 
 		m_pTransform->SetWorldPos(vPos);
 

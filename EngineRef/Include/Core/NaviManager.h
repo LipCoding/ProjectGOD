@@ -5,14 +5,7 @@
 PG_BEGIN
 
 class PG_DLL CNaviManager
-{
-private:
-	//unordered_map<string, class CNaviMesh*> m_mapNaviMesh;
-	//string m_curMeshName = "";
-	
-	class CNaviMesh* m_pCurrentMesh = nullptr;
-	bool m_bRenderCheck = false;
-	
+{	
 public:
 	const vector<class CCell*>* GetNaviCells();
 	bool IsCellEmpty();
@@ -21,16 +14,14 @@ public:
 	{
 		m_bRenderCheck = check;
 	}
+	float GetY(const Vector3& vPos);
+
 
 public:
-	/*class CNaviMesh * CreateNaviMesh(const string& strKey);
-	class CNaviMesh* FindNaviMesh(const string& strKey);
-	class CNaviMesh* FindNaviMesh(const Vector3& vPos);*/
-
 	/* Default */
 	class CNaviMesh * CreateNaviMesh();
 	/* Load */
-	class CNaviMesh * CreateNaviMesh(const string& filePath);
+	class CNaviMesh * CreateNaviMesh(const string& fileName);
 	
 	/* Add Cell, */
 	void AddCell(const vector<Vector3>& vPoint);
@@ -40,10 +31,26 @@ public:
 	void EraseCell(const CCell* searchCell);
 	void UndoCell();
 
+	/* Check Navi Index */
+	bool CheckPosition(const Vector3& vPos, Vector3* vDir);
+
 	void FreeNaviMesh();
 
 public:
 	void Render(float fTime);
+
+private:
+	class CNaviMesh* m_pCurrentNaviMesh = nullptr;
+	bool m_bRenderCheck = false;
+
+	/* Dummy */
+//private:
+	//unordered_map<string, class CNaviMesh*> m_mapNaviMesh;
+	//string m_curMeshName = "";
+
+	/*class CNaviMesh * CreateNaviMesh(const string& strKey);
+	class CNaviMesh* FindNaviMesh(const string& strKey);
+	class CNaviMesh* FindNaviMesh(const Vector3& vPos);*/
 
 	DECLARE_SINGLE(CNaviManager);
 };

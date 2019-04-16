@@ -36,6 +36,8 @@
 #include "Component/ColliderRect.h"
 #include "Core/PathManager.h"
 #include "Core/QuadTreeManager.h"
+#include "Core/NaviManager.h"
+#include "Component/Cell.h"
 
 
 CTestScene::CTestScene()
@@ -57,7 +59,7 @@ bool CTestScene::Init()
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
-		pLandScape->Load_Terrain("test_scene");
+		pLandScape->Load_Terrain("Test_Scene_Navi");
 
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
@@ -76,13 +78,20 @@ bool CTestScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
 
+#pragma region Navigation
+		GET_SINGLE(CNaviManager)->CreateNaviMesh("Navi_Test_Scene");
+		GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+#pragma endregion
+
 #pragma region Player
 		CGameObject*	pPlayerObj = CGameObject::CreateObject("PlayerCharacter", pLayer);
 		CPlayer*		pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
 		SAFE_RELEASE(pPlayer);
 		CTransform*	pTr = pPlayerObj->GetTransform();
 
-		pTr->SetWorldPos(50.f, 0.f, 50.f);
+		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells())[0]->Get_CenterPos();
+
+		pTr->SetWorldPos(vFirstNodeCenterPos);
 		pTr->SetWorldScale(1.f, 1.f, 1.f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
