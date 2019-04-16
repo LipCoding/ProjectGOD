@@ -22,11 +22,13 @@ public:
 	bool  GetSplattingCheck() { return m_bSplattingCheck; }
 
 	void SetBrushCheck(bool check) { m_bBrushCheck = check; }
+	void SetBrushCheck_Other(bool check) { m_bBrushCheck_Other = check; }
 	void SetHeightCheck(bool check) { m_bHeightCheck = check; }
 	void SetSlattingCheck(bool check) { m_bSplattingCheck = check; }
 	void SetBrushInformation(float range);
 	void SetBrushInformation(Vector4 color);
 	void SetBrushInformation(Vector3 mousePos);
+	void SetBrushInformation_Other(Vector3 pos);
 	
 	void SetSpeed(float Speed);
 	void SetSpeedDir(bool check);
@@ -48,6 +50,7 @@ private:
 	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power, bool erase);
 private:
 	bool  m_bBrushCheck = false;
+	bool  m_bBrushCheck_Other = false;
 	bool  m_bHeightCheck = true;
 	bool  m_bSplattingCheck = false;
 	float m_fRange = 1.f;
@@ -59,6 +62,7 @@ private:
 
 	UINT32* m_pArrPixel[4] = { nullptr };
 	BYTE* m_pArrPixel_Byte = nullptr;
+
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

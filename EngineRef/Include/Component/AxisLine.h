@@ -20,7 +20,7 @@ private:
 	Matrix*				m_matBoneWorld;
 	ID3D11InputLayout*	m_pLayout;
 	TRANSFORMCBUFFER	m_tTransform;
-	bool				m_bRednerCheck;
+	bool				m_bRenderCheck;
 
 private:
 	/* font */

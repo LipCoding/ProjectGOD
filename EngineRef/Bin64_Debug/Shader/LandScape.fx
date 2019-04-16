@@ -17,6 +17,8 @@ cbuffer LandScapeCBuffer	: register(b12)
 	float   g_fEmpty2;
 	float4  g_vColorBrush;
 	vector<float, 4>     g_arrDetailLevelTex;
+	float3  g_vPosBrush_Other;
+	float   g_fEmpty3;
 }
 
 Texture2DArray	g_SplatDif	: register(t11);
@@ -453,6 +455,19 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		if (length(abs(vPos_other - vPos)) < g_fRangeBrush)
 			output.vColor += g_vColorBrush;
 	}
+
+	if (g_fEmpty2)
+	{
+		float3	vPos2 = g_vPosBrush_Other;
+		vPos2 = mul(float4(vPos2, 1.f), g_matWorld).xyz;
+
+		float3 vPos_other2 = input.vOriginPos;
+		vPos_other2 = mul(float4(vPos_other2, 1.f), g_matWorld).xyz;
+
+		if (length(abs(vPos_other2 - vPos2)) < 1.5f)
+			output.vColor += float4(0.f, 1.f, 0.f, 1.f);
+	}
+
 
 	return output;
 }

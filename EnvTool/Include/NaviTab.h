@@ -1,7 +1,10 @@
 ﻿#pragma once
 
+#include "PGEngine.h"
 
-// CNaviTab 대화 상자
+#include "Component/Cell.h"
+
+PG_USING
 
 class CNaviTab : public CDialogEx
 {
@@ -27,4 +30,29 @@ public:
 	void Process_ChangeTab();
 	void Process_ShowTab();
 	void UpdateForm();
+
+public:
+	void Add_Point(const Vector3& vPoint);
+	void Find_NearPoint(Vector3& vPoint);
+	void Check_Direction();
+	void Pick_NaviMeshCell(const Vector3& vPos);
+
+private:
+	vector<Vector3> m_vecNaviPoint;
+	CListBox m_listNaviPoint;
+	CListBox m_listNaviCell;
+	CButton m_checkBoxNaviOn;
+	
+	CCell* m_pSelectCell = nullptr;
+
+	int m_NumCell = 0;
+	float m_BrushSize = 0.5f;
+
+public:
+	afx_msg void OnBnClickedCheckNavi();
+	afx_msg void OnBnClickedButtonNaviUndo();
+	afx_msg void OnBnClickedButtonNaviSave();
+	afx_msg void OnBnClickedButtonNaviLoad();
+	afx_msg void OnBnClickedButtonNaviDelete();
+	afx_msg void OnBnClickedButtonNaviClearall();
 };

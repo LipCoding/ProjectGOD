@@ -3,6 +3,7 @@
 #include "../Component/Transform.h"
 #include "NavigationMesh.h"
 
+
 PG_USING
 
 DEFINITION_SINGLE(CNavigationManager)

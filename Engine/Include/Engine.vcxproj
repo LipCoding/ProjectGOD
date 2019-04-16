@@ -26,6 +26,7 @@
     <ClCompile Include="Component\AxisLine.cpp" />
     <ClCompile Include="Component\BoneSocket.cpp" />
     <ClCompile Include="Component\Camera.cpp" />
+    <ClCompile Include="Component\Cell.cpp" />
     <ClCompile Include="Component\Font.cpp" />
     <ClCompile Include="Component\Collider.cpp" />
     <ClCompile Include="Component\ColliderAABB.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Component\AxisLine.h" />
     <ClInclude Include="Component\BoneSocket.h" />
     <ClInclude Include="Component\Camera.h" />
+    <ClInclude Include="Component\Cell.h" />
     <ClInclude Include="Component\Font.h" />
     <ClInclude Include="Component\Collider.h" />
     <ClInclude Include="Component\ColliderAABB.h" />

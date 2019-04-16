@@ -83,6 +83,11 @@ void CLandScape::SetBrushCheck(bool check)
 	m_bCheckBrush = check; 
 }
 
+void CLandScape::SetBrushCheck_Other(bool check)
+{
+	m_bCheckBrush_Other = check;
+}
+
 void CLandScape::SetTerrainSize(int x, int z)
 {
 	m_iNumX = x;
@@ -1775,6 +1780,7 @@ void CLandScape::UpdateNode()
 			{
 				tBuffer.arrDetailLevelTex[i] = m_arrDetailLevel_Tex[i];
 			}
+
 			// brush
 			if (m_bCheckBrush)
 			{
@@ -1786,6 +1792,17 @@ void CLandScape::UpdateNode()
 			else
 			{
 				tBuffer.fEmpty1 = 0.f;
+			}
+
+			// brush
+			if (m_bCheckBrush_Other)
+			{
+				tBuffer.fEmpty2 = 1.f;
+				tBuffer.vPosBrush_Other = m_vPosBrush_Other;
+			}
+			else
+			{
+				tBuffer.fEmpty2 = 0.f;
 			}
 
 			pRenderer->UpdateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER),

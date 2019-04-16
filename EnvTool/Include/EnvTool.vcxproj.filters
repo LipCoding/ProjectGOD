@@ -19,9 +19,6 @@
     <Filter Include="00.Tab">
       <UniqueIdentifier>{6b257c7c-c2bd-4203-babb-004a0b7017f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.Tab\Obj">
-      <UniqueIdentifier>{f28e3eb3-9903-4c3e-9cf8-95a0d5cd294f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.Tab\Terrain">
       <UniqueIdentifier>{f31e9a37-a978-4051-8897-4f2b12b38306}</UniqueIdentifier>
     </Filter>
@@ -30,6 +27,9 @@
     </Filter>
     <Filter Include="00.Tab\Navi">
       <UniqueIdentifier>{40faf7bd-0d46-4723-a413-518942987512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.Tab\Obj">
+      <UniqueIdentifier>{f28e3eb3-9903-4c3e-9cf8-95a0d5cd294f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

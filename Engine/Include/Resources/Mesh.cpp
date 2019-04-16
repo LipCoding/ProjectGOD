@@ -374,6 +374,7 @@ bool CMesh::CreateIndexBuffer(UINT iIdxCount, UINT iIdxSize,
 
 void CMesh::Render(float fTime)
 {
+	// Render
 	for (size_t i = 0; i < m_vecMeshContainer.size(); ++i)
 	{
 		UINT	iOffset = 0;

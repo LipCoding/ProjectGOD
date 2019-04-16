@@ -30,6 +30,7 @@
 #include "BrushTool.h"
 //#include "TarrainEdit.h"
 #include "ObjTab.h"
+#include "NaviTab.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -181,6 +182,26 @@ void CEnvToolView::OnMouseMove(UINT nFlags, CPoint point)
 void CEnvToolView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	TOOLTAB_TYPE type = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTabType();
+
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (pLandScapeObj != NULL)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		switch (type)
+		{
+		case TAB_NAVI:
+		{
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+			break;
+		}
+		default:
+			break;
+		}
+
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -227,6 +248,32 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 	}
 	
+	if (KEYDOWN("MouseLButton"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		if (pLandScapeObj != NULL)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			switch (type)
+			{
+			case TAB_TERRAIN:
+				break;
+			case TAB_OBJECT:
+				break;
+			case TAB_NAVI:
+			{
+				//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+				break;
+			}
+			default:
+				break;
+			}
+
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
 	if (KEYPUSH("MouseLButton"))
 	{
 		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
@@ -254,6 +301,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			}
 			case TAB_OBJECT:
 				break;
+			case TAB_NAVI:
+			{
+				//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Pick_NaviMeshCell(m_vPickPos);
+				break;
+			}
 			default:
 				break;
 			}
@@ -285,6 +337,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				{
 					((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->AddObject();
 				}
+				break;
+			}
+			case TAB_NAVI:
+			{
+				// AddPoint();
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Add_Point(m_vPickPos);
 				break;
 			}
 			default:
@@ -330,6 +388,10 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				break;
 			}
 			case TAB_OBJECT:
+			{
+				break;
+			}
+			case TAB_NAVI:
 			{
 				break;
 			}
@@ -532,6 +594,7 @@ void CEnvToolView::UpdateObject(const float & fTime)
 void CEnvToolView::UpdateForm(const float & fTime)
 {
 	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
+	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->UpdateForm();
 }
 
 void CEnvToolView::SetMainCamera()
@@ -605,6 +668,15 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 								SAFE_RELEASE(pTempObject);
 							}
 						}
+						break;
+					}
+					case TAB_NAVI:
+					{
+						CBrushTool* pBrushTool = m_pBrushObj->FindComponentFromTag<CBrushTool>("BrushTool");
+						//_cprintf("x : %f, y : %f, z : %f\n", pickPos.x, pickPos.y, pickPos.z);
+						pBrushTool->SetBrushInformation(m_vPickPos);
+						SAFE_RELEASE(pBrushTool);
+						bFirstCheck = true;
 						break;
 					}
 					default:
