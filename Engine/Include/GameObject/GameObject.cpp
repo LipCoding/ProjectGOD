@@ -176,7 +176,7 @@ void CGameObject::AddPrototype(const string & strTag,
 {
 	if (FindPrototype(strTag))
 	{
-		assert(false);
+		//assert(false);
 	}
 
 	pPrototype->AddRef();

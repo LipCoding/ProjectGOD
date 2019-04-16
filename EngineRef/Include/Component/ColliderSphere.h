@@ -32,6 +32,7 @@ public:
 	virtual void ColliderRender(float fTime);
 	virtual CColliderSphere* Clone();
 
+
 public:
 	virtual bool Collision(CCollider* pDest);
 };

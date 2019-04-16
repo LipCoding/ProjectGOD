@@ -25,8 +25,7 @@ PS_OUTPUT_SINGLE ColliderPS(float4 vColor : COLOR)
 {
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
 
-	output.vColor = vColor;
+	output.vColor = g_vColliderColor;
 	output.vColor.a = 1.f;
-	//output.vColor = float4(1.f, 0.f, 1.f, 1.f);
 	return output;
 }

@@ -657,8 +657,8 @@ void CRenderManager::Render(float fTime)
 		{
 			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
 		}
-			
-		m_tRenderGroup[i].iSize = 0;
+		if(i != RGT_UI)
+			m_tRenderGroup[i].iSize = 0;
 	}
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
@@ -683,6 +683,19 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+
+	for(int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
+	{
+		CCollider* pCollider = nullptr;
+		pCollider = m_tRenderGroup[RGT_UI].pRenderObj[i]->FindComponentFromType<CCollider>(CT_COLLIDER);
+		if (pCollider != nullptr)
+		{
+			pCollider->ColliderRender(fTime);
+			SAFE_RELEASE(pCollider);
+		}
+	}
+
+	m_tRenderGroup[RGT_UI].iSize = 0;
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 		m_tRenderGroup[i].iSize = 0;

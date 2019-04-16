@@ -72,6 +72,7 @@
     <ClCompile Include="Core\PathManager.cpp" />
     <ClCompile Include="Core\QuadTreeManager.cpp" />
     <ClCompile Include="Core\Scheduler.cpp" />
+    <ClCompile Include="Core\SoundManager.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Core\TimerManager.cpp" />
     <ClCompile Include="Device.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Core\PathManager.h" />
     <ClInclude Include="Core\QuadTreeManager.h" />
     <ClInclude Include="Core\Scheduler.h" />
+    <ClInclude Include="Core\SoundManager.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Core\TimerManager.h" />
     <ClInclude Include="Device.h" />

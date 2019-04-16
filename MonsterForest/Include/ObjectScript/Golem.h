@@ -1,24 +1,30 @@
 #pragma once
 
-#include "Component/Script.h"
-#include "Component/Transform.h"
-#include "Component/Animation.h"
-#include "Component/Navigation3D.h"
+#include "Monster.h"
 #include "GolemState.h"
 PG_USING
 
-class Golem	:
-	public CScript
+class Golem :
+	public Monster
 {
 	using GOLEMSTATE = pair<string, GolemState*>;
 public:
 	Golem();
 	Golem(const Golem& goblin);
 	~Golem();
+
 private:
+	int currentHP = 100;
+	int currentMP = 100;
+
+	int maxHP = 100;
+	int maxMP = 100;
+
+	int attackDamage = 5;
+
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
-	bool returnToInitialPos{false};
+	bool returnToInitialPos{ false };
 	float hearth_point{ 50 };
 private:
 	CTransform*		m_pTarget;
@@ -27,7 +33,7 @@ private:
 	bool            m_bEffectCheck = false;
 	float           m_fEffectTime = 0.f;
 protected:
-	GolemState* pState{nullptr};
+	GolemState* pState{ nullptr };
 	unordered_map<int, GOLEMSTATE> stateMap;
 	size_t currentAnimation{ 0 };
 	size_t nextAnimation{ 0 };
@@ -63,5 +69,19 @@ public:
 		float fTime);
 	virtual void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
+
+public:
+public:
+	int getCurrentHP() { return currentHP; }
+	int getCurrentMP() { return currentMP; }
+	int getMaxHP() { return maxHP; }
+	int getMaxMP() { return maxMP; }
+	int getAttackDamage() { return attackDamage; }
+public:
+	void setCurrentHP(int currentHP) { this->currentHP = currentHP; }
+	void setCurrentMP(int currentMP) { this->currentMP = currentMP; }
+	void setMaxHP(int maxHP) { this->maxHP = maxHP; }
+	void setMaxMP(int maxMP) { this->maxMP = maxMP; }
+	void setAttackDamag(int attackDamage) { this->attackDamage = attackDamage; }
 };
 

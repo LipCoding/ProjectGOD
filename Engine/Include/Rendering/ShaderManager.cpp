@@ -123,6 +123,15 @@ bool CShaderManager::Init()
 
 	SAFE_RELEASE(pShader);
 
+	pEntry[ST_VERTEX] = "UIVS";
+	pEntry[ST_PIXEL] = "UIHearthBarColorPS";
+	pEntry[ST_GEOMETRY] = NULL;
+	pShader = LoadShader(UI_HEARTH_BAR_SHADER, L"UI.fx",
+		pEntry);
+
+
+	SAFE_RELEASE(pShader);
+
 	pEntry[ST_VERTEX] = "SkyVS";
 	pEntry[ST_PIXEL] = "SkyPS";
 	pEntry[ST_GEOMETRY] = NULL;

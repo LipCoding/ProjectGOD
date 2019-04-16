@@ -29,6 +29,7 @@ CCollider::CCollider()
 	m_vecSectionIndex.reserve(8);
 
 	m_bColliderRenderCheck = false;
+	m_vColor = Vector4::Green;
 }
 
 CCollider::CCollider(const CCollider & coll) :
@@ -237,10 +238,7 @@ void CCollider::SetColliderRenderCheck(bool check)
 
 bool CCollider::Init()
 {
-	//CRenderer* pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
-	//pRenderer->AlphaEnable(true);
-	//SAFE_RELEASE(pRenderer);
-
+	m_vColor = Vector4::Green;
 	return true;
 }
 
@@ -256,15 +254,12 @@ int CCollider::Update(float fTime)
 	m_vMove = vPos - m_vPrevPos;
 
 	m_vPrevPos = vPos;
-
+	m_vColor = Vector4::Green;
 	return 0;
 }
 
 int CCollider::LateUpdate(float fTime)
 {
-
-	m_vColor = Vector4::Black;
-
 
 	return 0;
 }
@@ -285,7 +280,7 @@ void CCollider::Render(float fTime)
 
 	//m_pShader->SetShader();
 	//GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
-	//m_pMeshSphere->Render(fTime);
+	//m_pMesh->Render(fTime);
 
 	//if (m_pWireFrame)
 	//	m_pWireFrame->ResetState();
@@ -297,7 +292,7 @@ void CCollider::ColliderRender(float fTime)
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("ColliderColor",
-		&m_vColor, SCT_VERTEX);
+		&m_vColor, SCT_VERTEX | SCT_PIXEL);
 
 	if (m_pWireFrame)
 		m_pWireFrame->SetState();
@@ -312,8 +307,8 @@ void CCollider::ColliderRender(float fTime)
 
 void CCollider::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
-
 	m_vColor = Vector4::Red;
+	//m_vColor = Vector4::Red;
 
 }
 
@@ -321,13 +316,13 @@ void CCollider::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 
 	m_vColor = Vector4::Red;
-
+	//m_vColor = Vector4::Red;
 }
 
 void CCollider::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
 {
-
-	m_vColor = Vector4::Black;
+	m_vColor = Vector4::Green;
+	//m_vColor = Vector4::Black;
 
 }
 
@@ -446,7 +441,7 @@ bool CCollider::CollisionRayToAABB(PRAY tRay, const AABB & dest)
 {
 	//
 	Vector3 t1, t2;
-	
+
 	// 충돌 조건을 위해 필요한 원소이다.
 	// t_min은 광선이 최초로 slab 평면과의 교차하는 위치이다.
 	double t_min = -DBL_MAX;
@@ -543,7 +538,7 @@ bool CCollider::CollisionSphereToAABB(const AABB & tDest, const SPHERE & tSrc)
 		if (fCenter < tDest.vMin[i])
 		{
 			fDist += ((tDest.vMin[i] - fCenter) *
-					(tDest.vMin[i] - fCenter));
+				(tDest.vMin[i] - fCenter));
 		}
 		else if (fCenter > tDest.vMax[i])
 		{

@@ -14,7 +14,7 @@
 
 PG_USING
 
-CScene::CScene()	:
+CScene::CScene() :
 	m_pMainCameraObj(NULL),
 	m_pMainCamera(NULL),
 	m_pMainCameraTr(NULL),
@@ -116,8 +116,6 @@ CGameObject * CScene::CreateOrthoCamera(const string & strKey,
 	pCamera->SetOrthoProj(tRS, fNear, fFar);
 
 	SAFE_RELEASE(pCamera);
-
-	pCameraObj->SetScene(this);
 
 	pCameraObj->AddRef();
 	m_mapCamera.insert(make_pair(strKey, pCameraObj));
@@ -276,27 +274,23 @@ bool CScene::Init()
 	SAFE_RELEASE(pLayer);
 
 
+
 	pLayer = CreateLayer("UI", INT_MAX);
 
 	SAFE_RELEASE(pLayer);
 
 	// 메인 카메라 생성
 	m_pMainCameraObj = CreateCamera("MainCamera",
-	Vector3(0.f, 5.f, -5.f), XMConvertToRadians(60.f),
-	(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
+		Vector3(0.f, 5.f, -5.f), XMConvertToRadians(60.f),
+		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
 
 	m_pMainCamera = m_pMainCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pMainCameraTr = m_pMainCameraObj->GetTransform();
 
 	// 라이트 카메라
 	m_pLightCameraObj = CreateCamera("LightCamera",
-		Vector3(-10.f, 100.f, -10.f), XMConvertToRadians(20.f),
+		Vector3(-10.f, 100.f, -10.f), XMConvertToRadians(90.f),
 		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
-
-	/*m_pLightCameraObj = CreateOrthoCamera("LightCamera",
-		Vector3(0.f, 100.f, 0.f),
-		DEVICE_RESOLUTION, 1.f, 1000.f);*/
-
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();
 
@@ -323,15 +317,16 @@ bool CScene::Init()
 
 	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
 
-	pGlobalLight->SetLightRange(1000000.f);
+	pGlobalLight->SetLightRange(100000.f);
 
 	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
 		Vector4(0.f, 0.f, 0.f, 1.f));*/
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
-	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 4.f, 0.f);
+	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 	pLightTr->SetWorldPos(0.f, 10000.f, 0.f);
+	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	SAFE_RELEASE(pLightTr);
 
@@ -412,18 +407,18 @@ bool CScene::Init()
 
 	//SAFE_RELEASE(pGlobalLight);
 
-	//CLight*	pGlobalLight = CreateLight("GlobalLight", LT_SPOT);
+	////CLight*	pGlobalLight = CreateLight("GlobalLight", LT_SPOT);
 
-	////pGlobalLight->SetLightRange(5.f);
+	//////pGlobalLight->SetLightRange(5.f);
 
-	//CTransform*	pLightTr = pGlobalLight->GetTransform();
+	////CTransform*	pLightTr = pGlobalLight->GetTransform();
 
-	//pLightTr->SetWorldPos(0.f, -1.f, 0.f);
-	//pLightTr->SetWorldRot(PG_PI / 2.f, 0.f, 0.f);
+	////pLightTr->SetWorldPos(0.f, -1.f, 0.f);
+	////pLightTr->SetWorldRot(PG_PI / 2.f, 0.f, 0.f);
 
-	//SAFE_RELEASE(pLightTr);
+	////SAFE_RELEASE(pLightTr);
 
-	//SAFE_RELEASE(pGlobalLight);
+	////SAFE_RELEASE(pGlobalLight);
 
 	// 스카이박스
 	m_pSkyObject = CGameObject::CreateObject("Sky");
@@ -581,7 +576,7 @@ int CScene::Update(float fTime)
 		++iterL;
 	}
 
-	if(m_pSkyObject)
+	if (m_pSkyObject)
 		m_pSkyObject->Update(fTime);
 
 	return 0;
@@ -660,7 +655,7 @@ int CScene::LateUpdate(float fTime)
 		++iterL;
 	}
 
-	if(m_pSkyObject)
+	if (m_pSkyObject)
 		m_pSkyObject->LateUpdate(fTime);
 
 	return 0;
@@ -740,7 +735,7 @@ void CScene::Render(float fTime)
 			++iter1;
 	}
 
-	if(m_pSkyObject)
+	if (m_pSkyObject)
 		m_pSkyObject->Render(fTime);
 
 	vector<CLayer*>::iterator	iter;

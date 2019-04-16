@@ -29,6 +29,17 @@ protected:
 	function<void(float)>	m_ButtonCallback;
 	bool		m_bCallback;
 	BUTTON_STATE	m_eState;
+	float UILength;
+	float lengthRatio;
+
+
+
+public:
+	void setUILength(float UILength) { this->UILength = UILength; }
+	float getUILength() { return UILength; }
+
+	void setLengthRatio(float lengthRatio) { this->lengthRatio = lengthRatio; }
+	float getLengthRatio() { return lengthRatio; }
 
 public:
 	template <typename T>
@@ -43,6 +54,9 @@ public:
 	void SetNormalColor(const Vector4& vColor);
 	void SetMouseOnColor(const Vector4& vColor);
 	void SetClickColor(const Vector4& vColor);
+
+public:
+
 
 public:
 	virtual bool Init();

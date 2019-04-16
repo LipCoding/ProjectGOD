@@ -31,7 +31,8 @@ const unsigned char CS_PACKET_ROTATE_INV_X = 14;
 const unsigned char CS_PACKET_ROTATE_INV_Y = 15;
 const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
 const unsigned char CS_PACKET_CHAT = 4;
-const unsigned char CS_PACKET_ATTACK = 5;
+const unsigned char CS_PACKET_ATTACK = 50;
+const unsigned char CS_PACKET_ATTACK_SWORD_SKILL1 = 51;
 const unsigned char CS_PACKET_LOGIN = 6;
 const unsigned char CS_PACKET_JOIN = 7;
 const unsigned char CS_PACKET_MAINSERVER_CONNECT = 8;
@@ -40,11 +41,15 @@ const unsigned char SC_PACKET_MOVE = 0;
 const unsigned char SC_PACKET_ROTATE_X = 10;
 const unsigned char SC_PACKET_ROTATE_Y = 11;
 const unsigned char SC_PACKET_ROTATE_Z = 12;
+const unsigned char SC_PACKET_ROTATE_X_CI = 13;
+const unsigned char SC_PACKET_ROTATE_Y_CI = 14;
+const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
 const unsigned char SC_PACKET_PUT_PLAYER = 1;
 const unsigned char SC_PACKET_REMOVE_PLAYER = 2;
 const unsigned char SC_PACKET_CHAT_NPC = 3;
 const unsigned char SC_PACKET_CHAT_PLAYER = 4;
-const unsigned char SC_PACKET_ATTACK_PLAYER = 5;
+const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
+const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
 const unsigned char SC_PACKET_LOGIN = 6;
 const unsigned char SC_PACKET_JOIN = 7;
 const unsigned char SC_PACKET_CONNECT = 8;
@@ -132,6 +137,14 @@ struct cs_packet_login
 	wchar_t login_pw[MAX_STR_SIZE];
 };
 
+struct cs_packet_attack_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int id;
+	unsigned targetid;
+};
+
 struct sc_packet_connect
 {
 	unsigned short size;
@@ -144,6 +157,7 @@ struct sc_packet_put_player
 	unsigned short size;
 	unsigned char type;
 	unsigned int id;
+	unsigned char objectSetType;
 	float x;
 	float y;
 	float z;
@@ -199,6 +213,18 @@ struct sc_packet_attack_player
 	unsigned char type;
 	unsigned int id;
 	unsigned targetid;
+	unsigned char objectSetType;
 	unsigned short damage;
 };
+
+struct sc_packet_chat
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned char state;
+	unsigned int id;
+	WCHAR message[MAX_STR_SIZE];
+};
+
+
 #pragma pack(pop)
