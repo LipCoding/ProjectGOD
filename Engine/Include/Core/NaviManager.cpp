@@ -193,7 +193,7 @@ void CNaviManager::AddCell(const Vector3 * vPoint)
 bool CNaviManager::IsCellEmpty()
 {
 	if (m_pCurrentNaviMesh == nullptr)
-		return false;
+		return true;
 
 	return m_pCurrentNaviMesh->GetCellIsEmpty();
 }
