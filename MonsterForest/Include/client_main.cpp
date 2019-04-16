@@ -5,6 +5,7 @@
 #include "Scene/Scene.h"
 #include "SceneScript\MainScene.h"
 #include "SceneScript\LoginScene.h"
+#include "SceneScript\TestScene.h"
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
 PG_USING
@@ -24,9 +25,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
 	//CMainScene*	pLoginScene = pScene->CreateSceneScript<CMainScene>("MainScene");
-
+	
 
 	pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
+	//CTestScene * pTestScene = pScene->CreateSceneScript<CTestScene>("TestScene");
 
 
 
