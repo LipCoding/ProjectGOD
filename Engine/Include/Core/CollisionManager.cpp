@@ -145,8 +145,8 @@ PCOLLISIONGROUP CCollisionManager::FindGroup(const string & strKey)
 bool CCollisionManager::Init()
 {
 	CreateGroup("Default", 5, 5, 5, Vector3(10.f, 10.f, 10.f));
-	CreateGroup("UI", 5, 5, 1,
-		Vector3(DEVICE_RESOLUTION.iWidth / 5.f, DEVICE_RESOLUTION.iHeight/ 5.f, 1.f), CLT_2D);
+	CreateGroup("UI", 1, 1, 1,
+		Vector3(DEVICE_RESOLUTION.iWidth / 1.f, DEVICE_RESOLUTION.iHeight/ 1.f, 1.f), CLT_2D);
 
 	PCOLLISIONGROUP	pUIGroup = FindGroup("UI");
 

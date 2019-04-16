@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="00. Main">
-      <UniqueIdentifier>{d75001d8-b670-476c-90a5-56f88eb581ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene">
       <UniqueIdentifier>{c1018f74-2995-4c7b-ab63-36bf331880fb}</UniqueIdentifier>
     </Filter>
@@ -13,147 +10,342 @@
     <Filter Include="99. Defaults\헤더 파일">
       <UniqueIdentifier>{5eb4b4d9-f8bc-4569-acef-251c4134e48a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defaults\소스 파일">
-      <UniqueIdentifier>{0886482c-1875-4b92-a8db-adb8692200e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99. Defaults\리소스 파일">
       <UniqueIdentifier>{3552934c-413b-4130-98b6-05fa6e4e6c02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject">
+    <Filter Include="01. Scene\00. TestScene">
+      <UniqueIdentifier>{24647048-945d-471f-af2d-d5cb66a31eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. LoginScene">
+      <UniqueIdentifier>{1fb7cbc4-1b42-49da-8f6b-335516671d72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\02. LoadingScene">
+      <UniqueIdentifier>{6ed9adb3-5553-4098-89fa-02851cbdae4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface">
+      <UniqueIdentifier>{bc853a0c-851b-4c12-ba99-af48b8df5311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\01. Chatting">
+      <UniqueIdentifier>{4e7c63fb-6a23-4e90-bcce-3a190fdc1d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\02. Inventory">
+      <UniqueIdentifier>{ac0c93b3-08d2-4060-8ed3-0ffc712b21a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\03. MiniMap">
+      <UniqueIdentifier>{7f4cf11d-7ba5-4fc1-a0ae-78544b51b964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\04. Quest">
+      <UniqueIdentifier>{b8c6f266-f7b7-4c60-a3bb-942113c5e175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\05. SkillWindow">
+      <UniqueIdentifier>{38213b24-75a1-4264-9211-768d7c4b5cda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\06. Status">
+      <UniqueIdentifier>{dc5462fc-7d69-430b-8c12-98cba1400a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\02. Inventory\01. Slot">
+      <UniqueIdentifier>{ed463628-3343-4e64-ac22-16186b893aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\08. QuickSlot">
+      <UniqueIdentifier>{40d55629-0b81-4028-9935-69a6f116f102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\09. WorldMap">
+      <UniqueIdentifier>{535139bc-8cc0-4795-bc18-aca5381502d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. EntryPoint">
+      <UniqueIdentifier>{0886482c-1875-4b92-a8db-adb8692200e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. MainScene">
+      <UniqueIdentifier>{ec9f5cb3-cffa-4bc4-b538-606fccd5c649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object">
       <UniqueIdentifier>{a70eb36c-a2d2-4427-8431-ae37ff90dc85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\99. Temp">
+      <UniqueIdentifier>{1247bedd-a676-4841-942e-182b07170fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static">
+      <UniqueIdentifier>{a1ec93a0-6623-40a8-b439-682d8d47a5d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static\01. Item">
+      <UniqueIdentifier>{10a16f1d-6a52-4e31-bfc6-4feda588e162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static\01. Item\01. Sword">
+      <UniqueIdentifier>{35ecb99d-14e8-484f-bb19-8ad7e1993c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static\02. Environment">
+      <UniqueIdentifier>{0c2891a0-b091-454e-a897-ecc700927e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static\02. Environment\01. House">
+      <UniqueIdentifier>{f0e00ea3-cef4-4fb2-99f8-0044c115f78f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Static\02. Environment\02. Tree">
+      <UniqueIdentifier>{f6666a10-e8fa-4b6a-b9d2-24f3779e4aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor">
+      <UniqueIdentifier>{529a1f5a-b1e7-48bc-b7fb-a13e1c103501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\01. Player">
+      <UniqueIdentifier>{e3dbf03c-063c-4a34-b40f-30334c7ba936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\01. Player\01. FSM">
+      <UniqueIdentifier>{239190df-06ce-4060-8192-2ebf1b422a48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC">
+      <UniqueIdentifier>{75655469-e701-43d1-acb0-56efa731c780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster">
+      <UniqueIdentifier>{471abd96-ed0f-403b-94e0-90558e1e85e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\01. Golem">
+      <UniqueIdentifier>{111975c9-fc78-4826-83bd-b934a748f2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM">
+      <UniqueIdentifier>{9c76634a-b08f-4c91-b04f-75450f15cd93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\02. Mino">
+      <UniqueIdentifier>{6039000c-cb66-4dc7-89c4-4106dbae2aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi">
+      <UniqueIdentifier>{ae9b5ab7-cca1-4a49-8d12-b9de3a3768bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\03. Effects">
+      <UniqueIdentifier>{3ecb28e3-c5ee-4b38-8e09-98a0d2c5ab94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager">
+      <UniqueIdentifier>{9d8332a9-9b83-4c63-866c-8e8055f97826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1">
+      <UniqueIdentifier>{1e89d35c-13d0-496f-8754-10d070134c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\02 Villager2">
+      <UniqueIdentifier>{1299c3c8-c108-4f6d-9baa-b0e5f30f8aa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\07. Option">
+      <UniqueIdentifier>{94259b74-13c2-4c67-8d10-49ab197419bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>99. Defaults\헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>99. Defaults\헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneScript\TownScene.h">
-      <Filter>01. Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneScript\StartScene.h">
-      <Filter>01. Scene</Filter>
+    <ClInclude Include="SceneScript\TestScene.h">
+      <Filter>01. Scene\00. TestScene</Filter>
     </ClInclude>
     <ClInclude Include="SceneScript\MainScene.h">
-      <Filter>01. Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Sword.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Shield.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Bullet.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\CharacterPanel.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Effect.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Golem.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemAttack.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemDie.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemIdle.h">
-      <Filter>02. GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\GolemMove.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>01. Scene\03. MainScene</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\GolemState.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectScript\Gun.h">
-      <Filter>02. GameObject</Filter>
+    <ClInclude Include="ObjectScript\GolemAttack.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectScript\Player.h">
-      <Filter>02. GameObject</Filter>
+    <ClInclude Include="ObjectScript\GolemDie.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemIdle.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GolemMove.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\PlayerAttack.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\PlayerIdle.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\PlayerMove.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\PlayerState.h">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClInclude>
-    <ClInclude Include="SceneScript\TestScene.h">
-      <Filter>01. Scene</Filter>
+    <ClInclude Include="ObjectScript\Player.h">
+      <Filter>02. Object\01. Actor\01. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Bullet.h">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\CharacterPanel.h">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Effect.h">
+      <Filter>02. Object\03. Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Gun.h">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Golem.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Seuteompi.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Mino.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\02. Mino</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Monster.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Shield.h">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap.h">
+      <Filter>03. UserInterface\03. MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Chatting.h">
+      <Filter>03. UserInterface\01. Chatting</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>03. UserInterface\02. Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Slot.h">
+      <Filter>03. UserInterface\02. Inventory\01. Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSlot.h">
+      <Filter>03. UserInterface\08. QuickSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillWindow.h">
+      <Filter>03. UserInterface\05. SkillWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>03. UserInterface\06. Status</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterfaceManager.h">
+      <Filter>03. UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMap.h">
+      <Filter>03. UserInterface\09. WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Sword.h">
+      <Filter>02. Object\02. Static\01. Item\01. Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Actor.h">
+      <Filter>02. Object\01. Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneScript\LoginScene.h">
+      <Filter>01. Scene\01. LoginScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>00. EntryPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Villager1.h">
+      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>03. UserInterface\07. Option</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>99. Defaults\소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneScript\StartScene.cpp">
-      <Filter>01. Scene</Filter>
+    <ClCompile Include="SceneScript\TestScene.cpp">
+      <Filter>01. Scene\00. TestScene</Filter>
     </ClCompile>
     <ClCompile Include="SceneScript\MainScene.cpp">
-      <Filter>01. Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Sword.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Bullet.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\CharacterPanel.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Effect.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Golem.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>01. Scene\03. MainScene</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\GolemAttack.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\GolemDie.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\GolemIdle.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\GolemMove.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Gun.cpp">
-      <Filter>02. GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Player.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\PlayerAttack.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\PlayerIdle.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\PlayerMove.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\01. Actor\01. Player\01. FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Player.cpp">
+      <Filter>02. Object\01. Actor\01. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Bullet.cpp">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\CharacterPanel.cpp">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Effect.cpp">
+      <Filter>02. Object\03. Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Gun.cpp">
+      <Filter>02. Object\99. Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Golem.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Seuteompi.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Mino.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\02. Mino</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Monster.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\Shield.cpp">
-      <Filter>02. GameObject</Filter>
+      <Filter>02. Object\99. Temp</Filter>
     </ClCompile>
-    <ClCompile Include="SceneScript\TownScene.cpp">
-      <Filter>01. Scene</Filter>
+    <ClCompile Include="MiniMap.cpp">
+      <Filter>03. UserInterface\03. MiniMap</Filter>
     </ClCompile>
-    <ClCompile Include="SceneScript\TestScene.cpp">
-      <Filter>01. Scene</Filter>
+    <ClCompile Include="Chatting.cpp">
+      <Filter>03. UserInterface\01. Chatting</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>03. UserInterface\02. Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Slot.cpp">
+      <Filter>03. UserInterface\02. Inventory\01. Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="QuickSlot.cpp">
+      <Filter>03. UserInterface\08. QuickSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="Quest.cpp">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillWindow.cpp">
+      <Filter>03. UserInterface\05. SkillWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Status.cpp">
+      <Filter>03. UserInterface\06. Status</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterfaceManager.cpp">
+      <Filter>03. UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldMap.cpp">
+      <Filter>03. UserInterface\09. WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Sword.cpp">
+      <Filter>02. Object\02. Static\01. Item\01. Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Actor.cpp">
+      <Filter>02. Object\01. Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneScript\LoginScene.cpp">
+      <Filter>01. Scene\01. LoginScene</Filter>
+    </ClCompile>
+    <ClCompile Include="client_main.cpp">
+      <Filter>00. EntryPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Villager1.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>03. UserInterface\07. Option</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

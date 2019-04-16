@@ -16,6 +16,7 @@
 #include <fstream>
 #include "PGTypes.h"
 #include "Protocol.h"
+#include "fmod/fmod.hpp"
 
 #include <d2d1.h> // 글자 출력
 #include <dwrite.h> // 글자 출력
@@ -29,6 +30,8 @@
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite")
 #pragma comment(lib,"msimg32")
+#pragma comment(lib,"fmod64_vc.lib")
+using namespace FMOD;
 
 #define	PG_PI	3.141592f
 
@@ -82,6 +85,7 @@
 #define	UI_SHADER				"UIShader"
 #define	UI_MULTITEXTURE_SHADER	"UIMultiTextureShader"
 #define	UI_COLOR_SHADER			"UIColorShader"
+#define UI_HEARTH_BAR_SHADER "UIHearthBarShader"
 
 #define	SKY_SHADER				"SkyShader"
 
@@ -98,6 +102,8 @@
 #define	WIRE_FRAME		"WireFrame"
 #define CULLING_BACK    "CullBack"
 #define	CULLING_NONE	"CullNone"
+
+#define UI_LAYER 1000
 
 
 

@@ -26,12 +26,18 @@ protected:
 	class CMesh*		m_pMesh;
 	class CShader*		m_pShader;
 	ID3D11InputLayout*	m_pLayout;
-	Vector4				m_vColor;
+
 	TRANSFORMCBUFFER	m_tTransform;
 	VIEW_TYPE			m_eViewType;
 	class CRenderState*	m_pWireFrame;
 
 	bool			m_bColliderRenderCheck;
+public:
+	Vector4				m_vColor;
+
+public:
+	Vector4 getColor() { return this->m_vColor; }
+	void setColor(const Vector4 color) { this->m_vColor = color; }
 public:
 	Vector3 GetColliderMin()	const;
 	Vector3 GetColliderMax()	const;

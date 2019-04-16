@@ -16,7 +16,8 @@
 #include "Core\Scheduler.h"
 #include "Core\NavigationManager.h"
 #include "Core\QuadTreeManager.h"
-
+#include "Core/NetworkManager.h"
+#include "Core/SoundManager.h"
 PG_USING
 
 DEFINITION_SINGLE(CCore)
@@ -314,6 +315,29 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+
+	case WM_SOCKET:
+	{
+		if (WSAGETSELECTERROR(lParam)) {
+			NetworkManager::getInstance()->shutDownServer();
+			//closesocket((SOCKET)wParam);
+			//clienterror();
+			break;
+		}
+		switch (WSAGETSELECTEVENT(lParam)) {
+		case FD_READ:
+			NetworkManager::getInstance()->readPacket((SOCKET)wParam);
+			//ReadPacket((SOCKET)wParam);
+			break;
+		case FD_CLOSE:
+			NetworkManager::getInstance()->shutDownServer();
+			//closesocket((SOCKET)wParam);
+			//clienterror();
+			break;
+		}
+	}
+	break;
+
 	case WM_MOUSEWHEEL:
 		GET_SINGLE(CInput)->SetWheel(HIWORD(wParam));
 		break;

@@ -18,6 +18,10 @@
 #endif
 #endif // _DEBUG
 
-class CStartScene*	pStartScene;
+#include "SceneScript/MainScene.h"
+#include "SceneScript/LoginScene.h"
+
+static LoginScene*	pLoginScene = NULL;
+static CMainScene* pMainScene = NULL;
 
 LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

@@ -12,9 +12,10 @@ CUIButton::CUIButton()
 	SetTag("UIButton");
 	SetTypeName("CUIButton");
 	SetTypeID<CUIButton>();
+	m_eType = CT_UI;
 }
 
-CUIButton::CUIButton(const CUIButton & button)	:
+CUIButton::CUIButton(const CUIButton & button) :
 	CUI(button)
 {
 	m_vNormalCol = button.m_vNormalCol;
@@ -73,8 +74,8 @@ bool CUIButton::Init()
 	SAFE_RELEASE(pRenderer);
 
 	CColliderRect*	pRC = m_pGameObject->AddComponent<CColliderRect>("Button");
-	
-	pRC->SetRect(0.f, 0.f, 100.f, 100.f);
+
+	pRC->SetRect(0.f, 0.f, 10.f, 10.f);
 	pRC->SetViewType(VT_UI);
 
 	SAFE_RELEASE(pRC);
@@ -90,6 +91,8 @@ bool CUIButton::Init()
 	m_tCBuffer.vColor = m_vMouseOnCol;
 	m_tCBuffer.fLight = 1.f;
 
+	m_tCBuffer.length = 1.f;
+
 	return true;
 }
 
@@ -100,6 +103,8 @@ void CUIButton::Input(float fTime)
 
 int CUIButton::Update(float fTime)
 {
+	Vector3 pos = m_pTransform->GetWorldPos();
+	m_tCBuffer.length = pos.x + (this->UILength * this->lengthRatio);
 	CUI::Update(fTime);
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)

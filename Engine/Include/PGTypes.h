@@ -348,6 +348,8 @@ typedef struct PG_DLL _tagButtonCBuffer
 	Vector4	vColor;
 	float	fLight;
 	Vector3	vEmpty;
+	float   length;
+	Vector3 vEmpty2;
 }BUTTONCBUFFER, *PBUTTONCBUFFER;
 
 // Rect Info

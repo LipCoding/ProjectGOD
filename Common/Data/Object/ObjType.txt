@@ -7,3 +7,5 @@
 98.Static_Mesh\02.Lamp\Lamp
 99.Dynamic_Mesh\01.npc\npc
 99.Dynamic_Mesh\02.Monster\golem
+99.Dynamic_Mesh\02.Monster\seuteompi
+99.Dynamic_Mesh\02.Monster\Mino

@@ -153,7 +153,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Chatting.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="MiniMap.h" />
+    <ClInclude Include="ObjectScript\Actor.h" />
     <ClInclude Include="ObjectScript\Bullet.h" />
     <ClInclude Include="ObjectScript\CharacterPanel.h" />
     <ClInclude Include="ObjectScript\Effect.h" />
@@ -164,18 +168,29 @@
     <ClInclude Include="ObjectScript\GolemMove.h" />
     <ClInclude Include="ObjectScript\GolemState.h" />
     <ClInclude Include="ObjectScript\Gun.h" />
+    <ClInclude Include="ObjectScript\Mino.h" />
+    <ClInclude Include="ObjectScript\Monster.h" />
     <ClInclude Include="ObjectScript\Player.h" />
     <ClInclude Include="ObjectScript\PlayerAttack.h" />
     <ClInclude Include="ObjectScript\PlayerIdle.h" />
     <ClInclude Include="ObjectScript\PlayerMove.h" />
     <ClInclude Include="ObjectScript\PlayerState.h" />
+    <ClInclude Include="ObjectScript\Seuteompi.h" />
     <ClInclude Include="ObjectScript\Shield.h" />
     <ClInclude Include="ObjectScript\Sword.h" />
+    <ClInclude Include="ObjectScript\Villager1.h" />
+    <ClInclude Include="Option.h" />
+    <ClInclude Include="Quest.h" />
+    <ClInclude Include="QuickSlot.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneScript\MainScene.h" />
-    <ClInclude Include="SceneScript\StartScene.h" />
+    <ClInclude Include="SceneScript\LoginScene.h" />
     <ClInclude Include="SceneScript\TestScene.h" />
-    <ClInclude Include="SceneScript\TownScene.h" />
+    <ClInclude Include="SkillWindow.h" />
+    <ClInclude Include="Slot.h" />
+    <ClInclude Include="Status.h" />
+    <ClInclude Include="UserInterfaceManager.h" />
+    <ClInclude Include="WorldMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MonsterForest.rc" />
@@ -184,7 +199,11 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Chatting.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="client_main.cpp" />
+    <ClCompile Include="MiniMap.cpp" />
+    <ClCompile Include="ObjectScript\Actor.cpp" />
     <ClCompile Include="ObjectScript\Bullet.cpp" />
     <ClCompile Include="ObjectScript\CharacterPanel.cpp" />
     <ClCompile Include="ObjectScript\Effect.cpp" />
@@ -194,16 +213,27 @@
     <ClCompile Include="ObjectScript\GolemIdle.cpp" />
     <ClCompile Include="ObjectScript\GolemMove.cpp" />
     <ClCompile Include="ObjectScript\Gun.cpp" />
+    <ClCompile Include="ObjectScript\Mino.cpp" />
+    <ClCompile Include="ObjectScript\Monster.cpp" />
     <ClCompile Include="ObjectScript\Player.cpp" />
     <ClCompile Include="ObjectScript\PlayerAttack.cpp" />
     <ClCompile Include="ObjectScript\PlayerIdle.cpp" />
     <ClCompile Include="ObjectScript\PlayerMove.cpp" />
+    <ClCompile Include="ObjectScript\Seuteompi.cpp" />
     <ClCompile Include="ObjectScript\Shield.cpp" />
     <ClCompile Include="ObjectScript\Sword.cpp" />
+    <ClCompile Include="ObjectScript\Villager1.cpp" />
+    <ClCompile Include="Option.cpp" />
+    <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuickSlot.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
-    <ClCompile Include="SceneScript\StartScene.cpp" />
+    <ClCompile Include="SceneScript\LoginScene.cpp" />
     <ClCompile Include="SceneScript\TestScene.cpp" />
-    <ClCompile Include="SceneScript\TownScene.cpp" />
+    <ClCompile Include="SkillWindow.cpp" />
+    <ClCompile Include="Slot.cpp" />
+    <ClCompile Include="Status.cpp" />
+    <ClCompile Include="UserInterfaceManager.cpp" />
+    <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

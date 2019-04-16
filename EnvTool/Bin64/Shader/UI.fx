@@ -11,6 +11,8 @@ cbuffer ButtonCBuffer	: register(b11)
 	float4	g_vUIColor;
 	float	g_fLight;
 	float3	g_vUIEmpty;
+	float   g_length;
+	float3  g_vUIEmpty2;
 }
 
 cbuffer MultiTexture	: register(b12)
@@ -112,6 +114,38 @@ PS_OUTPUT_SINGLE UIMultiTexturePS(VS_OUTPUT_TEX input)
 	return output;
 }
 
+PS_OUTPUT_SINGLE UIHearthBarColorPS(VS_OUTPUT_TEX input)
+{
+	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
+
+	if (g_iAniType == 1)
+	{
+		float3	vUV;
+		vUV.xy = input.vUV;
+		vUV.z = g_iAniFrameX;
+		output.vColor = g_DifArrTex.Sample(g_DifSmp, vUV);
+	}
+	else
+	{
+		output.vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
+	}
+
+	if (input.vPos.x > g_length)
+	{
+		output.vColor.a = 0.f;
+	}
+
+	// clip : 픽셀값을 쓰지 않고 폐기한다.
+	// 이경우 깊이버퍼에도 값을 안쓴다.
+	if (output.vColor.a == 0.f)
+		clip(-1);
+
+	output.vColor *= g_vUIColor;
+
+	return output;
+}
+
+
 PS_OUTPUT_SINGLE UIColorPS(VS_OUTPUT_TEX input)
 {
 	PS_OUTPUT_SINGLE	output = (PS_OUTPUT_SINGLE)0;
@@ -123,7 +157,6 @@ PS_OUTPUT_SINGLE UIColorPS(VS_OUTPUT_TEX input)
 		vUV.z = g_iAniFrameX;
 		output.vColor = g_DifArrTex.Sample(g_DifSmp, vUV);
 	}
-
 	else
 	{
 		output.vColor = g_DifTex.Sample(g_DifSmp, input.vUV);

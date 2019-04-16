@@ -8,14 +8,14 @@ class PG_DLL CScene :
 {
 private:
 	friend class CSceneManager;
-
+	static bool isInitialize;
 private:
 	CScene();
 	~CScene();
 
 private:
 	vector<class CLayer*>		m_vecLayer;
-	vector<class CSceneScript*>	m_vecSceneScript;
+
 	class CGameObject*	m_pMainCameraObj;
 	class CTransform*	m_pMainCameraTr;
 	class CCamera*		m_pMainCamera;
@@ -30,6 +30,7 @@ private:
 	class CGameObject*	m_pSkyObject;
 
 public:
+	vector<class CSceneScript*>	m_vecSceneScript;
 	class CGameObject* CreatePrototype(const string& strKey);
 	CGameObject* CreateCamera(const string& strKey,
 		const Vector3& vPos, float fViewAngle, float fAspect,
