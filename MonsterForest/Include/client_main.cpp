@@ -27,8 +27,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//CMainScene*	pLoginScene = pScene->CreateSceneScript<CMainScene>("MainScene");
 	
 
-	pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
-	//CTestScene * pTestScene = pScene->CreateSceneScript<CTestScene>("TestScene");
+	//pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
+	CTestScene * pTestScene = pScene->CreateSceneScript<CTestScene>("TestScene");
 
 
 
