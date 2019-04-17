@@ -1,3 +1,4 @@
+#include "..\Client.h"
 #include "Player.h"
 #include "Component/Transform.h"
 #include "Core/Input.h"
@@ -57,8 +58,8 @@ bool CPlayer::Init()
 	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Player.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
-	GET_SINGLE(CInput)->CreateKey("RotInvX", 'Q');
-	GET_SINGLE(CInput)->CreateKey("RotX", 'E');
+	GET_SINGLE(CInput)->CreateKey("RotInvY", 'Q');
+	GET_SINGLE(CInput)->CreateKey("RotY", 'E');
 
 	GET_SINGLE(CInput)->CreateKey("RotInvZ", 'T');
 	GET_SINGLE(CInput)->CreateKey("RotZ", 'G');
@@ -73,154 +74,177 @@ bool CPlayer::Init()
 
 void CPlayer::Input(float fTime)
 {
-	//if (!m_pArm)
-	//{
-	//	CGameObject*	pCam = m_pScene->GetMainCameraObj();
+#ifdef _BOEM_
+	if (!m_pArm)
+	{
+		CGameObject*	pCam = m_pScene->GetMainCameraObj();
 
-	//	m_pArm = pCam->FindComponentFromType<CArm>(CT_ARM);
+		m_pArm = pCam->FindComponentFromType<CArm>(CT_ARM);
 
-	//	SAFE_RELEASE(pCam);
-	//}
+		SAFE_RELEASE(pCam);
+	}
 
-	//if (!m_pThirdCamera)
-	//{
-	//	CGameObject*	pCam = m_pScene->GetMainCameraObj();
+	/*if (!m_pThirdCamera)
+	{
+		CGameObject*	pCam = m_pScene->GetMainCameraObj();
 
-	//	m_pThirdCamera = pCam->FindComponentFromType<CThirdCamera>(CT_THIRDCAMERA);
+		m_pThirdCamera = pCam->FindComponentFromType<CThirdCamera>(CT_THIRDCAMERA);
 
-	//	SAFE_RELEASE(pCam);
-	//}
+		SAFE_RELEASE(pCam);
+	}*/
 
-	//if (KEYPUSH("RotY"))
-	//{
-	//	m_pTransform->RotateWorldY(m_fRotSpeed, fTime);
-	//	m_fRecentRot += m_fRotSpeed * fTime;
-	//	m_pArm->RotationY(m_fRotSpeed * fTime);
-	//}
+	if (KEYPUSH("RotY"))
+	{
+		m_pTransform->RotateWorldY(m_fRotSpeed, fTime);
+		m_fRecentRot += m_fRotSpeed * fTime;
+		//m_pArm->RotationY(m_fRotSpeed * fTime);
+	}
 
-	//if (KEYPUSH("RotInvY"))
-	//{
-	//	m_pTransform->RotateWorldY(-m_fRotSpeed, fTime);
-	//	m_fRecentRot += -m_fRotSpeed * fTime;
-	//	m_pArm->RotationY(-m_fRotSpeed * fTime);
-	//}
+	if (KEYPUSH("RotInvY"))
+	{
+		m_pTransform->RotateWorldY(-m_fRotSpeed, fTime);
+		m_fRecentRot += -m_fRotSpeed * fTime;
+		//m_pArm->RotationY(-m_fRotSpeed * fTime);
+	}
 
-	///*if (KEYPUSH("RotX"))
-	//{
-	//	m_pTransform->RotateWorldX(m_fRotSpeed, fTime);
-	//}
+	/*if (KEYPUSH("RotX"))
+	{
+		m_pTransform->RotateWorldX(m_fRotSpeed, fTime);
+	}
 
-	//if (KEYPUSH("RotInvX"))
-	//{
-	//	m_pTransform->RotateWorldX(-m_fRotSpeed, fTime);
-	//}
+	if (KEYPUSH("RotInvX"))
+	{
+		m_pTransform->RotateWorldX(-m_fRotSpeed, fTime);
+	}
 
-	//if (KEYPUSH("RotZ"))
-	//{
-	//	m_pTransform->RotateWorldZ(m_fRotSpeed, fTime);
-	//}
+	if (KEYPUSH("RotZ"))
+	{
+		m_pTransform->RotateWorldZ(m_fRotSpeed, fTime);
+	}
 
-	//if (KEYPUSH("RotInvZ"))
-	//{
-	//	m_pTransform->RotateWorldZ(-m_fRotSpeed, fTime);
-	//}*/
+	if (KEYPUSH("RotInvZ"))
+	{
+		m_pTransform->RotateWorldZ(-m_fRotSpeed, fTime);
+	}*/
 
-	//if (KEYPUSH("MoveFront"))
-	//{
-	//	/*
-	//	Vector3	vPos = m_pTarget->GetWorldPos() + m_vLookAtDist + m_vDist;
+	if (KEYPUSH("MoveFront"))
+	{
+		/*
+		Vector3	vPos = m_pTarget->GetWorldPos() + m_vLookAtDist + m_vDist;
 
-	//	m_pTransform->SetWorldPos(vPos);
-	//	*/
+		m_pTransform->SetWorldPos(vPos);
+		*/
+	
+		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 
-	//	
-	//
-	//	Vector3 vPos = m_pTransform->GetWorldPos();
-	//	Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
-	//	Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		vPos += vDir * m_fMoveSpeed * 2.f * fTime;
 
-	//	vPos += vDir * m_fMoveSpeed * 2.f * fTime;
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
+			vPos = m_pTransform->GetWorldPos();
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+			{
+				m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
+				vPos = m_pTransform->GetWorldPos();
+				float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				vPos.y = fPosY;
+			}
+			else
+			{
+				Vector3 vOpposite = -vdirection;
+				Vector3 vSlide = vDir * vOpposite.Dot(vDir);
+				vSlide = vDir + vSlide;
 
-	//	if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
-	//	{
-	//		m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
-	//		vPos = m_pTransform->GetWorldPos();
-	//		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
-	//		vPos.y = fPosY;
-	//	}
-	//	else
-	//	{
-	//		if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
-	//		{
-	//			m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
-	//			vPos = m_pTransform->GetWorldPos();
-	//			float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
-	//			vPos.y = fPosY;
-	//		}
-	//		else
-	//		{
-	//			Vector3 vOpposite = -vdirection;
-	//			Vector3 vSlide = vDir * vOpposite.Dot(vDir);
-	//			vSlide = vDir + vSlide;
+				vPos = m_pTransform->GetWorldPos();
+				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
 
-	//			vPos = m_pTransform->GetWorldPos();
-	//			vPos += vSlide * m_fMoveSpeed * 2.f * fTime;
+				//vPos = 
+			}
+		}
 
-	//			//vPos = 
-	//		}
-	//	}
+		m_pTransform->SetWorldPos(vPos);
 
-	//	m_pTransform->SetWorldPos(vPos);
+		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
+		Vector3 LightPos = m_pTransform->GetWorldPos();
+		LightPos = LightPos + Vector3{ -15, 30, -15 };
+		//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
+		pLightTransform->SetWorldPos(LightPos);
+		//pLightTransform->MoveWorld(Vector3{ 1, 0, 1 }, m_fMoveSpeed * 2.f, fTime);
+		m_pAnimation->ChangeClip("Run");
+	}
 
-	//	CTransform* pLightTransform = m_pScene->GetLightCameraTr();
-	//	Vector3 LightPos = m_pTransform->GetWorldPos();
-	//	LightPos = LightPos + Vector3{ -15, 30, -15 };
-	//	//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
-	//	pLightTransform->SetWorldPos(LightPos);
-	//	//pLightTransform->MoveWorld(Vector3{ 1, 0, 1 }, m_fMoveSpeed * 2.f, fTime);
-	//	m_pAnimation->ChangeClip("Run");
-	//}
+	if (KEYUP("MoveFront"))
+	{
+		m_pAnimation->ReturnDefaultClip();
+		//m_pAnimation->ChangeClip("Idle");
+	}
 
-	//if (KEYUP("MoveFront"))
-	//{
-	//	m_pAnimation->ReturnDefaultClip();
-	//	//m_pAnimation->ChangeClip("Idle");
-	//}
+	if (KEYPUSH("MoveBack"))
+	{
+		//CTransform* pLightTransform = m_pScene->GetLightCameraTr();
+		//pLightTransform->MoveWorld(Vector3{ -1, 0, -1 }, m_fMoveSpeed * 2.f, fTime);
 
-	//if (KEYPUSH("MoveBack"))
-	//{
-	//	//CTransform* pLightTransform = m_pScene->GetLightCameraTr();
-	//	//pLightTransform->MoveWorld(Vector3{ -1, 0, -1 }, m_fMoveSpeed * 2.f, fTime);
-	//	m_pTransform->MoveWorld(AXIS_Z, -m_fMoveSpeed, fTime);
+		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 
-	//	Vector3 vPos = m_pTransform->GetWorldPos();
+		vdirection = -vdirection;
+		vDir = -vDir;
+		vPos += vDir * -m_fMoveSpeed * 2.f * fTime;
 
-	//	if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
-	//	{
-	//		float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
-	//		vPos.y = fPosY;
-	//	}
-	//	else
-	//	{
-	//		float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
-	//		vPos.y = fPosY;
-	//	}
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			m_pTransform->MoveWorld(AXIS_Z, -m_fMoveSpeed * 2.f, fTime);
+			vPos = m_pTransform->GetWorldPos();
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+			{
+				m_pTransform->MoveWorld(AXIS_Z, -m_fMoveSpeed * 2.f, fTime);
+				vPos = m_pTransform->GetWorldPos();
+				float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				vPos.y = fPosY;
+			}
+			else
+			{
+				Vector3 vOpposite = -vdirection;
+				Vector3 vSlide = vDir * vOpposite.Dot(vDir);
+				vSlide = vDir + vSlide;
 
-	//	m_pTransform->SetWorldPos(vPos);
+				vPos = m_pTransform->GetWorldPos();
+				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
 
-	//	CTransform* pLightTransform = m_pScene->GetLightCameraTr();
-	//	Vector3 LightPos = m_pTransform->GetWorldPos();
-	//	LightPos = LightPos + Vector3{ -15, 30, -15 };
-	//	//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
-	//	pLightTransform->SetWorldPos(LightPos);
-	//	m_pAnimation->ChangeClip("Run");
-	//}
+				//vPos = 
+			}
+		}
 
-	//if (KEYUP("MoveBack"))
-	//{
-	//	m_pAnimation->ReturnDefaultClip();
-	//	//m_pAnimation->ChangeClip("Idle");
-	//}
+		m_pTransform->SetWorldPos(vPos);
+
+		CTransform* pLightTransform = m_pScene->GetLightCameraTr();
+		Vector3 LightPos = m_pTransform->GetWorldPos();
+		LightPos = LightPos + Vector3{ -15, 30, -15 };
+		//LightPos = Vector3{ 256.f / 2.f, 100.f, 256.f / 2.f };
+		pLightTransform->SetWorldPos(LightPos);
+		//pLightTransform->MoveWorld(Vector3{ 1, 0, 1 }, m_fMoveSpeed * 2.f, fTime);
+		m_pAnimation->ChangeClip("Run");
+	}
+
+	if (KEYUP("MoveBack"))
+	{
+		m_pAnimation->ReturnDefaultClip();
+		//m_pAnimation->ChangeClip("Idle");
+	}
 
 	//if (KEYDOWN("ShieldOn"))
 	//{
@@ -286,7 +310,7 @@ void CPlayer::Input(float fTime)
 	//if (KEYDOWN("ShieldOff"))
 	//{
 	//	m_bOnShield = false;
-
+#endif
 }
 
 int CPlayer::Update(float fTime)

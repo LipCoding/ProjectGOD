@@ -31,6 +31,7 @@ CCell::CCell()
 
 CCell::CCell(const CCell & axisLine)
 {
+
 }
 
 CCell::~CCell()
@@ -64,7 +65,7 @@ bool CCell::Check_Position(const Vector3 & vPos, Vector3 * vDir, int * iIdx, int
 		float fDot = v.Dot(m_vNormal[i]);
 
 		// 내적한 값이 0보다 크면 Cell안에 없는것이므로
-		if (fDot < 0.f)
+		if (fDot > 0.f)
 		{
 			if (nullptr == m_pNeighbor[i])
 			{
@@ -482,8 +483,7 @@ void CCell::Calc_Point(Vector3 P0, Vector3 P1, Vector3 P2)
 	/* Normal */
 	for (size_t i = 0; i < DIR_END; ++i)
 	{
-		//m_vNormal[i] = Vector3(-m_vDir[i].z, m_vDir[i].y, m_vDir[i].x).Normalize();
-		m_vNormal[i] = m_vDir->Cross(vCellNormal).Normalize();
+		m_vNormal[i] = Vector3(-m_vDir[i].z, m_vDir[i].y, m_vDir[i].x).Normalize();
 	}
 
 	/* Center */

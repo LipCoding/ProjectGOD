@@ -7,9 +7,6 @@
     <Filter Include="99. Defaults">
       <UniqueIdentifier>{6453c673-fd3c-4945-a694-fe1e5c9b4d51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defaults\헤더 파일">
-      <UniqueIdentifier>{5eb4b4d9-f8bc-4569-acef-251c4134e48a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99. Defaults\리소스 파일">
       <UniqueIdentifier>{3552934c-413b-4130-98b6-05fa6e4e6c02}</UniqueIdentifier>
     </Filter>
@@ -124,10 +121,13 @@
     <Filter Include="03. UserInterface\07. Option">
       <UniqueIdentifier>{94259b74-13c2-4c67-8d10-49ab197419bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99. Defaults\리소스 파일\헤더 파일">
+      <UniqueIdentifier>{5eb4b4d9-f8bc-4569-acef-251c4134e48a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>99. Defaults\헤더 파일</Filter>
+      <Filter>99. Defaults\리소스 파일\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SceneScript\TestScene.h">
       <Filter>01. Scene\00. TestScene</Filter>

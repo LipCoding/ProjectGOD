@@ -40,3 +40,8 @@ xcopy /s /y /d .\Engine\Bin_Debug\*.* .\AnimTool\Bin_Debug\
 xcopy /s /y /d .\Engine\Bin\*.* .\AnimTool\Bin\
 xcopy /s /y /d .\Engine\Bin64\*.* .\AnimTool\Bin64\
 xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\AnimTool\Bin64_Debug\
+
+xcopy /s /y /d .\Engine\Bin_Debug\*.* .\EffectTool\Bin_Debug\
+xcopy /s /y /d .\Engine\Bin\*.* .\EffectTool\Bin\
+xcopy /s /y /d .\Engine\Bin64\*.* .\EffectTool\Bin64\
+xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\EffectTool\Bin64_Debug\
