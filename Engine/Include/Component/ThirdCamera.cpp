@@ -80,8 +80,8 @@ int CThirdCamera::Update(float fTime)
 	if (!m_pArm)
 		m_pArm = FindComponentFromType<CArm>(CT_ARM);
 
-	//if (m_iMoveDir != 0)
-		//Zoom();
+	if (m_iMoveDir != 0)
+		Zoom();
 
 	// 마우스 RButton을 누른 상태에서 Drag가 시작된다.
 	if (m_iDragCount == 2 && m_pArm)

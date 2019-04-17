@@ -245,7 +245,6 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	if (KEYPUSH("MoveRight"))
 	{
 		m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
-
 	}
 	
 	if (KEYDOWN("MouseLButton"))

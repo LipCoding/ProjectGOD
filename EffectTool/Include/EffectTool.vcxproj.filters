@@ -48,6 +48,9 @@
     <ClInclude Include="EditForm.h">
       <Filter>99.Default\헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="EffectTab.h">
+      <Filter>00.Tab\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EffectTool.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="EditForm.cpp">
       <Filter>99.Default\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectTab.cpp">
+      <Filter>00.Tab\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

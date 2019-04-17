@@ -5,6 +5,7 @@
 #pragma once
 
 #include "EffectToolDoc.h"
+#include "GameObject/GameObject.h"
 #include "Core/Timer.h"
 #include "Component/Transform.h"
 
@@ -58,6 +59,8 @@ public:
 
 	// 사용자 변수
 private:
+	CGameObject	*m_pCamera = nullptr;
+	CTransform	*m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;
 
 public:

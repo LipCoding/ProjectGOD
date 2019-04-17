@@ -29,10 +29,14 @@ protected:
 
 private:
 	class CEnvToolView  *m_pView = nullptr;
-
+	
+	class CEffectTab *m_pEffectDlg = nullptr;
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 
 public:
 	virtual void OnInitialUpdate();
 
+private:
+	CTabCtrl m_Tab;
+	CListBox m_listEffectList;
 };

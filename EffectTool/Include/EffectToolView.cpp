@@ -27,6 +27,9 @@
 #include "Scene/Scene.h"
 #include "Component/Camera.h"
 
+#include "Resources/ResourcesManager.h"
+#include "Component/Material.h"
+
 
 
 #ifdef _DEBUG
@@ -49,7 +52,9 @@ END_MESSAGE_MAP()
 
 // CEffectToolView 생성/소멸
 
-CEffectToolView::CEffectToolView() noexcept
+CEffectToolView::CEffectToolView() noexcept :
+	m_pCamera(nullptr)
+	, m_pCamTr(nullptr)
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -144,6 +149,26 @@ void CEffectToolView::OnInitialUpdate()
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer* pLayer = pScene->GetLayer("Default");
 
+	//Camera
+	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
+	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
+
+	// SkyBox
+	CGameObject* pSky = CGameObject::FindObject("Sky");
+	if (pSky)
+	{
+		CRenderer*   pRenderer = pSky->FindComponentFromTag<CRenderer>("SkyRenderer");
+		CMaterial*   pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->ResetTextureInfo();
+		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
+		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Skybox\\Skybox_2.dds");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pSky);
+	}
+
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 }
@@ -159,6 +184,45 @@ void CEffectToolView::UpdateView()
 
 void CEffectToolView::UpdateInput(const float & fTime)
 {
+	if (KEYPUSH("MoveFront"))
+	{
+		m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveBack"))
+	{
+		m_pCamTr->MoveWorld(AXIS_Z, -30 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveLeft"))
+	{
+		m_pCamTr->MoveWorld(AXIS_X, -30 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MoveRight"))
+	{
+		m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
+	}
+
+	if (KEYPUSH("MouseMButton"))
+	{
+		POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+		POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+		if (ptMouseMove.x != 0)
+		{
+			float fAngle = ptMouseMove.x / 2000.f * PG_PI;
+
+			m_pCamTr->RotateWorldY(fAngle);
+		}
+
+		if (ptMouseMove.y != 0)
+		{
+			float fAngle = ptMouseMove.y / 2000.f * PG_PI;
+
+			m_pCamTr->RotateWorldX(fAngle);
+		}
+	}
 }
 
 void CEffectToolView::UpdateObject(const float & fTime)
