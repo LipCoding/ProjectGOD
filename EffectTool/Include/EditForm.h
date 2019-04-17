@@ -31,6 +31,7 @@ private:
 	class CEnvToolView  *m_pView = nullptr;
 	
 	class CEffectTab *m_pEffectDlg = nullptr;
+	class CEffectTab *m_pEffect1Dlg = nullptr;
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 
 public:
@@ -39,4 +40,6 @@ public:
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;
+public:
+	afx_msg void OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult);
 };

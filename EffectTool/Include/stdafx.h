@@ -34,6 +34,7 @@
 #include <afxcontrolbars.h>     // MFC의 리본 및 컨트롤 막대 지원
 #include <afxcontrolbars.h>
 #include <afxcontrolbars.h>
+#include <afxcontrolbars.h>
 
 
 #ifdef _UNICODE
@@ -66,5 +67,6 @@
 enum TOOLTAB_TYPE
 {
 	TAB_EFFECT,
+	TAB_EFFECT1,
 	TAB_END
 };

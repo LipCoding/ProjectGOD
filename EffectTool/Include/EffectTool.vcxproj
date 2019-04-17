@@ -191,6 +191,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EffectTab1.h" />
     <ClInclude Include="EditForm.h" />
     <ClInclude Include="EffectTab.h" />
     <ClInclude Include="EffectTool.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EffectTab1.cpp" />
     <ClCompile Include="EditForm.cpp" />
     <ClCompile Include="EffectTab.cpp" />
     <ClCompile Include="EffectTool.cpp" />

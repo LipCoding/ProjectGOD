@@ -8,6 +8,7 @@
 #define IDR_EffectToolTYPE              130
 #define IDD_DIALOG_FORM                 310
 #define IDD_DIALOG1                     312
+#define IDD_DIALOG2                     314
 #define IDC_TAB_EFFECT                  1001
 #define IDC_LIST_EFFECT_CONTAINER       1002
 #define IDC_BUTTON_EFFECT_SAVE          1003
@@ -129,20 +130,55 @@
 #define IDC_EDIT63                      1127
 #define IDC_EDIT64                      1128
 #define IDC_CHECK12                     1129
+#define IDC_EDIT67                      1129
 #define IDC_CHECK13                     1130
+#define IDC_EDIT68                      1130
 #define IDC_CHECK14                     1131
+#define IDC_EDIT69                      1131
 #define IDC_CHECK15                     1132
+#define IDC_EDIT70                      1132
 #define IDC_EDIT65                      1133
 #define IDC_BUTTON41                    1134
 #define IDC_BUTTON42                    1135
 #define IDC_CHECK16                     1136
 #define IDC_BUTTON43                    1137
+#define IDC_EDIT66                      1138
+#define IDC_BUTTON44                    1139
+#define IDC_BUTTON45                    1140
+#define IDC_CHECK17                     1141
+#define IDC_BUTTON46                    1142
+#define IDC_EDIT71                      1143
+#define IDC_EDIT72                      1144
+#define IDC_EDIT73                      1145
+#define IDC_EDIT74                      1146
+#define IDC_EDIT75                      1147
+#define IDC_EDIT76                      1148
+#define IDC_EDIT77                      1149
+#define IDC_EDIT78                      1150
+#define IDC_EDIT79                      1155
+#define IDC_BUTTON47                    1156
+#define IDC_BUTTON48                    1157
+#define IDC_CHECK22                     1158
+#define IDC_BUTTON49                    1159
+#define IDC_EDIT80                      1160
+#define IDC_EDIT81                      1161
+#define IDC_EDIT82                      1162
+#define IDC_EDIT83                      1163
+#define IDC_EDIT86                      1166
+#define IDC_EDIT87                      1167
+#define IDC_EDIT88                      1168
+#define IDC_EDIT89                      1169
+#define IDC_EDIT92                      1172
+#define IDC_BUTTON50                    1173
+#define IDC_BUTTON51                    1174
+#define IDC_CHECK23                     1175
+#define IDC_BUTTON52                    1176
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           310
