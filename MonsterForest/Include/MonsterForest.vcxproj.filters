@@ -55,9 +55,6 @@
     <Filter Include="00. EntryPoint">
       <UniqueIdentifier>{0886482c-1875-4b92-a8db-adb8692200e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\03. MainScene">
-      <UniqueIdentifier>{ec9f5cb3-cffa-4bc4-b538-606fccd5c649}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Object">
       <UniqueIdentifier>{a70eb36c-a2d2-4427-8431-ae37ff90dc85}</UniqueIdentifier>
     </Filter>
@@ -124,6 +121,12 @@
     <Filter Include="03. UserInterface\07. Option">
       <UniqueIdentifier>{94259b74-13c2-4c67-8d10-49ab197419bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\04. MainScene">
+      <UniqueIdentifier>{ec9f5cb3-cffa-4bc4-b538-606fccd5c649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. CharacterSelectScene">
+      <UniqueIdentifier>{a7f34170-9c23-425d-a26d-c3c745e83c28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -133,7 +136,7 @@
       <Filter>01. Scene\00. TestScene</Filter>
     </ClInclude>
     <ClInclude Include="SceneScript\MainScene.h">
-      <Filter>01. Scene\03. MainScene</Filter>
+      <Filter>01. Scene\04. MainScene</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\GolemState.h">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>
@@ -246,7 +249,7 @@
       <Filter>01. Scene\00. TestScene</Filter>
     </ClCompile>
     <ClCompile Include="SceneScript\MainScene.cpp">
-      <Filter>01. Scene\03. MainScene</Filter>
+      <Filter>01. Scene\04. MainScene</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\GolemAttack.cpp">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem\01. FSM</Filter>

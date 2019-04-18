@@ -4,7 +4,7 @@
 
 PG_USING
 
-CShader::CShader()	:
+CShader::CShader() :
 	m_pVS(NULL),
 	m_pVSBlob(NULL),
 	m_pPS(NULL),
@@ -42,8 +42,14 @@ int CShader::GetShaderByteCodeLength()
 	return m_pVSBlob->GetBufferSize();
 }
 
+void CShader::SetStreamDecl(D3D11_SO_DECLARATION_ENTRY * pStreamDecl, UINT count)
+{
+	this->pStreamDecl = pStreamDecl;
+	declCount = count;
+}
+
 bool CShader::LoadShader(const string & strKey, TCHAR * pFileName,
-	char * pEntry[ST_MAX], const string & strPathKey)
+	char * pEntry[ST_MAX], const string & strPathKey, bool streamOut)
 {
 	m_strKey = strKey;
 
@@ -58,8 +64,11 @@ bool CShader::LoadShader(const string & strKey, TCHAR * pFileName,
 	if (pEntry[ST_GEOMETRY])
 	{
 		if (!LoadGeometryShader(strKey, pFileName, pEntry[ST_GEOMETRY],
-			strPathKey))
+			strPathKey, streamOut))
+		{
+			MessageBoxA(NULL, "ShaderError", "Error", MB_OK);
 			return false;
+		}
 	}
 
 	return true;
@@ -97,11 +106,12 @@ bool CShader::LoadVertexShader(const string & strKey, TCHAR * pFileName,
 	return true;
 }
 
-bool CShader::LoadPixelShader(const string & strKey, TCHAR * pFileName, 
+bool CShader::LoadPixelShader(const string & strKey, TCHAR * pFileName,
 	char * pEntry, const string & strPathKey)
 {
 	UINT	iFlag = 0;
-
+	if (!pEntry)
+		return true;
 #ifdef _DEBUG
 	iFlag = D3DCOMPILE_DEBUG;
 #endif // _DEBUG
@@ -132,8 +142,8 @@ bool CShader::LoadPixelShader(const string & strKey, TCHAR * pFileName,
 	return true;
 }
 
-bool CShader::LoadGeometryShader(const string & strKey, 
-	TCHAR * pFileName, char * pEntry, const string & strPathKey)
+bool CShader::LoadGeometryShader(const string & strKey,
+	TCHAR * pFileName, char * pEntry, const string & strPathKey, bool streamOut)
 {
 	UINT	iFlag = 0;
 
@@ -155,11 +165,30 @@ bool CShader::LoadGeometryShader(const string & strKey,
 	if (FAILED(D3DCompileFromFile(strFile.c_str(), NULL,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, pEntry, pTarget, iFlag,
 		0, &m_pGSBlob, &pErr)))
+	{
+		MessageBoxA(NULL, "GS Compile Error", "Error", MB_OK);
 		return false;
+	}
+	if (!streamOut)
+	{
+		if (FAILED(DEVICE->CreateGeometryShader(m_pGSBlob->GetBufferPointer(),
+			m_pGSBlob->GetBufferSize(), NULL, &m_pGS)))
+		{
+			MessageBoxA(NULL, "GS Compile Error", "Error", MB_OK);
+			return false;
+		}
+	}
+	else
+	{
 
-	if (FAILED(DEVICE->CreateGeometryShader(m_pGSBlob->GetBufferPointer(),
-		m_pGSBlob->GetBufferSize(), NULL, &m_pGS)))
-		return false;
+		if (FAILED(DEVICE->CreateGeometryShaderWithStreamOutput(m_pGSBlob->GetBufferPointer(),
+			m_pGSBlob->GetBufferSize(), pStreamDecl, declCount, NULL, 0,
+			D3D11_SO_NO_RASTERIZED_STREAM, NULL, &m_pGS)))
+		{
+			MessageBoxA(NULL, "GS Compile Error", "Error", MB_OK);
+			return false;
+		}
+	}
 
 	return true;
 }

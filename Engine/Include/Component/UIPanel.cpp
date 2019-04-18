@@ -6,7 +6,7 @@
 #include "ColliderRect.h"
 #include "../Core/Input.h"
 #include "ColliderPoint.h"
-
+#include "../Scene/Layer.h"
 PG_USING
 
 CUIPanel::CUIPanel()
@@ -46,6 +46,8 @@ void CUIPanel::SetTitleArea(float l, float t, float r, float b)
 
 bool CUIPanel::Init()
 {
+	offset = Vector3::Zero;
+	m_iZOrder = m_pLayer->GetZOrder();
 	m_pTransform->SetWorldScale(300.f, 200.f, 1.f);
 
 	CRenderer2D*	pRenderer = m_pGameObject->AddComponent<CRenderer2D>("PanelRenderer");

@@ -237,7 +237,7 @@
     </Filter>
     <Filter Include="00. Core\09. SoundManager">
       <UniqueIdentifier>{a190f05c-b06b-43a1-abc3-f0b83c49c18d}</UniqueIdentifier>
-      </Filter>
+    </Filter>
     <Filter Include="00. Core\06. NavigationManager\Visualization">
       <UniqueIdentifier>{1f21595f-7f07-4f60-a78f-53a0b44538bf}</UniqueIdentifier>
     </Filter>
@@ -488,6 +488,9 @@
     </ClCompile>
     <ClCompile Include="Core\SoundManager.cpp">
       <Filter>00. Core\09. SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\ParticleMultiple.cpp">
+      <Filter>06. Component\13. Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -752,6 +755,9 @@
     <ClInclude Include="Core\SoundManager.h">
       <Filter>00. Core\09. SoundManager</Filter>
     </ClInclude>
+    <ClInclude Include="Component\ParticleMultiple.h">
+      <Filter>06. Component\13. Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DirectXTex.inl">
@@ -779,6 +785,9 @@
       <Filter>03. Rendering\00. Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin_Debug\Shader\UI.fx">
+      <Filter>03. Rendering\00. Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin_Debug\Shader\Particle.fx">
       <Filter>03. Rendering\00. Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

@@ -25,6 +25,7 @@ protected:
 	Vector4		m_vNormalCol;
 	Vector4		m_vMouseOnCol;
 	Vector4		m_vClickCol;
+	Vector3     offset;
 	BUTTONCBUFFER	m_tCBuffer;
 	function<void(float)>	m_ButtonCallback;
 	bool		m_bCallback;
@@ -56,7 +57,8 @@ public:
 	void SetClickColor(const Vector4& vColor);
 
 public:
-
+	void setOffset(const Vector3& offset) { this->offset = offset; }
+	Vector3 getOffset() { return this->offset; }
 
 public:
 	virtual bool Init();

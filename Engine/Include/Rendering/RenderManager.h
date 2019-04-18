@@ -24,6 +24,7 @@ enum RENDER_GROUP_TYPE
 	RGT_DEFAULT,
 	RGT_DECAL,
 	RGT_ALPHA,
+	RGT_PARTICLE,
 	RGT_UI,
 	RGT_END
 };
@@ -51,6 +52,7 @@ private:
 	RENDERGROUP	m_tRenderGroup[RGT_END];
 	unordered_map<string, class CRenderingTarget*>	m_mapTarget;
 	unordered_map<string, PMRT>	m_mapMRT;
+	list<class ParticleSystem*> particleLightList;
 	class CShader*	m_pLightAccShader;
 	class CShader*	m_pLightBlendShader;
 	class CShader*	m_pDeferredShader;

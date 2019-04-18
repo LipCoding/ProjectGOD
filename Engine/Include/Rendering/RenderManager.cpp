@@ -556,6 +556,25 @@ void CRenderManager::AddRenderObject(CGameObject * pObj)
 			pObj;
 		++m_tRenderGroup[RGT_UI].iSize;
 	}
+	else if (pObj->CheckComponentFromType(CT_PARTICLE_MULTIPLE))
+	{
+		if (true == pObj->GetEnable())
+		{
+			if (m_tRenderGroup[RGT_PARTICLE].iSize == m_tRenderGroup[RGT_PARTICLE].iCapasity)
+			{
+				m_tRenderGroup[CT_PARTICLE_MULTIPLE].iCapasity *= 1.5f;
+				CGameObject**	pList = new CGameObject*[m_tRenderGroup[RGT_PARTICLE].iCapasity];
+				memcpy(pList, m_tRenderGroup[RGT_PARTICLE].pRenderObj,
+					sizeof(CGameObject*) * m_tRenderGroup[RGT_PARTICLE].iSize);
+
+				delete[]	m_tRenderGroup[RGT_PARTICLE].pRenderObj;
+				m_tRenderGroup[RGT_PARTICLE].pRenderObj = pList;
+			}
+
+			m_tRenderGroup[RGT_PARTICLE].pRenderObj[m_tRenderGroup[RGT_PARTICLE].iSize] = pObj;
+			++m_tRenderGroup[RGT_PARTICLE].iSize;
+		}
+	}
 
 	else
 	{
@@ -653,6 +672,9 @@ void CRenderManager::Render(float fTime)
 
 	for (int i = RGT_ALPHA; i < RGT_END; ++i)
 	{
+		if (i == RGT_PARTICLE)
+			continue;
+
 		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
 		{
 			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
@@ -684,6 +706,12 @@ void CRenderManager::Render(float fTime)
 		}
 	}
 
+	for (int i = 0; i < m_tRenderGroup[RGT_PARTICLE].iSize; ++i)
+	{
+		m_tRenderGroup[RGT_PARTICLE].pRenderObj[i]->Render(fTime);
+	}
+	m_tRenderGroup[RGT_PARTICLE].iSize = 0;
+
 	for(int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
 	{
 		CCollider* pCollider = nullptr;
@@ -695,6 +723,7 @@ void CRenderManager::Render(float fTime)
 		}
 	}
 
+
 	m_tRenderGroup[RGT_UI].iSize = 0;
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
@@ -703,6 +732,8 @@ void CRenderManager::Render(float fTime)
 	pDepthTarget->ResetShader(13);
 
 	SAFE_RELEASE(pDepthTarget);
+
+
 
 	//pTarget->ResetTarget();
 
@@ -1245,5 +1276,5 @@ bool CRenderManager::SortUI(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcUI);
 	SAFE_RELEASE(pDestUI);
 
-	return iSrcZ > iDestZ;
+	return iSrcZ < iDestZ;
 }

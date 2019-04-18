@@ -40,7 +40,7 @@ bool Chatting::initialize()
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
 		pMaterial->SetDiffuseTexInfo("Linear", "ChatEdit",
-			0, 0, L"LoginEdit.bmp");
+			0, 0, L"UserInterface/UI_BASIC_CIRCLE_LONG.png");
 
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
@@ -53,9 +53,9 @@ bool Chatting::initialize()
 
 		pUIChatText = pUIChat->AddComponent<CFont>("TextUI");
 		pUIChatText->SetFont("³ª´®°íµñ");
-		chatString = L"Ã¤ÆÃ Å×½ºÆ®";
+		chatString = L"";
 		pUIChatText->SetText(chatString);
-		pUIChatText->SetArea(10, 0, 350, 30.f);
+		pUIChatText->SetArea(20, 40, 350, 30.f);
 
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
@@ -80,8 +80,8 @@ bool Chatting::initialize()
 		CRenderer2D* pRenderer = pUIChatLog->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "ChatEdit",
-			0, 0, L"LoginEdit.bmp");
+		pMaterial->SetDiffuseTexInfo("Linear", "UIChatLog",
+			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
 
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
@@ -95,7 +95,7 @@ bool Chatting::initialize()
 		pUIChatLogText = pUIChatLog->AddComponent<CFont>("TextUI");
 		pUIChatLogText->SetFont("³ª´®°íµñ");
 		pUIChatLogText->SetText(L"");
-		pUIChatLogText->SetArea(10, 190, 350, 30.f);
+		pUIChatLogText->SetArea(20, 210, 350, 30.f);
 
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);

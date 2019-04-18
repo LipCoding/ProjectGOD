@@ -123,6 +123,12 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 	if (!GET_SINGLE(CSceneManager)->Init())
 		return false;
 
+	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	pMouseObj->SetScene(GET_SINGLE(CSceneManager)->GetCurrentScene());
+	SAFE_RELEASE(pMouseObj);
+
+	ShowCursor(FALSE);
+
 	return true;
 }
 
@@ -246,9 +252,9 @@ void CCore::Render(float fTime)
 	
 	GET_SINGLE(CNaviManager)->Render(fTime);
 
-	/*CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	pMouseObj->Render(fTime);
-	SAFE_RELEASE(pMouseObj);*/
+	SAFE_RELEASE(pMouseObj);
 
 	GET_SINGLE(CDevice)->Present();
 

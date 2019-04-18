@@ -10,21 +10,20 @@ class LoginScene :
 public:
 	LoginScene();
 	~LoginScene();
-
+	unordered_map<string, vector<CGameObject*>> UICont;
 public:
 	virtual bool Init();
 	virtual int Update(float fTime);
-
-	CFont* pUIEditText;
+	CFont* pUIEditText = nullptr;
 	wstring pEditIDString;
-	CGameObject* pEditIDObject;
+	//CGameObject* pEditIDObject;
 	vector<WORD> ID_inputCont;
 
 
 	//// pw edit
-	CFont* pUIEditText_PW;
+	CFont* pUIEditText_PW = nullptr;
 	wstring pEditPWString;
-	CGameObject* pEditPWObject;
+	//CGameObject* pEditPWObject;
 	vector<WORD> PW_inputCont;
 
 public:
@@ -32,11 +31,13 @@ public:
 	bool pw_write = false;
 
 public:
-	void login_ID_callback(float fTime);
-	void login_PW_callback(float fTime);
+	void gameConnectCallBack(float time);
+	void closeGameConnectUICallBack(float time);
+	void loginIDEditCallback(float fTime);
+	void loginPWEditCallback(float fTime);
 	void login_JOIN_callback(float fTime);
 public:
-	void StartCallback(float fTime);
+	void connectGameServer(float fTime);
 	void ScheduleStartCallback(float fTime);
 };
 
