@@ -5,6 +5,7 @@
 #include "Scene/Scene.h"
 #include "SceneScript\MainScene.h"
 #include "SceneScript\LoginScene.h"
+#include "SceneScript\TestScene.h"
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
 PG_USING
@@ -24,13 +25,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 
 	//CMainScene*	pLoginScene = pScene->CreateSceneScript<CMainScene>("MainScene");
+	
 
+	//pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
 
-	pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
+	CTestScene * pTestScene = pScene->CreateSceneScript<CTestScene>("TestScene");
 
 
 
 	SAFE_RELEASE(pScene);
+
 
 	GET_SINGLE(CCore)->setWindowProc(clientProc);
 	int iRet = GET_SINGLE(CCore)->Run();
@@ -52,6 +56,7 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		switch (wParam)
 		{
+#ifdef _TAEHO_
 		case VK_BACK:
 		{
 			if (true == static_cast<LoginScene*>(pLoginScene)->id_write)
@@ -128,6 +133,7 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}*/
 		}
 		break;
+#endif
 		}
 
 		break;

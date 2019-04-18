@@ -31,6 +31,7 @@ CCell::CCell()
 
 CCell::CCell(const CCell & axisLine)
 {
+
 }
 
 CCell::~CCell()
@@ -48,6 +49,7 @@ CCell::~CCell()
 
 bool CCell::Check_Position(const Vector3 & vPos, Vector3 * vDir, int * iIdx, int * iOutCount)
 {
+	// 현재 인덱스에 위치하는 셀의 각 Edge를 검사하며
 	for (size_t i = 0; i < DIR_END; ++i)
 	{
 		Vector3 vP0 = vPos;
@@ -56,12 +58,14 @@ bool CCell::Check_Position(const Vector3 & vPos, Vector3 * vDir, int * iIdx, int
 		Vector3 vP1 = m_vPoints[i];
 		vP1.y = 0.f;
 
+		// 플레이어 위치와 셀의 각 점에 대한 각각의 Dir값
 		Vector3 v = (vP0 - vP1).Normalize();
 
-		float fCos = v.Dot(m_vNormal[i]);
+		// 구한 Dir값과 Edge의 Normal값과 내적한다.
+		float fDot = v.Dot(m_vNormal[i]);
 
-
-		if (fCos > 0.f)
+		// 내적한 값이 0보다 크면 Cell안에 없는것이므로
+		if (fDot > 0.f)
 		{
 			if (nullptr == m_pNeighbor[i])
 			{
@@ -79,6 +83,7 @@ bool CCell::Check_Position(const Vector3 & vPos, Vector3 * vDir, int * iIdx, int
 				bool isIn = true;
 				int iCount = *iOutCount;
 
+				// 재귀를 하며 이웃을 찾아 Index를 찾는다.
 				isIn = m_pNeighbor[i]->Check_Position(vPos, vDir, iIdx, iOutCount);
 
 				if (true == isIn && iCount == *iOutCount)
@@ -246,6 +251,7 @@ bool CCell::InitCell(const vector<Vector3>& vecPoints, CCell::CELL_OPT eCellOpt)
 	m_eOption = eCellOpt;
 	Calc_Point(vecPoints[0], vecPoints[1], vecPoints[2]);
 
+	/* For Rendering */
 	VERTEXCOLOR tLine[6] =
 	{
 		VERTEXCOLOR(m_vPoints[0].x, m_vPoints[0].y, m_vPoints[0].z, 1.f, 0.f, 0.f, 1.f),
@@ -294,6 +300,7 @@ bool CCell::InitCell(const Vector3 * vecPoints, CCell::CELL_OPT eCellOpt)
 	m_eOption = eCellOpt;
 	Calc_Point(vecPoints[0], vecPoints[1], vecPoints[2]);
 
+	/* For Rendering */
 	VERTEXCOLOR tLine[6] =
 	{
 		VERTEXCOLOR(m_vPoints[0].x, m_vPoints[0].y, m_vPoints[0].z, 1.f, 0.f, 0.f, 1.f),
@@ -322,8 +329,6 @@ bool CCell::InitCell(const Vector3 * vecPoints, CCell::CELL_OPT eCellOpt)
 		return false;
 
 	m_pShader = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
-
-
 
 	return true;
 }
@@ -466,6 +471,11 @@ void CCell::Calc_Point(Vector3 P0, Vector3 P1, Vector3 P2)
 	m_vDir[DIR_BC] = m_vPoints[POINT_C] - m_vPoints[POINT_B];
 	m_vDir[DIR_CA] = m_vPoints[POINT_A] - m_vPoints[POINT_C];
 
+	Vector3 vDirAB = m_vPoints[POINT_B] - m_vPoints[POINT_A];
+	Vector3 vDirAC = m_vPoints[POINT_C] - m_vPoints[POINT_A];
+	Vector3 vCellNormal = vDirAB.Cross(vDirAC).Normalize();
+
+	/* Edge Center */
 	m_vEdgeCenter[DIR_AB] = (m_vPoints[POINT_B] + m_vPoints[POINT_A]) / 2.f;
 	m_vEdgeCenter[DIR_BC] = (m_vPoints[POINT_C] + m_vPoints[POINT_B]) / 2.f;
 	m_vEdgeCenter[DIR_CA] = (m_vPoints[POINT_A] + m_vPoints[POINT_C]) / 2.f;

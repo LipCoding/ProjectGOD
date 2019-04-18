@@ -70,13 +70,16 @@ void CNaviMesh::Compute_Neighbor(void)
 			if (i == j)
 				continue;
 
-			if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]->Get_Point(CCell::POINT_A), m_Cells[i]->Get_Point(CCell::POINT_B), m_Cells[i]))
+			if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]
+				->Get_Point(CCell::POINT_A), m_Cells[i]->Get_Point(CCell::POINT_B), m_Cells[i]))
 				m_Cells[i]->Set_Neighbor(CCell::NEIGHBOR_AB, m_Cells[j]);
 			
-			else if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]->Get_Point(CCell::POINT_B), m_Cells[i]->Get_Point(CCell::POINT_C), m_Cells[i]))
+			else if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]
+				->Get_Point(CCell::POINT_B), m_Cells[i]->Get_Point(CCell::POINT_C), m_Cells[i]))
 				m_Cells[i]->Set_Neighbor(CCell::NEIGHBOR_BC, m_Cells[j]);
 			
-			else if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]->Get_Point(CCell::POINT_C), m_Cells[i]->Get_Point(CCell::POINT_A), m_Cells[i]))
+			else if (m_Cells[j]->Compute_NeighborCell(m_Cells[i]
+				->Get_Point(CCell::POINT_C), m_Cells[i]->Get_Point(CCell::POINT_A), m_Cells[i]))
 				m_Cells[i]->Set_Neighbor(CCell::NEIGHBOR_CA, m_Cells[j]);
 		}
 

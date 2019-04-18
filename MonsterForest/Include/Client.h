@@ -25,3 +25,6 @@ static LoginScene*	pLoginScene = NULL;
 static CMainScene* pMainScene = NULL;
 
 LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+#define _BOEM_
+//#define _TAEHO_
