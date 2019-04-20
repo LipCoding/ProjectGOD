@@ -15,7 +15,7 @@ private:
 	~CMouse();
 
 private:
-	BOOL	m_bMouseShow;
+	BOOL	m_bMouseShow = false;
 	Vector3	m_vRayPos;
 	Vector3	m_vRayDir;
 

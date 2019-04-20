@@ -25,15 +25,21 @@ private:
 
 	string		m_strKey;
 
+	D3D11_SO_DECLARATION_ENTRY* pStreamDecl;
+	UINT declCount;
+
 public:
 	string GetKey()	const;
 	void* GetShaderByteCode();
 	int GetShaderByteCodeLength();
 
 public:
+	void SetStreamDecl(D3D11_SO_DECLARATION_ENTRY* pStreamDecl, UINT count);
+
+public:
 	bool LoadShader(const string& strKey, TCHAR* pFileName,
 		char* pEntry[ST_MAX],
-		const string& strPathKey = SHADER_PATH);
+		const string& strPathKey = SHADER_PATH, bool streamOut = false);
 	bool LoadVertexShader(const string& strKey, TCHAR* pFileName,
 		char* pEntry,
 		const string& strPathKey = SHADER_PATH);
@@ -42,7 +48,7 @@ public:
 		const string& strPathKey = SHADER_PATH);
 	bool LoadGeometryShader(const string& strKey, TCHAR* pFileName,
 		char* pEntry,
-		const string& strPathKey = SHADER_PATH);
+		const string& strPathKey = SHADER_PATH, bool streamOut = false);
 
 public:
 	void SetShader();

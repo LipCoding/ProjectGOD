@@ -13,7 +13,11 @@ private:
 	CTransform();
 	CTransform(const CTransform& transform);
 	~CTransform();
-
+private:
+	Vector3 offset;
+public:
+	void setOffset(const Vector3& offset) { this->offset = offset; }
+	Vector3 getOffset() { return this->offset; }
 private:
 	int		m_iParentModify;
 	CTransform*	m_pParent;

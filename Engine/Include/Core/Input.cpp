@@ -136,7 +136,6 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	m_ptMousePos.y *= vRS.y;
 
 	m_pMouseObj = CGameObject::CreateObject("MouseObj");
-
 	m_pMouse = m_pMouseObj->AddComponent<CMouse>("Mouse");
 	m_pMouse->SetMouseShow(m_bOnMouseRenderer);
 	m_pMouseTr = m_pMouseObj->GetTransform();

@@ -43,6 +43,7 @@
 #include "../ObjectScript/Mino.h"
 #include "../ObjectScript/Seuteompi.h"
 #include "Component/Picking.h"
+#include "Component/ParticleMultiple.h"
 CMainScene::CMainScene()
 {
 }
@@ -58,6 +59,7 @@ void CMainScene::chat_callback(float fTime)
 
 bool CMainScene::Init()
 {
+
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -68,6 +70,9 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLayer);
 	}
 #pragma endregion
+
+	GET_SINGLE(UserInterfaceManager)->initialize();
+
 
 #pragma region KeySetting
 	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
@@ -387,6 +392,240 @@ bool CMainScene::Init()
 
 #pragma endregion
 
+	{
+		CLayer*	pUILayer = m_pScene->GetLayer("UI+2");
+
+		CGameObject*	pHPUIObj = CGameObject::CreateObject("HPUI", pUILayer);
+		CUIButton* pUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
+		pUIHearthBar->setUILength(125.f);
+		pUIHearthBar->setLengthRatio(1.f);
+
+		CTransform*	pButtonTr = pHPUIObj->GetTransform();
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
+		pButtonTr->SetWorldPos(127.f, 6.f, 0.f);
+
+		SAFE_RELEASE(pButtonTr);
+
+		CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
+			0, 0, L"UserInterface/UI_HP.png");
+
+		SAFE_RELEASE(pMaterial);
+
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 125, 25);
+
+		SAFE_RELEASE(pRC);
+
+		CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
+		HPFont->SetFont("³ª´®°íµñ");
+		HPFont->SetText(L"");
+		HPFont->SetArea(25, 0, 200, 25.f);
+		SAFE_RELEASE(HPFont);
+
+		GET_SINGLE(UserInterfaceManager)->setUIHearthBar(pUIHearthBar);
+
+		SAFE_RELEASE(pHPUIObj);
+
+		SAFE_RELEASE(pUILayer);
+	}
+
+	{
+		CLayer*	pUILayer = m_pScene->GetLayer("UI+1");
+
+		CGameObject*	pHPUIObj = CGameObject::CreateObject("Enemy1_HPUI", pUILayer);
+		CUIButton* pEnemyUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
+		pEnemyUIHearthBar->setUILength(200.f);
+		pEnemyUIHearthBar->setLengthRatio(1.f);
+
+		CTransform*	pButtonTr = pHPUIObj->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pButtonTr->SetWorldScale(200.f, 25.f, 1.f);
+		pButtonTr->SetWorldPos(300.f, 25.f, 0.f);
+
+		SAFE_RELEASE(pButtonTr);
+
+		CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
+			0, 0, L"UserInterface/UI_HP.png");
+
+		SAFE_RELEASE(pMaterial);
+
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 200, 25);
+
+		SAFE_RELEASE(pRC);
+		CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
+		HPFont->SetFont("³ª´®°íµñ");
+		HPFont->SetText(L"");
+		HPFont->SetArea(50, 0, 200, 25.f);
+		SAFE_RELEASE(HPFont);
+
+		GET_SINGLE(UserInterfaceManager)->setEnemyUIHearthBar(pEnemyUIHearthBar);
+
+		SAFE_RELEASE(pHPUIObj);
+
+		SAFE_RELEASE(pUILayer);
+	}
+
+#pragma region ParticleSystem
+	// ÆÄÆ¼Å¬ ÇÁ·ÎÅäÅ¸ÀÔ
+	CGameObject*	pParticleObj = CGameObject::CreatePrototype("Particle");
+
+	CTransform*	pParticleTr = pParticleObj->GetTransform();
+
+	pParticleTr->SetWorldPos(20.f, 7.f, 20.f);
+
+	SAFE_RELEASE(pParticleTr);
+
+	ParticleMultiple*	pParticle = pParticleObj->AddComponent<ParticleMultiple>("Particle");
+
+	pParticle->setParticleInfo();
+	pParticle->setParticleTexture("ParticleSample",
+		L"Effect/Light1.png");
+	pParticle->setParticleLight(false);
+
+	SAFE_RELEASE(pParticle);
+
+	SAFE_RELEASE(pParticleObj);
+	//ÆÄÆ¼Å¬ »ý¼º
+	{
+		CLayer*	pLayer = m_pScene->GetLayer("Default");
+		for (int i = 0; i < 20; ++i)
+		{
+			pParticleObj = CGameObject::CreateClone("Particle");
+
+			CTransform*	pParticleTr = pParticleObj->GetTransform();
+			pParticleTr->SetWorldPos(300.f, 0.f, 300.f);
+			SAFE_RELEASE(pParticleTr);
+
+			pLayer->AddObject(pParticleObj);
+
+			SAFE_RELEASE(pParticleObj);
+		}
+		SAFE_RELEASE(pLayer);
+	}
+#pragma endregion
+#pragma region sound
+	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", false, "MainSound.mp3");
+
+	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+#pragma endregion
+
+#pragma region Item
+	{
+		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM", pLayer);
+
+		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+		SAFE_RELEASE(pItemUI);
+
+		CTransform*	pItemTr = pItem->GetTransform();
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+
+		SAFE_RELEASE(pItemTr);
+		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+			0, 0, L"SWORD_ICON.jpg");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 30, 30);
+
+		SAFE_RELEASE(pRC);
+
+		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+		SAFE_RELEASE(pItem);
+	}
+
+	{
+		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM2", pLayer);
+
+		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+		SAFE_RELEASE(pItemUI);
+
+		CTransform*	pItemTr = pItem->GetTransform();
+		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+
+		SAFE_RELEASE(pItemTr);
+		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+			0, 0, L"SWORD_ICON.jpg");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 30, 30);
+
+		SAFE_RELEASE(pRC);
+
+		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+		SAFE_RELEASE(pItem);
+	}
+
+	{
+		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM3", pLayer);
+
+		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+		SAFE_RELEASE(pItemUI);
+
+		CTransform*	pItemTr = pItem->GetTransform();
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+
+		SAFE_RELEASE(pItemTr);
+		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+			0, 0, L"SWORD_ICON.jpg");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+		pRC->SetRect(0, 0, 30, 30);
+
+		SAFE_RELEASE(pRC);
+
+		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+		SAFE_RELEASE(pItem);
+	}
+#pragma endregion
+
 
 
 	return true;
@@ -394,197 +633,6 @@ bool CMainScene::Init()
 
 int CMainScene::Update(float fTime)
 {
-	if (false == isInitialize)
-	{
-		CMainScene::Init();
-		isInitialize = true;
-
-		{
-			CLayer*	pUILayer = m_pScene->GetLayer("UI");
-
-			CGameObject*	pHPUIObj = CGameObject::CreateObject("HPUI", pUILayer);
-			CUIButton* pUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
-			pUIHearthBar->setUILength(200.f);
-			pUIHearthBar->setLengthRatio(1.f);
-			GET_SINGLE(UserInterfaceManager)->setUIHearthBar(pUIHearthBar);
-
-			CTransform*	pButtonTr = pHPUIObj->GetTransform();
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pButtonTr->SetWorldScale(200.f, 25.f, 1.f);
-			pButtonTr->SetWorldPos(25.f, 25.f, 0.f);
-
-			SAFE_RELEASE(pButtonTr);
-
-			CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-			pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
-			CMaterial* pMaterial = pRenderer->GetMaterial();
-
-			pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
-				0, 0, L"HearthPoint.bmp");
-
-			SAFE_RELEASE(pMaterial);
-
-			SAFE_RELEASE(pRenderer);
-
-			CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
-			pRC->SetRect(0, 0, 200, 25);
-
-			SAFE_RELEASE(pRC);
-
-			SAFE_RELEASE(pHPUIObj);
-
-			SAFE_RELEASE(pUILayer);
-		}
-
-		{
-			CLayer*	pUILayer = m_pScene->GetLayer("UI");
-
-			CGameObject*	pHPUIObj = CGameObject::CreateObject("Enemy1_HPUI", pUILayer);
-			CUIButton* pEnemyUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
-			pEnemyUIHearthBar->setUILength(200.f);
-			pEnemyUIHearthBar->setLengthRatio(1.f);
-			GET_SINGLE(UserInterfaceManager)->setEnemyUIHearthBar(pEnemyUIHearthBar);
-
-			CTransform*	pButtonTr = pHPUIObj->GetTransform();
-
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pButtonTr->SetWorldScale(200.f, 25.f, 1.f);
-			pButtonTr->SetWorldPos(300.f, 25.f, 0.f);
-
-			SAFE_RELEASE(pButtonTr);
-
-			CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-			pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
-			CMaterial* pMaterial = pRenderer->GetMaterial();
-
-			pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
-				0, 0, L"HearthPoint.bmp");
-
-			SAFE_RELEASE(pMaterial);
-
-			SAFE_RELEASE(pRenderer);
-
-			CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
-			pRC->SetRect(0, 0, 200, 25);
-
-			SAFE_RELEASE(pRC);
-
-			SAFE_RELEASE(pHPUIObj);
-
-			SAFE_RELEASE(pUILayer);
-		}
-
-		GET_SINGLE(UserInterfaceManager)->initialize();
-
-#pragma region sound
-		GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", false, "MainSound.mp3");
-
-		GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
-#pragma endregion
-
-#pragma region Item
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-			CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM", pLayer);
-
-			CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-			SAFE_RELEASE(pItemUI);
-
-			CTransform*	pItemTr = pItem->GetTransform();
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-			pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-				DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
-
-			SAFE_RELEASE(pItemTr);
-			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-			CMaterial* pMaterial = pRenderer->GetMaterial();
-
-			pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-				0, 0, L"SWORD_ICON.jpg");
-
-			SAFE_RELEASE(pMaterial);
-			SAFE_RELEASE(pRenderer);
-
-			CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
-			pRC->SetRect(0, 0, 30, 30);
-
-			SAFE_RELEASE(pRC);
-
-			GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-			SAFE_RELEASE(pItem);
-		}
-
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-			CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM2", pLayer);
-
-			CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-			SAFE_RELEASE(pItemUI);
-
-			CTransform*	pItemTr = pItem->GetTransform();
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-			pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-				DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
-
-			SAFE_RELEASE(pItemTr);
-			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-			CMaterial* pMaterial = pRenderer->GetMaterial();
-
-			pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-				0, 0, L"SWORD_ICON.jpg");
-
-			SAFE_RELEASE(pMaterial);
-			SAFE_RELEASE(pRenderer);
-
-			CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
-			pRC->SetRect(0, 0, 30, 30);
-
-			SAFE_RELEASE(pRC);
-
-			GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-			SAFE_RELEASE(pItem);
-		}
-
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-			CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM3", pLayer);
-
-			CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-			SAFE_RELEASE(pItemUI);
-
-			CTransform*	pItemTr = pItem->GetTransform();
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-			pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-				DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
-
-			SAFE_RELEASE(pItemTr);
-			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-			CMaterial* pMaterial = pRenderer->GetMaterial();
-
-			pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-				0, 0, L"SWORD_ICON.jpg");
-
-			SAFE_RELEASE(pMaterial);
-			SAFE_RELEASE(pRenderer);
-
-			CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
-			pRC->SetRect(0, 0, 30, 30);
-
-			SAFE_RELEASE(pRC);
-
-			GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-			SAFE_RELEASE(pItem);
-		}
-#pragma endregion
-	}
 
 //#pragma region Chatting
 //	{
@@ -643,8 +691,8 @@ int CMainScene::Update(float fTime)
 			}
 			else
 			{
-				offset = ChatLogCont.size() - 8;
-				for (int i = offset; i < offset + 8; ++i)
+				offset = ChatLogCont.size() - 7;
+				for (int i = offset; i < offset + 7; ++i)
 				{
 					allChatLog += ChatLogCont[i];
 					index++;
@@ -671,7 +719,6 @@ int CMainScene::Update(float fTime)
 				if (nullptr == pPlayerObj)
 				{
 					pPlayerObj = CGameObject::CreateClone("PlayerCharacter", pLayer);
-
 					this->pPlayer = pPlayerObj;
 					pPlayerObj->SetTag(objectTag);
 					CTransform*	pTr = pPlayerObj->GetTransform();
@@ -685,6 +732,7 @@ int CMainScene::Update(float fTime)
 					SAFE_RELEASE(pTr);
 
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
+					GET_SINGLE(UserInterfaceManager)->setPlayer(pPlayer);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
 					CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("PlayerCollider");
@@ -1349,7 +1397,9 @@ void CMainScene::Input(float fTime)
 {
 	if (KEYDOWN("QUICKSLOT-Q"))
 	{
-		CGameObject* pGameObject = CGameObject::FindObject("Player0");
+		string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
 		if (pPlayerComponent->clickedID != -1)
 		{
@@ -1397,10 +1447,10 @@ void CMainScene::Input(float fTime)
 				chat_message = chat_message + appendString;
 			}
 
-			while (chat_message.length() < 50)
-			{
-				chat_message += L" ";
-			}
+			//while (chat_message.length() < 20)
+			//{
+			//	chat_message += L" ";
+			//}
 			packet->id = NetworkManager::getInstance()->getMyClientID();
 			packet->size = sizeof(cs_packet_chat);
 			wcscpy_s(packet->message, chat_message.c_str());
@@ -1509,7 +1559,7 @@ void CMainScene::Input(float fTime)
 
 	if (KEYDOWN("MouseLButton"))
 	{
-		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
+		/*CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
 		if (pLandScapeObj != NULL)
 		{
 			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
@@ -1546,7 +1596,7 @@ void CMainScene::Input(float fTime)
 			SAFE_RELEASE(pPicking);
 			SAFE_RELEASE(pLandScape);
 			SAFE_RELEASE(pLandScapeObj);
-		}
+		}*/
 	}
 
 	if (KEYDOWN("Attack"))

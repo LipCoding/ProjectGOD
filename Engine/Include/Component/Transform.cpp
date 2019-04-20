@@ -1520,6 +1520,7 @@ void CTransform::UpdateHierarchy()
 
 bool CTransform::Init()
 {
+	offset = Vector3::Zero;
 	m_matLocalScale = new Matrix;
 	m_matLocalRotX = new Matrix;
 	m_matLocalRotY = new Matrix;

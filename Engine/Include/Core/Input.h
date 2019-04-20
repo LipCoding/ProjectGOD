@@ -26,10 +26,11 @@ private:
 	class CTransform*	m_pMouseTr;
 	class CMouse*		m_pMouse;
 	bool		m_bMouseClip;
-	bool		m_bOnMouseRenderer;
+	bool		m_bOnMouseRenderer = true;
 	short		m_sWheel;
 
 public:
+	bool isMouseRender() { return m_bOnMouseRenderer; }
 	POINT GetMousePos()	const;
 	Vector2 GetWorldMousePos()	const;
 	POINT GetMouseMove()	const;

@@ -263,6 +263,17 @@ typedef struct PG_DLL _tagVertexBumpAnim
 	}
 }VERTEXBUMPANIM, *PVERTEXBUMPANIM;
 
+typedef struct _tagVertexParticleMultiple
+{
+	Vector3 pos;
+	Vector3 velocity;
+	Vector2 size;
+	float lifeTime;
+	float createTime;
+	unsigned int type;
+	float lightRange;
+}VERTEXPARTICLEMULTIPLE, *PVERTEXPARTICLEMULTIPLE;
+
 // Constant Buffer
 typedef struct PG_DLL _tagConstantBuffer
 {
@@ -443,6 +454,20 @@ typedef struct PG_DLL _tagParticleCBuffer
 	float       fAngle;
 	Vector3     vEmpty5;
 }PARTICLECBUFFER, *PPARTICLECBUFFER;
+
+
+typedef struct PG_DLL _tagParticleMultipleCBuffer
+{
+	Vector3     pos;
+	float       deltaTime;
+	Vector3		vCamAxisX;
+	float       createTime;
+	Vector3		vCamAxisY;
+	float       speed;
+	float       gameTime;
+	Vector3     createDir;
+#pragma endregion
+}PARTICLEMULTIPLECBUFFER, *PPARTICLEMULTIPLECBUFFER;
 
 typedef struct PG_DLL _tagRendererCBuffer
 {

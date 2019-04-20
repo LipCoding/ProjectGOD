@@ -85,6 +85,7 @@ void CColliderRect::Collision(float fTime)
 
 void CColliderRect::Render(float fTime)
 {
+#ifdef _DEBUG
 	char a = 0;
 	Matrix	matScale, matTrans, matParent;
 	float	x = m_tInfo.r - m_tInfo.l;
@@ -125,10 +126,12 @@ void CColliderRect::Render(float fTime)
 
 
 	CCollider::Render(fTime);
+#endif
 }
 
 void CColliderRect::ColliderRender(float fTime)
 {
+#ifdef _DEBUG
 	Matrix	matScale, matTrans, matParent;
 	float	x = m_tInfo.r - m_tInfo.l;
 	float	y = m_tInfo.b - m_tInfo.t;
@@ -168,6 +171,7 @@ void CColliderRect::ColliderRender(float fTime)
 
 
 	CCollider::ColliderRender(fTime);
+#endif
 }
 
 CColliderRect * CColliderRect::Clone()

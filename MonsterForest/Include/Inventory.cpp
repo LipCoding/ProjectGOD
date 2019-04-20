@@ -77,7 +77,7 @@ bool Inventory::initialize()
 		}
 	*/
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer*	pLayer = pScene->GetLayer("UI+1");
+	CLayer*	pLayer = pScene->GetLayer("UI+2");
 	for (int i = 0; i < SLOT_ROW; ++i)
 	{
 		for (int j = 0; j < SLOT_COL; ++j)

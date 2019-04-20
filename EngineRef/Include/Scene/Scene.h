@@ -75,20 +75,23 @@ public:
 public:
 	class CLayer* CreateLayer(const string& strTag = "", int iZOrder = 0);
 	class CLayer* GetLayer(const string& strTag);
+	
 	template <typename T>
-	T* CreateSceneScript(const string& strTag)
+	T* CreateSceneScript(const string& strTag, bool isInit = true)
 	{
 		T*	pScript = new T;
 
 		pScript->SetScene(this);
 		pScript->SetTag(strTag);
 
-		if (!pScript->Init())
+		if (isInit)
 		{
-			SAFE_RELEASE(pScript);
-			return NULL;
+			if (!pScript->Init())
+			{
+				SAFE_RELEASE(pScript);
+				return NULL;
+			}
 		}
-
 		pScript->AddRef();
 		m_vecSceneScript.push_back(pScript);
 

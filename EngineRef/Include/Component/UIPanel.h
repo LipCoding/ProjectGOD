@@ -13,18 +13,20 @@ protected:
 	CUIPanel();
 	CUIPanel(const CUIPanel& panel);
 	~CUIPanel();
-
+	
 private:
 	bool	m_bEnableTitle;
 	RECTINFO	m_tRelativeTitleArea;
 	RECTINFO	m_tTitleArea;
 	bool		m_bClick;
 	Vector2		m_vTitleDist;
-
+	Vector3    offset;
 public:
 	void EnableTitle(bool bTitle);
 	void SetTitleArea(float l, float t, float r, float b);
-
+public:
+	void setOffset(const Vector3& offset) { this->offset = offset; }
+	Vector3 getOffset() { return this->offset; }
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

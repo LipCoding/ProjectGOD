@@ -74,6 +74,11 @@ using namespace FMOD;
 #define	STANDARD_SHADOWMAP_COLOR_SHADER					"StandardShadowMapColorShader"
 #define	STANDARD_SHADOWMAP_COLORNORMAL_SHADER					"StandardShadowMapColorNormalShader"
 
+#define MAX_PARTICLES 10000
+#define PARTICLE_SHADER "ParticleSader"
+#define PARTICLE_STREAMOUT_SHADER "ParticleStreamOutShader"
+#define PARTICLE_LIGHT_SHADER "ParticleLightShader"
+
 #define	LIGHT_ACC_SHADER		"LightAccShader"
 #define	LIGHT_BLEND_SHADER		"LightBlendShader"
 #define	DEFERRED_SHADER			"DeferredShader"

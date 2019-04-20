@@ -148,6 +148,32 @@ bool CShaderManager::Init()
 
 	SAFE_RELEASE(pShader);
 
+	// Particle StreamOutShader
+	pEntry[ST_VERTEX] = "ParticleStreamOutVS";
+	pEntry[ST_GEOMETRY] = "ParticleStreamOutGS";
+	pEntry[ST_PIXEL] = NULL;
+
+	addStreamDecl(0, "POSITION", 0, 0, 3, 0);
+	addStreamDecl(0, "VELOCITY", 0, 0, 3, 0);
+	addStreamDecl(0, "SIZE", 0, 0, 2, 0);
+	addStreamDecl(0, "LIFETIME", 0, 0, 1, 0);
+	addStreamDecl(0, "CREATETIME", 0, 0, 1, 0);
+	addStreamDecl(0, "TYPE", 0, 0, 1, 0);
+	addStreamDecl(0, "LIGHTRANGE", 0, 0, 1, 0);
+
+	pShader = LoadShader(PARTICLE_STREAMOUT_SHADER, L"Particle.fx", pEntry, SHADER_PATH, true);
+
+	SAFE_RELEASE(pShader);
+
+	//// Particle Shader
+	pEntry[ST_VERTEX] = "ParticleVS";
+	pEntry[ST_GEOMETRY] = "ParticleGS";
+	pEntry[ST_PIXEL] = "ParticlePS";
+
+	pShader = LoadShader(PARTICLE_SHADER, L"Particle.fx", pEntry);
+
+	SAFE_RELEASE(pShader);
+
 	pEntry[ST_VERTEX] = "LandScapeVS";
 	pEntry[ST_PIXEL] = "LandScapePS";
 	pEntry[ST_GEOMETRY] = NULL;
@@ -385,6 +411,23 @@ bool CShaderManager::Init()
 
 	CreateInputLayout("BumpAnim", STANDARD_BUMP_ANIM_SHADER);
 
+	AddInputDesc("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("LIFETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 4,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("CREATETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 4,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("TYPE", 0, DXGI_FORMAT_R32_UINT, 0, 4,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("LIGHTRANGE", 0, DXGI_FORMAT_R32_FLOAT, 0, 4,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+
+	CreateInputLayout("Particle", PARTICLE_STREAMOUT_SHADER);
+
 	CreateCBuffer("Transform", 0, sizeof(TRANSFORMCBUFFER));
 	CreateCBuffer("Material", 1, sizeof(MATERIAL));
 	CreateCBuffer("Light", 2, sizeof(LIGHT));
@@ -397,6 +440,8 @@ bool CShaderManager::Init()
 
 	CreateCBuffer("Particle", 11, sizeof(PARTICLECBUFFER));
 
+	CreateCBuffer("ParticleMultiple", 7, sizeof(PARTICLEMULTIPLECBUFFER));
+
 	CreateCBuffer("LandScape", 12, sizeof(LANDSCAPECBUFFER));
 
 	CreateCBuffer("MultiTexture", 12, sizeof(MULTITEXTURECBUFFER));
@@ -408,8 +453,8 @@ bool CShaderManager::Init()
 	return true;
 }
 
-CShader * CShaderManager::LoadShader(const string & strKey, 
-	TCHAR * pFileName, char * pEntry[ST_MAX], const string & strPathKey)
+CShader * CShaderManager::LoadShader(const string & strKey,
+	TCHAR * pFileName, char * pEntry[ST_MAX], const string & strPathKey, bool streamOut)
 {
 	CShader*	pShader = FindShader(strKey);
 
@@ -418,18 +463,28 @@ CShader * CShaderManager::LoadShader(const string & strKey,
 
 	pShader = new CShader;
 
-	if (!pShader->LoadShader(strKey, pFileName, pEntry, strPathKey))
+	if (streamOut)
+		pShader->SetStreamDecl(&vecStreamDecl[0], vecStreamDecl.size());
+
+	if (!pShader->LoadShader(strKey, pFileName, pEntry, strPathKey, streamOut))
 	{
+		if (streamOut)
+			vecStreamDecl.clear();
+
 		SAFE_RELEASE(pShader);
 		return NULL;
 	}
-	
+
+	if (streamOut)
+		vecStreamDecl.clear();
+
 	pShader->AddRef();
 
 	m_mapShader.insert(make_pair(strKey, pShader));
 
 	return pShader;
 }
+
 
 CShader * CShaderManager::FindShader(const string & strKey)
 {
@@ -569,4 +624,18 @@ PCONSTANTBUFFER CShaderManager::FindCBuffer(const string & strKey)
 		return NULL;
 
 	return iter->second;
+}
+
+void CShaderManager::addStreamDecl(UINT streamNum, const char * pSemanticName, UINT sematicIndex, BYTE byStartCom, BYTE byComCount, BYTE byOutSlot)
+{
+	D3D11_SO_DECLARATION_ENTRY decl = {};
+
+	decl.Stream = streamNum;
+	decl.SemanticName = pSemanticName;
+	decl.SemanticIndex = sematicIndex;
+	decl.StartComponent = byStartCom;
+	decl.ComponentCount = byComCount;
+	decl.OutputSlot = byOutSlot;
+
+	vecStreamDecl.push_back(decl);
 }

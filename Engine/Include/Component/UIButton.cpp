@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "../GameObject/GameObject.h"
 #include "Transform.h"
+#include "../Scene/Layer.h"
 
 PG_USING
 
@@ -54,6 +55,8 @@ void CUIButton::SetClickColor(const Vector4 & vColor)
 
 bool CUIButton::Init()
 {
+	offset = Vector3::Zero;
+	m_iZOrder = m_pLayer->GetZOrder();
 	m_pTransform->SetWorldScale(100.f, 100.f, 1.f);
 
 	CRenderer2D*	pRenderer = m_pGameObject->AddComponent<CRenderer2D>("Renderer");
@@ -139,6 +142,7 @@ int CUIButton::LateUpdate(float fTime)
 
 	CRenderer2D*	pRenderer = m_pGameObject->FindComponentFromTypeID<CRenderer2D>();
 
+	m_tCBuffer.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
 	pRenderer->UpdateCBuffer("Button", 11, sizeof(BUTTONCBUFFER),
 		SCT_VERTEX | SCT_PIXEL, &m_tCBuffer);
 

@@ -275,7 +275,7 @@ bool CScene::Init()
 
 
 
-	pLayer = CreateLayer("UI", INT_MAX);
+	pLayer = CreateLayer("UI", UI_LAYER);
 
 	SAFE_RELEASE(pLayer);
 
