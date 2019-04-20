@@ -11,6 +11,7 @@
 
 // Tab
 #include "EffectTab.h"
+#include "EffectTab1.h"
 
 // EditForm
 
@@ -93,7 +94,7 @@ void CEditForm::OnInitialUpdate()
 	m_pEffectDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
 	m_pEffectDlg->ShowWindow(SW_SHOW);
 
-	m_pEffect1Dlg = new CEffectTab;
+	m_pEffect1Dlg = new CEffectTab1;
 	m_pEffect1Dlg->Create(IDD_DIALOG2, &m_Tab);
 	m_pEffect1Dlg->MoveWindow(0, 20, rect.Width(), rect.Height());
 	m_pEffect1Dlg->ShowWindow(SW_HIDE);
@@ -103,6 +104,11 @@ void CEditForm::OnInitialUpdate()
 	m_pView = (CEnvToolView*)pMain->GetActiveView();
 
 	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
+}
+
+void CEditForm::UpdateForm()
+{
+	m_pEffectDlg->UpdateForm();
 }
 
 void CEditForm::OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult)

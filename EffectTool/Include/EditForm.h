@@ -27,16 +27,27 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+public:
+	/* Getter, Setter */
+	class CEffectTab* GetEffectTab()
+	{
+		return m_pEffectDlg;
+	}
+	class CEffectTab1* GetEffect1Tab()
+	{
+		return m_pEffect1Dlg;
+	}
+
 private:
 	class CEnvToolView  *m_pView = nullptr;
 	
 	class CEffectTab *m_pEffectDlg = nullptr;
-	class CEffectTab *m_pEffect1Dlg = nullptr;
+	class CEffectTab1 *m_pEffect1Dlg = nullptr;
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 
 public:
 	virtual void OnInitialUpdate();
-
+	void UpdateForm();
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;

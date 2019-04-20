@@ -57,15 +57,23 @@ public:
 	void UpdateObject(const float& fTime);
 	void UpdateForm(const float& fTime);
 
+	void PickingProcess();
+
 	// 사용자 변수
 private:
 	CGameObject	*m_pCamera = nullptr;
 	CTransform	*m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;
 
+	CGameObject *m_pCollideObject = nullptr;
+
+	Vector3	    m_vPickPos;
+
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // EffectToolView.cpp의 디버그 버전

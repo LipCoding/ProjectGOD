@@ -1501,6 +1501,8 @@ void CTransform::Load_Local(FILE * pFile)
 	SetLocalRot(m_vLocalRot);
 	SetLocalPos(m_vLocalPos);
 
+	*m_matLocal = *m_matLocalScale * *m_matLocalRot * *m_matLocalPos;
+
 	m_bUpdate = true;
 }
 

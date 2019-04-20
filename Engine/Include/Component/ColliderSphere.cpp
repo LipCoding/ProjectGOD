@@ -125,9 +125,12 @@ void CColliderSphere::Render(float fTime)
 
 void CColliderSphere::ColliderRender(float fTime)
 {
+
+	if (m_bColliderRenderCheck == false)
+		return;
+
 	CCollider::ColliderRender(fTime);
-	//if (m_bColliderRenderCheck == false)
-	//	return;
+	
 	Matrix	matScale, matTrans, matRot;
 
 	float	fLength = m_tSphere.fRadius;
