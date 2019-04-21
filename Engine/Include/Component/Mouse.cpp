@@ -112,18 +112,18 @@ int CMouse::Update(float fTime)
 	if (vPos.x < 0 || vPos.x > DEVICE_RESOLUTION.iWidth ||
 		vPos.y < 0 || vPos.y > DEVICE_RESOLUTION.iHeight)
 	{
-		if (!m_bMouseShow)
+		if (m_bMouseShow)
 		{
-			m_bMouseShow = false;
-			ShowCursor(false);
+			m_bMouseShow = true;
+			ShowCursor(true);
 		}
 	}
 	else
 	{
-		if (m_bMouseShow)
+		if (!m_bMouseShow)
 		{
-			m_bMouseShow = false;
-			ShowCursor(false);
+			m_bMouseShow = true;
+			ShowCursor(true);
 		}
 	}
 

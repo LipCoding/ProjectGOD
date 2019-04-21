@@ -156,6 +156,7 @@ void CEffectToolView::OnInitialUpdate()
 	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
 
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	pScene->CreateLayer("ParticleLayer", 2000);
 	CLayer* pLayer = pScene->GetLayer("Default");
 
 	//Camera
@@ -209,22 +210,22 @@ void CEffectToolView::UpdateInput(const float & fTime)
 {
 	if (KEYPUSH("MoveFront"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, 30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveBack"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, -30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, -30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveLeft"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, -30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, -30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveRight"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, 30 * 0.5f, fTime);
 	}
 
 	if (KEYDOWN("MouseRButton"))
@@ -353,6 +354,17 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 
 	CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+	
+	/* for문을 빠져 여기까지 왔다는 뜻은 부딪힌 충돌체가 없다는 뜻. 즉 선택할 오브젝트가 없다는 뜻 */
+	if (m_pCollideObject)
+	{
+		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+		pColl->SetColliderRenderCheck(false);
+		SAFE_RELEASE(pColl);
+	}
+
+	m_pCollideObject = nullptr;
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
 
 	for (const auto& object : CGameObject::getObjectList())
 	{
@@ -373,17 +385,6 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 		}
 		SAFE_RELEASE(pColl);
 	}
-
-	/* for문을 빠져 여기까지 왔다는 뜻은 부딪힌 충돌체가 없다는 뜻. 즉 선택할 오브젝트가 없다는 뜻 */
-	if (m_pCollideObject)
-	{
-		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
-		pColl->SetColliderRenderCheck(false);
-		SAFE_RELEASE(pColl);
-	}
-
-	m_pCollideObject = nullptr;
-	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
 
 	SAFE_RELEASE(pRay);
 	SAFE_RELEASE(pMouseObj);

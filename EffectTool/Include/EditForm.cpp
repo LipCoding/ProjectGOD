@@ -15,6 +15,12 @@
 
 // EditForm
 
+#include "Core/PathManager.h"
+#include "Scene/SceneManager.h"
+#include "Scene/Scene.h"
+#include "Scene/Layer.h"
+#include "Component/EffectTexture.h"
+#include "Component/ColliderSphere.h"
 
 // CEditForm 대화 상자
 
@@ -30,11 +36,18 @@ CEditForm::CEditForm()
 CEditForm::~CEditForm()
 {
 	m_pView = nullptr;
+	SAFE_DELETE(m_pEffectDlg)
+	SAFE_DELETE(m_pEffect1Dlg)
+	Safe_Delete_VecList(m_vecEffect);
 }
 
 BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_WM_VSCROLL()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_EFFECT, &CEditForm::OnTcnSelchangeTabEffect)
+	ON_BN_CLICKED(IDC_BUTTON_LOAD_TEXTURE, &CEditForm::OnBnClickedButtonLoadTexture)
+	ON_BN_CLICKED(IDC_BUTTON_LOAD_PARTICLE, &CEditForm::OnBnClickedButtonLoadParticle)
+	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH_TEXTURE, &CEditForm::OnBnClickedButtonLoadMeshTexture)
+	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH, &CEditForm::OnBnClickedButtonLoadMesh)
 END_MESSAGE_MAP()
 
 
@@ -80,9 +93,9 @@ void CEditForm::OnInitialUpdate()
 
 	m_eTabType = TAB_EFFECT;
 
-	m_Tab.InsertItem(0, _T("Effect1"));
-	m_Tab.InsertItem(1, _T("Effect2"));
-	m_Tab.InsertItem(2, _T("Effect3"));
+	m_Tab.InsertItem(0, _T("Info/Pattern"));
+	m_Tab.InsertItem(1, _T("Fade/UV"));
+	m_Tab.InsertItem(2, _T("Particle"));
 
 	CRect rect;
 	m_Tab.GetWindowRect(&rect);
@@ -137,3 +150,143 @@ void CEditForm::OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult)
 
 	*pResult = 0;
 }
+
+/* Texture */
+void CEditForm::OnBnClickedButtonLoadTexture()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("이미지 파일(*.BMP,*.GIF,*.JPG, *.TGA, *.DDS) | *.BMP,*.GIF,*.JPG,*.TGA,*.DDS;*.bmp;*.gif;*.jpg;*.tga;*.dds|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(TEXTURE_PATH));
+
+	CString originPath = strPath;
+
+	wcscat_s(strPath, MAX_PATH, L"Effect_Texture\\");
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+	EFFECTDATA *pData = new EFFECTDATA;
+
+	pData->strName = "Effect_" + to_string(m_iEffectNumber) + "(Texture)";
+
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer *pLayer = pScene->GetLayer("ParticleLayer");
+
+	pData->pObject = CGameObject::CreateObject(pData->strName, pLayer);
+	pData->pTr = pData->pObject->GetTransform();
+
+	pData->pTr->SetWorldScale(2.f, 2.f, 2.f);
+	pData->pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
+	pData->pTr->SetWorldRot(0.f, 0.f, 0.f);
+
+	/* add effect texture */
+	pData->pEffect = pData->pObject->AddComponent<CEffectTexture>("Effect");
+	pData->pEffect->SetEffect();
+
+	/* set texture */
+	pData->pEffect->SetTexture((string)CT2CA(path));
+
+	/* Collider */
+	CColliderSphere* pCollider = pData->pObject->AddComponent<CColliderSphere>("Collider");
+	pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 5.f);
+	pCollider->SetColliderRenderCheck(true);
+	SAFE_RELEASE(pCollider);
+
+	pData->eType = EFFECT_TYPE::EFT_TYPE_TEXTURE;
+	m_vecEffect.push_back(pData);
+
+	++m_iEffectNumber;
+
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
+}
+
+/* Mesh */
+void CEditForm::OnBnClickedButtonLoadMeshTexture()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("이미지 파일(*.BMP,*.GIF,*.JPG, *.TGA, *.DDS) | *.BMP,*.GIF,*.JPG,*.TGA,*.DDS;*.bmp;*.gif;*.jpg;*.tga;*.dds|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(TEXTURE_PATH));
+
+	CString originPath = strPath;
+
+	wcscat_s(strPath, MAX_PATH, L"Effect_Mesh\\");
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+}
+
+void CEditForm::OnBnClickedButtonLoadMesh()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	wchar_t	strFilter[] = L"MESHFile(*.msh)|*.msh|모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
+		OFN_HIDEREADONLY, strFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	wcscat_s(strPath, MAX_PATH, L"Effect_Tool\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+}
+
+/* Particle */
+void CEditForm::OnBnClickedButtonLoadParticle()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("이미지 파일(*.BMP,*.GIF,*.JPG, *.TGA, *.DDS) | *.BMP,*.GIF,*.JPG,*.TGA,*.DDS;*.bmp;*.gif;*.jpg;*.tga;*.dds|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(TEXTURE_PATH));
+
+	CString originPath = strPath;
+
+	wcscat_s(strPath, MAX_PATH, L"Effect_Particle\\");
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+}
+

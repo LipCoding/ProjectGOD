@@ -152,7 +152,7 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 	//float	fViewDepth = input.vProjPos.w - vDepth.w;
 	float	fDepthGap = (vDepth.x - fEffectDepth) * 5000.f;
 
-	output.vColor.a = g_vAlpha;
+	/*output.vColor.a = g_vAlpha;
 	if (fDepthGap >= 0.f)
 	{
 		float	fAlpha = (fDepthGap / 10.f);
@@ -160,8 +160,9 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 		if (fAlpha > 1.f)
 			fAlpha = 1.f;
 		output.vColor.a *= fAlpha;
-	}
+	}*/
 
+	output.vColor.a = 1.f;
 
 	return output;
 }
@@ -286,4 +287,3 @@ PS_OUTPUT_DECAL ScreenSpaceDecalPS(VS_OUTPUT_DECAL input)
 
 	return output;
 }
-
