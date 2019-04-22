@@ -208,6 +208,8 @@ bool CTestScene::Init()
 		SAFE_RELEASE(pScene);
 	}
 
+
+
 	return true;
 }
 

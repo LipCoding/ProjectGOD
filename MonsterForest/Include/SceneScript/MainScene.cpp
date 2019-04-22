@@ -70,7 +70,6 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLayer);
 	}
 #pragma endregion
-
 	GET_SINGLE(UserInterfaceManager)->initialize();
 
 
@@ -196,7 +195,6 @@ bool CMainScene::Init()
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-
 			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
 			//pRenderer->SetForwardShader();
 
@@ -482,44 +480,44 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pUILayer);
 	}
 
-#pragma region ParticleSystem
-	// 파티클 프로토타입
-	CGameObject*	pParticleObj = CGameObject::CreatePrototype("Particle");
-
-	CTransform*	pParticleTr = pParticleObj->GetTransform();
-
-	pParticleTr->SetWorldPos(20.f, 7.f, 20.f);
-
-	SAFE_RELEASE(pParticleTr);
-
-	ParticleMultiple*	pParticle = pParticleObj->AddComponent<ParticleMultiple>("Particle");
-
-	pParticle->setParticleInfo();
-	pParticle->setParticleTexture("ParticleSample",
-		L"Effect/Light1.png");
-	pParticle->setParticleLight(false);
-
-	SAFE_RELEASE(pParticle);
-
-	SAFE_RELEASE(pParticleObj);
-	//파티클 생성
-	{
-		CLayer*	pLayer = m_pScene->GetLayer("Default");
-		for (int i = 0; i < 20; ++i)
-		{
-			pParticleObj = CGameObject::CreateClone("Particle");
-
-			CTransform*	pParticleTr = pParticleObj->GetTransform();
-			pParticleTr->SetWorldPos(300.f, 0.f, 300.f);
-			SAFE_RELEASE(pParticleTr);
-
-			pLayer->AddObject(pParticleObj);
-
-			SAFE_RELEASE(pParticleObj);
-		}
-		SAFE_RELEASE(pLayer);
-	}
-#pragma endregion
+//#pragma region ParticleSystem
+//	// 파티클 프로토타입
+//	CGameObject*	pParticleObj = CGameObject::CreatePrototype("Particle");
+//
+//	CTransform*	pParticleTr = pParticleObj->GetTransform();
+//
+//	pParticleTr->SetWorldPos(20.f, 7.f, 20.f);
+//
+//	SAFE_RELEASE(pParticleTr);
+//
+//	ParticleMultiple*	pParticle = pParticleObj->AddComponent<ParticleMultiple>("Particle");
+//
+//	pParticle->setParticleInfo();
+//	pParticle->setParticleTexture("ParticleSample",
+//		L"Effect/Light1.png");
+//	pParticle->setParticleLight(false);
+//
+//	SAFE_RELEASE(pParticle);
+//
+//	SAFE_RELEASE(pParticleObj);
+//	//파티클 생성
+//	{
+//		CLayer*	pLayer = m_pScene->GetLayer("Default");
+//		for (int i = 0; i < 20; ++i)
+//		{
+//			pParticleObj = CGameObject::CreateClone("Particle");
+//
+//			CTransform*	pParticleTr = pParticleObj->GetTransform();
+//			pParticleTr->SetWorldPos(300.f, 0.f, 300.f);
+//			SAFE_RELEASE(pParticleTr);
+//
+//			pLayer->AddObject(pParticleObj);
+//
+//			SAFE_RELEASE(pParticleObj);
+//		}
+//		SAFE_RELEASE(pLayer);
+//	}
+//#pragma endregion
 #pragma region sound
 	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", false, "MainSound.mp3");
 
@@ -626,7 +624,56 @@ bool CMainScene::Init()
 	}
 #pragma endregion
 
+	CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
 
+	for (int i = 0; i < 5; ++i)
+	{
+		CGameObject*    pParticleObj = CGameObject::CreateObject(
+			"ParticleObj", pParticleLayer);
+
+		CTransform*    pParticleTr = pParticleObj->GetTransform();
+
+		pParticleTr->SetWorldPos(300.f, 2.f, 300.f * i);
+
+		SAFE_RELEASE(pParticleTr);
+
+		CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
+
+		pParticleSingle->SetSize(10.f, 10.f);
+
+		SAFE_RELEASE(pParticleSingle);
+
+		CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+			SCT_VERTEX | SCT_PIXEL);
+
+		CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
+
+		pParticleAnimation->SetRenderer2DEnable(false);
+
+		vector<wstring>    vecExplosion;
+
+		for (int i = 1; i <= 89; ++i)
+		{
+			wchar_t    strPath[MAX_PATH] = {};
+			wsprintf(strPath, L"Explosion/Explosion%d.png", i);
+
+			vecExplosion.push_back(strPath);
+		}
+
+		pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
+			1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
+
+		SAFE_RELEASE(pParticleAnimation);
+
+		pParticleRenderer->SetRenderState(ALPHA_BLEND);
+
+		SAFE_RELEASE(pParticleRenderer);
+
+		SAFE_RELEASE(pParticleObj);
+	}
+	SAFE_RELEASE(pParticleLayer);
 
 	return true;
 }

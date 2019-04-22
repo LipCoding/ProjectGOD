@@ -668,20 +668,20 @@ void CRenderManager::Render(float fTime)
 
 	CRenderingTarget*	pDepthTarget = FindRenderTarget("Depth");
 
-	pDepthTarget->SetShader(13);
 
-	for (int i = RGT_ALPHA; i < RGT_END; ++i)
-	{
-		if (i == RGT_PARTICLE)
-			continue;
 
-		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
-		{
-			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
-		}
-		if(i != RGT_UI)
-			m_tRenderGroup[i].iSize = 0;
-	}
+	//for (int i = RGT_ALPHA; i < RGT_END; ++i)
+	//{
+	//	if (i == RGT_PARTICLE)
+	//		continue;
+
+	//	for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+	//	{
+	//		m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
+	//	}
+	//	if(i != RGT_UI)
+	//		m_tRenderGroup[i].iSize = 0;
+	//}
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	{
@@ -705,12 +705,23 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+	pDepthTarget->SetShader(13);
+	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
+	{
+		m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->Render(fTime);
+	}
+	m_tRenderGroup[RGT_ALPHA].iSize = 0;
 
 	for (int i = 0; i < m_tRenderGroup[RGT_PARTICLE].iSize; ++i)
 	{
 		m_tRenderGroup[RGT_PARTICLE].pRenderObj[i]->Render(fTime);
 	}
 	m_tRenderGroup[RGT_PARTICLE].iSize = 0;
+
+	for (int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
+	{
+		m_tRenderGroup[RGT_UI].pRenderObj[i]->Render(fTime);
+	}
 
 	for(int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
 	{
