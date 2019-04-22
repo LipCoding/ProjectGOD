@@ -637,7 +637,8 @@ void CEffectTab::OnBnClickedButtonInfoPosxUp()
 	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
 		m_fInfoStaticPosX = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosX.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -652,7 +653,8 @@ void CEffectTab::OnBnClickedButtonInfoPosxDown()
 	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
 		m_fInfoStaticPosX = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosX.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -667,7 +669,8 @@ void CEffectTab::OnBnClickedButtonInfoPosyUp()
 	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
 		m_fInfoStaticPosY = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosY.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -682,6 +685,7 @@ void CEffectTab::OnBnClickedButtonInfoPosyDown()
 	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
 		m_fInfoStaticPosY = 0.f;
 
+	m_editInfoPosY.SetWindowTextW(L"");
 	SetInfoPos();
 }
 
@@ -697,6 +701,7 @@ void CEffectTab::OnBnClickedButtonInfoPoszUp()
 	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
 		m_fInfoStaticPosZ = 0.f;
 
+	m_editInfoPosZ.SetWindowTextW(L"");
 	SetInfoPos();
 }
 
@@ -712,6 +717,7 @@ void CEffectTab::OnBnClickedButtonInfoPoszDown()
 	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
 		m_fInfoStaticPosZ = 0.f;
 
+	m_editInfoPosZ.SetWindowTextW(L"");
 	SetInfoPos();
 }
 #pragma endregion
@@ -729,6 +735,7 @@ void CEffectTab::OnBnClickedButtonInfoScalexUp()
 	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
 		m_fInfoStaticScaleX = 0.f;
 
+	m_editInfoScaleX.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -745,7 +752,8 @@ void CEffectTab::OnBnClickedButtonInfoScalexDown()
 	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
 		m_fInfoStaticScaleX = 0.f;
 
-	SetInfoScale();
+	m_editInfoScaleX.SetWindowTextW(L"");
+	SetInfoScale();	
 }
 
 
@@ -761,6 +769,7 @@ void CEffectTab::OnBnClickedButtonInfoScaleyUp()
 	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
 		m_fInfoStaticScaleY = 0.f;
 
+	m_editInfoScaleY.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -777,6 +786,7 @@ void CEffectTab::OnBnClickedButtonInfoScaleyDown()
 	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
 		m_fInfoStaticScaleY = 0.f;
 
+	m_editInfoScaleY.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -793,6 +803,7 @@ void CEffectTab::OnBnClickedButtonInfoScalezUp()
 	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
 		m_fInfoStaticScaleZ = 0.f;
 
+	m_editInfoScaleZ.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -809,6 +820,7 @@ void CEffectTab::OnBnClickedButtonInfoScalezDown()
 	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
 		m_fInfoStaticScaleZ = 0.f;
 
+	m_editInfoScaleZ.SetWindowTextW(L"");
 	SetInfoScale();
 }
 #pragma endregion
@@ -821,6 +833,7 @@ void CEffectTab::OnBnClickedButtonInfoRotxUp()
 		return;
 
 	m_iInfoStaticRotX += 5;
+	m_editInfoRotX.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -833,7 +846,8 @@ void CEffectTab::OnBnClickedButtonInfoRotxDown()
 		return;
 
 	m_iInfoStaticRotX -= 5;
-
+	m_editInfoRotX.SetWindowTextW(L"");
+	
 	SetInfoRot();
 }
 
@@ -845,6 +859,7 @@ void CEffectTab::OnBnClickedButtonInfoRotyUp()
 		return;
 
 	m_iInfoStaticRotY += 5;
+	m_editInfoRotY.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -857,6 +872,7 @@ void CEffectTab::OnBnClickedButtonInfoRotyDown()
 		return;
 
 	m_iInfoStaticRotY -= 5;
+	m_editInfoRotY.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -869,6 +885,7 @@ void CEffectTab::OnBnClickedButtonInfoRotzUp()
 		return;
 
 	m_iInfoStaticRotZ += 5;
+	m_editInfoRotZ.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -881,6 +898,7 @@ void CEffectTab::OnBnClickedButtonInfoRotzDown()
 		return;
 
 	m_iInfoStaticRotZ -= 5;
+	m_editInfoRotZ.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
