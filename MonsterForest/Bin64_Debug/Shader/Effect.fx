@@ -286,4 +286,3 @@ PS_OUTPUT_DECAL ScreenSpaceDecalPS(VS_OUTPUT_DECAL input)
 
 	return output;
 }
-

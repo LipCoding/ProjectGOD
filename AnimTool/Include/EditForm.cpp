@@ -919,4 +919,6 @@ void CEditForm::OnCbnSelchangeComboBoneInfo()
 		pAxis->SetBoneMatrix(pBone->matBone);
 		SAFE_RELEASE(pAxis);
 	}
+
+	SAFE_RELEASE(pAnimation);
 }

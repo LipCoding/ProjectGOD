@@ -163,6 +163,7 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 	//	output.vColor.a *= fAlpha;
 	//}
 
+
 	return output;
 }
 
@@ -286,4 +287,3 @@ PS_OUTPUT_DECAL ScreenSpaceDecalPS(VS_OUTPUT_DECAL input)
 
 	return output;
 }
-

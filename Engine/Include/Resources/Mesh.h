@@ -67,6 +67,8 @@ public:
 	string GetInputLayoutKey()	const;
 	Vector3 GetLength()	const;
 	Vector3	GetCenter()	const;
+	Vector3 GetMin() const;
+	Vector3 GetMax() const;
 	float GetRadius()	const;
 	string GetKey()	const;
 	void SetKey(const string& strKey);

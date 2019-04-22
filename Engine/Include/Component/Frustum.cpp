@@ -6,7 +6,19 @@ PG_USING
 
 CFrustum::CFrustum()
 {
-	m_vPos[0] = Vector3(-1.f, 1.f, 0.f);
+	float test = 1.f;
+
+	m_vPos[0] = Vector3(-test, test, 0.f);
+	m_vPos[1] = Vector3(test, test, 0.f);
+	m_vPos[2] = Vector3(-test, -test, 0.f);
+	m_vPos[3] = Vector3(test, -test, 0.f);
+
+	m_vPos[4] = Vector3(-test, test, test);
+	m_vPos[5] = Vector3(test, test, test);
+	m_vPos[6] = Vector3(-test, -test, test);
+	m_vPos[7] = Vector3(test, -test, test);
+
+	/*m_vPos[0] = Vector3(-1.f, 1.f, 0.f);
 	m_vPos[1] = Vector3(1.f, 1.f, 0.f);
 	m_vPos[2] = Vector3(-1.f, -1.f, 0.f);
 	m_vPos[3] = Vector3(1.f, -1.f, 0.f);
@@ -14,7 +26,7 @@ CFrustum::CFrustum()
 	m_vPos[4] = Vector3(-1.f, 1.f, 1.f);
 	m_vPos[5] = Vector3(1.f, 1.f, 1.f);
 	m_vPos[6] = Vector3(-1.f, -1.f, 1.f);
-	m_vPos[7] = Vector3(1.f, -1.f, 1.f);
+	m_vPos[7] = Vector3(1.f, -1.f, 1.f);*/
 	memset(m_Plane, 0, sizeof(Vector4) * FD_END);
 }
 

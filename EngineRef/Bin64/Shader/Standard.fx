@@ -228,6 +228,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	output.vColor = vColor + g_vColor;
 
+	//output.vColor = float4(1.f, 0.f, 0.f, 1.f);
 
 	//1
 	/*

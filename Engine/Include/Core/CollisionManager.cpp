@@ -211,8 +211,8 @@ bool CCollisionManager::AddCollider(CGameObject * pObj)
 		SAFE_RELEASE(pTransform);
 
 		
-
-		if (!pCamera->FrustumInSphere(vCenter, fRadius))
+		/* Radius값을 넉넉히 주어 LandScape가 Culling되는 것을 막음 */
+		if (!pCamera->FrustumInSphere(vCenter, fRadius * 1.4f))
 			pObj->SetCulling(true);
 
 		else

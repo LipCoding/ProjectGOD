@@ -11,6 +11,9 @@
 
 #include "EffectToolDoc.h"
 #include "EffectToolView.h"
+#include "EditForm.h"
+#include "EffectTab.h"
+#include "EffectTab1.h"
 
 #include "Core.h"
 #include "Core/Input.h"
@@ -29,7 +32,8 @@
 
 #include "Resources/ResourcesManager.h"
 #include "Component/Material.h"
-
+#include "Component/ColliderRay.h"
+#include "Component/ColliderSphere.h"
 
 
 #ifdef _DEBUG
@@ -48,6 +52,8 @@ BEGIN_MESSAGE_MAP(CEffectToolView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_CREATE()
 	ON_WM_MOUSEWHEEL()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CEffectToolView 생성/소멸
@@ -64,6 +70,9 @@ CEffectToolView::~CEffectToolView()
 {
 	SAFE_RELEASE(m_pTimer);
 	DESTROY_SINGLE(CCore);
+
+	SAFE_RELEASE(m_pCamTr);
+	SAFE_RELEASE(m_pCamera);
 }
 
 BOOL CEffectToolView::PreCreateWindow(CREATESTRUCT& cs)
@@ -147,11 +156,14 @@ void CEffectToolView::OnInitialUpdate()
 	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
 
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	pScene->CreateLayer("ParticleLayer", 2000);
 	CLayer* pLayer = pScene->GetLayer("Default");
 
 	//Camera
 	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
 	m_pCamTr = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
+
+	m_pCamTr->SetWorldPos(50.f / 2.f, 2.f, 50.f / 2.f - 5.f);
 
 	// SkyBox
 	CGameObject* pSky = CGameObject::FindObject("Sky");
@@ -169,6 +181,27 @@ void CEffectToolView::OnInitialUpdate()
 		SAFE_RELEASE(pSky);
 	}
 
+	// Load Terrain
+	CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
+	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
+	pLandScape->Load_Terrain("EffectTool1");
+
+	/* Wire mode */
+	for (auto& node : *pLandScape->GetAllNodes())
+	{
+		CRenderer*   pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+		pRenderer->SetRenderState(WIRE_FRAME);
+		//pRenderer->SetRenderState(CULLING_NONE);
+		SAFE_RELEASE(pRenderer);
+	}
+
+	// Mouse Picking
+	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
+
+	SAFE_RELEASE(pPicking);
+	SAFE_RELEASE(pLandScape);
+	SAFE_RELEASE(pLandScapeObj);
+
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 }
@@ -178,30 +211,57 @@ void CEffectToolView::UpdateView()
 	float	fTime = m_pTimer->GetDeltaTime();
 
 	this->UpdateInput(fTime);
-	this->UpdateObject(fTime);
 	this->UpdateForm(fTime);
+	this->UpdateObject(fTime);
 }
 
 void CEffectToolView::UpdateInput(const float & fTime)
 {
 	if (KEYPUSH("MoveFront"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, 30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, 30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveBack"))
 	{
-		m_pCamTr->MoveWorld(AXIS_Z, -30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_Z, -30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveLeft"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, -30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, -30 * 0.5f, fTime);
 	}
 
 	if (KEYPUSH("MoveRight"))
 	{
-		m_pCamTr->MoveWorld(AXIS_X, 30 * 2.f, fTime);
+		m_pCamTr->MoveWorld(AXIS_X, 30 * 0.5f, fTime);
+	}
+
+	if (KEYDOWN("MouseRButton"))
+	{
+	}
+
+	if (KEYUP("MouseRButton"))
+	{
+	}
+
+	if (KEYPUSH("MouseRButton"))
+	{
+		PickingProcess();
+
+		if (m_pCollideObject)
+		{
+			CTransform *pTr = m_pCollideObject->GetTransform();
+			
+			Vector3 vWorldPos = pTr->GetWorldPos();
+			
+			vWorldPos.x = m_vPickPos.x;
+			vWorldPos.z = m_vPickPos.z;
+
+			pTr->SetWorldPos(vWorldPos);
+
+			SAFE_RELEASE(pTr);
+		}
 	}
 
 	if (KEYPUSH("MouseMButton"))
@@ -227,10 +287,44 @@ void CEffectToolView::UpdateInput(const float & fTime)
 
 void CEffectToolView::UpdateObject(const float & fTime)
 {
+	
 }
 
 void CEffectToolView::UpdateForm(const float & fTime)
 {
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateForm();
+}
+
+void CEffectToolView::PickingProcess()
+{
+	CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+	if (pLandScapeObj != NULL)
+	{
+		CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+		CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
+
+		list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByMouse();
+
+		bool bFirstCheck = false;
+
+		if (!pNodes->empty())
+		{
+			for (const auto iter : *pNodes)
+			{
+				if (pPicking->Picking_ToBuffer(&m_vPickPos,
+					GET_SINGLE(CInput)->GetRayPos(),
+					GET_SINGLE(CInput)->GetRayDir(),
+					iter->vecVtx, iter->vecIndex))
+				{
+					break;
+				}
+			}
+		}
+
+		SAFE_RELEASE(pPicking);
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+	}
 }
 
 
@@ -251,4 +345,63 @@ BOOL CEffectToolView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	GET_SINGLE(CInput)->SetWheel(zDelta);
 
 	return CView::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+
+void CEffectToolView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	
+
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+	CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+	
+	if (((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->GetTargetObject() == nullptr)
+	{
+		m_pCollideObject = nullptr;
+	}
+
+	/* for문을 빠져 여기까지 왔다는 뜻은 부딪힌 충돌체가 없다는 뜻. 즉 선택할 오브젝트가 없다는 뜻 */
+	if (m_pCollideObject)
+	{
+		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+		pColl->SetColliderRenderCheck(false);
+		SAFE_RELEASE(pColl);
+	}
+
+	m_pCollideObject = nullptr;
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
+
+	for (const auto& object : CGameObject::getObjectList())
+	{
+		CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+		if (pRay->CheckCollList(pColl))
+		{
+			if (!m_pCollideObject)
+			{
+				pColl->SetColliderRenderCheck(true);
+				m_pCollideObject = object;
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(object);
+			}
+			SAFE_RELEASE(pColl);
+			SAFE_RELEASE(pRay);
+			SAFE_RELEASE(pMouseObj);
+			return;
+		}
+		SAFE_RELEASE(pColl);
+	}
+
+	SAFE_RELEASE(pRay);
+	SAFE_RELEASE(pMouseObj);
+
+	CView::OnRButtonDown(nFlags, point);
 }

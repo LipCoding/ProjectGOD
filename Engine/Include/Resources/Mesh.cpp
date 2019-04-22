@@ -96,6 +96,16 @@ Vector3 CMesh::GetCenter() const
 	return m_vCenter;
 }
 
+Vector3 CMesh::GetMin() const
+{
+	return m_vMin;
+}
+
+Vector3 CMesh::GetMax() const
+{
+	return m_vMax;
+}
+
 float CMesh::GetRadius() const
 {
 	return m_fRadius;

@@ -172,7 +172,7 @@ bool CResourcesManager::Init()
 	SAFE_RELEASE(pMesh);
 
 	// 구 메쉬를 생성한다.
-	pMesh = CreateSphere("Sphere", 1.f, 10);
+	pMesh = CreateSphere("Sphere", 1.f, 1);
 
 	SAFE_RELEASE(pMesh);
 

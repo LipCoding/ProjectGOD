@@ -187,6 +187,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	// smoothstep(min, max, x)
 	// x가 min보다 작으면 0을 리턴하고 max보다 크다면 1을 리턴한다.
+	// 1
 
 	//float rimWidth = 0.5f;
 	//float fRimLightColor = smoothstep(1.f - rimWidth, 1.f, 1 - max(0, saturate(dot(input.vNormal,
@@ -229,6 +230,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	output.vColor = vColor + g_vColor;
 
+	//output.vColor = float4(1.f, 0.f, 0.f, 1.f);
 
 	//1
 	/*
