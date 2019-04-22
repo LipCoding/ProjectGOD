@@ -163,7 +163,6 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 	//	output.vColor.a *= fAlpha;
 	//}
 
-
 	return output;
 }
 
