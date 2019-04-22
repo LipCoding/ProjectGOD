@@ -99,6 +99,7 @@ using namespace FMOD;
 
 // RenderState Key
 #define	ALPHA_BLEND	"AlphaBlend"
+#define	ALPHA_BLEND_DISABLE	"AlphaBlendDiable"
 #define	ONE_BLEND	"OneBlend"
 
 #define	DEPTH_DISABLE	"DepthDisable"

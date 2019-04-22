@@ -194,8 +194,6 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	//	vCamDir))));
 
 	//vColor += pow(fRimLightColor, 10.f) * 0.55f;
-
-
 	// 2
 	/*float fRim = 1.0f - saturate((dot(input.vNormal, vCamDir)));
 	float4 rc = float4(1.f, 1.f, 1.f, 1.f) * 0.75f;

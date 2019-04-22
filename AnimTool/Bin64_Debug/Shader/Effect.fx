@@ -139,30 +139,31 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 	if (output.vColor.a == 0.f)
 		clip(-1);
 
-	// 화면상의 깊이를 구하기 위한 UV 좌표를 구해준다.
-	float2	_vUV;
-	_vUV.x = (input.vProjPos.x / input.vProjPos.w) * 0.5f + 0.5f;
-	_vUV.y = (-input.vProjPos.y / input.vProjPos.w) * 0.5f + 0.5f;
+	//// 화면상의 깊이를 구하기 위한 UV 좌표를 구해준다.
+	//float2	_vUV;
+	//_vUV.x = (input.vProjPos.x / input.vProjPos.w) * 0.5f + 0.5f;
+	//_vUV.y = (-input.vProjPos.y / input.vProjPos.w) * 0.5f + 0.5f;
 
-	// 현재 화면의 깊이를 구해온다.
-	float4	vDepth = g_GBufferDepth.Sample(g_DepthSmp, _vUV);
+	//// 현재 화면의 깊이를 구해온다.
+	//float4	vDepth = g_GBufferDepth.Sample(g_DepthSmp, _vUV);
 
-	// 현재 출력할 이펙트의 깊이를 구한다.
-	float	fEffectDepth = input.vProjPos.z / input.vProjPos.w;
-	//float	fViewDepth = input.vProjPos.w - vDepth.w;
-	float	fDepthGap = (vDepth.x - fEffectDepth) * 5000.f;
+	//// 현재 출력할 이펙트의 깊이를 구한다.
+	//float	fEffectDepth = input.vProjPos.z / input.vProjPos.w;
+	////float	fViewDepth = input.vProjPos.w - vDepth.w;
+	//float	fDepthGap = (vDepth.x - fEffectDepth) * 1000.f;
 
-	/*output.vColor.a = g_vAlpha;
-	if (fDepthGap >= 0.f)
-	{
-		float	fAlpha = (fDepthGap / 10.f);
 
-		if (fAlpha > 1.f)
-			fAlpha = 1.f;
-		output.vColor.a *= fAlpha;
-	}*/
-
+	output.vColor.a = g_vAlpha;
 	output.vColor.a = 1.f;
+	//if (fDepthGap >= 0.f)
+	//{
+	//	float	fAlpha = (fDepthGap / 10.f);
+
+	//	if (fAlpha > 1.f)
+	//		fAlpha = 1.f;
+	//	output.vColor.a *= fAlpha;
+	//}
+
 
 	return output;
 }

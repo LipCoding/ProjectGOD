@@ -66,6 +66,14 @@ bool CRenderManager::Init()
 	if (!GET_SINGLE(CShaderManager)->Init())
 		return false;
 
+	{
+		AddBlendTargetDesc(false);
+
+		CBlendState*	pState = CreateBlendState(ALPHA_BLEND_DISABLE, FALSE, FALSE);
+
+		SAFE_RELEASE(pState);
+	}
+
 	AddBlendTargetDesc();
 
 	CBlendState*	pState = CreateBlendState(ALPHA_BLEND, FALSE, FALSE);
@@ -668,24 +676,34 @@ void CRenderManager::Render(float fTime)
 
 	CRenderingTarget*	pDepthTarget = FindRenderTarget("Depth");
 
-	pDepthTarget->SetShader(13);
 
-	for (int i = RGT_ALPHA; i < RGT_END; ++i)
-	{
-		if (i == RGT_PARTICLE)
-			continue;
 
-		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
-		{
-			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
-		}
-
-		if (i == RGT_ALPHA)
-			continue;
-
-		if(i != RGT_UI)
-			m_tRenderGroup[i].iSize = 0;
-	}
+//<<<<<<< HEAD
+//		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+//		{
+//			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
+//		}
+//
+//		if (i == RGT_ALPHA)
+//			continue;
+//
+//		if(i != RGT_UI)
+//			m_tRenderGroup[i].iSize = 0;
+//	}
+//=======
+//	//for (int i = RGT_ALPHA; i < RGT_END; ++i)
+//	//{
+//	//	if (i == RGT_PARTICLE)
+//	//		continue;
+//
+//	//	for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+//	//	{
+//	//		m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
+//	//	}
+//	//	if(i != RGT_UI)
+//	//		m_tRenderGroup[i].iSize = 0;
+//	//}
+//>>>>>>> a8d55e1292ef2b43b13cba5647f35826a6e61645
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	{
@@ -709,6 +727,12 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+	pDepthTarget->SetShader(13);
+	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
+	{
+		m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->Render(fTime);
+	}
+
 
 	for (int i = 0; i < m_tRenderGroup[RGT_PARTICLE].iSize; ++i)
 	{
@@ -716,8 +740,39 @@ void CRenderManager::Render(float fTime)
 	}
 	m_tRenderGroup[RGT_PARTICLE].iSize = 0;
 
+	for (int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
+	{
+		m_tRenderGroup[RGT_UI].pRenderObj[i]->Render(fTime);
+	}
+
+	/*
+		m_strKey = strKey;
+
+	D3D11_BLEND_DESC	tDesc = {};
+
+	tDesc.AlphaToCoverageEnable = bAlphaCoverage;
+	tDesc.IndependentBlendEnable = bIndependent;
+
+	for (size_t i = 0; i < m_vecDesc.size(); ++i)
+	{
+		tDesc.RenderTarget[i] = m_vecDesc[i];
+	}
+
+	if (FAILED(DEVICE->CreateBlendState(&tDesc, (ID3D11BlendState**)&m_pState)))
+		return false;
+
+	memset(m_fBlendFactor, 0, sizeof(float) * 4);
+	m_iSampleMask = 0xffffffff;
+
+	*/
+	//	CONTEXT->OMSetBlendState((ID3D11BlendState*)m_pState, m_fBlendFactor, m_iSampleMask);
+
+	//CRenderState*	pState = GET_SINGLE(CRenderManager)->FindRenderState(ALPHA_BLEND_DISABLE);
+	//pState->SetState();
+
 	for(int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
 	{
+			
 		CCollider* pCollider = nullptr;
 		pCollider = m_tRenderGroup[RGT_UI].pRenderObj[i]->FindComponentFromType<CCollider>(CT_COLLIDER);
 		if (pCollider != nullptr)
@@ -726,10 +781,8 @@ void CRenderManager::Render(float fTime)
 			SAFE_RELEASE(pCollider);
 		}
 	}
-
 	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
 	{
-
 		CCollider* pCollider = nullptr;
 		pCollider = m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->FindComponentFromType<CCollider>(CT_COLLIDER);
 		if (pCollider != nullptr)

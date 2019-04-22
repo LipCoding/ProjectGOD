@@ -26,11 +26,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	//CMainScene*	pLoginScene = pScene->CreateSceneScript<CMainScene>("MainScene");
 	
+#ifdef _TAEHO_
+	pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
+#endif
 
-	//pLoginScene = pScene->CreateSceneScript<LoginScene>("LoginScene");
-
+#ifdef _BOEM_
 	CTestScene * pTestScene = pScene->CreateSceneScript<CTestScene>("TestScene");
-
+#endif
 
 
 	SAFE_RELEASE(pScene);
