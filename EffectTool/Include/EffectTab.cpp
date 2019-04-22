@@ -32,9 +32,9 @@ CEffectTab::CEffectTab(CWnd* pParent /*=nullptr*/)
 	, m_fInfoStaticScaleX(0)
 	, m_fInfoStaticScaleY(0)
 	, m_fInfoStaticScaleZ(0)
-	, m_fInfoStaticRotX(0)
-	, m_fInfoStaticRotY(0)
-	, m_fInfoStaticRotZ(0)
+	, m_iInfoStaticRotX(0)
+	, m_iInfoStaticRotY(0)
+	, m_iInfoStaticRotZ(0)
 {
 
 }
@@ -54,9 +54,9 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_SCALE_INFO_STATIC_X, m_fInfoStaticScaleX);
 	DDX_Text(pDX, IDC_EDIT_SCALE_INFO_STATIC_Y, m_fInfoStaticScaleY);
 	DDX_Text(pDX, IDC_EDIT_SCALE_INFO_STATIC_Z, m_fInfoStaticScaleZ);
-	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_X, m_fInfoStaticRotX);
-	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_Y, m_fInfoStaticRotY);
-	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_Z, m_fInfoStaticRotZ);
+	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_X, m_iInfoStaticRotX);
+	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_Y, m_iInfoStaticRotY);
+	DDX_Text(pDX, IDC_EDIT_ROT_INFO_STATIC_Z, m_iInfoStaticRotZ);
 	DDX_Control(pDX, IDC_EDIT_POS_INFO_X, m_editInfoPosX);
 	DDX_Control(pDX, IDC_EDIT_POS_INFO_Y, m_editInfoPosY);
 	DDX_Control(pDX, IDC_EDIT_POS_INFO_Z, m_editInfoPosZ);
@@ -75,6 +75,24 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_CBN_SELCHANGE(IDC_COMBO_BONE_LIST, &CEffectTab::OnCbnSelchangeComboBoneList)
 	ON_CBN_SELCHANGE(IDC_COMBO_ANIM_LIST, &CEffectTab::OnCbnSelchangeComboAnimList)
 	ON_BN_CLICKED(IDC_BUTTON_INPUT_INFO, &CEffectTab::OnBnClickedButtonInputInfo)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSX_UP, &CEffectTab::OnBnClickedButtonInfoPosxUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSX_DOWN, &CEffectTab::OnBnClickedButtonInfoPosxDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSY_UP, &CEffectTab::OnBnClickedButtonInfoPosyUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSY_DOWN, &CEffectTab::OnBnClickedButtonInfoPosyDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSZ_UP, &CEffectTab::OnBnClickedButtonInfoPoszUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_POSZ_DOWN, &CEffectTab::OnBnClickedButtonInfoPoszDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEX_UP, &CEffectTab::OnBnClickedButtonInfoScalexUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEX_DOWN, &CEffectTab::OnBnClickedButtonInfoScalexDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEY_UP, &CEffectTab::OnBnClickedButtonInfoScaleyUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEY_DOWN, &CEffectTab::OnBnClickedButtonInfoScaleyDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEZ_UP, &CEffectTab::OnBnClickedButtonInfoScalezUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_SCALEZ_DOWN, &CEffectTab::OnBnClickedButtonInfoScalezDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTX_UP, &CEffectTab::OnBnClickedButtonInfoRotxUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTX_DOWN, &CEffectTab::OnBnClickedButtonInfoRotxDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTY_UP, &CEffectTab::OnBnClickedButtonInfoRotyUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTY_DOWN, &CEffectTab::OnBnClickedButtonInfoRotyDown)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_UP, &CEffectTab::OnBnClickedButtonInfoRotzUp)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_DOWN, &CEffectTab::OnBnClickedButtonInfoRotzDown)
 END_MESSAGE_MAP()
 
 
@@ -94,9 +112,9 @@ BOOL CEffectTab::OnInitDialog()
 	m_fInfoStaticScaleY = -1.f;
 	m_fInfoStaticScaleZ = -1.f;
 
-	m_fInfoStaticRotX = -1.f;
-	m_fInfoStaticRotY = -1.f;
-	m_fInfoStaticRotZ = -1.f;
+	m_iInfoStaticRotX = -1;
+	m_iInfoStaticRotY = -1;
+	m_iInfoStaticRotZ = -1;
 
 	UpdateData(FALSE);
 
@@ -114,9 +132,11 @@ void CEffectTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 void CEffectTab::InitForm()
 {
+	m_comboBoxBoneInfo.ResetContent();
+	m_comboBoxAnimInfo.ResetContent();
 }
 
-bool CEffectTab::LoadTargetMesh(const CString & filePath)
+bool CEffectTab::LoadTargetMesh(const CString & filePath, const CString& fileName)
 {
 	CString strTag = filePath + ".msh";
 
@@ -143,7 +163,7 @@ bool CEffectTab::LoadTargetMesh(const CString & filePath)
 
 	CRenderer *pRenderer = m_pObjectMesh->AddComponent<CRenderer>("Renderer");
 
-	pRenderer->SetMeshFromFullPath("TargetMesh", strTag.GetString());
+	pRenderer->SetMeshFromFullPath((string)CT2CA(fileName), strTag.GetString());
 
 	CMesh *pMesh = pRenderer->GetMesh();
 
@@ -262,7 +282,11 @@ void CEffectTab::DeleteTargetMesh()
 	CGameObject::EraseObj(m_pObjectMesh);
 	SAFE_RELEASE(m_pObjectMesh);
 	
+	m_pTargetObject = nullptr;
 	m_pBoneMatrix = nullptr;
+	m_boneNameAttachTo = "";
+
+
 }
 
 
@@ -304,15 +328,17 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 	string ConvertName = CT2CA(name.GetString());
 	string ConvertFullPath = ConvertPath + ConvertName;*/
 
-	if (!LoadTargetMesh(fullPath))
+	if (!LoadTargetMesh(fullPath, name))
 	{
 		AfxMessageBox(L"Target Mesh Create Fail!");
+		DeleteTargetMesh();
 		return;
 	}
 
 	if (!LoadTargetLocalInfo(fullPath))
 	{
 		AfxMessageBox(L"Mesh Local Information Create Fail!");
+		DeleteTargetMesh();
 		return;
 	}
 
@@ -351,7 +377,6 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 	SAFE_RELEASE(pRenderer);
 }
 
-
 void CEffectTab::OnCbnSelchangeComboBoneList()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -375,7 +400,6 @@ void CEffectTab::OnCbnSelchangeComboBoneList()
 
 	SAFE_RELEASE(pAnimation);
 }
-
 
 void CEffectTab::OnCbnSelchangeComboAnimList()
 {
@@ -420,9 +444,9 @@ void CEffectTab::UpdateForm()
 		m_fInfoStaticScaleY = pScale.y;
 		m_fInfoStaticScaleZ = pScale.z;
 
-		m_fInfoStaticRotX = XMConvertToDegrees(pRot.x);
-		m_fInfoStaticRotY = XMConvertToDegrees(pRot.y);
-		m_fInfoStaticRotZ = XMConvertToDegrees(pRot.z);
+		m_iInfoStaticRotX = (int)round(XMConvertToDegrees(pRot.x));
+		m_iInfoStaticRotY = (int)round(XMConvertToDegrees(pRot.y));
+		m_iInfoStaticRotZ = (int)round(XMConvertToDegrees(pRot.z));
 
 		SAFE_RELEASE(pTr);
 	}
@@ -436,9 +460,9 @@ void CEffectTab::UpdateForm()
 		m_fInfoStaticScaleY = -1.f;
 		m_fInfoStaticScaleZ = -1.f;
 
-		m_fInfoStaticRotX = -1.f;
-		m_fInfoStaticRotY = -1.f;
-		m_fInfoStaticRotZ = -1.f;
+		m_iInfoStaticRotX = -1;
+		m_iInfoStaticRotY = -1;
+		m_iInfoStaticRotZ = -1;
 		
 
 		m_editInfoPosX.SetWindowTextW(L"");
@@ -557,7 +581,7 @@ void CEffectTab::SetInfoRot()
 
 	if (X == L"")
 	{
-		vNewRot.x = m_fInfoStaticRotX;
+		vNewRot.x = (float)m_iInfoStaticRotX;
 	}
 	else
 	{
@@ -566,7 +590,7 @@ void CEffectTab::SetInfoRot()
 
 	if (Y == L"")
 	{
-		vNewRot.y = m_fInfoStaticRotY;
+		vNewRot.y = (float)m_iInfoStaticRotY;
 	}
 	else
 	{
@@ -575,7 +599,7 @@ void CEffectTab::SetInfoRot()
 
 	if (Z == L"")
 	{
-		vNewRot.z = m_fInfoStaticRotZ;
+		vNewRot.z = (float)m_iInfoStaticRotZ;
 	}
 	else
 	{
@@ -604,3 +628,264 @@ void CEffectTab::OnBnClickedButtonInputInfo()
 		SetInfoRot();
 	}
 }
+
+#pragma region modifybutton_pos
+void CEffectTab::OnBnClickedButtonInfoPosxUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosX += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
+		m_fInfoStaticPosX = 0.f;
+
+	SetInfoPos();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoPosxDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosX -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
+		m_fInfoStaticPosX = 0.f;
+
+	SetInfoPos();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoPosyUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosY += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
+		m_fInfoStaticPosY = 0.f;
+
+	SetInfoPos();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoPosyDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosY -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
+		m_fInfoStaticPosY = 0.f;
+
+	SetInfoPos();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoPoszUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosZ += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
+		m_fInfoStaticPosZ = 0.f;
+
+	SetInfoPos();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoPoszDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+	m_fInfoStaticPosZ -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
+		m_fInfoStaticPosZ = 0.f;
+
+	SetInfoPos();
+}
+#pragma endregion
+
+#pragma region modifybutton_scale
+void CEffectTab::OnBnClickedButtonInfoScalexUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleX += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
+		m_fInfoStaticScaleX = 0.f;
+
+	SetInfoScale();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoScalexDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleX -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
+		m_fInfoStaticScaleX = 0.f;
+
+	SetInfoScale();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoScaleyUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleY += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
+		m_fInfoStaticScaleY = 0.f;
+
+	SetInfoScale();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoScaleyDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleY -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
+		m_fInfoStaticScaleY = 0.f;
+
+	SetInfoScale();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoScalezUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleZ += 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
+		m_fInfoStaticScaleZ = 0.f;
+
+	SetInfoScale();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoScalezDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_fInfoStaticScaleZ -= 0.1f;
+
+	/* 오차 범위 */
+	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
+		m_fInfoStaticScaleZ = 0.f;
+
+	SetInfoScale();
+}
+#pragma endregion
+
+#pragma region modifybutton_rot
+void CEffectTab::OnBnClickedButtonInfoRotxUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotX += 5;
+
+	SetInfoRot();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoRotxDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotX -= 5;
+
+	SetInfoRot();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoRotyUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotY += 5;
+
+	SetInfoRot();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoRotyDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotY -= 5;
+
+	SetInfoRot();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoRotzUp()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotZ += 5;
+
+	SetInfoRot();
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoRotzDown()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	m_iInfoStaticRotZ -= 5;
+
+	SetInfoRot();
+}
+#pragma endregion

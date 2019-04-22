@@ -59,11 +59,20 @@ private:
 	class CEffectTab1 *m_pEffect1Dlg = nullptr;
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 
+	class CGameObject *m_pEffect = nullptr;
+
 	int m_iEffectNumber = 0;
 
 public:
 	virtual void OnInitialUpdate();
 	void UpdateForm();
+
+public:
+	/* Load Effect Mesh */
+	bool LoadEffectMesh(CGameObject* object, const CString& filePath, const CString& fileName);
+	bool LoadEffectLocalInfo(CGameObject* object, const CString& filePath);
+
+
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;

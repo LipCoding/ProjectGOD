@@ -186,6 +186,15 @@ void CEffectToolView::OnInitialUpdate()
 	CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 	pLandScape->Load_Terrain("EffectTool1");
 
+	/* Wire mode */
+	for (auto& node : *pLandScape->GetAllNodes())
+	{
+		CRenderer*   pRenderer = node->pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+		pRenderer->SetRenderState(WIRE_FRAME);
+		//pRenderer->SetRenderState(CULLING_NONE);
+		SAFE_RELEASE(pRenderer);
+	}
+
 	// Mouse Picking
 	CPicking* pPicking = pLandScapeObj->AddComponent<CPicking>("Picking");
 
@@ -355,6 +364,11 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
 	
+	if (((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->GetTargetObject() == nullptr)
+	{
+		m_pCollideObject = nullptr;
+	}
+
 	/* for문을 빠져 여기까지 왔다는 뜻은 부딪힌 충돌체가 없다는 뜻. 즉 선택할 오브젝트가 없다는 뜻 */
 	if (m_pCollideObject)
 	{

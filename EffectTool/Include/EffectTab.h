@@ -31,6 +31,11 @@ public:
 		m_pTargetObject = target;
 	}
 
+	CGameObject* GetTargetObject()
+	{
+		return m_pTargetObject;
+	}
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
@@ -38,7 +43,7 @@ public:
 	void InitForm();
 
 	/* Load Target Resource */
-	bool LoadTargetMesh(const CString& filePath);
+	bool LoadTargetMesh(const CString& filePath, const CString& fileName);
 	bool LoadTargetAnimation(const CString& filePath);
 	bool LoadTargetLocalInfo(const CString& filePath);
 
@@ -69,9 +74,9 @@ private:
 	float m_fInfoStaticScaleY;
 	float m_fInfoStaticScaleZ;
 
-	float m_fInfoStaticRotX;
-	float m_fInfoStaticRotY;
-	float m_fInfoStaticRotZ;
+	int m_iInfoStaticRotX;
+	int m_iInfoStaticRotY;
+	int m_iInfoStaticRotZ;
 
 	/* Input */
 	CEdit m_editInfoPosX;
@@ -97,4 +102,23 @@ private:
 	CComboBox m_comboBoxAnimInfo;
 public:
 	afx_msg void OnBnClickedButtonInputInfo();
+
+	afx_msg void OnBnClickedButtonInfoPosxUp();
+	afx_msg void OnBnClickedButtonInfoPosxDown();
+	afx_msg void OnBnClickedButtonInfoPosyUp();
+	afx_msg void OnBnClickedButtonInfoPosyDown();
+	afx_msg void OnBnClickedButtonInfoPoszUp();
+	afx_msg void OnBnClickedButtonInfoPoszDown();
+	afx_msg void OnBnClickedButtonInfoScalexUp();
+	afx_msg void OnBnClickedButtonInfoScalexDown();
+	afx_msg void OnBnClickedButtonInfoScaleyUp();
+	afx_msg void OnBnClickedButtonInfoScaleyDown();
+	afx_msg void OnBnClickedButtonInfoScalezUp();
+	afx_msg void OnBnClickedButtonInfoScalezDown();
+	afx_msg void OnBnClickedButtonInfoRotxUp();
+	afx_msg void OnBnClickedButtonInfoRotxDown();
+	afx_msg void OnBnClickedButtonInfoRotyUp();
+	afx_msg void OnBnClickedButtonInfoRotyDown();
+	afx_msg void OnBnClickedButtonInfoRotzUp();
+	afx_msg void OnBnClickedButtonInfoRotzDown();
 };

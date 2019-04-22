@@ -21,6 +21,9 @@
 #include "Scene/Layer.h"
 #include "Component/EffectTexture.h"
 #include "Component/ColliderSphere.h"
+#include "Component/Renderer.h"
+#include "Resources/Mesh.h"
+#include "Component/Material.h"
 
 // CEditForm 대화 상자
 
@@ -122,6 +125,59 @@ void CEditForm::OnInitialUpdate()
 void CEditForm::UpdateForm()
 {
 	m_pEffectDlg->UpdateForm();
+}
+
+bool CEditForm::LoadEffectMesh(CGameObject * object, const CString & filePath, const CString& fileName)
+{
+	CString strTag = filePath + ".msh";
+
+	if (!object)
+		return false;
+
+	CRenderer *pRenderer = object->AddComponent<CRenderer>("Renderer");
+
+	pRenderer->SetMeshFromFullPath((string)CT2CA(fileName), strTag.GetString());
+
+	CMesh *pMesh = pRenderer->GetMesh();
+
+	if (pMesh == nullptr)
+	{
+		SAFE_RELEASE(pRenderer);
+		return false;
+	}
+
+	SAFE_RELEASE(pMesh);
+	SAFE_RELEASE(pRenderer);
+
+	return true;
+}
+
+bool CEditForm::LoadEffectLocalInfo(CGameObject * object, const CString & filePath)
+{
+	CString strTag = filePath + ".dat";
+
+	if (!object)
+		return false;
+
+	FILE* pFile = nullptr;
+
+	char	strPath[MAX_PATH] = {};
+	WideCharToMultiByte(CP_ACP, 0, strTag, -1,
+		strPath, lstrlen(strTag), 0, 0);
+
+	fopen_s(&pFile, strPath, "rb");
+
+	if (!pFile)
+		return false;
+
+	CTransform* pTr = object->GetTransform();
+	pTr->Load_Local(pFile);
+	SAFE_RELEASE(pTr);
+
+	//SetMeshInfo();
+	fclose(pFile);
+
+	return true;
 }
 
 void CEditForm::OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult)
@@ -236,6 +292,22 @@ void CEditForm::OnBnClickedButtonLoadMeshTexture()
 
 	CString path = dlg.GetPathName();
 	CString name = dlg.GetFileTitle();
+
+	CRenderer *pRenderer = m_pEffect->FindComponentFromType<CRenderer>(CT_RENDERER);
+	CMaterial *pMaterial = pRenderer->GetMaterial();
+
+	pRenderer->SetRenderState(ALPHA_BLEND);
+	//pRenderer->AlphaEnable(true);
+
+	//pRenderer->SetRenderState(CULLING_NONE);
+
+	string fullPath = CT2CA(path);
+
+	pMaterial->SetDiffuseTexInfoFromFullPath(SAMPLER_LINEAR, (string)CT2CA(name), 0, 0,
+		fullPath.c_str());
+
+	SAFE_RELEASE(pMaterial);
+	SAFE_RELEASE(pRenderer);
 }
 
 void CEditForm::OnBnClickedButtonLoadMesh()
@@ -262,6 +334,72 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	CString path = dlg.GetPathName();
 	CString name = dlg.GetFileTitle();
 
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; --i)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	CString fullPath = path + name;
+
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer *pLayer = pScene->GetLayer("Default");
+
+	CGameObject *pObject = CGameObject::CreateObject("EffectObj", pLayer);
+
+	CTransform *pTr = pObject->GetTransform();
+	pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
+	SAFE_RELEASE(pTr);
+
+	if (!LoadEffectMesh(pObject, fullPath, name))
+	{
+		AfxMessageBox(L"Effect Mesh Create Fail!");
+
+		SAFE_RELEASE(pObject);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+		return;
+	}
+
+	if (!LoadEffectLocalInfo(pObject, fullPath))
+	{
+		AfxMessageBox(L"Effect Mesh Local Information Create Fail!");
+		SAFE_RELEASE(pObject);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+		return;
+	}
+
+	/* Collider */
+	CRenderer *pRenderer = pObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+	CMesh *pMesh = pRenderer->GetMesh();
+
+	pTr = pObject->GetTransform();
+
+	Vector3 vMin, vMax, vCenter;
+
+	vMin = (pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vMax = (pMesh->GetMax()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vCenter = (pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat);
+
+	float fRadius;
+
+	fRadius = pMesh->GetRadius() * pTr->GetLocalScale().x;
+
+	CColliderSphere* pCollider = pObject->AddComponent<CColliderSphere>("Collider");
+	pCollider->SetSphere(vCenter, fRadius);
+	pCollider->SetColliderRenderCheck(false);
+	SAFE_RELEASE(pTr);
+	SAFE_RELEASE(pCollider);
+
+	//SAFE_RELEASE(pObject);
+	m_pEffect = pObject;
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 }
 
 /* Particle */
