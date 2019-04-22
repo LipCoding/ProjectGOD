@@ -37,9 +37,7 @@ public:
 	void SetEffectTexture(const string& name, const string& fullPath);
 
 private:
-	class CRenderer* m_pRenderer;
-	class CMesh*	 m_pMesh;
-	class CMaterial* m_pMaterial;
+	class CRenderer* m_pRenderer = nullptr;
 
 	/* Fade */
 	float m_vAlpha = 1.f;

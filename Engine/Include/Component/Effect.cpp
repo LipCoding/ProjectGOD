@@ -27,8 +27,6 @@ CEffect::CEffect(const CEffect & effect) :
 
 CEffect::~CEffect()
 {
-	SAFE_RELEASE(m_pMaterial);
-	SAFE_RELEASE(m_pMesh)
 	SAFE_RELEASE(m_pRenderer);
 }
 
@@ -44,11 +42,9 @@ void CEffect::SetTexture(const string & strFullPath)
 bool CEffect::Init()
 {
 	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Renderer");
-	m_pMaterial = m_pRenderer->CreateMaterial();
-
-	m_pRenderer->SetRenderState(ALPHA_BLEND);
-	m_pRenderer->AlphaEnable(true);
-
+	CMaterial *pMaterial = m_pRenderer->CreateMaterial();
+	SAFE_RELEASE(pMaterial);
+	
 	return true;
 }
 
@@ -91,10 +87,13 @@ bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
 		return false;
 
 	m_pRenderer->SetMeshFromFullPath(fileName, wTag.c_str());
-	m_pMesh = m_pRenderer->GetMesh();
+	
+	CMesh *pMesh = m_pRenderer->GetMesh();
 
-	if (!m_pMesh)
+	if (!pMesh)
 		return false;
+
+	SAFE_RELEASE(pMesh);
 
 	return true;
 }
@@ -123,7 +122,9 @@ bool CEffect::LoadEffectLocalInfo(const string & filePath)
 
 bool CEffect::CreateEffectCollider()
 {
-	if (!m_pMesh)
+	CMesh *pMesh = m_pRenderer->GetMesh();
+
+	if (!pMesh)
 		return false;
 
 	/* Collider */
@@ -131,12 +132,12 @@ bool CEffect::CreateEffectCollider()
 	pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
 
 	Vector3 vMin, vMax, vCenter;
-	vMin = (m_pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
-	vMax = (m_pMesh->GetMax()).TransformCoord(pTr->GetLocalMatrix().mat);
-	vCenter = (m_pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vMin = (pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vMax = (pMesh->GetMax()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vCenter = (pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat);
 
 	float fRadius;
-	fRadius = m_pMesh->GetRadius() * pTr->GetLocalScale().x;
+	fRadius = pMesh->GetRadius() * pTr->GetLocalScale().x;
 
 	CColliderSphere* pCollider = m_pGameObject->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
@@ -144,14 +145,18 @@ bool CEffect::CreateEffectCollider()
 	SAFE_RELEASE(pCollider);
 
 	SAFE_RELEASE(pTr);
+	SAFE_RELEASE(pMesh);
 
 	return true;
 }
 
 void CEffect::SetEffectTexture(const string & name, const string & fullPath)
 {
-	//m_pRenderer->SetRenderState(CULLING_NONE);
-	
+	m_pRenderer->SetRenderState(CULLING_NONE);
+	m_pRenderer->SetRenderState(ALPHA_BLEND);
+	m_pRenderer->AlphaEnable(true);
 
-	m_pMaterial->SetDiffuseTexInfoFromFullPath(SAMPLER_LINEAR, name, 0, 0, fullPath.c_str());
+	CMaterial *pMaterial = m_pRenderer->GetMaterial();
+	pMaterial->SetDiffuseTexInfoFromFullPath(SAMPLER_LINEAR, name, 0, 0, fullPath.c_str());
+	SAFE_RELEASE(pMaterial);
 }
