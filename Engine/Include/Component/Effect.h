@@ -6,18 +6,6 @@ PG_BEGIN
 class PG_DLL CEffect : 
 	public CComponent
 {
-protected:
-	class CRenderer* m_pRenderer;
-
-	/* Fade */
-	float m_vAlpha = 1.f;
-	float m_Angle = 0.f;
-
-	/* Info */
-	Vector3 m_vAngle;
-	Vector3 m_vScale;
-	Vector3 m_vPos;
-
 private:
 	friend class CGameObject;
 
@@ -38,6 +26,31 @@ public:
 	virtual void Collision(float fTime);
 	virtual void Render(float fTime);
 	virtual CEffect* Clone();
+
+public:
+	/* Load Effect Mesh */
+	bool LoadEffectMesh(const string& filePath, const string& fileName);
+	bool LoadEffectLocalInfo(const string& filePath);
+	bool CreateEffectCollider();
+
+	/* Material */
+	void SetEffectTexture(const string& name, const string& fullPath);
+
+private:
+	class CRenderer* m_pRenderer;
+	class CMesh*	 m_pMesh;
+	class CMaterial* m_pMaterial;
+
+	/* Fade */
+	float m_vAlpha = 1.f;
+
+	/* Angle */
+	float m_Angle = 0.f;
+
+	/* Info */
+	Vector3 m_vAngle;
+	Vector3 m_vScale;
+	Vector3 m_vPos;
 };
 
 PG_END

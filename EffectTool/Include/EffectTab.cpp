@@ -285,10 +285,7 @@ void CEffectTab::DeleteTargetMesh()
 	m_pTargetObject = nullptr;
 	m_pBoneMatrix = nullptr;
 	m_boneNameAttachTo = "";
-
-
 }
-
 
 void CEffectTab::OnBnClickedButtonLoadTargetObj()
 {
@@ -364,7 +361,7 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 
 	CColliderSphere* pCollider = m_pObjectMesh->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
-	pCollider->SetColliderRenderCheck(false);
+	pCollider->SetColliderRenderCheck(true);
 	SAFE_RELEASE(pCollider);
 
 	/*CColliderAABB* pCollider = m_pObjectMesh->AddComponent<CColliderAABB>("Collider");
@@ -614,7 +611,6 @@ void CEffectTab::SetInfoRot()
 
 	SAFE_RELEASE(pTr);
 }
-
 
 void CEffectTab::OnBnClickedButtonInputInfo()
 {

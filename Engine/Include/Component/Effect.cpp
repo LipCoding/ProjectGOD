@@ -4,6 +4,9 @@
 #include "../Scene/Scene.h"
 #include "Transform.h"
 #include "Material.h"
+#include "Renderer.h"
+#include "../Resources/Mesh.h"
+#include "ColliderSphere.h"
 
 PG_USING
 
@@ -24,6 +27,8 @@ CEffect::CEffect(const CEffect & effect) :
 
 CEffect::~CEffect()
 {
+	SAFE_RELEASE(m_pMaterial);
+	SAFE_RELEASE(m_pMesh)
 	SAFE_RELEASE(m_pRenderer);
 }
 
@@ -38,11 +43,11 @@ void CEffect::SetTexture(const string & strFullPath)
 
 bool CEffect::Init()
 {
-	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Effect");
+	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Renderer");
+	m_pMaterial = m_pRenderer->CreateMaterial();
 
-	CMaterial *pMaterial = m_pRenderer->CreateMaterial();
-	//pMaterial->SetDiffuseSampler(SAMPLER_LINEAR);
-	SAFE_RELEASE(pMaterial);
+	m_pRenderer->SetRenderState(ALPHA_BLEND);
+	m_pRenderer->AlphaEnable(true);
 
 	return true;
 }
@@ -73,4 +78,80 @@ void CEffect::Render(float fTime)
 CEffect * CEffect::Clone()
 {
 	return new CEffect(*this);
+}
+
+bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
+{
+	string tag = filePath + ".msh";
+	wstring wTag;
+
+	wTag.assign(tag.begin(), tag.end());
+
+	if (!m_pGameObject)
+		return false;
+
+	m_pRenderer->SetMeshFromFullPath(fileName, wTag.c_str());
+	m_pMesh = m_pRenderer->GetMesh();
+
+	if (!m_pMesh)
+		return false;
+
+	return true;
+}
+
+bool CEffect::LoadEffectLocalInfo(const string & filePath)
+{
+	string tag = filePath + ".dat";
+
+	if (!m_pGameObject)
+		return false;
+
+	FILE* pFile = nullptr;
+
+	fopen_s(&pFile, tag.c_str(), "rb");
+
+	if (!pFile)
+		return false;
+
+	CTransform* pTr = m_pGameObject->GetTransform();
+	pTr->Load_Local(pFile);
+	SAFE_RELEASE(pTr);
+	fclose(pFile);
+
+	return true;
+}
+
+bool CEffect::CreateEffectCollider()
+{
+	if (!m_pMesh)
+		return false;
+
+	/* Collider */
+	CTransform *pTr = m_pGameObject->GetTransform();
+	pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
+
+	Vector3 vMin, vMax, vCenter;
+	vMin = (m_pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vMax = (m_pMesh->GetMax()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vCenter = (m_pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat);
+
+	float fRadius;
+	fRadius = m_pMesh->GetRadius() * pTr->GetLocalScale().x;
+
+	CColliderSphere* pCollider = m_pGameObject->AddComponent<CColliderSphere>("Collider");
+	pCollider->SetSphere(vCenter, fRadius);
+	pCollider->SetColliderRenderCheck(true);
+	SAFE_RELEASE(pCollider);
+
+	SAFE_RELEASE(pTr);
+
+	return true;
+}
+
+void CEffect::SetEffectTexture(const string & name, const string & fullPath)
+{
+	//m_pRenderer->SetRenderState(CULLING_NONE);
+	
+
+	m_pMaterial->SetDiffuseTexInfoFromFullPath(SAMPLER_LINEAR, name, 0, 0, fullPath.c_str());
 }

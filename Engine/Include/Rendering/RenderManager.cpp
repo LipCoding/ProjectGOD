@@ -679,6 +679,10 @@ void CRenderManager::Render(float fTime)
 		{
 			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
 		}
+
+		if (i == RGT_ALPHA)
+			continue;
+
 		if(i != RGT_UI)
 			m_tRenderGroup[i].iSize = 0;
 	}
@@ -723,6 +727,18 @@ void CRenderManager::Render(float fTime)
 		}
 	}
 
+	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
+	{
+
+		CCollider* pCollider = nullptr;
+		pCollider = m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->FindComponentFromType<CCollider>(CT_COLLIDER);
+		if (pCollider != nullptr)
+		{
+			pCollider->ColliderRender(fTime);
+			SAFE_RELEASE(pCollider);
+		}
+	}
+	m_tRenderGroup[RGT_ALPHA].iSize = 0;
 
 	m_tRenderGroup[RGT_UI].iSize = 0;
 

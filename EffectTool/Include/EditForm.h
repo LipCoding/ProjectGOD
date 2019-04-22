@@ -18,6 +18,7 @@ public:
 		CEffect			*pEffect;
 		CTransform		*pTr;
 		EFFECT_TYPE		eType;
+		bool			m_bBillMode;
 	}EFFECTDATA;
 
 public:
@@ -51,34 +52,38 @@ public:
 		return m_pEffect1Dlg;
 	}
 
+
+	vector<EFFECTDATA*> *GetEffects()
+	{
+		return &m_vecEffect;
+	}
+	void SetTargetEffect(EFFECTDATA *curEffect)
+	{
+		m_pCurEffect = curEffect;
+	}
+
 private:
 	vector<EFFECTDATA*> m_vecEffect;
+	EFFECTDATA* m_pCurEffect = nullptr;
 
 	class CEnvToolView  *m_pView = nullptr;
-	class CEffectTab *m_pEffectDlg = nullptr;
-	class CEffectTab1 *m_pEffect1Dlg = nullptr;
-	TOOLTAB_TYPE m_eTabType = TAB_END;
+	class CEffectTab	*m_pEffectDlg = nullptr;
+	class CEffectTab1	*m_pEffect1Dlg = nullptr;
+	TOOLTAB_TYPE		m_eTabType = TAB_END;
 
-	class CGameObject *m_pEffect = nullptr;
+	
 
 	int m_iEffectNumber = 0;
 
 public:
 	virtual void OnInitialUpdate();
 	void UpdateForm();
-
-public:
-	/* Load Effect Mesh */
-	bool LoadEffectMesh(CGameObject* object, const CString& filePath, const CString& fileName);
-	bool LoadEffectLocalInfo(CGameObject* object, const CString& filePath);
-
-
+	void FreeEffectData(EFFECTDATA* effect);
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;
 public:
 	afx_msg void OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnBnClickedButtonLoadTexture();
 	afx_msg void OnBnClickedButtonLoadParticle();
 	afx_msg void OnBnClickedButtonLoadMeshTexture();
 	afx_msg void OnBnClickedButtonLoadMesh();

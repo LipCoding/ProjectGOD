@@ -498,9 +498,6 @@
     <ClCompile Include="Component\Effect.cpp">
       <Filter>06. Component\19. Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EffectTexture.cpp">
-      <Filter>06. Component\19. Effect</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PGMath.h">
@@ -768,9 +765,6 @@
       <Filter>06. Component\13. Particle</Filter>
     </ClInclude>
     <ClInclude Include="Component\Effect.h">
-      <Filter>06. Component\19. Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EffectTexture.h">
       <Filter>06. Component\19. Effect</Filter>
     </ClInclude>
   </ItemGroup>
