@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 
 #include "MainFrm.h"
+#include "EaseSheetDlg.h"
 
 #include "Core/PathManager.h"
 #include "Resources/Mesh.h"
@@ -41,6 +42,7 @@ CEffectTab::CEffectTab(CWnd* pParent /*=nullptr*/)
 
 CEffectTab::~CEffectTab()
 {
+	SAFE_DELETE(m_pEaseSheetDlg);
 }
 
 void CEffectTab::DoDataExchange(CDataExchange* pDX)
@@ -66,6 +68,8 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_X, m_editInfoRotX);
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_Y, m_editInfoRotY);
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_Z, m_editInfoRotZ);
+	DDX_Control(pDX, IDC_COMBO_VIEWSHEET, m_comboEaseSheet_Scale);
+	DDX_Control(pDX, IDC_COMBO_VIEWSHEET1, m_comboEaseSheet_Rot);
 }
 
 
@@ -93,6 +97,8 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTY_DOWN, &CEffectTab::OnBnClickedButtonInfoRotyDown)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_UP, &CEffectTab::OnBnClickedButtonInfoRotzUp)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_DOWN, &CEffectTab::OnBnClickedButtonInfoRotzDown)
+	ON_BN_CLICKED(IDC_BUTTON_VIEWSHEET, &CEffectTab::OnBnClickedButtonViewsheet)
+	ON_BN_CLICKED(IDC_BUTTON_VIEWSHEET2, &CEffectTab::OnBnClickedButtonViewsheet2)
 END_MESSAGE_MAP()
 
 
@@ -115,6 +121,54 @@ BOOL CEffectTab::OnInitDialog()
 	m_iInfoStaticRotX = -1;
 	m_iInfoStaticRotY = -1;
 	m_iInfoStaticRotZ = -1;
+
+	/* Ease Sheet */
+	m_comboEaseSheet_Scale.AddString(L"None");
+	m_comboEaseSheet_Scale.AddString(L"EaseInSine");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutSine");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuad");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuad");
+	m_comboEaseSheet_Scale.AddString(L"EaseInCubic");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutCubic");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuart");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuart");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuint");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuint");
+	m_comboEaseSheet_Scale.AddString(L"EaseInExpo");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutExpo");
+	m_comboEaseSheet_Scale.AddString(L"EaseInCirc");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutCirc");
+	m_comboEaseSheet_Scale.AddString(L"EaseInBack");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutBack");
+	m_comboEaseSheet_Scale.AddString(L"EaseInElastic");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutElastic");
+	m_comboEaseSheet_Scale.AddString(L"EaseInBounce");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutBounce");
+
+	m_comboEaseSheet_Rot.AddString(L"None");
+	m_comboEaseSheet_Rot.AddString(L"EaseInSine");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutSine");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuad");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuad");
+	m_comboEaseSheet_Rot.AddString(L"EaseInCubic");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutCubic");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuart");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuart");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuint");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuint");
+	m_comboEaseSheet_Rot.AddString(L"EaseInExpo");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutExpo");
+	m_comboEaseSheet_Rot.AddString(L"EaseInCirc");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutCirc");
+	m_comboEaseSheet_Rot.AddString(L"EaseInBack");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutBack");
+	m_comboEaseSheet_Rot.AddString(L"EaseInElastic");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutElastic");
+	m_comboEaseSheet_Rot.AddString(L"EaseInBounce");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutBounce");
+
+	m_comboEaseSheet_Scale.SetCurSel(0);
+	m_comboEaseSheet_Rot.SetCurSel(0);
 
 	UpdateData(FALSE);
 
@@ -449,6 +503,9 @@ void CEffectTab::UpdateForm()
 	}
 	else
 	{
+		m_comboEaseSheet_Scale.SetCurSel(0);
+		m_comboEaseSheet_Rot.SetCurSel(0);
+
 		m_fInfoStaticPosX = -1.f;
 		m_fInfoStaticPosY = -1.f;
 		m_fInfoStaticPosZ = -1.f;
@@ -478,6 +535,7 @@ void CEffectTab::UpdateForm()
 	UpdateData(FALSE);
 }
 
+#pragma region setInfo
 void CEffectTab::SetInfoPos()
 {
 	CTransform *pTr = m_pTargetObject->GetTransform();
@@ -611,6 +669,7 @@ void CEffectTab::SetInfoRot()
 
 	SAFE_RELEASE(pTr);
 }
+#pragma endregion
 
 void CEffectTab::OnBnClickedButtonInputInfo()
 {
@@ -903,3 +962,21 @@ void CEffectTab::OnBnClickedButtonInfoRotzDown()
 	SetInfoRot();
 }
 #pragma endregion
+
+void CEffectTab::OnBnClickedButtonViewsheet()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pEaseSheetDlg == nullptr)
+	{
+		m_pEaseSheetDlg = new CEaseSheetDlg;
+		m_pEaseSheetDlg->Create(IDD_DIALOG3);
+	}
+	m_pEaseSheetDlg->ShowWindow(SW_SHOW);
+}
+
+
+void CEffectTab::OnBnClickedButtonViewsheet2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	OnBnClickedButtonViewsheet();
+}

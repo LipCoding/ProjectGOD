@@ -92,6 +92,8 @@ private:
 	CEdit m_editInfoRotZ;
 
 private:
+	class CEaseSheetDlg *m_pEaseSheetDlg = nullptr;
+
 	CGameObject *m_pObjectMesh = nullptr;
 	CGameObject *m_pTargetObject = nullptr;
 	Matrix		*m_pBoneMatrix = nullptr;
@@ -100,6 +102,8 @@ private:
 
 	CComboBox m_comboBoxBoneInfo;
 	CComboBox m_comboBoxAnimInfo;
+	CComboBox m_comboEaseSheet_Scale;
+	CComboBox m_comboEaseSheet_Rot;
 public:
 	afx_msg void OnBnClickedButtonInputInfo();
 
@@ -121,4 +125,6 @@ public:
 	afx_msg void OnBnClickedButtonInfoRotyDown();
 	afx_msg void OnBnClickedButtonInfoRotzUp();
 	afx_msg void OnBnClickedButtonInfoRotzDown();
+	afx_msg void OnBnClickedButtonViewsheet();
+	afx_msg void OnBnClickedButtonViewsheet2();
 };

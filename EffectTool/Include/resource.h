@@ -9,6 +9,7 @@
 #define IDD_DIALOG_FORM                 310
 #define IDD_DIALOG1                     312
 #define IDD_DIALOG2                     314
+#define IDD_DIALOG3                     316
 #define IDC_TAB_EFFECT                  1001
 #define IDC_LIST_EFFECT_CONTAINER       1002
 #define IDC_BUTTON_EFFECT_SAVE          1003
@@ -136,8 +137,11 @@
 #define IDC_EDIT37                      1087
 #define IDC_EDIT38                      1088
 #define IDC_CHECK3                      1089
+#define IDC_BUTTON_VIEWSHEET            1089
 #define IDC_CHECK4                      1090
+#define IDC_BUTTON_VIEWSHEET2           1090
 #define IDC_CHECK5                      1091
+#define IDC_COMBO_VIEWSHEET1            1091
 #define IDC_EDIT39                      1092
 #define IDC_BUTTON35                    1093
 #define IDC_BUTTON36                    1094
@@ -155,6 +159,7 @@
 #define IDC_EDIT50                      1106
 #define IDC_EDIT51                      1107
 #define IDC_CHECK7                      1108
+#define IDC_COMBO_VIEWSHEET             1108
 #define IDC_CHECK8                      1109
 #define IDC_CHECK9                      1110
 #define IDC_CHECK10                     1111
@@ -224,9 +229,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1070
+#define _APS_NEXT_CONTROL_VALUE         1092
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

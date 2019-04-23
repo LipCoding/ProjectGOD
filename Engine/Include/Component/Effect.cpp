@@ -8,6 +8,9 @@
 #include "../Resources/Mesh.h"
 #include "ColliderSphere.h"
 
+#include "../Core/Timer.h"
+#include "../Core/TimerManager.h"
+
 PG_USING
 
 CEffect::CEffect()
@@ -28,33 +31,30 @@ CEffect::CEffect(const CEffect & effect) :
 CEffect::~CEffect()
 {
 	SAFE_RELEASE(m_pRenderer);
-}
-
-void CEffect::SetEffect()
-{
-
-}
-
-void CEffect::SetTexture(const string & strFullPath)
-{
+	Safe_Delete_VecList(m_vecAssist);
 }
 
 bool CEffect::Init()
 {
 	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Renderer");
+	
 	CMaterial *pMaterial = m_pRenderer->CreateMaterial();
 	SAFE_RELEASE(pMaterial);
-	
+
 	return true;
 }
 
 void CEffect::Input(float fTime)
 {
-
 }
 
 int CEffect::Update(float fTime)
 {
+	if (OperationCheck)
+		m_Timer += fTime;
+	else
+		m_Timer = 0.f;
+
 	return 0;
 }
 

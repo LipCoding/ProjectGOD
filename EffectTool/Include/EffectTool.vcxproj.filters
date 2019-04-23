@@ -57,6 +57,9 @@
     <ClInclude Include="EffectTab1.h">
       <Filter>00.Tab\Effect1</Filter>
     </ClInclude>
+    <ClInclude Include="EaseSheetDlg.h">
+      <Filter>99.Default\헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EffectTool.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="EffectTab1.cpp">
       <Filter>00.Tab\Effect1</Filter>
+    </ClCompile>
+    <ClCompile Include="EaseSheetDlg.cpp">
+      <Filter>99.Default\소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
