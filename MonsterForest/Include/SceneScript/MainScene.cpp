@@ -44,6 +44,11 @@
 #include "../ObjectScript/Seuteompi.h"
 #include "Component/Picking.h"
 #include "Component/ParticleMultiple.h"
+#include "Core/QuadTreeManager.h"
+#include "Core/NaviManager.h"
+#include "Component/Cell.h"
+#include "Component/ColliderRay.h"
+#include "../DropTableUI.h"
 CMainScene::CMainScene()
 {
 }
@@ -390,134 +395,96 @@ bool CMainScene::Init()
 
 #pragma endregion
 
-	{
-		CLayer*	pUILayer = m_pScene->GetLayer("UI+2");
+	//{
+	//	CLayer*	pUILayer = m_pScene->GetLayer("UI+2");
 
-		CGameObject*	pHPUIObj = CGameObject::CreateObject("HPUI", pUILayer);
-		CUIButton* pUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
-		pUIHearthBar->setUILength(125.f);
-		pUIHearthBar->setLengthRatio(1.f);
+	//	CGameObject*	pHPUIObj = CGameObject::CreateObject("HPUI", pUILayer);
+	//	CUIButton* pUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
+	//	pUIHearthBar->setUILength(125.f);
+	//	pUIHearthBar->setLengthRatio(1.f);
 
-		CTransform*	pButtonTr = pHPUIObj->GetTransform();
-		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
-		pButtonTr->SetWorldPos(127.f, 6.f, 0.f);
+	//	CTransform*	pButtonTr = pHPUIObj->GetTransform();
+	//	//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+	//	pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
+	//	pButtonTr->SetWorldPos(127.f, 6.f, 0.f);
 
-		SAFE_RELEASE(pButtonTr);
+	//	SAFE_RELEASE(pButtonTr);
 
-		CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
+	//	CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+	//	pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
+	//	CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
-			0, 0, L"UserInterface/UI_HP.png");
+	//	pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
+	//		0, 0, L"UserInterface/UI_HP.png");
 
-		SAFE_RELEASE(pMaterial);
+	//	SAFE_RELEASE(pMaterial);
 
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pRenderer);
 
-		CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+	//	CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 125, 25);
+	//	pRC->SetRect(0, 0, 125, 25);
 
-		SAFE_RELEASE(pRC);
+	//	SAFE_RELEASE(pRC);
 
-		CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
-		HPFont->SetFont("³ª´®°íµñ");
-		HPFont->SetText(L"");
-		HPFont->SetArea(25, 0, 200, 25.f);
-		SAFE_RELEASE(HPFont);
+	//	CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
+	//	HPFont->SetFont("³ª´®°íµñ");
+	//	HPFont->SetText(L"");
+	//	HPFont->SetArea(25, 0, 200, 25.f);
+	//	SAFE_RELEASE(HPFont);
 
-		GET_SINGLE(UserInterfaceManager)->setUIHearthBar(pUIHearthBar);
+	//	GET_SINGLE(UserInterfaceManager)->setUIHearthBar(pUIHearthBar);
 
-		SAFE_RELEASE(pHPUIObj);
+	//	SAFE_RELEASE(pHPUIObj);
 
-		SAFE_RELEASE(pUILayer);
-	}
+	//	SAFE_RELEASE(pUILayer);
+	//}
 
-	{
-		CLayer*	pUILayer = m_pScene->GetLayer("UI+1");
+	//{
+	//	CLayer*	pUILayer = m_pScene->GetLayer("UI+2");
 
-		CGameObject*	pHPUIObj = CGameObject::CreateObject("Enemy1_HPUI", pUILayer);
-		CUIButton* pEnemyUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
-		pEnemyUIHearthBar->setUILength(200.f);
-		pEnemyUIHearthBar->setLengthRatio(1.f);
+	//	CGameObject*	pHPUIObj = CGameObject::CreateObject("Enemy1_HPUI", pUILayer);
+	//	CUIButton* pEnemyUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
+	//	pEnemyUIHearthBar->setUILength(200.f);
+	//	pEnemyUIHearthBar->setLengthRatio(1.f);
 
-		CTransform*	pButtonTr = pHPUIObj->GetTransform();
+	//	CTransform*	pButtonTr = pHPUIObj->GetTransform();
 
-		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(200.f, 25.f, 1.f);
-		pButtonTr->SetWorldPos(300.f, 25.f, 0.f);
+	//	//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+	//	pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
+	//	pButtonTr->SetWorldPos(527.f, 6.f, 0.f);
 
-		SAFE_RELEASE(pButtonTr);
+	//	SAFE_RELEASE(pButtonTr);
 
-		CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
+	//	CRenderer2D* pRenderer = pHPUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+	//	pRenderer->SetShader(UI_HEARTH_BAR_SHADER);
+	//	CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
-			0, 0, L"UserInterface/UI_HP.png");
+	//	pMaterial->SetDiffuseTexInfo("Linear", "HealthPoint",
+	//		0, 0, L"UserInterface/UI_HP.png");
 
-		SAFE_RELEASE(pMaterial);
+	//	SAFE_RELEASE(pMaterial);
 
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pRenderer);
 
-		CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+	//	CColliderRect* pRC = pHPUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 200, 25);
+	//	pRC->SetRect(0, 0, 200, 25);
 
-		SAFE_RELEASE(pRC);
-		CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
-		HPFont->SetFont("³ª´®°íµñ");
-		HPFont->SetText(L"");
-		HPFont->SetArea(50, 0, 200, 25.f);
-		SAFE_RELEASE(HPFont);
+	//	SAFE_RELEASE(pRC);
+	//	CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
+	//	HPFont->SetFont("³ª´®°íµñ");
+	//	HPFont->SetText(L"");
+	//	HPFont->SetArea(50, 0, 200, 25.f);
+	//	SAFE_RELEASE(HPFont);
 
-		GET_SINGLE(UserInterfaceManager)->setEnemyUIHearthBar(pEnemyUIHearthBar);
+	//	GET_SINGLE(UserInterfaceManager)->setEnemyUIHearthBar(pEnemyUIHearthBar);
 
-		SAFE_RELEASE(pHPUIObj);
+	//	SAFE_RELEASE(pHPUIObj);
 
-		SAFE_RELEASE(pUILayer);
-	}
+	//	SAFE_RELEASE(pUILayer);
+	//}
 
-//#pragma region ParticleSystem
-//	// ÆÄÆ¼Å¬ ÇÁ·ÎÅäÅ¸ÀÔ
-//	CGameObject*	pParticleObj = CGameObject::CreatePrototype("Particle");
-//
-//	CTransform*	pParticleTr = pParticleObj->GetTransform();
-//
-//	pParticleTr->SetWorldPos(20.f, 7.f, 20.f);
-//
-//	SAFE_RELEASE(pParticleTr);
-//
-//	ParticleMultiple*	pParticle = pParticleObj->AddComponent<ParticleMultiple>("Particle");
-//
-//	pParticle->setParticleInfo();
-//	pParticle->setParticleTexture("ParticleSample",
-//		L"Effect/Light1.png");
-//	pParticle->setParticleLight(false);
-//
-//	SAFE_RELEASE(pParticle);
-//
-//	SAFE_RELEASE(pParticleObj);
-//	//ÆÄÆ¼Å¬ »ý¼º
-//	{
-//		CLayer*	pLayer = m_pScene->GetLayer("Default");
-//		for (int i = 0; i < 20; ++i)
-//		{
-//			pParticleObj = CGameObject::CreateClone("Particle");
-//
-//			CTransform*	pParticleTr = pParticleObj->GetTransform();
-//			pParticleTr->SetWorldPos(300.f, 0.f, 300.f);
-//			SAFE_RELEASE(pParticleTr);
-//
-//			pLayer->AddObject(pParticleObj);
-//
-//			SAFE_RELEASE(pParticleObj);
-//		}
-//		SAFE_RELEASE(pLayer);
-//	}
-//#pragma endregion
 #pragma region sound
 	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", false, "MainSound.mp3");
 
@@ -550,7 +517,7 @@ bool CMainScene::Init()
 
 		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 30, 30);
+		pRC->SetRect(0, 0, 0, 0);
 
 		SAFE_RELEASE(pRC);
 
@@ -582,7 +549,7 @@ bool CMainScene::Init()
 
 		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 30, 30);
+		pRC->SetRect(0, 0, 0, 0);
 
 		SAFE_RELEASE(pRC);
 
@@ -615,7 +582,7 @@ bool CMainScene::Init()
 
 		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 30, 30);
+		pRC->SetRect(0, 0, 0, 0);
 
 		SAFE_RELEASE(pRC);
 
@@ -624,6 +591,7 @@ bool CMainScene::Init()
 	}
 #pragma endregion
 
+#pragma region Particle
 	CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
 
 	for (int i = 0; i < 5; ++i)
@@ -674,6 +642,9 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pParticleObj);
 	}
 	SAFE_RELEASE(pParticleLayer);
+#pragma endregion
+	//GET_SINGLE(CNaviManager)->CreateNaviMesh("NaviTest0423");
+	//GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 
 	return true;
 }
@@ -775,7 +746,7 @@ int CMainScene::Update(float fTime)
 					float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 					pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 					pTr->SetWorldScale(2.f, 2.f, 2.f);
-					pTr->SetWorldRot(0.f, 0.0f, 0.f);
+					pTr->SetWorldRotY(XMConvertToRadians(pPacket->y));
 					SAFE_RELEASE(pTr);
 
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
@@ -791,7 +762,6 @@ int CMainScene::Update(float fTime)
 
 					CGameObject*	pCameraObj = m_pScene->GetMainCameraObj();
 					CTransform* pTransform = m_pScene->GetMainCameraTr();
-
 					CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 					//Vector3 LightPos = m_pTransform->GetWorldPos();
 					Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
@@ -852,7 +822,7 @@ int CMainScene::Update(float fTime)
 					float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 					pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 					pTr->SetWorldScale(2.f, 2.f, 2.f);
-					pTr->SetWorldRot(0.f, 0.0f, 0.f);
+					pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 					SAFE_RELEASE(pTr);
 				}
 			}
@@ -879,6 +849,7 @@ int CMainScene::Update(float fTime)
 						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
 						SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 						pTr->SetWorldScale(0.5f, 0.5f, 0.5f);
 					}
@@ -902,6 +873,8 @@ int CMainScene::Update(float fTime)
 						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
 						SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetLocalRotY(XMConvertToRadians(180.f));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 						//pTr->SetWorldScale(0.5f, 0.5f, 0.5f);
 						
@@ -928,6 +901,7 @@ int CMainScene::Update(float fTime)
 						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
 						SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 					}
 				}
@@ -961,9 +935,7 @@ int CMainScene::Update(float fTime)
 
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
-						pTr->SetWorldScale(1.f, 1.f, 1.f);
-						pTr->SetLocalRot(-PG_PI / 2.f, PG_PI, 0.f);
-						pTr->SetWorldRot(0.f, 0.f, 0.f);
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 
 						string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 						string transformPath = meshBasePath + "99.Dynamic_Mesh\\01.npc\\npc.dat";
@@ -987,12 +959,22 @@ int CMainScene::Update(float fTime)
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				CTransform* pTransform = pGameObject->GetTransform();
-
+				
 				prevPos.x = pPacket->x;
 				prevPos.y = pPacket->y;
 				prevPos.z = pPacket->z;
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 				pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
+				
+				//Vector3 vPos = pTransform->GetWorldPos();
+				//Vector3 vDir = pTransform->GetWorldAxis(AXIS_Z) * 0.172f;
+				//if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+				//{
+				//	vPos = vPos + vDir;
+				//	float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				//	vPos.y = fPosY;
+				//	pTransform->SetWorldPos(vPos);
+				//}
 
 				CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 				Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
@@ -1296,15 +1278,15 @@ int CMainScene::Update(float fTime)
 
 				if (SC_PACKET_ROTATE_X == packet_type)
 				{
-					pTransform->SetWorldRotX(pPacket->angle);
+					pTransform->SetWorldRotX(XMConvertToRadians(pPacket->angle));
 				}
 				else if (SC_PACKET_ROTATE_Y == packet_type)
 				{
-					pTransform->SetWorldRotY(pPacket->angle);
+					pTransform->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 				}
 				else if (SC_PACKET_ROTATE_Z == packet_type)
 				{
-					pTransform->SetWorldRotZ(pPacket->angle);
+					pTransform->SetWorldRotZ(XMConvertToRadians(pPacket->angle));
 				}
 
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
@@ -1325,15 +1307,15 @@ int CMainScene::Update(float fTime)
 
 				if (SC_PACKET_ROTATE_X == packet_type)
 				{
-					pTransform->SetWorldRotX(pPacket->angle);
+					pTransform->SetWorldRotX(XMConvertToRadians(pPacket->angle));
 				}
 				else if (SC_PACKET_ROTATE_Y == packet_type)
 				{
-					pTransform->SetWorldRotY(pPacket->angle);
+					pTransform->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 				}
 				else if (SC_PACKET_ROTATE_Z == packet_type)
 				{
-					pTransform->SetWorldRotZ(pPacket->angle);
+					pTransform->SetWorldRotZ(XMConvertToRadians(pPacket->angle));
 				}
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 				pAnimation->ChangeClip("MOVE");
@@ -1355,15 +1337,15 @@ int CMainScene::Update(float fTime)
 
 					if (SC_PACKET_ROTATE_X == packet_type)
 					{
-						pTransform->SetWorldRotX(pPacket->angle);
+						pTransform->SetWorldRotX(XMConvertToRadians(pPacket->angle));
 					}
 					else if (SC_PACKET_ROTATE_Y == packet_type)
 					{
-						pTransform->SetWorldRotY(pPacket->angle);
+						pTransform->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 					}
 					else if (SC_PACKET_ROTATE_Z == packet_type)
 					{
-						pTransform->SetWorldRotZ(pPacket->angle);
+						pTransform->SetWorldRotZ(XMConvertToRadians(pPacket->angle));
 					}
 					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 					pAnimation->ChangeClip("Walk");
@@ -1409,6 +1391,30 @@ int CMainScene::Update(float fTime)
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
 				SAFE_RELEASE(pGameObject);
+			}
+		}
+		break;
+
+		case SC_PACKET_DIE_ANIMATION:
+		{
+			sc_packet_animation_player* pPacket = reinterpret_cast<sc_packet_animation_player*>(packet);
+			int id = pPacket->id;
+			char str[128];
+			string appendTag = _itoa(id, str, 10);
+			string objectTag = "Player" + appendTag;
+			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			if (pGameObject != nullptr)
+			{
+				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+				pAnimation->ChangeClip("Die");
+				
+				SAFE_RELEASE(pAnimation);
+				Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
+				if (nullptr != pMino)
+				{
+					pMino->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
 			}
 		}
 		break;
@@ -1606,44 +1612,49 @@ void CMainScene::Input(float fTime)
 
 	if (KEYDOWN("MouseLButton"))
 	{
-		/*CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
-		if (pLandScapeObj != NULL)
+		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+		bool clickedEnemy = false;
+		for (const auto& object : CGameObject::getObjectList())
 		{
-			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-			CPicking* pPicking = pLandScapeObj->FindComponentFromTag<CPicking>("Picking");
+			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
 
-			list<QUADTREENODE*>* pNodes = pLandScape->GetAllNodes();
-
-			bool bFirstCheck = false;
-
-			if (!pNodes->empty())
+			if (pRay->CheckCollList(pColl))
 			{
-				for (const auto iter : *pNodes)
-				{
-					Vector3 pos;
-					if (pPicking->Picking_ToBuffer(&pos,
-						GET_SINGLE(CInput)->GetRayPos(),
-						GET_SINGLE(CInput)->GetRayDir(),
-						iter->vecVtx, iter->vecIndex))
-					{
-						char str[128];
-						string appendTag = _itoa(NetworkManager::getInstance()->getMyClientID(), str, 10);
-						string objectTag = "Player" + appendTag;
-						CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-						CPlayer* pPlayer = pGameObject->FindComponentFromTag<CPlayer>("Player");
-						pPlayer->clickedID = -1;
-
-						CGameObject* pUIObject = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar()->GetGameObject();
-						pUIObject->Enable(false);
-						SAFE_RELEASE(pUIObject);
-					}
-				}
+				clickedEnemy = true;
 			}
+			SAFE_RELEASE(pColl);
+		}
+		
+		if(clickedEnemy)
+			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
+		else
+			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(false);
 
-			SAFE_RELEASE(pPicking);
-			SAFE_RELEASE(pLandScape);
-			SAFE_RELEASE(pLandScapeObj);
-		}*/
+		SAFE_RELEASE(pRay);
+		SAFE_RELEASE(pMouseObj);
+	}
+
+	if (KEYDOWN("MouseRButton"))
+	{
+		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+		bool clickedEnemy = false;
+		for (const auto& object : CGameObject::getObjectList())
+		{
+			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+			if (pRay->CheckCollList(pColl))
+			{
+				clickedEnemy = true;
+			}
+			SAFE_RELEASE(pColl);
+		}
+		if(clickedEnemy == false)
+			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
+
+		SAFE_RELEASE(pRay);
+		SAFE_RELEASE(pMouseObj);
 	}
 
 	if (KEYDOWN("Attack"))

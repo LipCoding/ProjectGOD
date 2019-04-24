@@ -88,7 +88,7 @@ void CColliderSphere::Collision(float fTime)
 
 void CColliderSphere::Render(float fTime)
 {
-	/*Matrix	matScale, matTrans, matRot;
+	Matrix	matScale, matTrans, matRot;
 
 	float	fLength = m_tSphere.fRadius;
 	Vector3	vLength = Vector3(fLength, fLength, fLength);
@@ -120,7 +120,7 @@ void CColliderSphere::Render(float fTime)
 
 	SAFE_RELEASE(pCamera);
 
-	CCollider::Render(fTime);*/
+	CCollider::Render(fTime);
 }
 
 void CColliderSphere::ColliderRender(float fTime)

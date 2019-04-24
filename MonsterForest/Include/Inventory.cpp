@@ -41,7 +41,7 @@ bool Inventory::initialize()
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
 		pMaterial->SetDiffuseTexInfo("Linear", "Slot",
-			0, 0, L"LoginEdit.bmp");
+			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
 
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
@@ -104,8 +104,8 @@ bool Inventory::initialize()
 			CMaterial* pMaterial = pRenderer->GetMaterial();
 
 			pMaterial->SetDiffuseTexInfo("Linear", "Slot",
-				0, 0, L"LoginEdit.bmp");
-
+				0, 0, L"UserInterface/UI_BASIC_BOX_MINI.png");
+			
 			SAFE_RELEASE(pMaterial);
 			SAFE_RELEASE(pRenderer);
 

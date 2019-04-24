@@ -26,7 +26,7 @@ class UserInterfaceManager
 	Status* pEnemyStatus;
 	class Chatting* pChatting;
 	class QuickSlot* pQuickSlot;
-
+	class DropTableUI* pDropTableUI;
 	class CPlayer* pPlayer = nullptr;
 
 public:
@@ -45,9 +45,10 @@ public:
 	MiniMap* getMiniMap() { return this->pMiniMap; }
 	WorldMap* getWorldMap() { return this->pWorldMap; }
 	Status* getStatus() { return this->pStatus; }
+	Status* getEnemyStatus() { return this->pEnemyStatus; }
 	Chatting* getChatting() { return this->pChatting; }
 	QuickSlot* getQuickSlot() { return this->pQuickSlot; }
-
+	DropTableUI* getDropTableUI() { return this->pDropTableUI; }
 
 	DECLARE_SINGLE(UserInterfaceManager);
 };

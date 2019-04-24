@@ -15,7 +15,7 @@
 #include "Player.h"
 #include "Core/NetworkManager.h"
 #include "../UserInterfaceManager.h"
-
+#include "../DropTableUI.h"
 
 Mino::Mino() :
 	m_pTarget(NULL),
@@ -130,6 +130,19 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		CGameObject* pUIObject = pEnemyUIHearthBar->GetGameObject();
 		pUIObject->Enable(true);
 		SAFE_RELEASE(pUIObject);
+	}
+
+	if (pDest->GetTag() == "MouseRay" && GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		if (true == dieState)
+		{
+			POINT mousePos = GET_SINGLE(CInput)->GetMousePos();
+			DropTableUI* pDropTableUI = GET_SINGLE(UserInterfaceManager)->getDropTableUI();
+			pDropTableUI->enableRender(true);
+			CTransform* pDropTableUITr = pDropTableUI->GetTransform();
+			pDropTableUITr->SetWorldPos(Vector3(mousePos.x, mousePos.y, 0));
+			SAFE_RELEASE(pDropTableUITr);
+		}
 	}
 }
 

@@ -90,4 +90,8 @@ public:
 	afx_msg void OnBnClickedButtonStop();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnCbnSelchangeComboBoneInfo();
+	afx_msg void OnBnClickedRadioClipType1();
+	afx_msg void OnBnClickedRadioClipType2();
+	afx_msg void OnBnClickedSliderArmRotX();
+	afx_msg void OnBnClickedRadioClipType3();
 };

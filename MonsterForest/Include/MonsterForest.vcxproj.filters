@@ -118,7 +118,6 @@
     <Filter Include="03. UserInterface\07. Option">
       <UniqueIdentifier>{94259b74-13c2-4c67-8d10-49ab197419bf}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="01. Scene\04. MainScene">
       <UniqueIdentifier>{ec9f5cb3-cffa-4bc4-b538-606fccd5c649}</UniqueIdentifier>
     </Filter>
@@ -127,6 +126,12 @@
     </Filter>
     <Filter Include="99. Defaults\리소스 파일\헤더 파일">
       <UniqueIdentifier>{5eb4b4d9-f8bc-4569-acef-251c4134e48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\10. DropTableUI">
+      <UniqueIdentifier>{3f26672a-1c9d-4f15-9fb6-d1285de74a33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\10. DropTableUI\01. DropItemSlot">
+      <UniqueIdentifier>{31a8a84b-0e02-41ec-bdf8-9ae51292f598}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +249,12 @@
     <ClInclude Include="Option.h">
       <Filter>03. UserInterface\07. Option</Filter>
     </ClInclude>
+    <ClInclude Include="DropTableUI.h">
+      <Filter>03. UserInterface\10. DropTableUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DropItemSlot.h">
+      <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -351,6 +362,12 @@
     <ClCompile Include="Option.cpp">
       <Filter>03. UserInterface\07. Option</Filter>
     </ClCompile>
+    <ClCompile Include="DropTableUI.cpp">
+      <Filter>03. UserInterface\10. DropTableUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DropItemSlot.cpp">
+      <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -361,5 +378,8 @@
     <ResourceCompile Include="MonsterForest.rc">
       <Filter>99. Defaults\리소스 파일</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Common\Data\Navi\NaviTest0423.bin" />
   </ItemGroup>
 </Project>
