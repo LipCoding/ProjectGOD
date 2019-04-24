@@ -16,10 +16,6 @@ PG_USING
 CEffect::CEffect()
 {
 	m_eType = CT_EFFECT;
-
-	m_vAngle = Vector3{ 0.f, 0.f, 0.f };
-	m_vScale = Vector3{ 0.f, 0.f, 0.f };
-	m_vPos = Vector3{ 0.f, 0.f, 0.f };
 }
 
 CEffect::CEffect(const CEffect & effect) :
@@ -32,6 +28,31 @@ CEffect::~CEffect()
 {
 	SAFE_RELEASE(m_pRenderer);
 	Safe_Delete_VecList(m_vecAssist);
+}
+
+CEffectAssist * CEffect::GetAssistFromType(CEffectAssist::ASSIST_TYPE type)
+{
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == type)
+		{
+			return assist;
+		}
+	}
+
+	return nullptr;
+}
+
+void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
+{
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == type)
+		{
+			assist->SetStartCheck(check);
+			break;
+		}
+	}
 }
 
 bool CEffect::Init()
@@ -50,16 +71,44 @@ void CEffect::Input(float fTime)
 
 int CEffect::Update(float fTime)
 {
-	if (OperationCheck)
-		m_Timer += fTime;
-	else
+	if (m_OperationCheck == false)
+	{
 		m_Timer = 0.f;
+	}
+	else
+	{
+		for (auto& assist : m_vecAssist)
+		{
+			assist->SetStartCheck(true);
+		}
+
+		m_Timer += fTime;
+
+		if (m_Timer >= m_MainEndTime)
+		{
+
+			for (auto& assist : m_vecAssist)
+			{
+				assist->SetStartCheck(true);
+			}
+
+			m_Timer = 0.f;
+			m_OperationCheck = false;
+		}
+	}
+
+	for (auto& assist : m_vecAssist)
+	{
+		assist->Update(m_pGameObject, fTime);
+	}
 
 	return 0;
 }
 
 int CEffect::LateUpdate(float fTime)
 {
+	/*  */
+
 	return 0;
 }
 
@@ -129,7 +178,7 @@ bool CEffect::CreateEffectCollider()
 
 	/* Collider */
 	CTransform *pTr = m_pGameObject->GetTransform();
-	pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
+	//pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
 
 	Vector3 vMin, vMax, vCenter;
 	vMin = (pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
@@ -159,4 +208,85 @@ void CEffect::SetEffectTexture(const string & name, const string & fullPath)
 	CMaterial *pMaterial = m_pRenderer->GetMaterial();
 	pMaterial->SetDiffuseTexInfoFromFullPath(SAMPLER_LINEAR, name, 0, 0, fullPath.c_str());
 	SAFE_RELEASE(pMaterial);
+}
+
+void CEffect::AddPatternScale(const int& easeType, const float & start, const float & end, const float & powX, const float & powY, const float & powZ, const int & repeat)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_SCALE)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetPowerX(powX);
+			pAssistData->SetPowerY(powY);
+			pAssistData->SetPowerZ(powZ);
+			pAssistData->SetRepeat(repeat);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_SCALE, (CEffectAssist::EASE_TYPE)easeType);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetPowerX(powX);
+		pAssistData->SetPowerY(powY);
+		pAssistData->SetPowerZ(powZ);
+		pAssistData->SetRepeat(repeat);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_SCALE, (CEffectAssist::EASE_TYPE)easeType);
+	m_vecAssist.push_back(pAssistData);
+}
+
+void CEffect::AddPatternRotation(const int& easeType, const float & start, const float & end, const float & powX, const float & powY, const float & powZ, const int & repeat)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_ROT)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetPowerX(powX);
+			pAssistData->SetPowerY(powY);
+			pAssistData->SetPowerZ(powZ);
+			pAssistData->SetRepeat(repeat);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_ROT, (CEffectAssist::EASE_TYPE)easeType);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetPowerX(powX);
+		pAssistData->SetPowerY(powY);
+		pAssistData->SetPowerZ(powZ);
+		pAssistData->SetRepeat(repeat);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_ROT, (CEffectAssist::EASE_TYPE)easeType);
+	m_vecAssist.push_back(pAssistData);
+}
+
+void CEffect::DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type)
+{
+	auto& assistEffect = remove_if(m_vecAssist.begin(), m_vecAssist.end(),
+		[&](CEffectAssist* assist) {return type == assist->GetType(); });
+
+	if (assistEffect == m_vecAssist.end())
+		return;
+
+	m_vecAssist.erase(assistEffect, m_vecAssist.end());
 }

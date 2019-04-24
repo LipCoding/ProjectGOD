@@ -16,8 +16,14 @@ public:
 	~CEffect();
 
 public:
+	CEffectAssist* GetAssistFromType(CEffectAssist::ASSIST_TYPE type);
+
+	void SetOperationCheck(bool check) { m_OperationCheck = check; }
+	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
+
 	void SetMainStartTime(const float& start) { m_MainStartTime = start; }
 	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
+	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
 public:
 	virtual bool Init();
@@ -38,14 +44,17 @@ public:
 	void SetEffectTexture(const string& name, const string& fullPath);
 
 	/* Add Assist Effect */
+
 	/* Pattern */
-	void AddPatternScale(const float& start, const float& end,
+	void AddPatternScale(const int& easeType,
+						 const float& start, const float& end,
 						 const float& powX, const float& powY, const float& powZ, 
 						 const int& repeat);
-	void AddPatternRotation(
+	void AddPatternRotation(const int& easeType,
 						 const float& start, const float& end,
 						 const float& powX, const float& powY, const float& powZ,
 						 const int& repeat);
+
 	/* Fade In Out */
 	void AddFadeIn(const float& start, const float& end, const float& degree);
 	void AddFadeOut(const float& start, const float& end, const float& degree);
@@ -55,12 +64,15 @@ public:
 						const int& width, const int& height, const int& repeat, const int& num);
 	void AddUVMovement(const float& start, const float& end, const int& moveX, const int& moveY);
 
+	/* Delete Assist Effect */
+	void DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type);
+
 private:
 	/* Container */
 	vector<CEffectAssist*> m_vecAssist;
 
 	/* Check */
-	bool OperationCheck = false;
+	bool m_OperationCheck = false;
 
 	/* Timer */
 	float m_MainStartTime = 0.f;
@@ -77,17 +89,6 @@ private:
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;
-
-	/* Fade */
-	float m_vAlpha = 1.f;
-
-	/* Angle */
-	float m_Angle = 0.f;
-
-	/* Info */
-	Vector3 m_vAngle;
-	Vector3 m_vScale;
-	Vector3 m_vPos;
 };
 
 PG_END

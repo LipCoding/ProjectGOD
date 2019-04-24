@@ -16,8 +16,8 @@
 #define IDC_EDIT_POS_CLIP               1008
 #define IDC_RADIO_CLIP_TYPE_1           1009
 #define IDC_RADIO_CLIP_TYPE_2           1010
-#define IDC_BUTTON_LOAD_ARM             1011
 #define IDC_RADIO_CLIP_TYPE_3           1011
+#define IDC_BUTTON_LOAD_ARM             1011
 #define IDC_BUTTON_STOP                 1012
 #define IDC_BUTTON_LOAD_MESH            1013
 #define IDC_BUTTON_PLAY_PAUSE           1014
@@ -67,7 +67,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1051
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
