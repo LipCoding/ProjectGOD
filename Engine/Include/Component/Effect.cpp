@@ -43,6 +43,27 @@ CEffectAssist * CEffect::GetAssistFromType(CEffectAssist::ASSIST_TYPE type)
 	return nullptr;
 }
 
+void CEffect::SetOperationCheck(bool check)
+{
+	m_OperationCheck = check;
+
+	if (m_OperationCheck == false)
+	{
+		for (auto& assist : m_vecAssist)
+		{
+			assist->SetStartCheck(false);
+			assist->Update(m_pGameObject, 0.f);
+		}
+	}
+	else
+	{
+		for (auto& assist : m_vecAssist)
+		{
+			assist->SetStartCheck(true);
+		}
+	}
+}
+
 void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
 {
 	for (auto& assist : m_vecAssist)
@@ -77,19 +98,13 @@ int CEffect::Update(float fTime)
 	}
 	else
 	{
-		for (auto& assist : m_vecAssist)
-		{
-			assist->SetStartCheck(true);
-		}
-
 		m_Timer += fTime;
 
 		if (m_Timer >= m_MainEndTime)
 		{
-
 			for (auto& assist : m_vecAssist)
 			{
-				assist->SetStartCheck(true);
+				assist->SetStartCheck(false);
 			}
 
 			m_Timer = 0.f;

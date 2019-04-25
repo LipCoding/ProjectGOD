@@ -53,6 +53,10 @@ CEffectTab::CEffectTab(CWnd* pParent /*=nullptr*/)
 	, m_fPatternStaticRotEndTime(0)
 	, m_iPatternStaticRepeat(0)
 	, m_fPatternStaticRotTime(0)
+	, m_fMainStaticStartTime(0)
+	, m_fMainStaticEndTime(0)
+	, m_iMainRepeat(0)
+	, m_fMainStaticTime(0)
 {
 
 }
@@ -115,6 +119,13 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_END_TIME, m_editPatternRotEndTime);
 	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_REPEAT, m_editPatternRotRepeat);
 	DDX_Control(pDX, IDC_CHECK_ROTATING, m_checkRotating);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_START_TIME, m_fMainStaticStartTime);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_END_TIME, m_fMainStaticEndTime);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_REPEAT, m_iMainRepeat);
+	DDX_Control(pDX, IDC_EDIT_MAIN_START_TIME_, m_editMainStartTime);
+	DDX_Control(pDX, IDC_EDIT_MAIN_END_TIME, m_editMainEndTime);
+	DDX_Control(pDX, IDC_EDIT_MAIN_REPEAT, m_editMainRepeat);
+	DDX_Text(pDX, IDC_EDIT_STATIC_MAIN_TIME, m_fMainStaticTime);
 }
 
 BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
@@ -151,6 +162,9 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_PATTERN_ROT_PLAY, &CEffectTab::OnBnClickedButtonPatternRotPlay)
 	ON_BN_CLICKED(IDC_BUTTON_PATTERN_ROT_STOP, &CEffectTab::OnBnClickedButtonPatternRotStop)
 	ON_BN_CLICKED(IDC_CHECK_ROTATING, &CEffectTab::OnBnClickedCheckRotating)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_MAIN, &CEffectTab::OnBnClickedButtonInfoMain)
+	ON_BN_CLICKED(IDC_BUTTON_MAIN_PLAY, &CEffectTab::OnBnClickedButtonMainPlay)
+	ON_BN_CLICKED(IDC_BUTTON_MAIN_STOP, &CEffectTab::OnBnClickedButtonMainStop)
 END_MESSAGE_MAP()
 
 // CEffectTab 메시지 처리기
@@ -184,6 +198,7 @@ void CEffectTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
+#pragma region Init
 void CEffectTab::InitForm()
 {
 	m_comboBoxBoneInfo.ResetContent();
@@ -200,9 +215,23 @@ void CEffectTab::InitFormValue()
 	m_checkSclaling.SetCheck(0);
 	m_checkRotating.SetCheck(0);
 
+	InitMainTimer();
 	InitFormInfo();
 	InitFormPatternScale();
 	InitFormPatternRot();
+}
+
+void CEffectTab::InitMainTimer()
+{
+	m_fMainStaticStartTime = -1.f;
+	m_fMainStaticEndTime = -1.f;
+	m_iMainRepeat = -1.f;
+
+	m_fMainStaticTime = -1.f;
+
+	m_editMainStartTime.SetWindowTextW(L"");
+	m_editMainEndTime.SetWindowTextW(L"");
+	m_editMainRepeat.SetWindowTextW(L"");
 }
 
 void CEffectTab::InitFormInfo()
@@ -326,7 +355,9 @@ void CEffectTab::InitComboBox()
 	m_comboEaseSheet_Scale.SetCurSel(0);
 	m_comboEaseSheet_Rot.SetCurSel(0);
 }
+#pragma endregion
 
+#pragma region Update
 void CEffectTab::UpdateInfo()
 {
 	CTransform *pTr = m_pTargetObject->GetTransform();
@@ -353,8 +384,18 @@ void CEffectTab::UpdateInfo()
 	SAFE_RELEASE(pTr);
 }
 
-void CEffectTab::UpdateMain()
+void CEffectTab::UpdateMainTimer()
 {
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+
+	if (pEffect)
+	{
+		m_fMainStaticStartTime = pEffect->GetMainStartTime();
+		m_fMainStaticEndTime = pEffect->GetMainEndTime();
+		m_iMainRepeat = pEffect->GetMainRepeat();
+
+		SAFE_RELEASE(pEffect);
+	}
 }
 
 void CEffectTab::UpdatePattern()
@@ -423,8 +464,10 @@ void CEffectTab::UpdateTime()
 	if (!pEffect)
 		return;
 
-	CEffectAssist *pAssist = nullptr;
+	/* Main Timer */
+	m_fMainStaticTime = pEffect->GetMainTime();
 
+	CEffectAssist *pAssist = nullptr;
 
 	/* Check 되어 있다면 */
 	
@@ -445,7 +488,9 @@ void CEffectTab::UpdateTime()
 			m_fPatternStaticRotTime = pAssist->GetTime();
 	}
 }
+#pragma endregion
 
+#pragma region Load
 bool CEffectTab::LoadTargetMesh(const CString & filePath, const CString& fileName)
 {
 	CString strTag = filePath + ".msh";
@@ -583,6 +628,7 @@ bool CEffectTab::LoadTargetLocalInfo(const CString & filePath)
 
 	return true;
 }
+#pragma endregion
 
 void CEffectTab::DeleteTargetMesh()
 {
@@ -740,7 +786,7 @@ void CEffectTab::UpdateForm()
 		if (m_bFirstTargetCheck)
 		{
 			/* MainTime */
-			UpdateMain();
+			UpdateMainTimer();
 
 			/* Pattern */
 			UpdatePattern();
@@ -992,6 +1038,34 @@ void CEffectTab::AddPatternRot(CEffect * pEffect)
 		m_fPatternStaticRotStartTime, m_fPatternStaticRotEndTime,
 		m_fPatternStaticRotX, m_fPatternStaticRotY, m_fPatternStaticRotZ,
 		m_iPatternStaticRepeat);
+}
+
+void CEffectTab::SetMainTimer(CEffect * pEffect)
+{
+	CString StartTime, EndTime, Repeat;
+
+	m_editMainStartTime.GetWindowTextW(StartTime);
+	m_editMainEndTime.GetWindowTextW(EndTime);
+	m_editMainRepeat.GetWindowTextW(Repeat);
+
+	if (StartTime == L"")
+		m_fMainStaticStartTime = 0.f;
+	else
+		m_fMainStaticStartTime = (float)_wtof(StartTime);
+
+	if (EndTime == L"")
+		m_fMainStaticEndTime = 0.f;
+	else
+		m_fMainStaticEndTime = (float)_wtof(EndTime);
+
+	if (Repeat == L"")
+		m_iMainRepeat = 0;
+	else
+		m_iMainRepeat = _wtoi(Repeat);
+
+	pEffect->SetMainStartTime(m_fMainStaticStartTime);
+	pEffect->SetMainEndTime(m_fMainStaticEndTime);
+	pEffect->SetRepeat(m_iMainRepeat);
 }
 
 void CEffectTab::OnBnClickedButtonInputInfo()
@@ -1478,9 +1552,6 @@ void CEffectTab::OnBnClickedButtonPatternRotPlay()
 
 	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_ROT, true);
 
-	/* Pattern */
-	UpdatePattern();
-
 	SAFE_RELEASE(pEffect);
 }
 
@@ -1502,8 +1573,55 @@ void CEffectTab::OnBnClickedButtonPatternRotStop()
 
 	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_ROT, false);
 
-	/* Pattern */
-	UpdatePattern();
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoMain()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	SetMainTimer(pEffect);
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonMainPlay()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	/* Main을 재생하기 전에 모든 EffectAssist의 재생을 정지한다.*/
+	pEffect->SetOperationCheck(false);
+	pEffect->SetOperationCheck(true);
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonMainStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	pEffect->SetOperationCheck(false);
 
 	SAFE_RELEASE(pEffect);
 }

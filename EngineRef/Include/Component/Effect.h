@@ -18,7 +18,13 @@ public:
 public:
 	CEffectAssist* GetAssistFromType(CEffectAssist::ASSIST_TYPE type);
 
-	void SetOperationCheck(bool check) { m_OperationCheck = check; }
+	float GetMainStartTime() { return m_MainStartTime; }
+	float GetMainEndTime() { return m_MainEndTime; }
+	float GetMainTime() { return m_Timer; }
+
+	int GetMainRepeat() { return m_Repeat; }
+
+	void SetOperationCheck(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
 
 	void SetMainStartTime(const float& start) { m_MainStartTime = start; }

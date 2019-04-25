@@ -61,8 +61,11 @@ private:
 	/* */
 	void InitForm();
 
-	/* */
+
+	/* Total */
 	void InitFormValue();
+	/* Main */
+	void InitMainTimer();
 	/* Info */
 	void InitFormInfo();
 	/* Pattern */
@@ -72,7 +75,7 @@ private:
 	void InitComboBox();
 
 	void UpdateInfo();
-	void UpdateMain();
+	void UpdateMainTimer();
 	void UpdatePattern();
 	void UpdateTime();
 
@@ -83,7 +86,20 @@ private:
 
 	void AddPatternScale(class CEffect *pEffect);
 	void AddPatternRot(class CEffect *pEffect);
+
+	void SetMainTimer(class CEffect *pEffect);
 private:
+	/* Main Time */
+	float m_fMainStaticStartTime;
+	float m_fMainStaticEndTime;
+	int m_iMainRepeat;
+	
+	float m_fMainStaticTime;
+
+	CEdit m_editMainStartTime;
+	CEdit m_editMainEndTime;
+	CEdit m_editMainRepeat;
+
 	/* Info */
 	/* Static */
 	float m_fInfoStaticPosX;
@@ -200,9 +216,12 @@ public:
 	afx_msg void OnBnClickedButtonPatternScaleInput();
 	afx_msg void OnBnClickedButtonPatternScalePlay();
 	afx_msg void OnBnClickedButtonPatternScaleStop();
-
 	afx_msg void OnBnClickedButtonPatternRotInput();
 	afx_msg void OnBnClickedButtonPatternRotPlay();
 	afx_msg void OnBnClickedButtonPatternRotStop();
 	afx_msg void OnBnClickedCheckRotating();
+	afx_msg void OnBnClickedButtonInfoMain();
+	afx_msg void OnBnClickedButtonMainPlay();
+	afx_msg void OnBnClickedButtonMainStop();
+
 };
