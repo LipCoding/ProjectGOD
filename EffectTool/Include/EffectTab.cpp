@@ -225,7 +225,7 @@ void CEffectTab::InitMainTimer()
 {
 	m_fMainStaticStartTime = -1.f;
 	m_fMainStaticEndTime = -1.f;
-	m_iMainRepeat = -1.f;
+	m_iMainRepeat = -1;
 
 	m_fMainStaticTime = -1.f;
 
@@ -487,6 +487,8 @@ void CEffectTab::UpdateTime()
 		if (pAssist)
 			m_fPatternStaticRotTime = pAssist->GetTime();
 	}
+
+	SAFE_RELEASE(pEffect);
 }
 #pragma endregion
 

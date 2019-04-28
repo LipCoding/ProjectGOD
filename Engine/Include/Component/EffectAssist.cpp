@@ -2,8 +2,11 @@
 #include "../Ease.h"
 #include "Transform.h"
 #include "../GameObject/GameObject.h"
+#include "../Component/Renderer.h"
 
 PG_USING
+
+SHARECBUFFER CEffectAssist::g_tShareBuffer{};
 
 CEffectAssist::CEffectAssist()
 {
@@ -20,6 +23,10 @@ void CEffectAssist::Init(CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE 
 	m_EaseType = easeType;
 
 	FirstStatusSet(object);
+
+	CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+	pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
+	SAFE_RELEASE(pRenderer);
 }
 
 void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
@@ -60,10 +67,31 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 		}
 		case ASSIST_FADE_IN:
 		{
+			float fAlpha = Calc_Ease(m_EaseType, m_StartFadeIn, m_Degree, m_LifeTime);
+
+			if (fAlpha >= 1.f)
+				fAlpha = 1.f;
+
+			g_tShareBuffer.fAlphaFadeOut = 1.f;
+			g_tShareBuffer.fAlphaFadeIn = fAlpha;
+			g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		case ASSIST_FADE_OUT:
 		{
+			g_tShareBuffer.fAlphaFadeIn = 0.f;
+			g_tShareBuffer.fAlphaFadeOut = Calc_Ease(m_EaseType, m_StartFadeOut, m_Degree, m_LifeTime);
+			g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		case ASSIST_UV_ANI:
@@ -82,6 +110,16 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 	if (m_Time >= m_EndTime)
 	{
 		ReturnToFirstSet(object);
+
+		/* Fade */
+		g_tShareBuffer.fAlphaFadeIn = 0.f;
+		g_tShareBuffer.fAlphaFadeOut = 0.f;
+		g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+		CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+		SAFE_RELEASE(pRenderer);
+
 		m_StartCheck = false;
 	}
 }
@@ -90,6 +128,7 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 {
 	m_LifeTime = m_EndTime - m_StartTime;
 	m_Time = 0.f;
+
 	switch (m_AssistType)
 	{
 	case ASSIST_SCALE:
@@ -114,10 +153,12 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 	}
 	case ASSIST_FADE_IN:
 	{
+		m_StartFadeIn = 0.f;
 		break;
 	}
 	case ASSIST_FADE_OUT:
 	{
+		m_StartFadeOut = 0.f;
 		break;
 	}
 	case ASSIST_UV_ANI:

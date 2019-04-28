@@ -123,6 +123,7 @@ void CEditForm::OnInitialUpdate()
 void CEditForm::UpdateForm()
 {
 	m_pEffectDlg->UpdateForm();
+	m_pEffect1Dlg->UpdateForm();
 }
 
 void CEditForm::FreeEffectData(EFFECTDATA* effect)
@@ -245,7 +246,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	EFFECTDATA *pData = new EFFECTDATA;
 
 	// Create Object
-	pData->pObject = CGameObject::CreateObject("EffectObj", pLayer);
+	pData->pObject = CGameObject::CreateObject("EffectObj_" + to_string(m_iEffectNumber), pLayer);
 
 	// Transform
 	pData->pTr = pData->pObject->GetTransform();

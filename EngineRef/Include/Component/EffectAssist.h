@@ -118,6 +118,9 @@ private:
 	float m_PowerZ = 0.f;
 
 	/* For Fade (In / Out) */
+	float m_StartFadeIn = 0.f;
+	float m_StartFadeOut = 0.f;
+
 	float m_Degree = 0.f;
 
 	/* For UV */
@@ -129,6 +132,8 @@ private:
 	int m_AniY = 0;
 
 	int m_Repeat = 0;
+
+	static SHARECBUFFER g_tShareBuffer;
 };
 
 PG_END

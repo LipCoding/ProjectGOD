@@ -381,6 +381,7 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	/* 초기화 */
 	m_pCollideObject = nullptr;
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(nullptr);
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetTargetEffect(nullptr);
 
 	for (const auto& object : CGameObject::getObjectList())
@@ -404,6 +405,7 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 				pColl->SetColliderRenderCheck(true);
 				m_pCollideObject = object;
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(object);
 			}
 			SAFE_RELEASE(pColl);
 			SAFE_RELEASE(pRay);

@@ -502,7 +502,9 @@ typedef struct PG_DLL _tagShareCBuffer
 {
 	Vector4 vColor;
 	Vector3 vCameraPos;
-	float   fEmpty;
+	float   fAlphaFadeOut;
+	float   fAlphaFadeIn;
+	Vector3 vEmpty;
 }SHARECBUFFER, *PSHARECBUFFER;
 
 PG_END

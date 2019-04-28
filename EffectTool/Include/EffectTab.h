@@ -175,10 +175,11 @@ private:
 	class CEaseSheetDlg *m_pEaseSheetDlg = nullptr;
 
 	CGameObject *m_pObjectMesh = nullptr;
-	CGameObject *m_pTargetObject = nullptr;
 	Matrix		*m_pBoneMatrix = nullptr;
 
 	string		m_boneNameAttachTo = "";
+
+	CGameObject *m_pTargetObject = nullptr;
 
 	CComboBox m_comboBoxBoneInfo;
 	CComboBox m_comboBoxAnimInfo;

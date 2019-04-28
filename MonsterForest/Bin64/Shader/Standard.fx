@@ -177,8 +177,10 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	// clip : 픽셀값을 쓰지 않고 폐기한다.
 	// 이경우 깊이버퍼에도 값을 안쓴다.
-	if (vColor.a == 0.f)
-		clip(-1);
+	/*if (vColor.a == 0.f)
+		clip(-1);*/
+
+	vColor.a = vColor.a - g_fAlphaFadeOut + g_fAlphaFadeIn;
 
 	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
 	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
@@ -194,6 +196,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	//	vCamDir))));
 
 	//vColor += pow(fRimLightColor, 10.f) * 0.55f;
+
 
 	// 2
 	/*float fRim = 1.0f - saturate((dot(input.vNormal, vCamDir)));

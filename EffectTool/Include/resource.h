@@ -168,6 +168,7 @@
 #define IDC_COMBO_VIEWSHEET1            1091
 #define IDC_EDIT39                      1092
 #define IDC_EDIT_PATTERN_STATIC_SCALE_TIME 1092
+#define IDC_BUTTON_FADE_OUT_INPUT       1092
 #define IDC_BUTTON35                    1093
 #define IDC_BUTTON_PATTERN_SCALE_PLAY   1093
 #define IDC_BUTTON36                    1094
@@ -214,17 +215,29 @@
 #define IDC_BUTTON40                    1116
 #define IDC_BUTTON_PATTERN_ROT_INPUT    1116
 #define IDC_EDIT53                      1117
+#define IDC_EDIT_FADE_IN_STATIC_START_TIME 1117
 #define IDC_EDIT54                      1118
+#define IDC_EDIT_FADE_IN_START_TIME     1118
 #define IDC_EDIT55                      1119
+#define IDC_EDIT_FADE_IN_STATIC_END_TIME 1119
 #define IDC_EDIT56                      1120
+#define IDC_EDIT_FADE_IN_END_TIME       1120
 #define IDC_EDIT57                      1121
+#define IDC_EDIT_FADE_IN_STATIC_DEGREE  1121
 #define IDC_EDIT58                      1122
+#define IDC_EDIT_FADE_IN_DEGREE         1122
 #define IDC_EDIT59                      1123
+#define IDC_EDIT_FADE_OUT_STATIC_START_TIME 1123
 #define IDC_EDIT60                      1124
+#define IDC_EDIT_FADE_OUT_START_TIME    1124
 #define IDC_EDIT61                      1125
+#define IDC_EDIT_FADE_OUT_STATIC_END_TIME 1125
 #define IDC_EDIT62                      1126
+#define IDC_EDIT_FADE_OUT_END_TIME      1126
 #define IDC_EDIT63                      1127
+#define IDC_EDIT_FADE_OUT_STATIC_DEGREE 1127
 #define IDC_EDIT64                      1128
+#define IDC_EDIT_FADE_OUT_DEGREE        1128
 #define IDC_CHECK12                     1129
 #define IDC_EDIT67                      1129
 #define IDC_CHECK13                     1130
@@ -234,15 +247,25 @@
 #define IDC_CHECK15                     1132
 #define IDC_EDIT70                      1132
 #define IDC_EDIT65                      1133
+#define IDC_EDIT_FADE_IN_STATIC_TIME    1133
 #define IDC_BUTTON41                    1134
+#define IDC_BUTTON_FADE_IN_PLAY         1134
 #define IDC_BUTTON42                    1135
+#define IDC_BUTTON_FADE_IN_STOP         1135
 #define IDC_CHECK16                     1136
+#define IDC_CHECK_FADE_IN               1136
 #define IDC_BUTTON43                    1137
+#define IDC_BUTTON_FADE_IN_INPUT        1137
 #define IDC_EDIT66                      1138
+#define IDC_EDIT_FADE_OUT_STATIC_TIME   1138
 #define IDC_BUTTON44                    1139
+#define IDC_BUTTON_FADE_OUT_PLAY        1139
 #define IDC_BUTTON45                    1140
+#define IDC_BUTTON_FADE_OUT_STOP        1140
 #define IDC_CHECK17                     1141
+#define IDC_CHECK_FADE_OUT              1141
 #define IDC_BUTTON46                    1142
+#define IDC_BUTTON_                     1142
 #define IDC_EDIT71                      1143
 #define IDC_EDIT72                      1144
 #define IDC_EDIT73                      1145
@@ -276,7 +299,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1092
+#define _APS_NEXT_CONTROL_VALUE         1093
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

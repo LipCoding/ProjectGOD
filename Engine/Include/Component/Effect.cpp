@@ -80,6 +80,16 @@ bool CEffect::Init()
 {
 	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Renderer");
 	
+	/* Alpha용 상수 버퍼 */
+	m_pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
+
+	SHARECBUFFER tShareBuffer = {};
+	tShareBuffer.fAlphaFadeIn = 0.f;
+	tShareBuffer.fAlphaFadeOut = 0.f;
+	tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+	
+	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
+
 	CMaterial *pMaterial = m_pRenderer->CreateMaterial();
 	SAFE_RELEASE(pMaterial);
 
@@ -106,6 +116,13 @@ int CEffect::Update(float fTime)
 			{
 				assist->SetStartCheck(false);
 			}
+
+			SHARECBUFFER tShareBuffer = {};
+			tShareBuffer.fAlphaFadeIn = 0.f;
+			tShareBuffer.fAlphaFadeOut = 0.f;
+			tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+			m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
 
 			m_Timer = 0.f;
 			m_OperationCheck = false;
@@ -205,7 +222,7 @@ bool CEffect::CreateEffectCollider()
 
 	CColliderSphere* pCollider = m_pGameObject->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
-	pCollider->SetColliderRenderCheck(true);
+	pCollider->SetColliderRenderCheck(false);
 	SAFE_RELEASE(pCollider);
 
 	SAFE_RELEASE(pTr);
@@ -292,6 +309,64 @@ void CEffect::AddPatternRotation(const int& easeType, const float & start, const
 	}
 
 	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_ROT, (CEffectAssist::EASE_TYPE)easeType);
+	m_vecAssist.push_back(pAssistData);
+}
+
+void CEffect::AddFadeIn(const float & start, const float & end, const float & degree)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_FADE_IN)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetDegree(degree);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetDegree(degree);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
+	m_vecAssist.push_back(pAssistData);
+}
+
+void CEffect::AddFadeOut(const float & start, const float & end, const float & degree)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_FADE_OUT)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetDegree(degree);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_OUT, CEffectAssist::EASE_SINE_OUT);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetDegree(degree);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_OUT, CEffectAssist::EASE_SINE_OUT);
 	m_vecAssist.push_back(pAssistData);
 }
 

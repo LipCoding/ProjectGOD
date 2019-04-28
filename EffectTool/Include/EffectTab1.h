@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include "GameObject/GameObject.h"
+#include "Component/Effect.h"
+
+PG_USING
 
 // CEffectTab1 대화 상자
 
@@ -20,4 +24,72 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 	DECLARE_MESSAGE_MAP()
+
+public:
+	/* Getter, Setter */
+	void SetTargetObject(CGameObject *target)
+	{
+		m_pTargetObject = target;
+		m_bFirstTargetCheck = true;
+	}
+private:
+	/* Fade In */
+	float m_fFadeInStaticStartTime;
+	float m_fFadeInStaticEndTime;
+	float m_fFadeInStaticDegree;
+
+	float m_fFadeInStaticTime;
+
+	CEdit m_editFadeInStartTime;
+	CEdit m_editFadeInEndTime;
+	CEdit m_editFadeInDegree;
+
+	/* Fade Out */
+	float m_fFadeOutStaticStartTime;
+	float m_fFadeOutStaticEndTime;
+	float m_fFadeOutStaticDegree;
+
+	float m_fFadeOutStaticTime;
+
+	CEdit m_editFadeOutStartTime;
+	CEdit m_editFadeOutEndTime;
+	CEdit m_editFadeOutDegree;
+
+	/* Check */
+	CButton m_checkFadeIn;
+	CButton m_checkFadeOut;
+
+public:
+	void UpdateForm();
+
+private:
+	/* */
+	void InitForm();
+
+	/* Total */
+	void InitFormValue();
+	/* Fade */
+	void InitFadeIn();
+	void InitFadeOut();
+	/* UV */
+
+	void UpdateFade();
+	void UpdateTime();
+
+private:
+	CGameObject *m_pTargetObject = nullptr;
+	bool m_bFirstTargetCheck = true;
+
+private:
+	void AddFadeIn(class CEffect *pEffect);
+	void AddFadeOut(class CEffect *pEffect);
+public:
+	afx_msg void OnBnClickedButtonFadeInInput();
+	afx_msg void OnBnClickedButtonFadeInPlay();
+	afx_msg void OnBnClickedButtonFadeInStop();
+	afx_msg void OnBnClickedButtonFadeOutInput();
+	afx_msg void OnBnClickedButtonFadeOutPlay();
+	afx_msg void OnBnClickedButtonFadeOutStop();
+	afx_msg void OnBnClickedCheckFadeIn();
+	afx_msg void OnBnClickedCheckFadeOut();
 };
