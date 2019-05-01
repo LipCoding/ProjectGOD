@@ -62,8 +62,6 @@ public:
 		  
 	float GetDegree() { return m_Degree; }
 
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
 	int GetNum() { return m_Num; }
 		
 	int GetRepeat() { return m_Repeat; }
@@ -79,8 +77,6 @@ public:
 
 	void SetDegree(const float& degree) { m_Degree = degree; }
 
-	void SetWidth(const int& width) { m_Width = width; }
-	void SetHeight(const int& height) { m_Height = height; }
 	void SetNum(const int& num) { m_Num = num; }
 
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
@@ -124,14 +120,13 @@ private:
 	float m_Degree = 0.f;
 
 	/* For UV */
-	int m_Width = 0;
-	int m_Height = 0;
+	class CAnimation2D *m_pAnimation = nullptr;
+
+	int m_Repeat = 0;
 	int m_Num = 0;
 
 	int m_AniX = 0;
 	int m_AniY = 0;
-
-	int m_Repeat = 0;
 
 	static SHARECBUFFER g_tShareBuffer;
 };

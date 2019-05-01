@@ -110,6 +110,7 @@
 #define IDC_BUTTON_MAIN_PLAY            1059
 #define IDC_CHECK1                      1060
 #define IDC_CHECK_MAIN_SELECT_ALL       1060
+#define IDC_CHECK_BILLBOARD             1060
 #define IDC_CHECK2                      1061
 #define IDC_CHECK6                      1062
 #define IDC_CHECK_SCAILING              1062
@@ -240,12 +241,16 @@
 #define IDC_EDIT_FADE_OUT_DEGREE        1128
 #define IDC_CHECK12                     1129
 #define IDC_EDIT67                      1129
+#define IDC_EDIT_UV_SPRITE_STATIC_START_TIME 1129
 #define IDC_CHECK13                     1130
 #define IDC_EDIT68                      1130
+#define IDC_EDIT_UV_SPRITE_START_TIME   1130
 #define IDC_CHECK14                     1131
 #define IDC_EDIT69                      1131
+#define IDC_EDIT_UV_SPRITE_STATIC_END_TIME 1131
 #define IDC_CHECK15                     1132
 #define IDC_EDIT70                      1132
+#define IDC_EDIT_UV_SPRITE_END_TIME     1132
 #define IDC_EDIT65                      1133
 #define IDC_EDIT_FADE_IN_STATIC_TIME    1133
 #define IDC_BUTTON41                    1134
@@ -265,20 +270,28 @@
 #define IDC_CHECK17                     1141
 #define IDC_CHECK_FADE_OUT              1141
 #define IDC_BUTTON46                    1142
-#define IDC_BUTTON_                     1142
 #define IDC_EDIT71                      1143
+#define IDC_EDIT_UV_SPRITE_STATIC_REPEAT 1143
 #define IDC_EDIT72                      1144
+#define IDC_EDIT_UV_SPRITE_REPEAT       1144
 #define IDC_EDIT73                      1145
 #define IDC_EDIT74                      1146
 #define IDC_EDIT75                      1147
 #define IDC_EDIT76                      1148
 #define IDC_EDIT77                      1149
+#define IDC_EDIT_UV_SPRITE_STATIC_NUM   1149
 #define IDC_EDIT78                      1150
+#define IDC_EDIT_UV_SPRITE_NUM          1150
 #define IDC_EDIT79                      1155
+#define IDC_EDIT_UV_SPRITE_STATIC_TIME  1155
 #define IDC_BUTTON47                    1156
+#define IDC_BUTTON_UV_SPRITE_PLAY       1156
 #define IDC_BUTTON48                    1157
+#define IDC_BUTTON_UV_SPRITE_STOP       1157
 #define IDC_CHECK22                     1158
+#define IDC_CHECK_UV_SPRITE             1158
 #define IDC_BUTTON49                    1159
+#define IDC_BUTTON_UV_SPRITE_INPUT      1159
 #define IDC_EDIT80                      1160
 #define IDC_EDIT81                      1161
 #define IDC_EDIT82                      1162
@@ -291,6 +304,7 @@
 #define IDC_BUTTON50                    1173
 #define IDC_BUTTON51                    1174
 #define IDC_CHECK23                     1175
+#define IDC_CHECK_UV                    1175
 #define IDC_BUTTON52                    1176
 
 // Next default values for new objects

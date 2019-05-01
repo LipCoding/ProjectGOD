@@ -406,6 +406,7 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 				m_pCollideObject = object;
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(object);
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateTarget(object);
 			}
 			SAFE_RELEASE(pColl);
 			SAFE_RELEASE(pRay);

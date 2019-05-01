@@ -55,9 +55,21 @@ private:
 	CEdit m_editFadeOutEndTime;
 	CEdit m_editFadeOutDegree;
 
+	/* UV Sprite */
+	float m_fUVSpriteStaticStartTime;
+	float m_fUVSpriteStaticEndTime;
+	int   m_iUVSpriteStaticNum;
+
+	float m_fUVSpriteTime;
+
+	CEdit m_editUVSpriteStartTime;
+	CEdit m_editUVSpriteEndTime;
+	CEdit m_editUVSpriteNum;
+	
 	/* Check */
 	CButton m_checkFadeIn;
 	CButton m_checkFadeOut;
+	CButton m_checkUVSprite;
 
 public:
 	void UpdateForm();
@@ -72,8 +84,10 @@ private:
 	void InitFadeIn();
 	void InitFadeOut();
 	/* UV */
+	void InitUVSprite();
 
 	void UpdateFade();
+	void UpdateUV();
 	void UpdateTime();
 
 private:
@@ -83,6 +97,7 @@ private:
 private:
 	void AddFadeIn(class CEffect *pEffect);
 	void AddFadeOut(class CEffect *pEffect);
+	void AddUVSprite(class CEffect *pEffect);
 public:
 	afx_msg void OnBnClickedButtonFadeInInput();
 	afx_msg void OnBnClickedButtonFadeInPlay();
@@ -92,4 +107,9 @@ public:
 	afx_msg void OnBnClickedButtonFadeOutStop();
 	afx_msg void OnBnClickedCheckFadeIn();
 	afx_msg void OnBnClickedCheckFadeOut();
+
+	afx_msg void OnBnClickedButtonUvSpriteInput();
+	afx_msg void OnBnClickedButtonUvSpritePlay();
+	afx_msg void OnBnClickedButtonUvSpriteStop();
+	afx_msg void OnBnClickedCheckUvSprite();
 };

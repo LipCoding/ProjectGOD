@@ -23,6 +23,7 @@
 #include "Component/Renderer.h"
 #include "Resources/Mesh.h"
 #include "Component/Material.h"
+#include "Component/Billboard.h"
 
 // CEditForm 대화 상자
 
@@ -49,6 +50,7 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_PARTICLE, &CEditForm::OnBnClickedButtonLoadParticle)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH_TEXTURE, &CEditForm::OnBnClickedButtonLoadMeshTexture)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH, &CEditForm::OnBnClickedButtonLoadMesh)
+	ON_BN_CLICKED(IDC_CHECK_BILLBOARD, &CEditForm::OnBnClickedCheckBillboard)
 END_MESSAGE_MAP()
 
 
@@ -57,6 +59,7 @@ void CEditForm::DoDataExchange(CDataExchange* pDX)
 	CFormView::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB_EFFECT, m_Tab);
 	DDX_Control(pDX, IDC_LIST_EFFECT_CONTAINER, m_listEffectList);
+	DDX_Control(pDX, IDC_CHECK_BILLBOARD, m_checkBillBoard);
 }
 
 #ifdef _DEBUG
@@ -118,12 +121,32 @@ void CEditForm::OnInitialUpdate()
 	m_pView = (CEnvToolView*)pMain->GetActiveView();
 
 	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
+
+	m_checkBillBoard.SetCheck(0);
 }
 
 void CEditForm::UpdateForm()
 {
 	m_pEffectDlg->UpdateForm();
 	m_pEffect1Dlg->UpdateForm();
+}
+
+void CEditForm::UpdateTarget(class CGameObject* object)
+{
+	/* Billboard */
+	CBillboard *pBillboard = object->FindComponentFromTag<CBillboard>("Billboard");
+	if (pBillboard)
+	{
+		if(pBillboard->GetOperateBillboard())
+			m_checkBillBoard.SetCheck(1);
+		else
+			m_checkBillBoard.SetCheck(0);
+		SAFE_RELEASE(pBillboard);
+	}
+	else
+	{
+		m_checkBillBoard.SetCheck(0);
+	}
 }
 
 void CEditForm::FreeEffectData(EFFECTDATA* effect)
@@ -314,3 +337,43 @@ void CEditForm::OnBnClickedButtonLoadParticle()
 	CString name = dlg.GetFileTitle();
 }
 
+void CEditForm::OnBnClickedCheckBillboard()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int check = m_checkBillBoard.GetCheck();
+	
+	CGameObject *pTarget = m_pEffectDlg->GetTargetObject();
+
+
+	if (check == 1)
+	{
+		if (pTarget)
+		{
+			CBillboard *pBillboard = pTarget->FindComponentFromTag<CBillboard>("Billboard");
+			if (pBillboard)
+			{
+				pBillboard->SetOperateBillboard(true);
+				SAFE_RELEASE(pBillboard);
+			}
+			else
+			{
+				pBillboard = pTarget->AddComponent<CBillboard>("Billboard");
+				SAFE_RELEASE(pBillboard);
+			}
+			m_checkBillBoard.SetCheck(1);
+		}
+	}
+	else
+	{
+		if (pTarget)
+		{
+			CBillboard *pBillboard = pTarget->FindComponentFromTag<CBillboard>("Billboard");
+			if (pBillboard)
+			{
+				pBillboard->SetOperateBillboard(false);
+				SAFE_RELEASE(pBillboard);
+			}
+			m_checkBillBoard.SetCheck(0);
+		}
+	}
+}

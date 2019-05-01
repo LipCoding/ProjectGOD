@@ -38,6 +38,11 @@ public:
 		return m_pTargetObject;
 	}
 
+	bool GetFirstCheck()
+	{
+		return m_bFirstTargetCheck;
+	}
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);

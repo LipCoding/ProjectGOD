@@ -103,7 +103,7 @@ bool CTestScene::Init()
 		SHARECBUFFER tShareBuffer = {};
 
 		tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 1.f };
-		tShareBuffer.fEmpty = 1.f;
+		tShareBuffer.fAlphaFadeIn = 0.f;
 		tShareBuffer.vCameraPos = Vector3{ 0.f, 0.f, 0.f };
 
 		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);

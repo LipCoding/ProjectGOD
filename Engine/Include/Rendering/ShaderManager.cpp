@@ -91,6 +91,14 @@ bool CShaderManager::Init()
 
 	SAFE_RELEASE(pShader);
 
+	pEntry[ST_VERTEX] = "StandardEffectTexNormalVS";
+	pEntry[ST_PIXEL] = "StandardEffectTexNormalPS";
+	pEntry[ST_GEOMETRY] = NULL;
+	pShader = LoadShader(STANDARD_EFFECT_TEX_NORMAL_SHADER, L"Standard.fx",
+		pEntry);
+
+	SAFE_RELEASE(pShader);
+
 	pEntry[ST_VERTEX] = "ColliderVS";
 	pEntry[ST_PIXEL] = "ColliderPS";
 	pEntry[ST_GEOMETRY] = NULL;

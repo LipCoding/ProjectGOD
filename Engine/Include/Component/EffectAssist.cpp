@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "../GameObject/GameObject.h"
 #include "../Component/Renderer.h"
+#include "../Component/Animation2D.h"
 
 PG_USING
 
@@ -96,6 +97,12 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 		}
 		case ASSIST_UV_ANI:
 		{
+			CAnimation2D *pAnimation = object->FindComponentFromType<CAnimation2D>(CT_ANIMATION2D);
+			if (pAnimation)
+			{
+				pAnimation->ChangeAnimation("Effect");
+				SAFE_RELEASE(pAnimation);
+			}
 			break;
 		}
 		case ASSIST_UV_MOVE:
@@ -205,6 +212,19 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	}
 	case ASSIST_UV_ANI:
 	{
+		CAnimation2D *pAnimation = object->FindComponentFromType<CAnimation2D>(CT_ANIMATION2D);
+		if (pAnimation)
+		{
+			pAnimation->ChangeAnimation("Default");
+			PANIMATIONCLIP2D pClip = pAnimation->GetClip("Effect");
+			if (pClip)
+			{
+				pClip->iFrameMaxX = m_Num;
+				pClip->iLengthX = m_Num;
+				pClip->fAnimLimitTime = m_LifeTime;
+			}
+			SAFE_RELEASE(pAnimation);
+		}
 		break;
 	}
 	case ASSIST_UV_MOVE:

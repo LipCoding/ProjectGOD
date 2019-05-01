@@ -78,13 +78,16 @@ private:
 public:
 	virtual void OnInitialUpdate();
 	void UpdateForm();
+	void UpdateTarget(class CGameObject* object);
 	void FreeEffectData(EFFECTDATA* effect);
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;
+	CButton m_checkBillBoard;
 public:
 	afx_msg void OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLoadParticle();
 	afx_msg void OnBnClickedButtonLoadMeshTexture();
 	afx_msg void OnBnClickedButtonLoadMesh();
+	afx_msg void OnBnClickedCheckBillboard();
 };

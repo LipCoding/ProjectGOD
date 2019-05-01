@@ -256,6 +256,9 @@
     <Filter Include="00. Core\00. Math\Ease">
       <UniqueIdentifier>{a712eae5-7dba-42fd-8f1c-6b4c65ec67eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\03. Camera\Billboard">
+      <UniqueIdentifier>{36c4693b-1a61-4d68-8fcc-6ae91730284b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -509,6 +512,9 @@
     </ClCompile>
     <ClCompile Include="Ease.cpp">
       <Filter>00. Core\00. Math\Ease</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Billboard.cpp">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -784,6 +790,9 @@
     </ClInclude>
     <ClInclude Include="Ease.h">
       <Filter>00. Core\00. Math\Ease</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Billboard.h">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
