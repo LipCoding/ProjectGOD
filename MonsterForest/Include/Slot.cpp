@@ -86,12 +86,13 @@ void Slot::showItem(bool show)
 
 void Slot::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
+
 }
 
 void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 
-	//if (KEYDOWN("MouseLButton"))
+	if (KEYDOWN("MouseLButton"))
 	{
 		 //현재 몇번째 인덱스를 선택했는지 알려준다.
 		 //아이템을 갖고있는지 확인

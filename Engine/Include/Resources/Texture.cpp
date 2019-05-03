@@ -18,6 +18,16 @@ CTexture::~CTexture()
 	if (m_pTexArr)
 		SAFE_RELEASE(m_pTexArr);
 }
+/*
+	m_strKey = strKey;
+	//char	strPath[MAX_PATH] = {};
+
+	//WideCharToMultiByte(CP_ACP, 0, pFileName, -1, strPath,
+	//	lstrlen(pFileName), 0, 0);
+	string strPath = strconv(pFileName);
+
+	return LoadTexture(strKey, strPath.c_str(), strPathKey);
+*/
 
 bool CTexture::LoadTexture(const string & strKey, const wchar_t * pFileName,
 	const string & strPathKey)
@@ -29,6 +39,16 @@ bool CTexture::LoadTexture(const string & strKey, const wchar_t * pFileName,
 		lstrlen(pFileName), 0, 0);
 
 	return LoadTexture(strKey, strPath, strPathKey);
+}
+
+bool CTexture::LoadTexture(const string & strKey, const wstring& pFileName,
+	const string & strPathKey)
+{
+	m_strKey = strKey;
+
+	string strPath = strconv(pFileName);
+
+	return LoadTexture(strKey, strPath.c_str(), strPathKey);
 }
 
 bool CTexture::LoadTexture(const string & strKey, 

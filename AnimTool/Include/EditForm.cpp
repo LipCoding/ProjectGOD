@@ -54,7 +54,10 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, &CEditForm::OnBnClickedButtonStop)
 	ON_WM_HSCROLL()
 	ON_CBN_SELCHANGE(IDC_COMBO_BONE_INFO, &CEditForm::OnCbnSelchangeComboBoneInfo)
-	ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO_CLIP_TYPE_1, IDC_RADIO_CLIP_TYPE_3, OnRadioAnimTypeCheck)
+	ON_BN_CLICKED(IDC_RADIO_CLIP_TYPE_1, &CEditForm::OnBnClickedRadioClipType1)
+	ON_BN_CLICKED(IDC_RADIO_CLIP_TYPE_2, &CEditForm::OnBnClickedRadioClipType2)
+	ON_BN_CLICKED(IDC_SLIDER_ARM_ROT_X, &CEditForm::OnBnClickedSliderArmRotX)
+	ON_BN_CLICKED(IDC_RADIO_CLIP_TYPE_3, &CEditForm::OnBnClickedRadioClipType3)
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -605,6 +608,7 @@ void CEditForm::OnRadioAnimTypeCheck(UINT id)
 {
 	UpdateData(TRUE);
 
+	char a = 0;
 	switch (m_iRadioAnimType)
 	{
 	case 0:
@@ -922,4 +926,27 @@ void CEditForm::OnCbnSelchangeComboBoneInfo()
 	}
 
 	SAFE_RELEASE(pAnimation);
+}
+
+
+void CEditForm::OnBnClickedRadioClipType1()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CEditForm::OnBnClickedRadioClipType2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CEditForm::OnBnClickedSliderArmRotX()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CEditForm::OnBnClickedRadioClipType3()
+{
 }

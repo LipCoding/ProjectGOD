@@ -190,8 +190,6 @@ void Golem::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		tag.erase(0, 6);
 		int id = atoi(tag.c_str());
 
-
-
 		char str[128];
 		string appendTag = _itoa(NetworkManager::getInstance()->getMyClientID(), str, 10);
 		string objectTag = "Player" + appendTag;

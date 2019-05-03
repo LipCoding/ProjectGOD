@@ -14,6 +14,7 @@
 #include <conio.h>
 #include <functional>
 #include <fstream>
+#include <atlconv.h>
 #include "PGTypes.h"
 #include "Protocol.h"
 #include "fmod/fmod.hpp"
@@ -173,3 +174,6 @@ void Safe_Delete_Map(T& p)
 
 	p.clear();
 }
+
+extern std::wstring strconv(const std::string& _src);
+extern std::string strconv(const std::wstring& _src);

@@ -770,6 +770,21 @@ void CRenderManager::Render(float fTime)
 	//CRenderState*	pState = GET_SINGLE(CRenderManager)->FindRenderState(ALPHA_BLEND_DISABLE);
 	//pState->SetState();
 
+	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
+	{
+		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+		{
+			CCollider* pCollider = nullptr;
+			pCollider = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CCollider>(CT_COLLIDER);
+			if (pCollider != nullptr)
+			{
+				pCollider->ColliderRender(fTime);
+				SAFE_RELEASE(pCollider);
+			}
+		}
+		m_tRenderGroup[i].iSize = 0;
+	}
+
 	for(int i = 0; i < m_tRenderGroup[RGT_UI].iSize; ++i)
 	{
 			
@@ -795,8 +810,6 @@ void CRenderManager::Render(float fTime)
 
 	m_tRenderGroup[RGT_UI].iSize = 0;
 
-	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
-		m_tRenderGroup[i].iSize = 0;
 
 	pDepthTarget->ResetShader(13);
 

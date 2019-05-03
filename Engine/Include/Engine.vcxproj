@@ -83,6 +83,7 @@
     <ClCompile Include="Ease.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="Obj.cpp" />
+    <ClCompile Include="PGEngine.cpp" />
     <ClCompile Include="PGMatrix.cpp" />
     <ClCompile Include="PGVector2.cpp" />
     <ClCompile Include="PGVector3.cpp" />

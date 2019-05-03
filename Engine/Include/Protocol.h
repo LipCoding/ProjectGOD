@@ -1,6 +1,8 @@
 #pragma once
 
-#define SERVERIP "192.168.40.240"
+
+
+#define SERVERIP "127.0.0.1"
 
 const unsigned int MAX_BUFF_SIZE = 1024;
 const unsigned int MAX_PACKET_SIZE = 255;
@@ -24,36 +26,49 @@ enum PACKETSTATE : unsigned char
 
 const unsigned char CS_PACKET_MOVE_FRONT = 0;
 const unsigned char CS_PACKET_MOVE_BACK = 1;
+const unsigned char CS_PACKET_CHAT = 4;
+const unsigned char CS_PACKET_LOGIN = 6;
+const unsigned char CS_PACKET_JOIN = 7;
+const unsigned char CS_PACKET_MAINSERVER_CONNECT = 8;
 const unsigned char CS_PACKET_ROTATE_X = 11;
 const unsigned char CS_PACKET_ROTATE_Y = 12;
 const unsigned char CS_PACKET_ROTATE_Z = 13;
 const unsigned char CS_PACKET_ROTATE_INV_X = 14;
 const unsigned char CS_PACKET_ROTATE_INV_Y = 15;
 const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
-const unsigned char CS_PACKET_CHAT = 4;
+
 const unsigned char CS_PACKET_ATTACK = 50;
 const unsigned char CS_PACKET_ATTACK_SWORD_SKILL1 = 51;
-const unsigned char CS_PACKET_LOGIN = 6;
-const unsigned char CS_PACKET_JOIN = 7;
-const unsigned char CS_PACKET_MAINSERVER_CONNECT = 8;
+
+const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
+const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
+const unsigned char CS_PACKET_ROOTING_TABLE = 155;
 
 const unsigned char SC_PACKET_MOVE = 0;
+const unsigned char SC_PACKET_PUT_PLAYER = 1;
+const unsigned char SC_PACKET_REMOVE_PLAYER = 2;
+const unsigned char SC_PACKET_CHAT_NPC = 3;
+const unsigned char SC_PACKET_CHAT_PLAYER = 4;
+const unsigned char SC_PACKET_LOGIN = 6;
+const unsigned char SC_PACKET_JOIN = 7;
+const unsigned char SC_PACKET_CONNECT = 8;
+
 const unsigned char SC_PACKET_ROTATE_X = 10;
 const unsigned char SC_PACKET_ROTATE_Y = 11;
 const unsigned char SC_PACKET_ROTATE_Z = 12;
 const unsigned char SC_PACKET_ROTATE_X_CI = 13;
 const unsigned char SC_PACKET_ROTATE_Y_CI = 14;
 const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
-const unsigned char SC_PACKET_PUT_PLAYER = 1;
-const unsigned char SC_PACKET_REMOVE_PLAYER = 2;
-const unsigned char SC_PACKET_CHAT_NPC = 3;
-const unsigned char SC_PACKET_CHAT_PLAYER = 4;
+
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
-const unsigned char SC_PACKET_LOGIN = 6;
-const unsigned char SC_PACKET_JOIN = 7;
-const unsigned char SC_PACKET_CONNECT = 8;
+const unsigned char SC_PACKET_DIE_ANIMATION = 52;
+
 const unsigned char SC_PACKET_COLLISION = 100;
+const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
+const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
+const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
+
 /*
 #define SC_PACKET_POS 0
 #define SC_PACKET_PUT_PLAYER 1
@@ -68,11 +83,11 @@ const unsigned char SC_PACKET_COLLISION = 100;
 const unsigned int MAX_USER = 1000;
 const unsigned int NPC_START = 1000;
 const unsigned int MAX_NPC = 1100;
-const unsigned int SERVER_PORT = 4000;
+const unsigned int SERVER_PORT = 3998;
 
 const unsigned int BOARD_WIDTH = 300;
 const unsigned int BOARD_HIGHT = 300;
-const unsigned int RADIUS = 150;
+const unsigned int RADIUS = 100;
 
 const unsigned char DB_LOGIN_UNKNOWN = 0x00;
 const unsigned char DB_LOGIN_SUCCESS = 0x01;
@@ -145,6 +160,28 @@ struct cs_packet_attack_player
 	unsigned targetid;
 };
 
+struct cs_packet_require_itemtable
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+};
+
+struct cs_packet_additem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+};
+
+struct cs_packet_removeitem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+	unsigned int slotIndex;
+};
+
 struct sc_packet_connect
 {
 	unsigned short size;
@@ -161,6 +198,7 @@ struct sc_packet_put_player
 	float x;
 	float y;
 	float z;
+	float angle;
 };
 
 struct sc_packet_pos
@@ -179,6 +217,13 @@ struct sc_packet_rotate
 	unsigned char type;
 	unsigned int id;
 	float angle;
+};
+
+struct sc_packet_animation_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int id;
 };
 
 struct sc_packet_remove_player
@@ -207,6 +252,7 @@ struct sc_packet_login
 	float z;
 	wchar_t character_name[MAX_STR_SIZE];
 };
+
 struct sc_packet_attack_player
 {
 	unsigned short size;
@@ -214,7 +260,7 @@ struct sc_packet_attack_player
 	unsigned int id;
 	unsigned targetid;
 	unsigned char objectSetType;
-	unsigned short damage;
+	int damage;
 };
 
 struct sc_packet_chat
@@ -226,5 +272,22 @@ struct sc_packet_chat
 	WCHAR message[MAX_STR_SIZE];
 };
 
+struct sc_packet_require_itemtable
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int item_id1;
+	unsigned int item_id2;
+	unsigned int item_id3;
+};
+
+struct sc_packet_additem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetID;
+	unsigned int index;
+	WCHAR itemname[MAX_STR_SIZE];
+};
 
 #pragma pack(pop)

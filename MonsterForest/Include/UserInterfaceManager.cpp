@@ -17,6 +17,8 @@
 #include "Status.h"
 #include "ObjectScript/Player.h"
 #include "MiniMap.h"
+#include "DropTableUI.h"
+
 DEFINITION_SINGLE(UserInterfaceManager);
 
 
@@ -39,6 +41,8 @@ bool UserInterfaceManager::initialize()
 	//this->pStatus->initialize();
 	//this->pEnemyStatus = new Status;
 	//this->pEnemyStatus->initialize();
+
+#pragma region PlayerStatus
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI+1");
@@ -60,21 +64,24 @@ bool UserInterfaceManager::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
+#pragma endregion
 
+#pragma region EnemyStatus
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI+1");
 		CGameObject* pEnemyStatusObj = CGameObject::CreateObject("EnemyStatus", pLayer);
-		this->pEnemyStatus = pEnemyStatusObj->AddComponent<Status>("Status");
-		pEnemyStatus->initialize();
 		CTransform* pStatusTr = pEnemyStatusObj->GetTransform();
 		pStatusTr->SetWorldScale(100.f, 100.f, 1.f);
-		pStatusTr->SetWorldPos(300.f, 0.f, 1.f);
+		pStatusTr->SetWorldPos(400.f, 0.f, 1.f);
+		this->pEnemyStatus = pEnemyStatusObj->AddComponent<Status>("Status");
+		pEnemyStatus->initialize();
 		CRenderer2D* pRenderer = pEnemyStatusObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
 		pMaterial->SetDiffuseTexInfo("Linear", "UI_EnemyPortrait",
 			0, 0, L"UserInterface/UI_GAUGE_PLAYER.png");
+		pEnemyStatus->enableRender(false);
 		SAFE_RELEASE(pStatusTr);
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
@@ -82,7 +89,47 @@ bool UserInterfaceManager::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
+#pragma endregion
 
+#pragma region DropTableUI
+	{
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
+
+		CGameObject* pDropTableUIObj = CGameObject::CreateObject("DropTableUI", pLayer);
+
+
+		this->pDropTableUI = pDropTableUIObj->AddComponent<DropTableUI>("DropTableUI");
+		pDropTableUI->initialize();
+		CRenderer2D* pRenderer = pDropTableUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "UI_DropTable",
+			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
+		//pDropTableUI->enableRender(false);
+
+		CTransform* pDropTableTr = pDropTableUIObj->GetTransform();
+		pDropTableTr->SetWorldScale(200.f, 150.f, 1.f);
+		pDropTableTr->SetWorldPos(400.f, 400.f, 1.f);
+
+		//CColliderRect* pRC = pDropTableUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		//pRC->SetRect(0, 0, 200.f, 150.f);
+		//pRC->SetTag("DropTable");
+		//SAFE_RELEASE(pRC);
+
+		pDropTableUI->initialize();
+		pDropTableUI->enableRender(false);
+
+		SAFE_RELEASE(pDropTableTr);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pDropTableUIObj);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+	}
+#pragma endregion
+
+#pragma region MiniMap
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI+1");
@@ -105,6 +152,7 @@ bool UserInterfaceManager::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
+#pragma endregion
 #pragma region frameRender
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -148,6 +196,8 @@ bool UserInterfaceManager::initialize()
 	}
 #pragma endregion
 
+
+
 	return true;
 }
 
@@ -189,6 +239,8 @@ void UserInterfaceManager::update(float time)
 		pChatting->getUIChatText()->SetText(edit_view);
 	}
 
+
+
 	if (KEYDOWN("INVENTORY"))
 	{
 		this->pInventory->enableShowInventory();
@@ -205,4 +257,6 @@ void UserInterfaceManager::update(float time)
 		SAFE_RELEASE(pFont);
 		SAFE_RELEASE(pHearthBarObj);
 	}
+
+
 }
