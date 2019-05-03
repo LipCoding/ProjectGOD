@@ -33,6 +33,7 @@ void CFont::SetArea(float l, float t, float r, float b)
 void CFont::SetFont(const string & strFont)
 {
 	m_pFont = GET_SINGLE(CDevice)->FindTextFormat(strFont);
+	// m_pFont->
 }
 
 void CFont::SetBrush(const string & strBrush)

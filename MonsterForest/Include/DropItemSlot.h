@@ -10,8 +10,9 @@ class DropItemSlot
 	: public CUIButton
 
 {
-public:
-
+private:
+	class DropTableUI* pDropTableUI = nullptr;
+	int index = -1;
 public:
 	DropItemSlot();
 	~DropItemSlot();
@@ -23,5 +24,9 @@ public:
 		float fTime);
 	virtual void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
+
+	void setDropTableUI(class DropTableUI* pDropTableUI) { this->pDropTableUI = pDropTableUI; };
+	void setIndex(int index) { this->index = index; }
+	void deleteSlot();
 };
 

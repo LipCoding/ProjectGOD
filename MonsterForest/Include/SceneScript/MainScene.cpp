@@ -49,6 +49,21 @@
 #include "Component/Cell.h"
 #include "Component/ColliderRay.h"
 #include "../DropTableUI.h"
+#include <random>
+#include "Component/UIButton.h"
+
+std::wstring strconv(const std::string& _src)
+{
+	USES_CONVERSION;
+	return std::wstring(A2W(_src.c_str()));
+};
+
+std::string strconv(const std::wstring& _src)
+{
+	USES_CONVERSION;
+	return std::string(W2A(_src.c_str()));
+};
+
 CMainScene::CMainScene()
 {
 }
@@ -73,6 +88,14 @@ bool CMainScene::Init()
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
 		SAFE_RELEASE(pLayer);
+	}
+	{
+		CLayer* pLayer = m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
+		SAFE_RELEASE(pLayer);
+	}
+	{
+		CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
+		SAFE_RELEASE(pParticleLayer);
 	}
 #pragma endregion
 	GET_SINGLE(UserInterfaceManager)->initialize();
@@ -486,168 +509,489 @@ bool CMainScene::Init()
 	//}
 
 #pragma region sound
-	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", false, "MainSound.mp3");
+	//GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
 
-	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+	//GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
 #pragma region Item
-	{
-		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM", pLayer);
+	//{
+	//	CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+	//	CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM", pLayer);
 
-		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-		SAFE_RELEASE(pItemUI);
+	//	CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+	//	SAFE_RELEASE(pItemUI);
 
-		CTransform*	pItemTr = pItem->GetTransform();
-		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+	//	CTransform*	pItemTr = pItem->GetTransform();
+	//	//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+	//	pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+	//	pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+	//		DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
 
-		SAFE_RELEASE(pItemTr);
-		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
+	//	SAFE_RELEASE(pItemTr);
+	//	CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+	//	CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-			0, 0, L"SWORD_ICON.jpg");
+	//	pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+	//		0, 0, L"SWORD_ICON.jpg");
 
-		SAFE_RELEASE(pMaterial);
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pMaterial);
+	//	SAFE_RELEASE(pRenderer);
 
-		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+	//	CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 0, 0);
+	//	pRC->SetRect(0, 0, 0, 0);
 
-		SAFE_RELEASE(pRC);
+	//	SAFE_RELEASE(pRC);
 
-		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-		SAFE_RELEASE(pItem);
-	}
+	//	GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+	//	SAFE_RELEASE(pItem);
+	//}
 
-	{
-		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM2", pLayer);
+	//{
+	//	CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+	//	CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM2", pLayer);
 
-		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-		SAFE_RELEASE(pItemUI);
+	//	CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+	//	SAFE_RELEASE(pItemUI);
 
-		CTransform*	pItemTr = pItem->GetTransform();
-		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+	//	CTransform*	pItemTr = pItem->GetTransform();
+	//	pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+	//	pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+	//		DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
 
-		SAFE_RELEASE(pItemTr);
-		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
+	//	SAFE_RELEASE(pItemTr);
+	//	CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+	//	CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-			0, 0, L"SWORD_ICON.jpg");
+	//	pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+	//		0, 0, L"SWORD_ICON.jpg");
 
-		SAFE_RELEASE(pMaterial);
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pMaterial);
+	//	SAFE_RELEASE(pRenderer);
 
-		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+	//	CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 0, 0);
+	//	pRC->SetRect(0, 0, 0, 0);
 
-		SAFE_RELEASE(pRC);
+	//	SAFE_RELEASE(pRC);
 
-		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-		SAFE_RELEASE(pItem);
-	}
+	//	GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+	//	SAFE_RELEASE(pItem);
+	//}
 
-	{
-		CLayer*	pLayer = m_pScene->GetLayer("UI+2");
-		CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM3", pLayer);
+	//{
+	//	CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+	//	CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM3", pLayer);
 
-		CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
-		SAFE_RELEASE(pItemUI);
+	//	CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+	//	SAFE_RELEASE(pItemUI);
 
-		CTransform*	pItemTr = pItem->GetTransform();
-		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pItemTr->SetWorldScale(30.f, 30.f, 1.f);
-		pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
+	//	CTransform*	pItemTr = pItem->GetTransform();
+	//	//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+	//	pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+	//	pItemTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
+	//		DEVICE_RESOLUTION.iHeight / 2.f, 0.f);
 
-		SAFE_RELEASE(pItemTr);
-		CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
+	//	SAFE_RELEASE(pItemTr);
+	//	CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+	//	CMaterial* pMaterial = pRenderer->GetMaterial();
 
-		pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
-			0, 0, L"SWORD_ICON.jpg");
+	//	pMaterial->SetDiffuseTexInfo("Linear", "SWORD_ICON",
+	//		0, 0, L"SWORD_ICON.jpg");
 
-		SAFE_RELEASE(pMaterial);
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pMaterial);
+	//	SAFE_RELEASE(pRenderer);
 
-		CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+	//	CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
 
-		pRC->SetRect(0, 0, 0, 0);
+	//	pRC->SetRect(0, 0, 0, 0);
 
-		SAFE_RELEASE(pRC);
+	//	SAFE_RELEASE(pRC);
 
-		GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
-		SAFE_RELEASE(pItem);
-	}
+	//	GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+	//	SAFE_RELEASE(pItem);
+	//}
 #pragma endregion
 
-#pragma region Particle
-	CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
+//#pragma region Particle
+//	CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
+//
+//	for (int i = 0; i < 5; ++i)
+//	{
+//		CGameObject*    pParticleObj = CGameObject::CreateObject(
+//			"ParticleObj", pParticleLayer);
+//
+//		CTransform*    pParticleTr = pParticleObj->GetTransform();
+//
+//		pParticleTr->SetWorldPos(300.f, 2.f, 300.f * i);
+//
+//		SAFE_RELEASE(pParticleTr);
+//
+//		CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
+//
+//		pParticleSingle->SetSize(10.f, 10.f);
+//
+//		SAFE_RELEASE(pParticleSingle);
+//
+//		CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+//
+//		pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+//			SCT_VERTEX | SCT_PIXEL);
+//
+//		CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
+//
+//		pParticleAnimation->SetRenderer2DEnable(false);
+//
+//		vector<wstring>    vecExplosion;
+//
+//		for (int i = 1; i <= 89; ++i)
+//		{
+//			wchar_t    strPath[MAX_PATH] = {};
+//			wsprintf(strPath, L"Explosion/Explosion%d.png", i);
+//
+//			vecExplosion.push_back(strPath);
+//		}
+//
+//		pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
+//			89, 1, 89, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
+//
+//		SAFE_RELEASE(pParticleAnimation);
+//
+//		pParticleRenderer->SetRenderState(ALPHA_BLEND);
+//
+//		SAFE_RELEASE(pParticleRenderer);
+//
+//		SAFE_RELEASE(pParticleObj);
+//	}
+//	SAFE_RELEASE(pParticleLayer);
+//#pragma endregion
 
-	for (int i = 0; i < 5; ++i)
+#pragma region billboard
 	{
-		CGameObject*    pParticleObj = CGameObject::CreateObject(
-			"ParticleObj", pParticleLayer);
+		default_random_engine dre;
+		uniform_int_distribution<> ui;
 
-		CTransform*    pParticleTr = pParticleObj->GetTransform();
+		CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
 
-		pParticleTr->SetWorldPos(300.f, 2.f, 300.f * i);
-
-		SAFE_RELEASE(pParticleTr);
-
-		CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
-
-		pParticleSingle->SetSize(10.f, 10.f);
-
-		SAFE_RELEASE(pParticleSingle);
-
-		CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
-
-		pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
-			SCT_VERTEX | SCT_PIXEL);
-
-		CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
-
-		pParticleAnimation->SetRenderer2DEnable(false);
-
-		vector<wstring>    vecExplosion;
-
-		for (int i = 1; i <= 89; ++i)
+		for (int i = 0; i < 10; ++i)
 		{
-			wchar_t    strPath[MAX_PATH] = {};
-			wsprintf(strPath, L"Explosion/Explosion%d.png", i);
+			for (int j = 0; j < 10; ++j)
+			{
+				string number_tag = to_string(i);
+				string object_tag = "ParticleObj" + number_tag;
+				CGameObject*    pParticleObj = CGameObject::CreateObject(object_tag, pParticleLayer);
 
-			vecExplosion.push_back(strPath);
+				CTransform*    pParticleTr = pParticleObj->GetTransform();
+				pParticleTr->SetWorldPos(300.f + (0.2 * i), 2.f, 300.f + (0.2*j));
+				SAFE_RELEASE(pParticleTr);
+
+				CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
+				pParticleSingle->SetSize(10.f, 10.f);
+				SAFE_RELEASE(pParticleSingle);
+
+				CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+				pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+					SCT_VERTEX | SCT_PIXEL);
+				pParticleRenderer->SetRenderState(ALPHA_BLEND);
+				CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
+				pParticleAnimation->SetRenderer2DEnable(false);
+
+				vector<wstring>    vecExplosion;
+				for (int i = 1; i <= 1; ++i)
+				{
+					wchar_t    strPath[MAX_PATH] = {};
+					wsprintf(strPath, L"Billboard/grass.tga", i);
+
+					vecExplosion.push_back(strPath);
+				}
+
+				pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
+					1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
+
+				SAFE_RELEASE(pParticleAnimation);
+				SAFE_RELEASE(pParticleRenderer);
+				SAFE_RELEASE(pParticleObj);
+			}
 		}
-
-		pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
-			1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
-
-		SAFE_RELEASE(pParticleAnimation);
-
-		pParticleRenderer->SetRenderState(ALPHA_BLEND);
-
-		SAFE_RELEASE(pParticleRenderer);
-
-		SAFE_RELEASE(pParticleObj);
+		SAFE_RELEASE(pParticleLayer);
 	}
-	SAFE_RELEASE(pParticleLayer);
 #pragma endregion
-	//GET_SINGLE(CNaviManager)->CreateNaviMesh("NaviTest0423");
-	//GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+	GET_SINGLE(CNaviManager)->CreateNaviMesh("NaviTest0423");
+	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+
+
+
+
 
 	return true;
 }
+
+
+void CMainScene::Input(float fTime)
+{
+	if (KEYDOWN("QUICKSLOT-Q"))
+	{
+		{
+#pragma region AlphaBlend
+			{
+				CLayer*	pLayer = m_pScene->GetLayer("UI+1");
+				CGameObject* pFadeInOut = CGameObject::CreateObject("FadeInOut", pLayer);
+				CTransform* pFadeInOutTr = pFadeInOut->GetTransform();
+				CUIButton* pButton = pFadeInOut->AddComponent<CUIButton>("d");
+				pButton->enableAlpha(true);
+				SAFE_RELEASE(pButton);
+				pFadeInOutTr->SetWorldScale(1280.f, 960.f, 1.f);
+				pFadeInOutTr->SetWorldPos(0.f, 0.f, 0.f);
+				CRenderer2D* pRenderer = pFadeInOut->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+				CMaterial* pMaterial = pRenderer->GetMaterial();
+
+				pMaterial->SetDiffuseTexInfo("Linear", "Fadeinout",
+					0, 0, L"Fadeinout.png");
+				SAFE_RELEASE(pFadeInOutTr);
+				SAFE_RELEASE(pMaterial);
+				SAFE_RELEASE(pRenderer);
+				SAFE_RELEASE(pFadeInOut);
+				SAFE_RELEASE(pLayer);
+			}
+#pragma endregion
+		}
+		//string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+		//string objectTag = "Player" + appendTag;
+		//CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		//CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+		//if (pPlayerComponent->clickedID != -1)
+		//{
+		//	cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+		//	pPacket->size = sizeof(cs_packet_attack_player);
+		//	NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+		//	DWORD iobyte;
+
+		//	pPacket->id = NetworkManager::getInstance()->getMyClientID();
+		//	pPacket->targetid = pPlayerComponent->clickedID;
+		//	pPacket->type = CS_PACKET_ATTACK_SWORD_SKILL1;
+		//	int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+		//	if (ret)
+		//	{
+
+		//	}
+		//}
+	}
+
+	if (KEYDOWN("Enter"))
+	{
+		Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
+
+		if (false == pChatting->isChatWrite())
+		{
+			pChatting->enableChatWrite(true);
+		}
+		else
+		{
+			cs_packet_chat* packet = reinterpret_cast<cs_packet_chat*>(NetworkManager::getInstance()->getSendBuffer());
+			packet->type = CS_PACKET_CHAT;
+
+
+
+			wstring chat_message = L"";
+			const auto& chat_edit_cont = pChatting->getChatCont();
+
+			for (auto input : chat_edit_cont)
+			{
+				wchar_t temp[64];
+				wchar_t temp2 = input;
+				wstring appendString = L"";
+				appendString = appendString + temp2;
+				chat_message = chat_message + appendString;
+			}
+
+			//while (chat_message.length() < 20)
+			//{
+			//	chat_message += L" ";
+			//}
+			packet->id = NetworkManager::getInstance()->getMyClientID();
+			packet->size = sizeof(cs_packet_chat);
+			wcscpy_s(packet->message, chat_message.c_str());
+			packet->message[MAX_STR_SIZE] = 0;
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_chat);
+			DWORD iobyte;
+			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+			pChatting->getChatCont().clear();
+			pChatting->enableChatWrite(false);
+		}
+	}
+
+
+	if (KEYPUSH("MoveRight"))
+	{
+		cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+
+		pPacket->size = sizeof(cs_packet_rotate);
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+		DWORD iobyte;
+
+		pPacket->type = CS_PACKET_ROTATE_Y;
+
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+	}
+
+
+	if (KEYPUSH("MoveLeft"))
+	{
+		cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+
+		pPacket->size = sizeof(cs_packet_rotate);
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+		DWORD iobyte;
+
+		pPacket->type = CS_PACKET_ROTATE_INV_Y;
+
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+	}
+
+	if (KEYPUSH("MoveFront"))
+	{
+
+		CTransform* pTransform = pPlayer->GetTransform();
+		cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+		pPacket->size = sizeof(cs_packet_up);
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+		DWORD iobyte;
+
+		Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+		pPacket->type = CS_PACKET_MOVE_FRONT;
+		pPacket->dir_x = Axis.x;
+		pPacket->dir_y = Axis.y;
+		pPacket->dir_z = Axis.z;
+
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+		if (ret)
+		{
+			// 俊矾贸府.
+			char a = 0;
+		}
+		//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		//pAnimation->ChangeClip("MOVE");
+		//SAFE_RELEASE(pAnimation);
+	}
+
+	if (KEYUP("MoveFront"))
+	{
+		CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		pAnimation->ReturnDefaultClip();
+	}
+
+	if (KEYPUSH("MoveBack"))
+	{
+
+		CTransform* pTransform = pPlayer->GetTransform();
+
+		cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+		pPacket->size = sizeof(cs_packet_up);
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+		DWORD iobyte;
+
+		Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+		pPacket->type = CS_PACKET_MOVE_BACK;
+		pPacket->dir_x = Axis.x;
+		pPacket->dir_y = Axis.y;
+		pPacket->dir_z = Axis.z;
+
+
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+		if (ret)
+		{
+			char a = 0;
+		}
+	}
+
+	if (KEYDOWN("MouseLButton"))
+	{
+		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+		bool clickedEnemy = false;
+		for (const auto& object : CGameObject::getObjectList())
+		{
+			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+			if (pRay->CheckCollList(pColl))
+			{
+				clickedEnemy = true;
+			}
+			SAFE_RELEASE(pColl);
+		}
+
+		if (clickedEnemy)
+			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
+		else
+			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(false);
+
+		SAFE_RELEASE(pRay);
+		SAFE_RELEASE(pMouseObj);
+	}
+
+	if (KEYDOWN("MouseRButton"))
+	{
+		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
+		bool clickedEnemy = false;
+		for (const auto& object : CGameObject::getObjectList())
+		{
+			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+			if (pRay->CheckCollList(pColl))
+			{
+				clickedEnemy = true;
+			}
+			SAFE_RELEASE(pColl);
+		}
+		if (clickedEnemy == false)
+			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
+
+		SAFE_RELEASE(pRay);
+		SAFE_RELEASE(pMouseObj);
+	}
+
+	if (KEYDOWN("Attack"))
+	{
+		char str[128];
+		int id = NetworkManager::getInstance()->getMyClientID();
+		string appendTag = _itoa(id, str, 10);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+		if (pPlayerComponent->clickedID != -1)
+		{
+			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+			pPacket->size = sizeof(cs_packet_attack_player);
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+			DWORD iobyte;
+
+			pPacket->id = NetworkManager::getInstance()->getMyClientID();
+			pPacket->targetid = pPlayerComponent->clickedID;
+			pPacket->type = CS_PACKET_ATTACK;
+			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			if (ret)
+			{
+
+			}
+		}
+	}
+
+}
+
 
 int CMainScene::Update(float fTime)
 {
@@ -676,7 +1020,7 @@ int CMainScene::Update(float fTime)
 		if (nullptr == packet)
 			continue;
 
-		char packet_type = reinterpret_cast<char*>(packet)[2];
+		unsigned char packet_type = reinterpret_cast<unsigned char*>(packet)[2];
 
 		switch (packet_type)
 		{
@@ -1407,7 +1751,6 @@ int CMainScene::Update(float fTime)
 			{
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 				pAnimation->ChangeClip("Die");
-				
 				SAFE_RELEASE(pAnimation);
 				Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
 				if (nullptr != pMino)
@@ -1436,6 +1779,56 @@ int CMainScene::Update(float fTime)
 		}
 		break;
 
+		case SC_PACKET_ROOTING_TABLE:
+		{
+			sc_packet_require_itemtable* pPacket = reinterpret_cast<sc_packet_require_itemtable*>(packet);
+			//int id = pPacket->id;
+			DropTableUI* pDropTableUI = GET_SINGLE(UserInterfaceManager)->getDropTableUI();
+			pDropTableUI->addDropItemSlot(pPacket->item_id1);
+			pDropTableUI->addDropItemSlot(pPacket->item_id2);
+			pDropTableUI->addDropItemSlot(pPacket->item_id3);
+			pDropTableUI->enableRender(true);
+		}
+		break;
+		case SC_PACKET_ADDITEM_INVENTORY:
+		{
+			sc_packet_additem_inventory* pPacket = reinterpret_cast<sc_packet_additem_inventory*>(packet);
+			wstring tempitemname = pPacket->itemname;
+
+			CLayer*	pLayer = m_pScene->GetLayer("UI+2");
+			CGameObject* pItem = CGameObject::CreateObject("SWORD_ITEM", pLayer);
+
+			CUIButton*	pItemUI = pItem->AddComponent<CUIButton>("SWORD_ITEM");
+			SAFE_RELEASE(pItemUI);
+
+			CTransform*	pItemTr = pItem->GetTransform();
+			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+			pItemTr->SetWorldScale(30.f, 30.f, 1.f);
+
+			SAFE_RELEASE(pItemTr);
+			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CMaterial* pMaterial = pRenderer->GetMaterial();
+			tempitemname += L".png";
+			string itemname = strconv(tempitemname);
+			pMaterial->SetDiffuseTexInfo("Linear", itemname,
+				0, 0, tempitemname.c_str());
+
+			SAFE_RELEASE(pMaterial);
+			SAFE_RELEASE(pRenderer);
+
+			CColliderRect* pRC = pItem->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+
+			pRC->SetRect(0, 0, 0, 0);
+
+			SAFE_RELEASE(pRC);
+
+			GET_SINGLE(UserInterfaceManager)->getInventory()->addItem(pItem);
+			SAFE_RELEASE(pItem);
+
+			DropTableUI* pDropTableUI = GET_SINGLE(UserInterfaceManager)->getDropTableUI();
+			pDropTableUI->detachDropItemSlot(pPacket->index);
+		}
+		break;
 		default:
 			break;
 		}
@@ -1444,246 +1837,6 @@ int CMainScene::Update(float fTime)
 	}
 
 	return 0;
-}
-
-void CMainScene::Input(float fTime)
-{
-	if (KEYDOWN("QUICKSLOT-Q"))
-	{
-		string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
-		string objectTag = "Player" + appendTag;
-		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
-		if (pPlayerComponent->clickedID != -1)
-		{
-			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
-			pPacket->size = sizeof(cs_packet_attack_player);
-			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
-			DWORD iobyte;
-
-			pPacket->id = NetworkManager::getInstance()->getMyClientID();
-			pPacket->targetid = pPlayerComponent->clickedID;
-			pPacket->type = CS_PACKET_ATTACK_SWORD_SKILL1;
-			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			if (ret)
-			{
-
-			}
-		}
-	}
-
-	if (KEYDOWN("Enter"))
-	{
-		Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
-
-		if (false == pChatting->isChatWrite())
-		{
-			pChatting->enableChatWrite(true);
-		}
-		else
-		{
-			cs_packet_chat* packet = reinterpret_cast<cs_packet_chat*>(NetworkManager::getInstance()->getSendBuffer());
-			packet->type = CS_PACKET_CHAT;
-
-
-
-			wstring chat_message = L"";
-			const auto& chat_edit_cont = pChatting->getChatCont();
-
-			for (auto input : chat_edit_cont)
-			{
-				wchar_t temp[64];
-				wchar_t temp2 = input;
-				wstring appendString = L"";
-				appendString = appendString + temp2;
-				chat_message = chat_message + appendString;
-			}
-
-			//while (chat_message.length() < 20)
-			//{
-			//	chat_message += L" ";
-			//}
-			packet->id = NetworkManager::getInstance()->getMyClientID();
-			packet->size = sizeof(cs_packet_chat);
-			wcscpy_s(packet->message, chat_message.c_str());
-			packet->message[MAX_STR_SIZE] = 0;
-			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_chat);
-			DWORD iobyte;
-			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-			pChatting->getChatCont().clear();
-			pChatting->enableChatWrite(false);
-		}
-	}
-
-
-	if (KEYPUSH("MoveRight"))
-	{
-		cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-		pPacket->size = sizeof(cs_packet_rotate);
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-		DWORD iobyte;
-
-		pPacket->type = CS_PACKET_ROTATE_Y;
-
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-	}
-
-
-	if (KEYPUSH("MoveLeft"))
-	{
-		cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-		pPacket->size = sizeof(cs_packet_rotate);
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-		DWORD iobyte;
-
-		pPacket->type = CS_PACKET_ROTATE_INV_Y;
-
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-	}
-
-	if (KEYPUSH("MoveFront"))
-	{
-
-		CTransform* pTransform = pPlayer->GetTransform();
-		cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-		pPacket->size = sizeof(cs_packet_up);
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-		DWORD iobyte;
-
-		Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-		pPacket->type = CS_PACKET_MOVE_FRONT;
-		pPacket->dir_x = Axis.x;
-		pPacket->dir_y = Axis.y;
-		pPacket->dir_z = Axis.z;
-
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-		if (ret)
-		{
-			// 俊矾贸府.
-			char a = 0;
-		}
-		//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-		//pAnimation->ChangeClip("MOVE");
-		//SAFE_RELEASE(pAnimation);
-	}
-
-	if (KEYUP("MoveFront"))
-	{
-		CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-		pAnimation->ReturnDefaultClip();
-	}
-
-	if (KEYPUSH("MoveBack"))
-	{
-
-		CTransform* pTransform = pPlayer->GetTransform();
-
-		cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-		pPacket->size = sizeof(cs_packet_up);
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-		DWORD iobyte;
-
-		Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-		pPacket->type = CS_PACKET_MOVE_BACK;
-		pPacket->dir_x = Axis.x;
-		pPacket->dir_y = Axis.y;
-		pPacket->dir_z = Axis.z;
-
-
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-		if (ret)
-		{
-			char a = 0;
-		}
-	}
-
-	if (KEYDOWN("MouseLButton"))
-	{
-		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
-		bool clickedEnemy = false;
-		for (const auto& object : CGameObject::getObjectList())
-		{
-			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
-
-			if (pRay->CheckCollList(pColl))
-			{
-				clickedEnemy = true;
-			}
-			SAFE_RELEASE(pColl);
-		}
-		
-		if(clickedEnemy)
-			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
-		else
-			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(false);
-
-		SAFE_RELEASE(pRay);
-		SAFE_RELEASE(pMouseObj);
-	}
-
-	if (KEYDOWN("MouseRButton"))
-	{
-		CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-		CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
-		bool clickedEnemy = false;
-		for (const auto& object : CGameObject::getObjectList())
-		{
-			CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
-
-			if (pRay->CheckCollList(pColl))
-			{
-				clickedEnemy = true;
-			}
-			SAFE_RELEASE(pColl);
-		}
-		if(clickedEnemy == false)
-			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
-
-		SAFE_RELEASE(pRay);
-		SAFE_RELEASE(pMouseObj);
-	}
-
-	if (KEYDOWN("Attack"))
-	{
-		char str[128];
-		int id = NetworkManager::getInstance()->getMyClientID();
-		string appendTag = _itoa(id, str, 10);
-		string objectTag = "Player" + appendTag;
-		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
-		if (pPlayerComponent->clickedID != -1)
-		{
-			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
-			pPacket->size = sizeof(cs_packet_attack_player);
-			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
-			DWORD iobyte;
-
-			pPacket->id = NetworkManager::getInstance()->getMyClientID();
-			pPacket->targetid = pPlayerComponent->clickedID;
-			pPacket->type = CS_PACKET_ATTACK;
-			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			if (ret)
-			{
-
-			}
-		}
-	}
-
 }
 
 int CMainScene::LateUpdate(float fTime)

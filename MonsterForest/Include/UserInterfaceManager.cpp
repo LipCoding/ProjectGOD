@@ -112,12 +112,13 @@ bool UserInterfaceManager::initialize()
 		pDropTableTr->SetWorldScale(200.f, 150.f, 1.f);
 		pDropTableTr->SetWorldPos(400.f, 400.f, 1.f);
 
-		CColliderRect* pRC = pDropTableUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-		pRC->SetRect(0, 0, 200.f, 150.f);
-		pRC->SetTag("DropTable");
+		//CColliderRect* pRC = pDropTableUIObj->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		//pRC->SetRect(0, 0, 200.f, 150.f);
+		//pRC->SetTag("DropTable");
+		//SAFE_RELEASE(pRC);
+
 		pDropTableUI->initialize();
 		pDropTableUI->enableRender(false);
-		SAFE_RELEASE(pRC);
 
 		SAFE_RELEASE(pDropTableTr);
 		SAFE_RELEASE(pMaterial);

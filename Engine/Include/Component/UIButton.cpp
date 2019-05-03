@@ -106,6 +106,16 @@ void CUIButton::Input(float fTime)
 
 int CUIButton::Update(float fTime)
 {
+	if (isalpha)
+	{
+		if(alpha > 0)
+			alpha -= fTime;
+		else
+			alpha = 0;
+	}
+
+	
+
 	Vector3 pos = m_pTransform->GetWorldPos();
 	m_tCBuffer.length = pos.x + (this->UILength * this->lengthRatio);
 	CUI::Update(fTime);
@@ -143,6 +153,7 @@ int CUIButton::LateUpdate(float fTime)
 	CRenderer2D*	pRenderer = m_pGameObject->FindComponentFromTypeID<CRenderer2D>();
 
 	m_tCBuffer.vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	m_tCBuffer.vColor.w = alpha;
 	pRenderer->UpdateCBuffer("Button", 11, sizeof(BUTTONCBUFFER),
 		SCT_VERTEX | SCT_PIXEL, &m_tCBuffer);
 

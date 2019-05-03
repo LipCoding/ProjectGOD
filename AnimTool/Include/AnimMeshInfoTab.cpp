@@ -125,7 +125,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonModifyLocalInfo()
 	CTransform* pTr = m_pEditObj->GetTransform();
 
 	pTr->SetLocalScale(m_fScaleX, m_fScaleY, m_fScaleZ);
-	
+
 	// 라디안값으로 변경 필요
 	pTr->SetLocalRot(
 		XMConvertToRadians(m_fRotationX),
@@ -166,7 +166,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 
 	CString path = dlg.GetPathName();
 	CString name = dlg.GetFileTitle();
-	
+
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->ArmMeshLoadFromMeshInfoTab(path, name);
 
 	m_armMeshPath = path;
@@ -275,7 +275,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonArmDown()
 	}
 
 	CTransform* pTr = m_pArmObj->GetTransform();
-	
+
 	Vector3 vecModifyPos = pTr->GetLocalPos();
 
 	UpdateData(TRUE);
@@ -354,7 +354,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveArm()
 	armPath.erase(0, lstrlen(originPath) - 1 + 1);
 	wchar_t wstrArmPath[MAX_PATH] = {};
 	wcscpy_s(wstrArmPath, MAX_PATH, armPath.c_str());
-	
+
 	wstring armName = m_armObjName;
 	wchar_t wstrArmName[MAX_PATH] = {};
 	wcscpy_s(wstrArmName, MAX_PATH, armName.c_str());
@@ -613,7 +613,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveLocalInfo()
 
 	CString path = dlg.GetPathName();
 	CString name = dlg.GetFileTitle();
-	
+
 	FILE* pFile = nullptr;
 
 	char	strPath[MAX_PATH] = {};
@@ -621,7 +621,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveLocalInfo()
 		strPath, lstrlen(path), 0, 0);
 
 	fopen_s(&pFile, strPath, "wb");
-	
+
 	if (!pFile)
 		return;
 
@@ -739,7 +739,7 @@ void CAnimMeshInfoTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar
 			pTr->SetLocalRotX(XMConvertToRadians((float)iPos));
 			SAFE_RELEASE(pTr);
 		}
-		
+
 		else if (pScrollBar == (CScrollBar*)&m_sliderCtrlArmRotY)
 		{
 			int iPos = m_sliderCtrlArmRotY.GetPos();
@@ -748,7 +748,7 @@ void CAnimMeshInfoTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar
 			pTr->SetLocalRotY(XMConvertToRadians((float)iPos));
 			SAFE_RELEASE(pTr);
 		}
-		
+
 		else if (pScrollBar == (CScrollBar*)&m_sliderCtrlArmRotZ)
 		{
 			int iPos = m_sliderCtrlArmRotZ.GetPos();

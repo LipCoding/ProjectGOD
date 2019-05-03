@@ -123,6 +123,9 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 	if (!GET_SINGLE(CSceneManager)->Init())
 		return false;
 
+	if (!GET_SINGLE(SoundManager)->Init())
+		return false;
+
 	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	pMouseObj->SetScene(GET_SINGLE(CSceneManager)->GetCurrentScene());
 	SAFE_RELEASE(pMouseObj);

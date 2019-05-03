@@ -34,6 +34,8 @@ public:
 
 
 public:
+	bool CTexture::LoadTexture(const string & strKey, const wstring& pFileName,
+		const string & strPathKey = TEXTURE_PATH);
 	bool LoadTexture(const string& strKey, const wchar_t* pFileName,
 		const string& strPathKey = TEXTURE_PATH);
 	bool LoadTexture(const string& strKey, const char* pFileName,

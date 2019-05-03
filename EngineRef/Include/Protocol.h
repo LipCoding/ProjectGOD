@@ -40,8 +40,8 @@ const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
 const unsigned char CS_PACKET_ATTACK = 50;
 const unsigned char CS_PACKET_ATTACK_SWORD_SKILL1 = 51;
 
-const unsigned char CS_PACKET_INVENTORY_ADD = 150;
-const unsigned char CS_PACKET_INVENTORY_REMOVE = 151;
+const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
+const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char CS_PACKET_ROOTING_TABLE = 155;
 
 const unsigned char SC_PACKET_MOVE = 0;
@@ -65,10 +65,9 @@ const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
 const unsigned char SC_PACKET_DIE_ANIMATION = 52;
 
 const unsigned char SC_PACKET_COLLISION = 100;
-const unsigned char SC_PACKET_INVENTORY_ADD = 150;
-const unsigned char SC_PACKET_INVENTORY_REMOVE = 151;
-const unsigned char SC_PACKET_ROOTING_TABLE = 155;
-
+const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
+const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
+const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
 
 /*
 #define SC_PACKET_POS 0
@@ -84,7 +83,7 @@ const unsigned char SC_PACKET_ROOTING_TABLE = 155;
 const unsigned int MAX_USER = 1000;
 const unsigned int NPC_START = 1000;
 const unsigned int MAX_NPC = 1100;
-const unsigned int SERVER_PORT = 4000;
+const unsigned int SERVER_PORT = 3998;
 
 const unsigned int BOARD_WIDTH = 300;
 const unsigned int BOARD_HIGHT = 300;
@@ -159,6 +158,29 @@ struct cs_packet_attack_player
 	unsigned char type;
 	unsigned int id;
 	unsigned targetid;
+};
+
+struct cs_packet_require_itemtable
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+	unsigned char index;
+};
+
+struct cs_packet_additem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+};
+
+struct cs_packet_removeitem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
+	unsigned int slotIndex;
 };
 
 struct sc_packet_connect
@@ -249,6 +271,24 @@ struct sc_packet_chat
 	unsigned char state;
 	unsigned int id;
 	WCHAR message[MAX_STR_SIZE];
+};
+
+struct sc_packet_require_itemtable
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int item_id1;
+	unsigned int item_id2;
+	unsigned int item_id3;
+};
+
+struct sc_packet_additem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetID;
+	unsigned int index;
+	WCHAR itemname[MAX_STR_SIZE];
 };
 
 #pragma pack(pop)

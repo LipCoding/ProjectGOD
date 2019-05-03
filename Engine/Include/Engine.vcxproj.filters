@@ -501,6 +501,9 @@
     <ClCompile Include="Component\EffectTexture.cpp">
       <Filter>06. Component\19. Effect</Filter>
     </ClCompile>
+    <ClCompile Include="PGEngine.cpp">
+      <Filter>98. Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PGMath.h">

@@ -209,7 +209,6 @@ bool CTestScene::Init()
 	}
 
 
-
 	return true;
 }
 

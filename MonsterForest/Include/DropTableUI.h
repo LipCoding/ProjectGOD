@@ -8,9 +8,9 @@ PG_USING
 class DropTableUI :
 	public CUIPanel
 {
-	CUIButton* pDropItemSlot1;
-	CUIButton* pDropItemSlot2;
-	CUIButton* pDropItemSlot3;
+	CUIButton* pDropItemSlot1 = nullptr;
+	CUIButton* pDropItemSlot2 = nullptr;
+	CUIButton* pDropItemSlot3 = nullptr;
 
 public:
 	DropTableUI();
@@ -21,7 +21,10 @@ public:
 
 public:
 	void enableRender(bool show);
-
+public:
+	void addDropItemSlot(int itemid);
+public:
+	void detachDropItemSlot(int slotNumber);
 public:
 	CUIButton* getItemTable1() { return pDropItemSlot1; }
 	CUIButton* getItemTable2() { return pDropItemSlot2; }

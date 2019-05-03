@@ -32,8 +32,11 @@ protected:
 	BUTTON_STATE	m_eState;
 	float UILength;
 	float lengthRatio;
+	float alpha = 1.f;
+	bool isalpha = false;
 
-
+public:
+	void enableAlpha(bool isalpha) { this->isalpha = isalpha; }
 
 public:
 	void setUILength(float UILength) { this->UILength = UILength; }

@@ -827,8 +827,11 @@ void LoginScene::connectGameServer(float fTime)
 	NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_login);
 
 	DWORD iobyte;
-	WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
+	int retval = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+	if (retval == SOCKET_ERROR)
+	{
+		MessageBoxA(NULL, "connectGameServer() SendError", "Error", MB_OK);
+	}
 
 
 
