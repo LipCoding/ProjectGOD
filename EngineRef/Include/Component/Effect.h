@@ -1,23 +1,12 @@
 #pragma once
 #include "Component.h"
+#include "EffectAssist.h"
 
 PG_BEGIN
 
 class PG_DLL CEffect : 
 	public CComponent
 {
-protected:
-	class CRenderer* m_pRenderer;
-
-	/* Fade */
-	float m_vAlpha = 1.f;
-	float m_Angle = 0.f;
-
-	/* Info */
-	Vector3 m_vAngle;
-	Vector3 m_vScale;
-	Vector3 m_vPos;
-
 private:
 	friend class CGameObject;
 
@@ -27,8 +16,20 @@ public:
 	~CEffect();
 
 public:
-	virtual void SetEffect();
-	virtual void SetTexture(const string& strFullPath);
+	CEffectAssist* GetAssistFromType(CEffectAssist::ASSIST_TYPE type);
+
+	float GetMainStartTime() { return m_MainStartTime; }
+	float GetMainEndTime() { return m_MainEndTime; }
+	float GetMainTime() { return m_Timer; }
+
+	int GetMainRepeat() { return m_Repeat; }
+
+	void SetOperationCheck(bool check);
+	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
+
+	void SetMainStartTime(const float& start) { m_MainStartTime = start; }
+	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
+	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
 public:
 	virtual bool Init();
@@ -38,6 +39,64 @@ public:
 	virtual void Collision(float fTime);
 	virtual void Render(float fTime);
 	virtual CEffect* Clone();
+
+public:
+	/* Load Effect Mesh */
+	bool LoadEffectMesh(const string& filePath, const string& fileName);
+	bool LoadEffectLocalInfo(const string& filePath);
+	bool CreateEffectCollider();
+
+	/* Material */
+	void SetEffectTexture(const string& name, const string& fullPath);
+
+	/* Add Assist Effect */
+
+	/* Pattern */
+	void AddPatternScale(const int& easeType,
+						 const float& start, const float& end,
+						 const float& powX, const float& powY, const float& powZ, 
+						 const int& repeat);
+	void AddPatternRotation(const int& easeType,
+						 const float& start, const float& end,
+						 const float& powX, const float& powY, const float& powZ,
+						 const int& repeat);
+
+	/* Fade In Out */
+	void AddFadeIn(const float& start, const float& end, const float& degree);
+	void AddFadeOut(const float& start, const float& end, const float& degree);
+
+	/* UV */
+	void AddUVAnimation(const float& start, const float& end, const int& num, const int& repeat);
+	void AddUVMovement(const float& start, const float& end, const int& moveX, const int& moveY);
+
+	/* Delete Assist Effect */
+	void DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type);
+
+private:
+	/* Container */
+	vector<CEffectAssist*> m_vecAssist;
+
+	/* Check */
+	bool m_OperationCheck = false;
+
+	/* Timer */
+	float m_MainStartTime = 0.f;
+	float m_MainEndTime = 0.f;
+	float m_Timer = 0.f;
+
+	/* Repeat */
+	int m_Repeat = 0;
+
+	/* Name */
+	string EffectName = "";
+	string MeshPath = "";
+	string FileName = "";
+
+	string TextureFullPath = "";
+	string TexturePath = "";
+
+	/* Class */
+	class CRenderer *m_pRenderer = nullptr;
 };
 
 PG_END

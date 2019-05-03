@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 
 #include "MainFrm.h"
+#include "EaseSheetDlg.h"
 
 #include "Core/PathManager.h"
 #include "Resources/Mesh.h"
@@ -20,6 +21,9 @@
 #include "Component/Camera.h"
 #include "Component/ColliderAABB.h"
 #include "Component/ColliderSphere.h"
+
+
+#include "Component/EffectAssist.h"
 // CEffectTab 대화 상자
 
 IMPLEMENT_DYNAMIC(CEffectTab, CDialogEx)
@@ -35,12 +39,31 @@ CEffectTab::CEffectTab(CWnd* pParent /*=nullptr*/)
 	, m_iInfoStaticRotX(0)
 	, m_iInfoStaticRotY(0)
 	, m_iInfoStaticRotZ(0)
+	, m_fPatternStaticScaleX(0)
+	, m_fPatternStaticScaleY(0)
+	, m_fPatternStaticScaleZ(0)
+	, m_fPatternStaticScaleStartTime(0)
+	, m_fPatternStaticScaleEndTime(0)
+	, m_iPatternStaticScaleRepeat(0)
+	, m_fPatternStaticScaleTime(0)
+	, m_fPatternStaticRotX(0)
+	, m_fPatternStaticRotY(0)
+	, m_fPatternStaticRotZ(0)
+	, m_fPatternStaticRotStartTime(0)
+	, m_fPatternStaticRotEndTime(0)
+	, m_iPatternStaticRepeat(0)
+	, m_fPatternStaticRotTime(0)
+	, m_fMainStaticStartTime(0)
+	, m_fMainStaticEndTime(0)
+	, m_iMainRepeat(0)
+	, m_fMainStaticTime(0)
 {
 
 }
 
 CEffectTab::~CEffectTab()
 {
+	SAFE_DELETE(m_pEaseSheetDlg);
 }
 
 void CEffectTab::DoDataExchange(CDataExchange* pDX)
@@ -66,8 +89,44 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_X, m_editInfoRotX);
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_Y, m_editInfoRotY);
 	DDX_Control(pDX, IDC_EDIT_ROT_INFO_Z, m_editInfoRotZ);
+	DDX_Control(pDX, IDC_COMBO_VIEWSHEET, m_comboEaseSheet_Scale);
+	DDX_Control(pDX, IDC_COMBO_VIEWSHEET1, m_comboEaseSheet_Rot);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_X, m_fPatternStaticScaleX);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_Y_, m_fPatternStaticScaleY);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_Z, m_fPatternStaticScaleZ);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_START_TIME, m_fPatternStaticScaleStartTime);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_END_TIME, m_fPatternStaticScaleEndTime);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_REPEAT, m_iPatternStaticScaleRepeat);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_START_TIME, m_editPatternScaleStartTime);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_END_TIME, m_editPatternScaleEndTime);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_REPEAT, m_editPatternScaleRepeat);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_X, m_editPatternScaleX);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_Y, m_editPatternScaleY);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_Z, m_editPatternScaleZ);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_TIME, m_fPatternStaticScaleTime);
+	DDX_Control(pDX, IDC_CHECK_SCAILING, m_checkSclaling);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_X, m_fPatternStaticRotX);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_Y, m_fPatternStaticRotY);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_Z, m_fPatternStaticRotZ);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_START_TIME, m_fPatternStaticRotStartTime);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_END_TIME, m_fPatternStaticRotEndTime);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_REPEAT, m_iPatternStaticRepeat);
+	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_TIME, m_fPatternStaticRotTime);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_X, m_editPatternRotX);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_Y, m_editPatternRotY);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_Z, m_editPatternRotZ);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_START_TIME, m_editPatternRotStartTime);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_END_TIME, m_editPatternRotEndTime);
+	DDX_Control(pDX, IDC_EDIT_PATTERN_ROT_REPEAT, m_editPatternRotRepeat);
+	DDX_Control(pDX, IDC_CHECK_ROTATING, m_checkRotating);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_START_TIME, m_fMainStaticStartTime);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_END_TIME, m_fMainStaticEndTime);
+	DDX_Text(pDX, IDC_EDIT_MAIN_STATIC_REPEAT, m_iMainRepeat);
+	DDX_Control(pDX, IDC_EDIT_MAIN_START_TIME_, m_editMainStartTime);
+	DDX_Control(pDX, IDC_EDIT_MAIN_END_TIME, m_editMainEndTime);
+	DDX_Control(pDX, IDC_EDIT_MAIN_REPEAT, m_editMainRepeat);
+	DDX_Text(pDX, IDC_EDIT_STATIC_MAIN_TIME, m_fMainStaticTime);
 }
-
 
 BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_WM_HSCROLL()
@@ -93,17 +152,91 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTY_DOWN, &CEffectTab::OnBnClickedButtonInfoRotyDown)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_UP, &CEffectTab::OnBnClickedButtonInfoRotzUp)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_ROTZ_DOWN, &CEffectTab::OnBnClickedButtonInfoRotzDown)
+	ON_BN_CLICKED(IDC_BUTTON_VIEWSHEET, &CEffectTab::OnBnClickedButtonViewsheet)
+	ON_BN_CLICKED(IDC_BUTTON_VIEWSHEET2, &CEffectTab::OnBnClickedButtonViewsheet2)
+	ON_BN_CLICKED(IDC_CHECK_SCAILING, &CEffectTab::OnBnClickedCheckScailing)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_SCALE_INPUT, &CEffectTab::OnBnClickedButtonPatternScaleInput)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_SCALE_PLAY, &CEffectTab::OnBnClickedButtonPatternScalePlay)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_SCALE_STOP, &CEffectTab::OnBnClickedButtonPatternScaleStop)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_ROT_INPUT, &CEffectTab::OnBnClickedButtonPatternRotInput)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_ROT_PLAY, &CEffectTab::OnBnClickedButtonPatternRotPlay)
+	ON_BN_CLICKED(IDC_BUTTON_PATTERN_ROT_STOP, &CEffectTab::OnBnClickedButtonPatternRotStop)
+	ON_BN_CLICKED(IDC_CHECK_ROTATING, &CEffectTab::OnBnClickedCheckRotating)
+	ON_BN_CLICKED(IDC_BUTTON_INFO_MAIN, &CEffectTab::OnBnClickedButtonInfoMain)
+	ON_BN_CLICKED(IDC_BUTTON_MAIN_PLAY, &CEffectTab::OnBnClickedButtonMainPlay)
+	ON_BN_CLICKED(IDC_BUTTON_MAIN_STOP, &CEffectTab::OnBnClickedButtonMainStop)
 END_MESSAGE_MAP()
 
-
 // CEffectTab 메시지 처리기
-
 
 BOOL CEffectTab::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+
+	/* Static Value */
+	InitFormValue();
+
+	/* Ease Sheet */
+	InitComboBox();
+
+	/* Check */
+	m_checkSclaling.SetCheck(0);
+	m_checkRotating.SetCheck(0);
+
+	UpdateData(FALSE);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
+
+void CEffectTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+#pragma region Init
+void CEffectTab::InitForm()
+{
+	m_comboBoxBoneInfo.ResetContent();
+	m_comboBoxAnimInfo.ResetContent();
+}
+
+void CEffectTab::InitFormValue()
+{
+	/* Sheet */
+	m_comboEaseSheet_Scale.SetCurSel(0);
+	m_comboEaseSheet_Rot.SetCurSel(0);
+
+	/* Check */
+	m_checkSclaling.SetCheck(0);
+	m_checkRotating.SetCheck(0);
+
+	InitMainTimer();
+	InitFormInfo();
+	InitFormPatternScale();
+	InitFormPatternRot();
+}
+
+void CEffectTab::InitMainTimer()
+{
+	m_fMainStaticStartTime = -1.f;
+	m_fMainStaticEndTime = -1.f;
+	m_iMainRepeat = -1;
+
+	m_fMainStaticTime = -1.f;
+
+	m_editMainStartTime.SetWindowTextW(L"");
+	m_editMainEndTime.SetWindowTextW(L"");
+	m_editMainRepeat.SetWindowTextW(L"");
+}
+
+void CEffectTab::InitFormInfo()
+{
+	/* Info */
 	m_fInfoStaticPosX = -1.f;
 	m_fInfoStaticPosY = -1.f;
 	m_fInfoStaticPosZ = -1.f;
@@ -116,26 +249,250 @@ BOOL CEffectTab::OnInitDialog()
 	m_iInfoStaticRotY = -1;
 	m_iInfoStaticRotZ = -1;
 
-	UpdateData(FALSE);
+	m_editInfoPosX.SetWindowTextW(L"");
+	m_editInfoPosY.SetWindowTextW(L"");
+	m_editInfoPosZ.SetWindowTextW(L"");
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+	m_editInfoScaleX.SetWindowTextW(L"");
+	m_editInfoScaleY.SetWindowTextW(L"");
+	m_editInfoScaleZ.SetWindowTextW(L"");
+
+	m_editInfoRotX.SetWindowTextW(L"");
+	m_editInfoRotY.SetWindowTextW(L"");
+	m_editInfoRotZ.SetWindowTextW(L"");
 }
 
-
-void CEffectTab::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+void CEffectTab::InitFormPatternScale()
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	/* Pattern */
+	m_fPatternStaticScaleX = -1.f;
+	m_fPatternStaticScaleY = -1.f;
+	m_fPatternStaticScaleZ = -1.f;
 
-	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+	m_fPatternStaticScaleStartTime = -1.f;
+	m_fPatternStaticScaleEndTime = -1.f;
+	m_iPatternStaticScaleRepeat = -1;
+
+	m_fPatternStaticScaleTime = -1.f;
+
+	m_editPatternScaleX.SetWindowTextW(L"");
+	m_editPatternScaleY.SetWindowTextW(L"");
+	m_editPatternScaleZ.SetWindowTextW(L"");
+
+	m_editPatternScaleStartTime.SetWindowTextW(L"");
+	m_editPatternScaleEndTime.SetWindowTextW(L"");
+	m_editPatternScaleRepeat.SetWindowTextW(L"");
 }
 
-void CEffectTab::InitForm()
+void CEffectTab::InitFormPatternRot()
 {
-	m_comboBoxBoneInfo.ResetContent();
-	m_comboBoxAnimInfo.ResetContent();
+	/* Pattern */
+	m_fPatternStaticRotX = -1.f;
+	m_fPatternStaticRotY = -1.f;
+	m_fPatternStaticRotZ = -1.f;
+
+	m_fPatternStaticRotStartTime = -1.f;
+	m_fPatternStaticRotEndTime = -1.f;
+	m_iPatternStaticRepeat = -1;
+
+	m_fPatternStaticRotTime = -1.f;
+
+	m_editPatternRotX.SetWindowTextW(L"");
+	m_editPatternRotY.SetWindowTextW(L"");
+	m_editPatternRotZ.SetWindowTextW(L"");
+
+	m_editPatternRotStartTime.SetWindowTextW(L"");
+	m_editPatternRotEndTime.SetWindowTextW(L"");
+	m_editPatternRotRepeat.SetWindowTextW(L"");
 }
 
+void CEffectTab::InitComboBox()
+{
+	m_comboEaseSheet_Scale.AddString(L"None");
+	m_comboEaseSheet_Scale.AddString(L"EaseInSine");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutSine");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuad");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuad");
+	m_comboEaseSheet_Scale.AddString(L"EaseInCubic");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutCubic");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuart");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuart");
+	m_comboEaseSheet_Scale.AddString(L"EaseInQuint");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutQuint");
+	m_comboEaseSheet_Scale.AddString(L"EaseInExpo");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutExpo");
+	m_comboEaseSheet_Scale.AddString(L"EaseInCirc");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutCirc");
+	m_comboEaseSheet_Scale.AddString(L"EaseInBack");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutBack");
+	m_comboEaseSheet_Scale.AddString(L"EaseInElastic");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutElastic");
+	m_comboEaseSheet_Scale.AddString(L"EaseInBounce");
+	m_comboEaseSheet_Scale.AddString(L"EaseOutBounce");
+
+	m_comboEaseSheet_Rot.AddString(L"None");
+	m_comboEaseSheet_Rot.AddString(L"EaseInSine");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutSine");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuad");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuad");
+	m_comboEaseSheet_Rot.AddString(L"EaseInCubic");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutCubic");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuart");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuart");
+	m_comboEaseSheet_Rot.AddString(L"EaseInQuint");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutQuint");
+	m_comboEaseSheet_Rot.AddString(L"EaseInExpo");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutExpo");
+	m_comboEaseSheet_Rot.AddString(L"EaseInCirc");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutCirc");
+	m_comboEaseSheet_Rot.AddString(L"EaseInBack");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutBack");
+	m_comboEaseSheet_Rot.AddString(L"EaseInElastic");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutElastic");
+	m_comboEaseSheet_Rot.AddString(L"EaseInBounce");
+	m_comboEaseSheet_Rot.AddString(L"EaseOutBounce");
+
+	m_comboEaseSheet_Scale.SetCurSel(0);
+	m_comboEaseSheet_Rot.SetCurSel(0);
+}
+#pragma endregion
+
+#pragma region Update
+void CEffectTab::UpdateInfo()
+{
+	CTransform *pTr = m_pTargetObject->GetTransform();
+
+	Vector3 pScale = pTr->GetWorldScale();
+	Vector3 pPos = pTr->GetWorldPos();
+	Vector3 pRot = pTr->GetWorldRot();
+
+	pPos.x -= 50.f / 2.f;
+	pPos.z -= 50.f / 2.f;
+
+	m_fInfoStaticPosX = pPos.x;
+	m_fInfoStaticPosY = pPos.y;
+	m_fInfoStaticPosZ = pPos.z;
+
+	m_fInfoStaticScaleX = pScale.x;
+	m_fInfoStaticScaleY = pScale.y;
+	m_fInfoStaticScaleZ = pScale.z;
+
+	m_iInfoStaticRotX = (int)round(XMConvertToDegrees(pRot.x));
+	m_iInfoStaticRotY = (int)round(XMConvertToDegrees(pRot.y));
+	m_iInfoStaticRotZ = (int)round(XMConvertToDegrees(pRot.z));
+
+	SAFE_RELEASE(pTr);
+}
+
+void CEffectTab::UpdateMainTimer()
+{
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+
+	if (pEffect)
+	{
+		m_fMainStaticStartTime = pEffect->GetMainStartTime();
+		m_fMainStaticEndTime = pEffect->GetMainEndTime();
+		m_iMainRepeat = pEffect->GetMainRepeat();
+
+		SAFE_RELEASE(pEffect);
+	}
+}
+
+void CEffectTab::UpdatePattern()
+{
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	
+	if (pEffect)
+	{
+		/* Scale */
+		CEffectAssist *pAssistScale = pEffect->GetAssistFromType(CEffectAssist::ASSIST_SCALE);
+
+		if (pAssistScale)
+		{
+			m_fPatternStaticScaleX = pAssistScale->GetPowerX();
+			m_fPatternStaticScaleY = pAssistScale->GetPowerY();
+			m_fPatternStaticScaleZ = pAssistScale->GetPowerZ();
+
+			m_fPatternStaticScaleStartTime = pAssistScale->GetStartTime();
+			m_fPatternStaticScaleEndTime = pAssistScale->GetEndTime();
+			m_iPatternStaticScaleRepeat = pAssistScale->GetRepeat();
+
+			m_comboEaseSheet_Scale.SetCurSel(pAssistScale->GetEaseType());
+			m_checkSclaling.SetCheck(1);
+		}
+		else
+		{
+			InitFormPatternScale();
+			m_comboEaseSheet_Scale.SetCurSel(0);
+			m_checkSclaling.SetCheck(0);
+		}
+
+		/* Rotate */
+		CEffectAssist *pAssistRot = pEffect->GetAssistFromType(CEffectAssist::ASSIST_ROT);
+
+		if (pAssistRot)
+		{
+			m_fPatternStaticRotX = pAssistRot->GetPowerX();
+			m_fPatternStaticRotY = pAssistRot->GetPowerY();
+			m_fPatternStaticRotZ = pAssistRot->GetPowerZ();
+
+			m_fPatternStaticRotStartTime = pAssistRot->GetStartTime();
+			m_fPatternStaticRotEndTime = pAssistRot->GetEndTime();
+			m_iPatternStaticRepeat = pAssistRot->GetRepeat();
+
+			m_comboEaseSheet_Rot.SetCurSel(pAssistRot->GetEaseType());
+			m_checkRotating.SetCheck(1);
+		}
+		else
+		{
+			InitFormPatternRot();
+			m_comboEaseSheet_Rot.SetCurSel(0);
+			m_checkRotating.SetCheck(0);
+		}
+
+		SAFE_RELEASE(pEffect);
+	}
+}
+
+void CEffectTab::UpdateTime()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	/* Main Timer */
+	m_fMainStaticTime = pEffect->GetMainTime();
+
+	CEffectAssist *pAssist = nullptr;
+
+	/* Check 되어 있다면 */
+	
+	/* Pattern */
+	if (m_checkSclaling.GetCheck() == 1)
+	{
+		pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_SCALE);
+
+		if(pAssist)
+			m_fPatternStaticScaleTime = pAssist->GetTime();
+	}
+
+	if (m_checkRotating.GetCheck() == 1)
+	{
+		pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_ROT);
+
+		if (pAssist)
+			m_fPatternStaticRotTime = pAssist->GetTime();
+	}
+
+	SAFE_RELEASE(pEffect);
+}
+#pragma endregion
+
+#pragma region Load
 bool CEffectTab::LoadTargetMesh(const CString & filePath, const CString& fileName)
 {
 	CString strTag = filePath + ".msh";
@@ -273,6 +630,7 @@ bool CEffectTab::LoadTargetLocalInfo(const CString & filePath)
 
 	return true;
 }
+#pragma endregion
 
 void CEffectTab::DeleteTargetMesh()
 {
@@ -285,10 +643,7 @@ void CEffectTab::DeleteTargetMesh()
 	m_pTargetObject = nullptr;
 	m_pBoneMatrix = nullptr;
 	m_boneNameAttachTo = "";
-
-
 }
-
 
 void CEffectTab::OnBnClickedButtonLoadTargetObj()
 {
@@ -364,7 +719,7 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 
 	CColliderSphere* pCollider = m_pObjectMesh->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
-	pCollider->SetColliderRenderCheck(false);
+	pCollider->SetColliderRenderCheck(true);
 	SAFE_RELEASE(pCollider);
 
 	/*CColliderAABB* pCollider = m_pObjectMesh->AddComponent<CColliderAABB>("Collider");
@@ -427,60 +782,32 @@ void CEffectTab::UpdateForm()
 {
 	if (m_pTargetObject)
 	{
-		CTransform *pTr = m_pTargetObject->GetTransform();
+		/* Info */
+		UpdateInfo();
 
-		Vector3 pScale = pTr->GetWorldScale();
-		Vector3 pPos = pTr->GetWorldPos();
-		Vector3 pRot = pTr->GetWorldRot();
-		
-		pPos.x -= 50.f / 2.f;
-		pPos.z -= 50.f / 2.f;
+		if (m_bFirstTargetCheck)
+		{
+			/* MainTime */
+			UpdateMainTimer();
 
-		m_fInfoStaticPosX = pPos.x;
-		m_fInfoStaticPosY = pPos.y;
-		m_fInfoStaticPosZ = pPos.z;
+			/* Pattern */
+			UpdatePattern();
 
-		m_fInfoStaticScaleX = pScale.x;
-		m_fInfoStaticScaleY = pScale.y;
-		m_fInfoStaticScaleZ = pScale.z;
+			m_bFirstTargetCheck = false;
+		}
 
-		m_iInfoStaticRotX = (int)round(XMConvertToDegrees(pRot.x));
-		m_iInfoStaticRotY = (int)round(XMConvertToDegrees(pRot.y));
-		m_iInfoStaticRotZ = (int)round(XMConvertToDegrees(pRot.z));
-
-		SAFE_RELEASE(pTr);
+		UpdateTime();
 	}
 	else
 	{
-		m_fInfoStaticPosX = -1.f;
-		m_fInfoStaticPosY = -1.f;
-		m_fInfoStaticPosZ = -1.f;
-
-		m_fInfoStaticScaleX = -1.f;
-		m_fInfoStaticScaleY = -1.f;
-		m_fInfoStaticScaleZ = -1.f;
-
-		m_iInfoStaticRotX = -1;
-		m_iInfoStaticRotY = -1;
-		m_iInfoStaticRotZ = -1;
-		
-
-		m_editInfoPosX.SetWindowTextW(L"");
-		m_editInfoPosY.SetWindowTextW(L"");
-		m_editInfoPosZ.SetWindowTextW(L"");
-
-		m_editInfoScaleX.SetWindowTextW(L"");
-		m_editInfoScaleY.SetWindowTextW(L"");
-		m_editInfoScaleZ.SetWindowTextW(L"");
-
-		m_editInfoRotX.SetWindowTextW(L"");
-		m_editInfoRotY.SetWindowTextW(L"");
-		m_editInfoRotZ.SetWindowTextW(L"");
+		InitFormValue();
+		m_bFirstTargetCheck = true;
 	}
 
 	UpdateData(FALSE);
 }
 
+#pragma region setInfo
 void CEffectTab::SetInfoPos()
 {
 	CTransform *pTr = m_pTargetObject->GetTransform();
@@ -614,7 +941,134 @@ void CEffectTab::SetInfoRot()
 
 	SAFE_RELEASE(pTr);
 }
+#pragma endregion
 
+void CEffectTab::AddPatternScale(CEffect *pEffect)
+{
+	CString StartTime, EndTime, Repeat, X, Y, Z;
+
+	m_editPatternScaleX.GetWindowTextW(X);
+	m_editPatternScaleY.GetWindowTextW(Y);
+	m_editPatternScaleZ.GetWindowTextW(Z);
+
+	m_editPatternScaleStartTime.GetWindowTextW(StartTime);
+	m_editPatternScaleEndTime.GetWindowTextW(EndTime);
+	m_editPatternScaleRepeat.GetWindowTextW(Repeat);
+
+	/* Init Edit */
+	if (X == L"")
+		m_fInfoStaticScaleX = 0.f;
+	else
+		m_fInfoStaticScaleX = (float)_wtof(X);
+	
+	if (Y == L"")
+		m_fInfoStaticScaleY = 0.f;
+	else
+		m_fInfoStaticScaleY = (float)_wtof(Y);
+
+	if (Z == L"")
+		m_fInfoStaticScaleZ = 0.f;
+	else
+		m_fInfoStaticScaleZ = (float)_wtof(Z);
+
+	if (StartTime == L"")
+		m_fPatternStaticScaleStartTime = 0.f;
+	else
+		m_fPatternStaticScaleStartTime = (float)_wtof(StartTime);
+
+	if (EndTime == L"")
+		m_fPatternStaticScaleEndTime = 0.f;
+	else
+		m_fPatternStaticScaleEndTime = (float)_wtof(EndTime);
+
+	if (Repeat == L"")
+		m_iPatternStaticScaleRepeat = 0;
+	else
+		m_iPatternStaticScaleRepeat = _wtoi(Repeat);
+
+		
+	pEffect->AddPatternScale(m_comboEaseSheet_Scale.GetCurSel(),
+		m_fPatternStaticScaleStartTime, m_fPatternStaticScaleEndTime,
+		m_fInfoStaticScaleX, m_fInfoStaticScaleY, m_fInfoStaticScaleZ,
+		m_iPatternStaticScaleRepeat);
+}
+
+void CEffectTab::AddPatternRot(CEffect * pEffect)
+{
+	CString StartTime, EndTime, Repeat, X, Y, Z;
+
+	m_editPatternRotX.GetWindowTextW(X);
+	m_editPatternRotY.GetWindowTextW(Y);
+	m_editPatternRotZ.GetWindowTextW(Z);
+
+	m_editPatternRotStartTime.GetWindowTextW(StartTime);
+	m_editPatternRotEndTime.GetWindowTextW(EndTime);
+	m_editPatternRotRepeat.GetWindowTextW(Repeat);
+
+	/* Init Edit */
+	if (X == L"")
+		m_fPatternStaticRotX = 0.f;
+	else
+		m_fPatternStaticRotX = (float)_wtof(X);
+
+	if (Y == L"")
+		m_fPatternStaticRotY = 0.f;
+	else
+		m_fPatternStaticRotY = (float)_wtof(Y);
+
+	if (Z == L"")
+		m_fPatternStaticRotZ = 0.f;
+	else
+		m_fPatternStaticRotZ = (float)_wtof(Z);
+
+	if (StartTime == L"")
+		m_fPatternStaticRotStartTime = 0.f;
+	else
+		m_fPatternStaticRotStartTime = (float)_wtof(StartTime);
+
+	if (EndTime == L"")
+		m_fPatternStaticRotEndTime = 0.f;
+	else
+		m_fPatternStaticRotEndTime = (float)_wtof(EndTime);
+
+	if (Repeat == L"")
+		m_iPatternStaticRepeat = 0;
+	else
+		m_iPatternStaticRepeat = _wtoi(Repeat);
+
+	pEffect->AddPatternRotation(m_comboEaseSheet_Rot.GetCurSel(),
+		m_fPatternStaticRotStartTime, m_fPatternStaticRotEndTime,
+		m_fPatternStaticRotX, m_fPatternStaticRotY, m_fPatternStaticRotZ,
+		m_iPatternStaticRepeat);
+}
+
+void CEffectTab::SetMainTimer(CEffect * pEffect)
+{
+	CString StartTime, EndTime, Repeat;
+
+	m_editMainStartTime.GetWindowTextW(StartTime);
+	m_editMainEndTime.GetWindowTextW(EndTime);
+	m_editMainRepeat.GetWindowTextW(Repeat);
+
+	if (StartTime == L"")
+		m_fMainStaticStartTime = 0.f;
+	else
+		m_fMainStaticStartTime = (float)_wtof(StartTime);
+
+	if (EndTime == L"")
+		m_fMainStaticEndTime = 0.f;
+	else
+		m_fMainStaticEndTime = (float)_wtof(EndTime);
+
+	if (Repeat == L"")
+		m_iMainRepeat = 0;
+	else
+		m_iMainRepeat = _wtoi(Repeat);
+
+	pEffect->SetMainStartTime(m_fMainStaticStartTime);
+	pEffect->SetMainEndTime(m_fMainStaticEndTime);
+	pEffect->SetRepeat(m_iMainRepeat);
+}
 
 void CEffectTab::OnBnClickedButtonInputInfo()
 {
@@ -641,7 +1095,8 @@ void CEffectTab::OnBnClickedButtonInfoPosxUp()
 	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
 		m_fInfoStaticPosX = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosX.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -656,7 +1111,8 @@ void CEffectTab::OnBnClickedButtonInfoPosxDown()
 	if (fabsf(m_fInfoStaticPosX) <= FLT_EPSILON)
 		m_fInfoStaticPosX = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosX.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -671,7 +1127,8 @@ void CEffectTab::OnBnClickedButtonInfoPosyUp()
 	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
 		m_fInfoStaticPosY = 0.f;
 
-	SetInfoPos();
+	m_editInfoPosY.SetWindowTextW(L"");
+	SetInfoPos();	
 }
 
 
@@ -686,6 +1143,7 @@ void CEffectTab::OnBnClickedButtonInfoPosyDown()
 	if (fabsf(m_fInfoStaticPosY) <= FLT_EPSILON)
 		m_fInfoStaticPosY = 0.f;
 
+	m_editInfoPosY.SetWindowTextW(L"");
 	SetInfoPos();
 }
 
@@ -701,6 +1159,7 @@ void CEffectTab::OnBnClickedButtonInfoPoszUp()
 	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
 		m_fInfoStaticPosZ = 0.f;
 
+	m_editInfoPosZ.SetWindowTextW(L"");
 	SetInfoPos();
 }
 
@@ -716,6 +1175,7 @@ void CEffectTab::OnBnClickedButtonInfoPoszDown()
 	if (fabsf(m_fInfoStaticPosZ) <= FLT_EPSILON)
 		m_fInfoStaticPosZ = 0.f;
 
+	m_editInfoPosZ.SetWindowTextW(L"");
 	SetInfoPos();
 }
 #pragma endregion
@@ -733,6 +1193,7 @@ void CEffectTab::OnBnClickedButtonInfoScalexUp()
 	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
 		m_fInfoStaticScaleX = 0.f;
 
+	m_editInfoScaleX.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -749,7 +1210,8 @@ void CEffectTab::OnBnClickedButtonInfoScalexDown()
 	if (fabsf(m_fInfoStaticScaleX) <= FLT_EPSILON)
 		m_fInfoStaticScaleX = 0.f;
 
-	SetInfoScale();
+	m_editInfoScaleX.SetWindowTextW(L"");
+	SetInfoScale();	
 }
 
 
@@ -765,6 +1227,7 @@ void CEffectTab::OnBnClickedButtonInfoScaleyUp()
 	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
 		m_fInfoStaticScaleY = 0.f;
 
+	m_editInfoScaleY.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -781,6 +1244,7 @@ void CEffectTab::OnBnClickedButtonInfoScaleyDown()
 	if (fabsf(m_fInfoStaticScaleY) <= FLT_EPSILON)
 		m_fInfoStaticScaleY = 0.f;
 
+	m_editInfoScaleY.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -797,6 +1261,7 @@ void CEffectTab::OnBnClickedButtonInfoScalezUp()
 	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
 		m_fInfoStaticScaleZ = 0.f;
 
+	m_editInfoScaleZ.SetWindowTextW(L"");
 	SetInfoScale();
 }
 
@@ -813,6 +1278,7 @@ void CEffectTab::OnBnClickedButtonInfoScalezDown()
 	if (fabsf(m_fInfoStaticScaleZ) <= FLT_EPSILON)
 		m_fInfoStaticScaleZ = 0.f;
 
+	m_editInfoScaleZ.SetWindowTextW(L"");
 	SetInfoScale();
 }
 #pragma endregion
@@ -825,6 +1291,7 @@ void CEffectTab::OnBnClickedButtonInfoRotxUp()
 		return;
 
 	m_iInfoStaticRotX += 5;
+	m_editInfoRotX.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -837,7 +1304,8 @@ void CEffectTab::OnBnClickedButtonInfoRotxDown()
 		return;
 
 	m_iInfoStaticRotX -= 5;
-
+	m_editInfoRotX.SetWindowTextW(L"");
+	
 	SetInfoRot();
 }
 
@@ -849,6 +1317,7 @@ void CEffectTab::OnBnClickedButtonInfoRotyUp()
 		return;
 
 	m_iInfoStaticRotY += 5;
+	m_editInfoRotY.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -861,6 +1330,7 @@ void CEffectTab::OnBnClickedButtonInfoRotyDown()
 		return;
 
 	m_iInfoStaticRotY -= 5;
+	m_editInfoRotY.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -873,6 +1343,7 @@ void CEffectTab::OnBnClickedButtonInfoRotzUp()
 		return;
 
 	m_iInfoStaticRotZ += 5;
+	m_editInfoRotZ.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
@@ -885,7 +1356,274 @@ void CEffectTab::OnBnClickedButtonInfoRotzDown()
 		return;
 
 	m_iInfoStaticRotZ -= 5;
+	m_editInfoRotZ.SetWindowTextW(L"");
 
 	SetInfoRot();
 }
 #pragma endregion
+
+void CEffectTab::OnBnClickedButtonViewsheet()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pEaseSheetDlg == nullptr)
+	{
+		m_pEaseSheetDlg = new CEaseSheetDlg;
+		m_pEaseSheetDlg->Create(IDD_DIALOG3);
+	}
+	m_pEaseSheetDlg->ShowWindow(SW_SHOW);
+}
+
+void CEffectTab::OnBnClickedButtonViewsheet2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	OnBnClickedButtonViewsheet();
+}
+
+void CEffectTab::OnBnClickedCheckScailing()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkSclaling.GetCheck();
+
+	/* Check를 푸는 동작 */
+	if(check == 1)
+	{
+		AddPatternScale(pEffect);
+		m_checkSclaling.SetCheck(1);
+	}
+	/* Check를 하는 동작 */
+	else
+	{
+		pEffect->DeleteAssistEffectFromType(CEffectAssist::ASSIST_SCALE);
+		m_checkSclaling.SetCheck(0);
+	}
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedCheckRotating()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkRotating.GetCheck();
+
+	/* Check를 푸는 동작 */
+	if (check == 1)
+	{
+		AddPatternRot(pEffect);
+		m_checkRotating.SetCheck(1);
+	}
+	/* Check를 하는 동작 */
+	else
+	{
+		pEffect->DeleteAssistEffectFromType(CEffectAssist::ASSIST_ROT);
+		m_checkRotating.SetCheck(0);
+	}
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternScaleInput()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkSclaling.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add scale pattern first!");
+		return;
+	}
+
+	AddPatternScale(pEffect);
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternScalePlay()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkSclaling.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add scale pattern first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_SCALE, true);
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternScaleStop()
+{
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkSclaling.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add scale pattern first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_SCALE, false);
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternRotInput()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkRotating.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add rot pattern first!");
+		return;
+	}
+
+	AddPatternRot(pEffect);
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternRotPlay()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkRotating.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add rot pattern first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_ROT, true);
+
+	SAFE_RELEASE(pEffect);
+}
+
+void CEffectTab::OnBnClickedButtonPatternRotStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkRotating.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add rot pattern first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_ROT, false);
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonInfoMain()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	SetMainTimer(pEffect);
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonMainPlay()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	/* Main을 재생하기 전에 모든 EffectAssist의 재생을 정지한다.*/
+	pEffect->SetOperationCheck(false);
+	pEffect->SetOperationCheck(true);
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonMainStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	pEffect->SetOperationCheck(false);
+
+	SAFE_RELEASE(pEffect);
+}

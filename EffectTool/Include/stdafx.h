@@ -35,6 +35,7 @@
 #include <afxcontrolbars.h>
 #include <afxcontrolbars.h>
 #include <afxcontrolbars.h>
+#include <afxcontrolbars.h>
 
 
 #ifdef _UNICODE
@@ -73,8 +74,6 @@ enum TOOLTAB_TYPE
 
 enum EFFECT_TYPE
 {
-	EFT_TYPE_TEXTURE,
-	EFT_TYPE_TEXTURE_BILL,
 	EFT_TYPE_MESH,
 	EFT_TYPE_PARTICLE,
 	EFT_TYPE_END

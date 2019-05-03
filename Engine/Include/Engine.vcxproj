@@ -24,11 +24,12 @@
     <ClCompile Include="Component\AnimationClip.cpp" />
     <ClCompile Include="Component\Arm.cpp" />
     <ClCompile Include="Component\AxisLine.cpp" />
+    <ClCompile Include="Component\Billboard.cpp" />
     <ClCompile Include="Component\BoneSocket.cpp" />
     <ClCompile Include="Component\Camera.cpp" />
     <ClCompile Include="Component\Cell.cpp" />
     <ClCompile Include="Component\Effect.cpp" />
-    <ClCompile Include="Component\EffectTexture.cpp" />
+    <ClCompile Include="Component\EffectAssist.cpp" />
     <ClCompile Include="Component\Font.cpp" />
     <ClCompile Include="Component\Collider.cpp" />
     <ClCompile Include="Component\ColliderAABB.cpp" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Core\TimerManager.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Ease.cpp" />
     <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="PGEngine.cpp" />
@@ -110,11 +112,12 @@
     <ClInclude Include="Component\AnimationClip.h" />
     <ClInclude Include="Component\Arm.h" />
     <ClInclude Include="Component\AxisLine.h" />
+    <ClInclude Include="Component\Billboard.h" />
     <ClInclude Include="Component\BoneSocket.h" />
     <ClInclude Include="Component\Camera.h" />
     <ClInclude Include="Component\Cell.h" />
     <ClInclude Include="Component\Effect.h" />
-    <ClInclude Include="Component\EffectTexture.h" />
+    <ClInclude Include="Component\EffectAssist.h" />
     <ClInclude Include="Component\Font.h" />
     <ClInclude Include="Component\Collider.h" />
     <ClInclude Include="Component\ColliderAABB.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Core\TimerManager.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="Ease.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="PGEngine.h" />

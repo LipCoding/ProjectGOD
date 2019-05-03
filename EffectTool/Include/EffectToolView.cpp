@@ -364,12 +364,13 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	CGameObject *pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 	CColliderRay *pRay = pMouseObj->FindComponentFromTag<CColliderRay>("MouseRay");
 	
+	/* Target을 잃어버리면 m_pCollideObject도 nullptr이여야 UpdateForm에서 에러가 나지 않는다. */
 	if (((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->GetTargetObject() == nullptr)
 	{
 		m_pCollideObject = nullptr;
 	}
 
-	/* for문을 빠져 여기까지 왔다는 뜻은 부딪힌 충돌체가 없다는 뜻. 즉 선택할 오브젝트가 없다는 뜻 */
+	/* 선택이 안된 Object의 충돌체를 끈다. */
 	if (m_pCollideObject)
 	{
 		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
@@ -377,8 +378,11 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 		SAFE_RELEASE(pColl);
 	}
 
+	/* 초기화 */
 	m_pCollideObject = nullptr;
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(nullptr);
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetTargetEffect(nullptr);
 
 	for (const auto& object : CGameObject::getObjectList())
 	{
@@ -388,9 +392,21 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 		{
 			if (!m_pCollideObject)
 			{
+				/* 고른 Target Effect를 찾아 Set */
+				vector<CEditForm::EFFECTDATA*>* pEffects = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffects();
+				for (const auto& effect : *pEffects)
+				{
+					if (effect->pObject == object)
+					{
+						((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetTargetEffect(effect);
+					}
+				}
+
 				pColl->SetColliderRenderCheck(true);
 				m_pCollideObject = object;
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateTarget(object);
 			}
 			SAFE_RELEASE(pColl);
 			SAFE_RELEASE(pRay);

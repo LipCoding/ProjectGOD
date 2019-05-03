@@ -3,7 +3,9 @@ cbuffer ShareCBuffer	: register(b8)
 {
 	float4  g_vColor;
 	float3  g_vCameraPos;
-	float   g_fEmpty;
+	float   g_fAlphaFadeOut;
+	float	g_fAlphaFadeIn;
+	float3  g_vEmpty;
 }
 
 struct VS_INPUT_POS

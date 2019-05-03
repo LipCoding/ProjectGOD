@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "GameObject/GameObject.h"
+#include "Component/Effect.h"
 
 PG_USING
 
@@ -29,6 +30,7 @@ public:
 	void SetTargetObject(CGameObject *target)
 	{
 		m_pTargetObject = target;
+		m_bFirstTargetCheck = true;
 	}
 
 	CGameObject* GetTargetObject()
@@ -36,11 +38,14 @@ public:
 		return m_pTargetObject;
 	}
 
+	bool GetFirstCheck()
+	{
+		return m_bFirstTargetCheck;
+	}
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-
-	void InitForm();
 
 	/* Load Target Resource */
 	bool LoadTargetMesh(const CString& filePath, const CString& fileName);
@@ -58,13 +63,49 @@ public:
 	void UpdateForm();
 
 private:
+	/* */
+	void InitForm();
+
+
+	/* Total */
+	void InitFormValue();
+	/* Main */
+	void InitMainTimer();
+	/* Info */
+	void InitFormInfo();
+	/* Pattern */
+	void InitFormPatternScale();
+	void InitFormPatternRot();
+	/* Sheet */
+	void InitComboBox();
+
+	void UpdateInfo();
+	void UpdateMainTimer();
+	void UpdatePattern();
+	void UpdateTime();
+
+private:
 	void SetInfoPos();
 	void SetInfoScale();
 	void SetInfoRot();
 
-private:
-	/* Info */
+	void AddPatternScale(class CEffect *pEffect);
+	void AddPatternRot(class CEffect *pEffect);
 
+	void SetMainTimer(class CEffect *pEffect);
+private:
+	/* Main Time */
+	float m_fMainStaticStartTime;
+	float m_fMainStaticEndTime;
+	int m_iMainRepeat;
+	
+	float m_fMainStaticTime;
+
+	CEdit m_editMainStartTime;
+	CEdit m_editMainEndTime;
+	CEdit m_editMainRepeat;
+
+	/* Info */
 	/* Static */
 	float m_fInfoStaticPosX;
 	float m_fInfoStaticPosY;
@@ -91,18 +132,72 @@ private:
 	CEdit m_editInfoRotY;
 	CEdit m_editInfoRotZ;
 
+	/* Pattern */
+
+	/* Scale */
+	/* Static */
+	float m_fPatternStaticScaleX;
+	float m_fPatternStaticScaleY;
+	float m_fPatternStaticScaleZ;
+
+	float m_fPatternStaticScaleStartTime;
+	float m_fPatternStaticScaleEndTime;
+	int m_iPatternStaticScaleRepeat;
+
+	float m_fPatternStaticScaleTime;
+
+	/* Input */
+	CEdit m_editPatternScaleX;
+	CEdit m_editPatternScaleY;
+	CEdit m_editPatternScaleZ;
+
+	CEdit m_editPatternScaleStartTime;
+	CEdit m_editPatternScaleEndTime;
+	CEdit m_editPatternScaleRepeat;
+
+	/* Rot */
+	/* Static */
+	float m_fPatternStaticRotX;
+	float m_fPatternStaticRotY;
+	float m_fPatternStaticRotZ;
+
+	float m_fPatternStaticRotStartTime;
+	float m_fPatternStaticRotEndTime;
+	int m_iPatternStaticRepeat;
+
+	float m_fPatternStaticRotTime;
+
+	/* Input */
+	CEdit m_editPatternRotX;
+	CEdit m_editPatternRotY;
+	CEdit m_editPatternRotZ;
+
+	CEdit m_editPatternRotStartTime;
+	CEdit m_editPatternRotEndTime;
+	CEdit m_editPatternRotRepeat;
+
 private:
+	class CEaseSheetDlg *m_pEaseSheetDlg = nullptr;
+
 	CGameObject *m_pObjectMesh = nullptr;
-	CGameObject *m_pTargetObject = nullptr;
 	Matrix		*m_pBoneMatrix = nullptr;
 
 	string		m_boneNameAttachTo = "";
 
+	CGameObject *m_pTargetObject = nullptr;
+
 	CComboBox m_comboBoxBoneInfo;
 	CComboBox m_comboBoxAnimInfo;
+	CComboBox m_comboEaseSheet_Scale;
+	CComboBox m_comboEaseSheet_Rot;
+
+	CButton m_checkSclaling;
+	CButton m_checkRotating;
+
+	bool m_bFirstTargetCheck = true;
+
 public:
 	afx_msg void OnBnClickedButtonInputInfo();
-
 	afx_msg void OnBnClickedButtonInfoPosxUp();
 	afx_msg void OnBnClickedButtonInfoPosxDown();
 	afx_msg void OnBnClickedButtonInfoPosyUp();
@@ -121,4 +216,18 @@ public:
 	afx_msg void OnBnClickedButtonInfoRotyDown();
 	afx_msg void OnBnClickedButtonInfoRotzUp();
 	afx_msg void OnBnClickedButtonInfoRotzDown();
+	afx_msg void OnBnClickedButtonViewsheet();
+	afx_msg void OnBnClickedButtonViewsheet2();
+	afx_msg void OnBnClickedCheckScailing();
+	afx_msg void OnBnClickedButtonPatternScaleInput();
+	afx_msg void OnBnClickedButtonPatternScalePlay();
+	afx_msg void OnBnClickedButtonPatternScaleStop();
+	afx_msg void OnBnClickedButtonPatternRotInput();
+	afx_msg void OnBnClickedButtonPatternRotPlay();
+	afx_msg void OnBnClickedButtonPatternRotStop();
+	afx_msg void OnBnClickedCheckRotating();
+	afx_msg void OnBnClickedButtonInfoMain();
+	afx_msg void OnBnClickedButtonMainPlay();
+	afx_msg void OnBnClickedButtonMainStop();
+
 };

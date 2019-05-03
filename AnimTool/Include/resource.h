@@ -16,8 +16,8 @@
 #define IDC_EDIT_POS_CLIP               1008
 #define IDC_RADIO_CLIP_TYPE_1           1009
 #define IDC_RADIO_CLIP_TYPE_2           1010
-#define IDC_BUTTON_LOAD_ARM             1011
 #define IDC_RADIO_CLIP_TYPE_3           1011
+#define IDC_BUTTON_LOAD_ARM             1011
 #define IDC_BUTTON_STOP                 1012
 #define IDC_BUTTON_LOAD_MESH            1013
 #define IDC_BUTTON_PLAY_PAUSE           1014

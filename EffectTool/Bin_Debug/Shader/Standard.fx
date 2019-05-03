@@ -154,7 +154,11 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalVS(VS_INPUT_TEX_NORMAL input)
 	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
 	output.vViewPos = mul(float4(input.vPos, 1.f), g_matWV).xyz;
 
-	output.vUV = input.vUV;
+	if (g_iAniType == 0)
+		output.vUV = ComputeUV(input.vUV);
+	else
+		output.vUV = input.vUV;
+
 	output.iDecal = 1;
 
 	return output;
@@ -179,6 +183,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	// 이경우 깊이버퍼에도 값을 안쓴다.
 	if (vColor.a == 0.f)
 		clip(-1);
+
 
 	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
 	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
@@ -267,6 +272,85 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 		vMtrlSpc.w = g_vMtrlSpecular.w;
 		output.vColor4.w = vMtrlSpc.w;
 		//vMtrlSpc = float4(g_vMtrlSpecular.xyz, 1.f);
+	}
+
+	else
+	{
+		vMtrlSpc = g_vMtrlSpecular;
+		output.vColor4.w = g_vMtrlSpecular.w;
+	}
+	output.vColor3 = vMtrlSpc;
+
+	return output;
+}
+
+// Effect
+VS_OUTPUT_TEX_NORMAL StandardEffectTexNormalVS(VS_INPUT_TEX_NORMAL input)
+{
+	VS_OUTPUT_TEX_NORMAL	output = (VS_OUTPUT_TEX_NORMAL)0;
+
+	float3	vPos = input.vPos - g_vTrLength * g_vPivot;
+
+	output.vProjPos = mul(float4(vPos, 1.f), g_matWVP);
+	output.vPos = output.vProjPos;
+	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
+	output.vViewPos = mul(float4(input.vPos, 1.f), g_matWV).xyz;
+
+	if (g_iAniType == 0)
+		output.vUV = ComputeUV(input.vUV);
+	else
+		output.vUV = input.vUV;
+
+	output.iDecal = 1;
+
+	return output;
+}
+
+PS_OUTPUT StandardEffectTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
+{
+	PS_OUTPUT	output = (PS_OUTPUT)0;
+
+	float4 vColor;
+
+	if (g_iAniType == 1)
+	{
+		float3	vUV;
+		vUV.xy = input.vUV;
+		vUV.z = g_iAniFrameX;
+		vColor = g_DifArrTex.Sample(g_DifSmp, vUV);
+	}
+	else
+	{
+		vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
+	}
+
+	vColor.a = vColor.a - g_fAlphaFadeOut + g_fAlphaFadeIn;
+
+	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
+	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
+	float3 vCamDir = normalize(vCamPos - input.vViewPos);
+
+	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	float degree = float(degrees(acos(dotProduct)));
+
+	output.vColor5.w = (float)input.iDecal;
+
+	output.vColor = vColor + g_vColor;
+
+	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
+	output.vColor1.w = 1.f;
+	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
+	output.vColor2.w = input.vProjPos.w;
+
+	output.vColor2.y = g_vMtrlDiffuse.x;
+	output.vColor2.z = g_vMtrlAmbient.x;
+
+	float4	vMtrlSpc;
+	if (g_vMtrlAmbient.w == 1)
+	{
+		vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, input.vUV);
+		vMtrlSpc.w = g_vMtrlSpecular.w;
+		output.vColor4.w = vMtrlSpc.w;
 	}
 
 	else

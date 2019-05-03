@@ -202,18 +202,6 @@
     <Filter Include="06. Component\16. Picking">
       <UniqueIdentifier>{9f79590f-8e5e-4fdb-9d3e-f5aef19ec53e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="98. Headers\99. Defaults">
-      <UniqueIdentifier>{051d041f-c906-4411-8105-949b3f4e6dca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. Headers\99. Defaults\리소스 파일">
-      <UniqueIdentifier>{7cdbbf92-342e-4f8a-999d-13d5556a4099}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. Headers\99. Defaults\소스 파일">
-      <UniqueIdentifier>{52ae908e-080e-4941-9161-ee0a55992ccb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98. Headers\99. Defaults\헤더 파일">
-      <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\17. Description">
       <UniqueIdentifier>{af1c715a-b926-420a-b838-139d83a78777}</UniqueIdentifier>
     </Filter>
@@ -249,6 +237,27 @@
     </Filter>
     <Filter Include="06. Component\19. Effect">
       <UniqueIdentifier>{cf190667-745b-42de-b2aa-225c3ee855e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\19. Effect\Assist">
+      <UniqueIdentifier>{9a5adeda-5f2d-4f2c-8b0c-712f0a8996d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defaults">
+      <UniqueIdentifier>{051d041f-c906-4411-8105-949b3f4e6dca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defaults\리소스 파일">
+      <UniqueIdentifier>{7cdbbf92-342e-4f8a-999d-13d5556a4099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defaults\소스 파일">
+      <UniqueIdentifier>{52ae908e-080e-4941-9161-ee0a55992ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defaults\헤더 파일">
+      <UniqueIdentifier>{0be00c40-570f-424a-89d4-12e5379bac9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Core\00. Math\Ease">
+      <UniqueIdentifier>{a712eae5-7dba-42fd-8f1c-6b4c65ec67eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Component\03. Camera\Billboard">
+      <UniqueIdentifier>{36c4693b-1a61-4d68-8fcc-6ae91730284b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -498,8 +507,14 @@
     <ClCompile Include="Component\Effect.cpp">
       <Filter>06. Component\19. Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EffectTexture.cpp">
-      <Filter>06. Component\19. Effect</Filter>
+    <ClCompile Include="Component\EffectAssist.cpp">
+      <Filter>06. Component\19. Effect\Assist</Filter>
+    </ClCompile>
+    <ClCompile Include="Ease.cpp">
+      <Filter>00. Core\00. Math\Ease</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Billboard.cpp">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
     </ClCompile>
     <ClCompile Include="PGEngine.cpp">
       <Filter>98. Headers</Filter>
@@ -773,8 +788,14 @@
     <ClInclude Include="Component\Effect.h">
       <Filter>06. Component\19. Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EffectTexture.h">
-      <Filter>06. Component\19. Effect</Filter>
+    <ClInclude Include="Component\EffectAssist.h">
+      <Filter>06. Component\19. Effect\Assist</Filter>
+    </ClInclude>
+    <ClInclude Include="Ease.h">
+      <Filter>00. Core\00. Math\Ease</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Billboard.h">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

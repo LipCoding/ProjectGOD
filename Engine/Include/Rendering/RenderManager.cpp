@@ -678,18 +678,32 @@ void CRenderManager::Render(float fTime)
 
 
 
-	//for (int i = RGT_ALPHA; i < RGT_END; ++i)
-	//{
-	//	if (i == RGT_PARTICLE)
-	//		continue;
-
-	//	for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
-	//	{
-	//		m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
-	//	}
-	//	if(i != RGT_UI)
-	//		m_tRenderGroup[i].iSize = 0;
-	//}
+//<<<<<<< HEAD
+//		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+//		{
+//			m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
+//		}
+//
+//		if (i == RGT_ALPHA)
+//			continue;
+//
+//		if(i != RGT_UI)
+//			m_tRenderGroup[i].iSize = 0;
+//	}
+//=======
+//	//for (int i = RGT_ALPHA; i < RGT_END; ++i)
+//	//{
+//	//	if (i == RGT_PARTICLE)
+//	//		continue;
+//
+//	//	for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
+//	//	{
+//	//		m_tRenderGroup[i].pRenderObj[j]->Render(fTime);
+//	//	}
+//	//	if(i != RGT_UI)
+//	//		m_tRenderGroup[i].iSize = 0;
+//	//}
+//>>>>>>> a8d55e1292ef2b43b13cba5647f35826a6e61645
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	{
@@ -784,7 +798,6 @@ void CRenderManager::Render(float fTime)
 	}
 	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
 	{
-
 		CCollider* pCollider = nullptr;
 		pCollider = m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->FindComponentFromType<CCollider>(CT_COLLIDER);
 		if (pCollider != nullptr)

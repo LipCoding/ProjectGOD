@@ -152,7 +152,6 @@ PS_OUTPUT_SINGLE EffectPS(GS_OUTPUT_PARTICLE input)
 	////float	fViewDepth = input.vProjPos.w - vDepth.w;
 	//float	fDepthGap = (vDepth.x - fEffectDepth) * 1000.f;
 
-
 	output.vColor.a = g_vAlpha;
 	output.vColor.a = 1.f;
 	//if (fDepthGap >= 0.f)

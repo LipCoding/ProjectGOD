@@ -25,6 +25,9 @@
     <Filter Include="00.Tab\Effect1">
       <UniqueIdentifier>{c363e845-184e-46c5-98f0-17e906d96d03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.Tab\EaseSheet">
+      <UniqueIdentifier>{e16112fa-3226-44ad-b724-d04aed789d95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EffectTool.h">
@@ -57,6 +60,9 @@
     <ClInclude Include="EffectTab1.h">
       <Filter>00.Tab\Effect1</Filter>
     </ClInclude>
+    <ClInclude Include="EaseSheetDlg.h">
+      <Filter>00.Tab\EaseSheet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EffectTool.cpp">
@@ -82,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="EffectTab1.cpp">
       <Filter>00.Tab\Effect1</Filter>
+    </ClCompile>
+    <ClCompile Include="EaseSheetDlg.cpp">
+      <Filter>00.Tab\EaseSheet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
