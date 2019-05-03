@@ -51,6 +51,9 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH_TEXTURE, &CEditForm::OnBnClickedButtonLoadMeshTexture)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_MESH, &CEditForm::OnBnClickedButtonLoadMesh)
 	ON_BN_CLICKED(IDC_CHECK_BILLBOARD, &CEditForm::OnBnClickedCheckBillboard)
+	ON_LBN_SELCHANGE(IDC_LIST_EFFECT_CONTAINER, &CEditForm::OnLbnSelchangeListEffectContainer)
+	ON_BN_CLICKED(IDC_BUTTON_DELETE, &CEditForm::OnBnClickedButtonDelete)
+	ON_BN_CLICKED(IDC_BUTTON_CLEAR_ALL, &CEditForm::OnBnClickedButtonClearAll)
 END_MESSAGE_MAP()
 
 
@@ -269,7 +272,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	EFFECTDATA *pData = new EFFECTDATA;
 
 	// Create Object
-	pData->pObject = CGameObject::CreateObject("EffectObj_" + to_string(m_iEffectNumber), pLayer);
+	pData->strName = "EffectObj_" + to_string(m_iEffectNumber);
+	pData->pObject = CGameObject::CreateObject(pData->strName, pLayer);
 
 	// Transform
 	pData->pTr = pData->pObject->GetTransform();
@@ -304,6 +308,10 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	}
 	
 	m_vecEffect.push_back(pData);
+
+	/* list box 추가 */
+	CString EffectName = (CString)pData->strName.c_str();
+	m_listEffectList.AddString(EffectName);
 
 	++m_iEffectNumber;
 
@@ -376,4 +384,84 @@ void CEditForm::OnBnClickedCheckBillboard()
 			m_checkBillBoard.SetCheck(0);
 		}
 	}
+}
+
+
+void CEditForm::OnLbnSelchangeListEffectContainer()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	/* 선택이 안된 Object의 충돌체를 끈다. */
+	((CMainFrame*)AfxGetMainWnd())->GetView()->OnRButtonDown(0, CPoint(0, 0));
+
+	int pos = m_listEffectList.GetCurSel();
+
+	CString effectName;
+	m_listEffectList.GetText(pos, effectName);
+
+	for (auto& effect : m_vecEffect)
+	{
+		/* 원하는 Effect를 찾았으니 */
+		if (effect->strName == (string)CT2CA(effectName))
+		{
+			CColliderSphere *pColl = effect->pObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+			pColl->SetColliderRenderCheck(true);
+
+			SetTargetEffect(effect);
+			((CMainFrame*)AfxGetMainWnd())->GetView()->SetCollideObject(effect->pObject);
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(effect->pObject);
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(effect->pObject);
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateTarget(effect->pObject);
+			break;
+		}
+	}
+}
+
+
+void CEditForm::OnBnClickedButtonDelete()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int pos = m_listEffectList.GetCurSel();
+
+	if (pos == -1)
+	{
+		AfxMessageBox(L"Select list first!");
+		return;
+	}
+
+	CString wEffectName;
+	m_listEffectList.GetText(pos, wEffectName);
+	string effectName = (string)CT2CA(wEffectName);
+
+	for (auto& effect_iter : m_vecEffect)
+	{
+		if (effect_iter->strName == effectName)
+		{
+			auto& erase_iter = find(m_vecEffect.begin(), m_vecEffect.end(), effect_iter);
+			FreeEffectData(effect_iter);
+			m_vecEffect.erase(erase_iter);
+			break;
+		}
+	}
+
+	m_listEffectList.DeleteString(pos);
+
+	/* Target 초기화 */
+	((CMainFrame*)AfxGetMainWnd())->GetView()->OnRButtonDown(0, CPoint(0, 0));
+}
+
+
+void CEditForm::OnBnClickedButtonClearAll()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	for (auto& effect : m_vecEffect)
+	{
+		FreeEffectData(effect);
+	}
+	m_vecEffect.clear();
+
+	m_listEffectList.ResetContent();
+	m_iEffectNumber = 0;
+
+	/* Target 초기화 */
+	((CMainFrame*)AfxGetMainWnd())->GetView()->OnRButtonDown(0, CPoint(0, 0));
 }

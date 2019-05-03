@@ -7,8 +7,6 @@
 
 PG_USING
 
-SHARECBUFFER CEffectAssist::g_tShareBuffer{};
-
 CEffectAssist::CEffectAssist()
 {
 }
@@ -73,24 +71,24 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 			if (fAlpha >= 1.f)
 				fAlpha = 1.f;
 
-			g_tShareBuffer.fAlphaFadeOut = 1.f;
-			g_tShareBuffer.fAlphaFadeIn = fAlpha;
-			g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_pShareBuffer->fAlphaFadeOut = 1.f;
+			m_pShareBuffer->fAlphaFadeIn = fAlpha;
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
 
 			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
-			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
 			SAFE_RELEASE(pRenderer);
 
 			break;
 		}
 		case ASSIST_FADE_OUT:
 		{
-			g_tShareBuffer.fAlphaFadeIn = 0.f;
-			g_tShareBuffer.fAlphaFadeOut = Calc_Ease(m_EaseType, m_StartFadeOut, m_Degree, m_LifeTime);
-			g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_pShareBuffer->fAlphaFadeIn = 0.f;
+			m_pShareBuffer->fAlphaFadeOut = Calc_Ease(m_EaseType, m_StartFadeOut, m_Degree, m_LifeTime);
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
 
 			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
-			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
 			SAFE_RELEASE(pRenderer);
 
 			break;
@@ -107,6 +105,12 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 		}
 		case ASSIST_UV_MOVE:
 		{
+			m_pShareBuffer->fMoveUV_X += m_AniX * deltaTime;
+			m_pShareBuffer->fMoveUV_Y += m_AniY * deltaTime;
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		default:
@@ -119,12 +123,14 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 		ReturnToFirstSet(object);
 
 		/* Fade */
-		g_tShareBuffer.fAlphaFadeIn = 0.f;
-		g_tShareBuffer.fAlphaFadeOut = 0.f;
-		g_tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+		m_pShareBuffer->fAlphaFadeIn = 0.f;
+		m_pShareBuffer->fAlphaFadeOut = 0.f;
+		m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+		m_pShareBuffer->fMoveUV_X = 0.f;
+		m_pShareBuffer->fMoveUV_Y = 0.f;
 
 		CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
-		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &g_tShareBuffer);
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
 		SAFE_RELEASE(pRenderer);
 
 		m_StartCheck = false;

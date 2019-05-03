@@ -124,12 +124,13 @@ int CEffect::Update(float fTime)
 				assist->SetStartCheck(false);
 			}
 
-			SHARECBUFFER tShareBuffer = {};
-			tShareBuffer.fAlphaFadeIn = 0.f;
-			tShareBuffer.fAlphaFadeOut = 0.f;
-			tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_tshareBuffer.fAlphaFadeIn = 0.f;
+			m_tshareBuffer.fAlphaFadeOut = 0.f;
+			m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_tshareBuffer.fMoveUV_X = 0.f;
+			m_tshareBuffer.fMoveUV_Y = 0.f;
 
-			m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
+			m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
 
 			m_Timer = 0.f;
 			m_OperationCheck = false;
@@ -352,6 +353,7 @@ void CEffect::AddFadeIn(const float & start, const float & end, const float & de
 			pAssistData->SetEndTime(end);
 			pAssistData->SetDegree(degree);
 			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
+			pAssistData->SetShareBuffer(&m_tshareBuffer);
 			return;
 		}
 	}
@@ -362,6 +364,7 @@ void CEffect::AddFadeIn(const float & start, const float & end, const float & de
 		pAssistData->SetStartTime(start);
 		pAssistData->SetEndTime(end);
 		pAssistData->SetDegree(degree);
+		pAssistData->SetShareBuffer(&m_tshareBuffer);
 	}
 
 	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
@@ -381,6 +384,7 @@ void CEffect::AddFadeOut(const float & start, const float & end, const float & d
 			pAssistData->SetEndTime(end);
 			pAssistData->SetDegree(degree);
 			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_OUT, CEffectAssist::EASE_SINE_OUT);
+			pAssistData->SetShareBuffer(&m_tshareBuffer);
 			return;
 		}
 	}
@@ -391,6 +395,7 @@ void CEffect::AddFadeOut(const float & start, const float & end, const float & d
 		pAssistData->SetStartTime(start);
 		pAssistData->SetEndTime(end);
 		pAssistData->SetDegree(degree);
+		pAssistData->SetShareBuffer(&m_tshareBuffer);
 	}
 
 	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_OUT, CEffectAssist::EASE_SINE_OUT);
@@ -410,6 +415,7 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 			pAssistData->SetEndTime(end);
 			pAssistData->SetNum(num);
 			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_ANI);
+			pAssistData->SetShareBuffer(&m_tshareBuffer);
 			return;
 		}
 	}
@@ -420,6 +426,7 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 		pAssistData->SetStartTime(start);
 		pAssistData->SetEndTime(end);
 		pAssistData->SetNum(num);
+		pAssistData->SetShareBuffer(&m_tshareBuffer);
 	}
 
 	CAnimation2D*	pEffectAnimation = m_pGameObject->AddComponent<CAnimation2D>("EffectAnimation");
@@ -469,6 +476,39 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 
 	/*  */
 	
+}
+
+void CEffect::AddUVMovement(const float & start, const float & end, const float & moveX, const float & moveY)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_UV_MOVE)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetMoveUV_X(moveX);
+			pAssistData->SetMoveUV_Y(moveY);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_MOVE);
+			pAssistData->SetShareBuffer(&m_tshareBuffer);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetMoveUV_X(moveX);
+		pAssistData->SetMoveUV_Y(moveY);
+		pAssistData->SetShareBuffer(&m_tshareBuffer);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_MOVE);
+	m_vecAssist.push_back(pAssistData);
 }
 
 void CEffect::DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type)

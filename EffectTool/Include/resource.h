@@ -293,19 +293,31 @@
 #define IDC_BUTTON49                    1159
 #define IDC_BUTTON_UV_SPRITE_INPUT      1159
 #define IDC_EDIT80                      1160
+#define IDC_EDIT_UV_MOVE_STATIC_START_TIME 1160
 #define IDC_EDIT81                      1161
+#define IDC_EDIT_UV_MOVE_START_TIME     1161
 #define IDC_EDIT82                      1162
+#define IDC_EDIT_UV_MOVE_STATIC_END_TIME 1162
 #define IDC_EDIT83                      1163
+#define IDC_EDIT_UV_MOVE_END_TIME       1163
 #define IDC_EDIT86                      1166
+#define IDC_EDIT_UV_MOVE_STATIC_MOVE_X  1166
 #define IDC_EDIT87                      1167
+#define IDC_EDIT_UV_MOVE_DIR_X          1167
 #define IDC_EDIT88                      1168
+#define IDC_EDIT_UV_MOVE_STATIC_MOVE_Y  1168
 #define IDC_EDIT89                      1169
+#define IDC_EDIT_UV_MOVE_DIR_Y          1169
 #define IDC_EDIT92                      1172
+#define IDC_EDIT_UV_MOVE_STATIC_TIME    1172
 #define IDC_BUTTON50                    1173
+#define IDC_BUTTON_UV_MOVE_PLAY         1173
 #define IDC_BUTTON51                    1174
+#define IDC_BUTTON_UV_MOVE_STOP         1174
 #define IDC_CHECK23                     1175
 #define IDC_CHECK_UV                    1175
 #define IDC_BUTTON52                    1176
+#define IDC_BUTTON_UV_MOVE_INPUT        1176
 
 // Next default values for new objects
 // 

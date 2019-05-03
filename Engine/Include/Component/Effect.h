@@ -67,7 +67,7 @@ public:
 
 	/* UV */
 	void AddUVAnimation(const float& start, const float& end, const int& num, const int& repeat);
-	void AddUVMovement(const float& start, const float& end, const int& moveX, const int& moveY);
+	void AddUVMovement(const float& start, const float& end, const float& moveX, const float& moveY);
 
 	/* Delete Assist Effect */
 	void DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type);
@@ -97,6 +97,8 @@ private:
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;
+
+	SHARECBUFFER     m_tshareBuffer = {};
 };
 
 PG_END

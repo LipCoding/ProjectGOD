@@ -321,6 +321,10 @@ PS_OUTPUT StandardEffectTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	}
 	else
 	{
+		/* UV Movement */
+		input.vUV.x = input.vUV.x + g_fMoveUV_X;
+		input.vUV.y = input.vUV.y + g_fMoveUV_Y;
+		
 		vColor = g_DifTex.Sample(g_DifSmp, input.vUV);
 	}
 
