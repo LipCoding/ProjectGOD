@@ -166,6 +166,7 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_MAIN, &CEffectTab::OnBnClickedButtonInfoMain)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_PLAY, &CEffectTab::OnBnClickedButtonMainPlay)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_STOP, &CEffectTab::OnBnClickedButtonMainStop)
+	ON_BN_CLICKED(IDC_BUTTON_COPY_CURRENT_EFFECT, &CEffectTab::OnBnClickedButtonCopyCurrentEffect)
 END_MESSAGE_MAP()
 
 // CEffectTab 메시지 처리기
@@ -926,6 +927,18 @@ void CEffectTab::SetInfoScale()
 
 	pTr->SetWorldScale(vNewScale);
 
+	CEffect *pEffect = m_pTargetObject->FindComponentFromTag<CEffect>("Effect");
+
+	if (pEffect)
+	{
+		CEffectAssist* pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_SCALE);
+		if (pAssist)
+		{
+			pAssist->FirstStatusSet(m_pTargetObject);
+		}
+		SAFE_RELEASE(pEffect);
+	}
+
 	SAFE_RELEASE(pTr);
 }
 
@@ -971,6 +984,18 @@ void CEffectTab::SetInfoRot()
 	vNewRot.z = XMConvertToRadians(vNewRot.z);
 
 	pTr->SetWorldRot(vNewRot);
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromTag<CEffect>("Effect");
+
+	if (pEffect)
+	{
+		CEffectAssist* pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_ROT);
+		if (pAssist)
+		{
+			pAssist->FirstStatusSet(m_pTargetObject);
+		}
+		SAFE_RELEASE(pEffect);
+	}
 
 	SAFE_RELEASE(pTr);
 }
@@ -1674,4 +1699,11 @@ void CEffectTab::OnBnClickedButtonMainStop()
 	pEffect->SetOperationCheck(false);
 
 	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonCopyCurrentEffect()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->CloneTarget();
 }

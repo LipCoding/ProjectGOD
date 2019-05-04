@@ -11,7 +11,6 @@ CEffectAssist::CEffectAssist()
 {
 }
 
-
 CEffectAssist::~CEffectAssist()
 {
 }
@@ -23,9 +22,9 @@ void CEffectAssist::Init(CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE 
 
 	FirstStatusSet(object);
 
-	CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
-	pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
-	SAFE_RELEASE(pRenderer);
+	//CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+	//pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
+	//SAFE_RELEASE(pRenderer);
 }
 
 void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
@@ -122,16 +121,19 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 	{
 		ReturnToFirstSet(object);
 
-		/* Fade */
-		m_pShareBuffer->fAlphaFadeIn = 0.f;
-		m_pShareBuffer->fAlphaFadeOut = 0.f;
-		m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
-		m_pShareBuffer->fMoveUV_X = 0.f;
-		m_pShareBuffer->fMoveUV_Y = 0.f;
+		if (m_pShareBuffer)
+		{
+			/* Fade */
+			m_pShareBuffer->fAlphaFadeIn = 0.f;
+			m_pShareBuffer->fAlphaFadeOut = 0.f;
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_pShareBuffer->fMoveUV_X = 0.f;
+			m_pShareBuffer->fMoveUV_Y = 0.f;
 
-		CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
-		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
-		SAFE_RELEASE(pRenderer);
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+		}
 
 		m_StartCheck = false;
 	}
@@ -197,14 +199,26 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	case ASSIST_SCALE:
 	{
 		CTransform *pTr = object->GetTransform();
-		pTr->SetWorldScale(m_StartX, m_StartY, m_StartZ);
+		
+		if (pTr->GetWorldScale() != Vector3(m_StartX, m_StartY, m_StartZ))
+			pTr->SetWorldScale(m_StartX, m_StartY, m_StartZ);
+
 		SAFE_RELEASE(pTr);
 		break;
 	}
 	case ASSIST_ROT:
 	{
 		CTransform *pTr = object->GetTransform();
-		pTr->SetWorldRot(XMConvertToRadians(m_StartX), XMConvertToRadians(m_StartY), XMConvertToRadians(m_StartZ));
+
+		if (pTr->GetWorldRot() != Vector3(XMConvertToRadians(m_StartX),
+										  XMConvertToRadians(m_StartY),
+										  XMConvertToRadians(m_StartZ)))
+		{
+			pTr->SetWorldRot(XMConvertToRadians(m_StartX),
+				XMConvertToRadians(m_StartY),
+				XMConvertToRadians(m_StartZ));
+		}
+
 		SAFE_RELEASE(pTr);
 		break;
 	}

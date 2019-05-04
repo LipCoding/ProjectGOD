@@ -91,9 +91,9 @@ public:
 public:
 	void Init(class CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE easeType = EASE_END);
 	void Update(class CGameObject *object, const float& deltaTime);
-	
-private:
 	void FirstStatusSet(class CGameObject *object);
+
+private:
 	void ReturnToFirstSet(class CGameObject *object);
 	float Calc_Ease(EASE_TYPE type, const float& startValue, const float& variation, const float& duration);
 

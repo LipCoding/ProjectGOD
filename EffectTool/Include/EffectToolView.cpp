@@ -374,8 +374,11 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	if (m_pCollideObject)
 	{
 		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
-		pColl->SetColliderRenderCheck(false);
-		SAFE_RELEASE(pColl);
+		if (pColl)
+		{
+			pColl->SetColliderRenderCheck(false);
+			SAFE_RELEASE(pColl);
+		}
 	}
 
 	/* 초기화 */
@@ -387,6 +390,9 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	for (const auto& object : CGameObject::getObjectList())
 	{
 		CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+		if (!pColl)
+			continue;
 
 		if (pRay->CheckCollList(pColl))
 		{

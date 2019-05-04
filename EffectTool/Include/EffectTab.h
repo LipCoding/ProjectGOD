@@ -229,4 +229,5 @@ public:
 	afx_msg void OnBnClickedButtonInfoMain();
 	afx_msg void OnBnClickedButtonMainPlay();
 	afx_msg void OnBnClickedButtonMainStop();	
+	afx_msg void OnBnClickedButtonCopyCurrentEffect();
 };

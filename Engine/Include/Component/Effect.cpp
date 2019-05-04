@@ -24,7 +24,65 @@ CEffect::CEffect()
 CEffect::CEffect(const CEffect & effect) :
 	CComponent(effect)
 {
-	m_pRenderer = FindComponentFromType<CRenderer>(CT_RENDERER);
+	m_MainStartTime = effect.m_MainStartTime;
+	m_MainEndTime = effect.m_MainEndTime;
+
+	EffectName = effect.EffectName;
+	FileName = effect.FileName;
+
+	MeshPath = effect.MeshPath;
+	LocalPath = effect.LocalPath;
+	TextureFullPath = effect.TextureFullPath;
+	TexturePath = effect.TexturePath;
+
+	m_tshareBuffer = effect.m_tshareBuffer;
+
+	for(const auto& assist : effect.m_vecAssist)
+	{
+		switch (assist->GetType())
+		{
+		case CEffectAssist::ASSIST_SCALE:
+		{
+			AddPatternScale(assist->GetEaseType(),
+				assist->GetStartTime(), assist->GetEndTime(),
+				assist->GetPowerX(), assist->GetPowerY(), assist->GetPowerZ(),
+				assist->GetRepeat());
+			break;
+		}
+		case CEffectAssist::ASSIST_ROT:
+		{
+			AddPatternRotation(assist->GetEaseType(),
+				assist->GetStartTime(), assist->GetEndTime(),
+				assist->GetPowerX(), assist->GetPowerY(), assist->GetPowerZ(),
+				assist->GetRepeat());
+			break;
+		}
+		case CEffectAssist::ASSIST_FADE_IN:
+		{
+			AddFadeIn(assist->GetStartTime(), assist->GetEndTime(), assist->GetDegree());
+			break;
+		}
+		case CEffectAssist::ASSIST_FADE_OUT:
+		{
+			AddFadeOut(assist->GetStartTime(), assist->GetEndTime(), assist->GetDegree());
+			break;
+		}
+		case CEffectAssist::ASSIST_UV_ANI:
+		{
+			AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
+				assist->GetNum(), assist->GetRepeat());
+			break;
+		}
+		case CEffectAssist::ASSIST_UV_MOVE:
+		{
+			AddUVMovement(assist->GetStartTime(), assist->GetEndTime(),
+				assist->GetMoveUV_X(), assist->GetMoveUV_Y());
+			break;
+		}
+		default :
+			break;
+		}
+	}
 }
 
 CEffect::~CEffect()
@@ -109,6 +167,12 @@ void CEffect::Input(float fTime)
 
 int CEffect::Update(float fTime)
 {
+	if (!m_pRenderer)
+	{
+		m_pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);
+		m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+	}
+
 	if (m_OperationCheck == false)
 	{
 		m_Timer = 0.f;
@@ -148,7 +212,6 @@ int CEffect::Update(float fTime)
 int CEffect::LateUpdate(float fTime)
 {
 	/*  */
-
 	return 0;
 }
 
@@ -168,12 +231,27 @@ CEffect * CEffect::Clone()
 bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
 {
 	string tag = filePath + ".msh";
+	MeshPath = tag;
 	wstring wTag;
 
 	wTag.assign(tag.begin(), tag.end());
 
 	if (!m_pGameObject)
 		return false;
+
+	// 확장자명 제거
+	for (int i = strlen(MeshPath.c_str()) - 1; i >= 0; i--)
+	{
+		if (MeshPath[i] == '.')
+		{
+			MeshPath.erase(i, strlen(MeshPath.c_str()) - 1);
+			break;
+		}
+	}
+
+	// 앞쪽 Mesh_Path 제거
+	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH)) - 1;
+	MeshPath.erase(0, meshPathSize);
 
 	m_pRenderer->SetMeshFromFullPath(fileName, wTag.c_str());
 	
@@ -193,9 +271,24 @@ bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
 bool CEffect::LoadEffectLocalInfo(const string & filePath)
 {
 	string tag = filePath + ".dat";
+	LocalPath = tag;
 
 	if (!m_pGameObject)
 		return false;
+
+	// 확장자명 제거
+	for (int i = strlen(LocalPath.c_str()) - 1; i >= 0; i--)
+	{
+		if (LocalPath[i] == '.')
+		{
+			LocalPath.erase(i, strlen(LocalPath.c_str()) - 1);
+			break;
+		}
+	}
+
+	// 앞쪽 Mesh_Path 제거
+	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH)) - 1;
+	LocalPath.erase(0, meshPathSize);
 
 	FILE* pFile = nullptr;
 
@@ -429,53 +522,59 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 		pAssistData->SetShareBuffer(&m_tshareBuffer);
 	}
 
-	CAnimation2D*	pEffectAnimation = m_pGameObject->AddComponent<CAnimation2D>("EffectAnimation");
-	pEffectAnimation->SetRenderer2DEnable(false);
-	
-	wstring wPath;
-	wPath.assign(TexturePath.begin(), TexturePath.end());
-	wPath += L".png";
-	
-	wchar_t	strPath[MAX_PATH] = {};
-	wsprintf(strPath, wPath.c_str());
+	CAnimation2D*	pEffectAnimation = nullptr;
 
-	if (!pEffectAnimation->CreateClip("Default", A2D_FRAME, A2DO_LOOP,
-		1, 1, 1, 1, 0, 0, 0, 0.f, "Default",
-		strPath))
-	{
-		SAFE_RELEASE(pEffectAnimation);
-		return;
-	}
-	pEffectAnimation->SetDefaultAnim("Default");
+	pEffectAnimation = m_pGameObject->FindComponentFromTag<CAnimation2D>("EffectAnimation");
 
-	/* Sprite */
-	vector<wstring>	vecTextures;
-	for (int i = 1; i <= num; ++i)
+	if (!pEffectAnimation)
 	{
+		pEffectAnimation = m_pGameObject->AddComponent<CAnimation2D>("EffectAnimation");
+
+		pEffectAnimation->SetRenderer2DEnable(false);
+
 		wstring wPath;
 		wPath.assign(TexturePath.begin(), TexturePath.end());
-
-		wPath += L"%d.png";
+		wPath += L".png";
 
 		wchar_t	strPath[MAX_PATH] = {};
-		wsprintf(strPath, wPath.c_str(), i);
+		wsprintf(strPath, wPath.c_str());
 
-		vecTextures.push_back(strPath);
-	}
-	if (!pEffectAnimation->CreateClip("Effect", A2D_FRAME, A2DO_TIME_RETURN,
-		num, 1, num, 1, 0, end - start, 0, 0.f, "Effect",
-		&vecTextures))
-	{
+		if (!pEffectAnimation->CreateClip("Default", A2D_FRAME, A2DO_LOOP,
+			1, 1, 1, 1, 0, 0, 0, 0.f, "Default",
+			strPath))
+		{
+			SAFE_RELEASE(pEffectAnimation);
+			return;
+		}
+		pEffectAnimation->SetDefaultAnim("Default");
+
+		/* Sprite */
+		vector<wstring>	vecTextures;
+		for (int i = 1; i <= num; ++i)
+		{
+			wstring wPath;
+			wPath.assign(TexturePath.begin(), TexturePath.end());
+
+			wPath += L"%d.png";
+
+			wchar_t	strPath[MAX_PATH] = {};
+			wsprintf(strPath, wPath.c_str(), i);
+
+			vecTextures.push_back(strPath);
+		}
+		if (!pEffectAnimation->CreateClip("Effect", A2D_FRAME, A2DO_TIME_RETURN,
+			num, 1, num, 1, 0, end - start, 0, 0.f, "Effect",
+			&vecTextures))
+		{
+			SAFE_RELEASE(pEffectAnimation);
+			return;
+		}
 		SAFE_RELEASE(pEffectAnimation);
-		return;
 	}
-	SAFE_RELEASE(pEffectAnimation);
 
 	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_ANI);
 	m_vecAssist.push_back(pAssistData);
-
 	/*  */
-	
 }
 
 void CEffect::AddUVMovement(const float & start, const float & end, const float & moveX, const float & moveY)
