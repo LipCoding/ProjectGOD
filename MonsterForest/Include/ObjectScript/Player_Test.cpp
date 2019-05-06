@@ -13,6 +13,7 @@
 #include "Core/QuadTreeManager.h"
 #include "Core/NaviManager.h"
 #include "Core/PathManager.h"
+#include "Core/EffectManager.h"
 
 
 CPlayer_Test::CPlayer_Test()
@@ -109,6 +110,9 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CInput)->CreateKey("Attack1", '1');
 	GET_SINGLE(CInput)->CreateKey("Attack2", '2');
 	GET_SINGLE(CInput)->CreateKey("Attack3", '3');
+
+	/* Effect */
+	GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
 
 	return true;
 }
@@ -243,16 +247,19 @@ void CPlayer_Test::Input(float fTime)
 
 	if (KEYDOWN("Attack1"))
 	{
+		GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, m_pTransform->GetWorldPos());
 		m_pAnimation->ChangeClip("Attack1");
 	}
 
 	if (KEYDOWN("Attack2"))
 	{
+		GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, m_pTransform->GetWorldPos());
 		m_pAnimation->ChangeClip("Attack2");
 	}
 
 	if (KEYDOWN("Attack3"))
 	{
+		GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, m_pTransform->GetWorldPos());
 		m_pAnimation->ChangeClip("Attack3");
 	}
 #endif

@@ -30,11 +30,13 @@ public:
 	const string& GetTexturePath() { return TexturePath; }
 
 	void SetOperationCheck(bool check);
+	void SetErase(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
 
 	void SetMainStartTime(const float& start) { m_MainStartTime = start; }
 	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
+
 
 public:
 	virtual bool Init();
@@ -83,6 +85,7 @@ private:
 
 	/* Check */
 	bool m_OperationCheck = false;
+	bool m_EraseCheck = false;
 
 	/* Timer */
 	float m_MainStartTime = 0.f;

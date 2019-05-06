@@ -60,6 +60,7 @@
 #define IDC_CHECK1                      1027
 #define IDC_CHECK_COLLIDER              1027
 #define IDC_CHECK_NAVI                  1027
+#define IDC_CHECK_HEIGHT_INIT           1027
 #define IDC_CHECK_HEIGHT                1028
 #define IDC_BUTTON_NAVI_UNDO            1028
 #define IDC_RADIO_MODE_1                1029
@@ -92,6 +93,8 @@
 #define IDC_LIST_NAVI_POINT             1054
 #define IDC_LIST_NAVI_CELL              1055
 #define IDC_BUTTON_NAVI_CLEARALL        1056
+#define IDC_BUTTON3                     1057
+#define IDC_BUTTON_RESET_SELECTED       1057
 
 // Next default values for new objects
 // 
@@ -99,7 +102,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        332
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1057
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -28,7 +28,7 @@
 #include "EditForm.h"
 
 #include "BrushTool.h"
-//#include "TarrainEdit.h"
+#include "TerrainTab.h"
 #include "ObjTab.h"
 #include "NaviTab.h"
 
@@ -374,9 +374,15 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				if (pBrushTool->GetHeightCheck())
 				{
 					list<QUADTREENODE*>* pNodes = pLandScape->FindNode_ByRadius(pBrushTool->GetBrushRange());
+					
 					if (!pNodes->empty())
 					{
-						pBrushTool->MoveHeight(pNodes, m_vPickPos, fTime);
+						int iZeroCheck = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTerrainTab()->GetHeightZeroCheck();
+
+						if (iZeroCheck == 0)
+							pBrushTool->MoveHeight(pNodes, m_vPickPos, fTime);
+						else
+							pBrushTool->MoveHeightZero(pNodes, m_vPickPos);
 					}
 				}
 				else if (pBrushTool->GetSplattingCheck())

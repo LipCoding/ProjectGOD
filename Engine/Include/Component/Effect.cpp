@@ -125,6 +125,11 @@ void CEffect::SetOperationCheck(bool check)
 	}
 }
 
+void CEffect::SetErase(bool check)
+{
+	m_EraseCheck = check;
+}
+
 void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
 {
 	for (auto& assist : m_vecAssist)
@@ -183,18 +188,26 @@ int CEffect::Update(float fTime)
 
 		if (m_Timer >= m_MainEndTime)
 		{
-			for (auto& assist : m_vecAssist)
+			if (m_EraseCheck)
 			{
-				assist->SetStartCheck(false);
+				m_pGameObject->Die();
+				CGameObject::EraseObj(m_pGameObject);
 			}
+			else
+			{
+				for (auto& assist : m_vecAssist)
+				{
+					assist->SetStartCheck(false);
+				}
 
-			m_tshareBuffer.fAlphaFadeIn = 0.f;
-			m_tshareBuffer.fAlphaFadeOut = 0.f;
-			m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
-			m_tshareBuffer.fMoveUV_X = 0.f;
-			m_tshareBuffer.fMoveUV_Y = 0.f;
+				m_tshareBuffer.fAlphaFadeIn = 0.f;
+				m_tshareBuffer.fAlphaFadeOut = 0.f;
+				m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+				m_tshareBuffer.fMoveUV_X = 0.f;
+				m_tshareBuffer.fMoveUV_Y = 0.f;
 
-			m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+				m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+			}
 
 			m_Timer = 0.f;
 			m_OperationCheck = false;

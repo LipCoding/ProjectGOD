@@ -541,6 +541,26 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 	}
 }
 
+void CBrushTool::MoveHeightZero(list<QUADTREENODE*>* list, Vector3 mousePos)
+{
+	for (auto& node : *list)
+	{
+		int iIndex = 0;
+
+		for (auto& iter : node->vecVtx)
+		{
+			float fDistance = iter.vPos.Distance(mousePos);
+
+			if (fDistance < m_fRange)
+			{
+				iter.vPos.y = 0 ;
+				UpdateVtxBuffer(&node->MeshInfo, node->vecVtx);
+			}
+			iIndex++;
+		}
+	}
+}
+
 void CBrushTool::MovePixel(Vector3 mousePos, const float & fTime, bool erase)
 {
 	CTexture* pTexture = GET_SINGLE(CResourcesManager)->FindTexture("SplatAlpha");

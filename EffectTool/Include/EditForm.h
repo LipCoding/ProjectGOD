@@ -17,7 +17,6 @@ public:
 		CGameObject		*pObject;
 		CEffect			*pEffect;
 		CTransform		*pTr;
-		bool			m_bBillMode;
 	}EFFECTDATA;
 
 public:

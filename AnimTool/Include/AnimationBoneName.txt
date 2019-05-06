@@ -17,6 +17,10 @@ LeftHandIndex1
 LeftHandIndex2
 LeftHandIndex3
 LeftHandIndex4
+LeftHandMiddle1
+LeftHandMiddle2
+LeftHandMiddle3
+LeftHandMiddle4
 RightShoulder
 RightArm
 RightForeArm
@@ -29,6 +33,10 @@ RightHandIndex1
 RightHandIndex2
 RightHandIndex3
 RightHandIndex4
+RightHandMiddle1
+RightHandMiddle2
+RightHandMiddle3
+RightHandMiddle4
 LeftUpLeg
 LeftLeg
 LeftFoot
