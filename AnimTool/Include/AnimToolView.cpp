@@ -137,9 +137,8 @@ void CAnimToolView::OnInitialUpdate()
 	HWND  hWnd = pWnd->m_hWnd;
 
 	// 엔진 초기화
-	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 900, true, true, false))
+	if (!GET_SINGLE(CCore)->Init(AfxGetInstanceHandle(), m_hWnd, 1400, 1000, true, true, false))
 		return;
-
 
 	// Timer
 	m_pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");

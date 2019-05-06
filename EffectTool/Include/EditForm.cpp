@@ -283,7 +283,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"MESHFile(*.msh)|*.msh|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
+	CFileDialog	dlg(TRUE, L"*.msh", L"Mesh",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정

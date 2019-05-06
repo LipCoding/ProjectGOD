@@ -60,6 +60,8 @@
 #define IDC_EDIT_MESH_PIVOT             1048
 #define IDC_EDIT_SCALE_ARM              1049
 #define IDC_BUTTON_ADJUST_SCALE_ARM     1050
+#define IDC_BUTTON_LOAD_ALL             1052
+#define IDC_BUTTON_SAVE_ALL             1053
 
 // Next default values for new objects
 // 
@@ -67,7 +69,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1052
+#define _APS_NEXT_CONTROL_VALUE         1053
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
