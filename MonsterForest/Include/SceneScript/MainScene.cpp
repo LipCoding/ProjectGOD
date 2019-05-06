@@ -135,6 +135,7 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 	}
 #pragma endregion
+
 #pragma region StaticObject
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
@@ -234,6 +235,10 @@ bool CMainScene::Init()
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.dat";
+
+			CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
+			pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+			SAFE_RELEASE(pCollider);
 
 			FILE* pFile_Player = nullptr;
 
@@ -380,33 +385,33 @@ bool CMainScene::Init()
 	//{
 	//	CLayer*	pLayer = m_pScene->GetLayer("UI");
 	//	this->pUIChat = CGameObject::CreateObject("UIChat", pLayer);
-
+	//
 	//	CUIButton*	pButton = pUIChat->AddComponent<CUIButton>("ChatEdit");
 	//	pButton->SetCallback(this, &CMainScene::chat_callback);
 	//	SAFE_RELEASE(pButton);
-
+	//
 	//	CTransform*	pButtonTr = pUIChat->GetTransform();
-
+	//
 	//	//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
 	//	pButtonTr->SetWorldScale(200.f, 50.f, 1.f);
 	//	pButtonTr->SetWorldPos(0.f, DEVICE_RESOLUTION.iHeight - 120.f, 0.f);
-
+	//
 	//	SAFE_RELEASE(pButtonTr);
 	//	CRenderer2D* pRenderer = pUIChat->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 	//	CMaterial* pMaterial = pRenderer->GetMaterial();
-
+	//
 	//	pMaterial->SetDiffuseTexInfo("Linear", "ChatEdit",
 	//		0, 0, L"LoginEdit.bmp");
-
+	//
 	//	SAFE_RELEASE(pMaterial);
 	//	SAFE_RELEASE(pRenderer);
-
+	//
 	//	CColliderRect* pRC = pUIChat->FindComponentFromType<CColliderRect>(CT_COLLIDER);
-
+	//
 	//	pRC->SetRect(0, 0, 200, 50);
-
+	//
 	//	SAFE_RELEASE(pRC);
-
+	//
 	//	pUIChatText = pUIChat->AddComponent<CFont>("TextUI");
 	//	pUIChatText->SetFont("나눔고딕");
 	//	pChatString = L"채팅 테스트";
@@ -1069,6 +1074,7 @@ int CMainScene::Update(float fTime)
 			sc_packet_put_player* pPacket = reinterpret_cast<sc_packet_put_player*>(packet);
 			int id = pPacket->id;
 			OBJECT_SET_TYPE ObjectSetType = (OBJECT_SET_TYPE)static_cast<sc_packet_put_player*>(packet)->objectSetType;
+			
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				char str[128];
@@ -1097,10 +1103,10 @@ int CMainScene::Update(float fTime)
 					GET_SINGLE(UserInterfaceManager)->setPlayer(pPlayer);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
-					CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("PlayerCollider");
-					pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
-					pCollider->setColor(Vector4::Green);
-					SAFE_RELEASE(pCollider);
+					//CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("PlayerCollider");
+					//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+					//pCollider->setColor(Vector4::Green);
+					//SAFE_RELEASE(pCollider);
 					/*CPlayer* pPlayer = pPlayerObj->FindComponentFromTag<CPlayer>("Player");
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));*/
 
@@ -1784,9 +1790,15 @@ int CMainScene::Update(float fTime)
 			sc_packet_require_itemtable* pPacket = reinterpret_cast<sc_packet_require_itemtable*>(packet);
 			//int id = pPacket->id;
 			DropTableUI* pDropTableUI = GET_SINGLE(UserInterfaceManager)->getDropTableUI();
-			pDropTableUI->addDropItemSlot(pPacket->item_id1);
-			pDropTableUI->addDropItemSlot(pPacket->item_id2);
-			pDropTableUI->addDropItemSlot(pPacket->item_id3);
+
+			for (int i = 0; i < pPacket->count; ++i)
+			{
+				pDropTableUI->addDropItemSlot(pPacket->itemname1 + (i*100));
+			}
+			//pDropTableUI->addDropItemSlot(pPacket->itemname1);
+			//pDropTableUI->addDropItemSlot(pPacket->itemname2);
+			//pDropTableUI->addDropItemSlot(pPacket->itemname3);
+
 			pDropTableUI->enableRender(true);
 		}
 		break;
@@ -1808,11 +1820,9 @@ int CMainScene::Update(float fTime)
 			SAFE_RELEASE(pItemTr);
 			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 			CMaterial* pMaterial = pRenderer->GetMaterial();
-			tempitemname += L".png";
+			tempitemname = L"ItemIcon/" +tempitemname +L".png";
 			string itemname = strconv(tempitemname);
-			pMaterial->SetDiffuseTexInfo("Linear", itemname,
-				0, 0, tempitemname.c_str());
-
+			pMaterial->SetDiffuseTexInfo("Linear", itemname, 0, 0, tempitemname.c_str());
 			SAFE_RELEASE(pMaterial);
 			SAFE_RELEASE(pRenderer);
 

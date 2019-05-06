@@ -11,6 +11,8 @@
 #include "Core/Input.h"
 #include "UserInterfaceManager.h"
 #include "Inventory.h"
+#include "Core/NetworkManager.h"
+
 Slot::Slot()
 {
 	SetTag("Slot");
@@ -18,7 +20,6 @@ Slot::Slot()
 	SetTypeID<Slot>();
 	m_eType = CT_UI;
 }
-
 
 Slot::~Slot()
 {
@@ -119,6 +120,17 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 				int row = prevIndex / 5;
 				int col = prevIndex % 5;
 				GET_SINGLE(UserInterfaceManager)->getInventory()->getSlot()[row][col]->pItem = nullptr;
+
+				// 서버에 아이템 이동패킷을 보낸다.
+				cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+				packet->size = sizeof(cs_packet_moveitem_inventory);
+				packet->type = CS_PACKET_MOVEITEM_INVENTORY;
+				packet->fromslot = prevIndex;
+				packet->toslot = this->index;
+
+				DWORD iobyte;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 		}
 	}

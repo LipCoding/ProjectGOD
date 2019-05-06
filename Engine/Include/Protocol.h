@@ -42,6 +42,7 @@ const unsigned char CS_PACKET_ATTACK_SWORD_SKILL1 = 51;
 
 const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
+const unsigned char CS_PACKET_MOVEITEM_INVENTORY = 152;
 const unsigned char CS_PACKET_ROOTING_TABLE = 155;
 
 const unsigned char SC_PACKET_MOVE = 0;
@@ -67,7 +68,9 @@ const unsigned char SC_PACKET_DIE_ANIMATION = 52;
 const unsigned char SC_PACKET_COLLISION = 100;
 const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
+const unsigned char SC_PACKET_MOVEITEM_INVENTORY = 152;
 const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
+
 
 /*
 #define SC_PACKET_POS 0
@@ -160,26 +163,28 @@ struct cs_packet_attack_player
 	unsigned targetid;
 };
 
-struct cs_packet_require_itemtable
-{
-	unsigned short size;
-	unsigned char type;
-	unsigned int targetId;
-};
-
 struct cs_packet_additem_inventory
 {
 	unsigned short size;
 	unsigned char type;
 	unsigned int targetId;
+	unsigned char index;
 };
 
-struct cs_packet_removeitem_inventory
+struct cs_packet_require_itemtable
 {
 	unsigned short size;
 	unsigned char type;
 	unsigned int targetId;
-	unsigned int slotIndex;
+	unsigned char index;
+};
+
+struct cs_packet_moveitem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned char fromslot;
+	unsigned char toslot;
 };
 
 struct sc_packet_connect
@@ -276,9 +281,10 @@ struct sc_packet_require_itemtable
 {
 	unsigned short size;
 	unsigned char type;
-	unsigned int item_id1;
-	unsigned int item_id2;
-	unsigned int item_id3;
+	unsigned char count;
+	WCHAR itemname1[MAX_STR_SIZE];
+	WCHAR itemname2[MAX_STR_SIZE];
+	WCHAR itemname3[MAX_STR_SIZE];
 };
 
 struct sc_packet_additem_inventory
@@ -288,6 +294,14 @@ struct sc_packet_additem_inventory
 	unsigned int targetID;
 	unsigned int index;
 	WCHAR itemname[MAX_STR_SIZE];
+};
+
+struct sc_packet_moveitem_inventory
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned char fromslot;
+	unsigned char toslot;
 };
 
 #pragma pack(pop)

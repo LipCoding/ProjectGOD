@@ -25,10 +25,6 @@ LeftHandRing1
 LeftHandRing2
 LeftHandRing3
 LeftHandRing4
-LeftHandPinky1
-LeftHandPinky2
-LeftHandPinky3
-LeftHandPinky4
 RightShoulder
 RightArm
 RightForeArm
@@ -49,10 +45,6 @@ RightHandRing1
 RightHandRing2
 RightHandRing3
 RightHandRing4
-RightHandPinky1
-RightHandPinky2
-RightHandPinky3
-RightHandPinky4
 LeftUpLeg
 LeftLeg
 LeftFoot

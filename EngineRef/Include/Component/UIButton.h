@@ -16,7 +16,7 @@ class PG_DLL CUIButton :
 protected:
 	friend class CGameObject;
 
-protected:
+public:
 	CUIButton();
 	CUIButton(const CUIButton& button);
 	~CUIButton();

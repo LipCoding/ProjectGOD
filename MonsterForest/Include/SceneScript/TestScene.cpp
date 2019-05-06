@@ -38,13 +38,14 @@
 #include "Core/NaviManager.h"
 #include "Component/Cell.h"
 
-
 CTestScene::CTestScene()
 {
+
 }
 
 CTestScene::~CTestScene()
 {
+
 }
 
 bool CTestScene::Init()

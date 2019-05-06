@@ -9,7 +9,7 @@ class PG_DLL CUI :
 protected:
 	friend class CGameObject;
 
-protected:
+public:
 	CUI();
 	CUI(const CUI& ui);
 	~CUI() = 0;

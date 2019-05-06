@@ -11,12 +11,17 @@ class DropItemSlot
 
 {
 private:
+	CUIPanel* pItemUI = nullptr;
 	class DropTableUI* pDropTableUI = nullptr;
 	int index = -1;
 public:
 	DropItemSlot();
 	~DropItemSlot();
 
+public:
+	bool initialize(const wstring& itemname);
+	int Update(float fTime);
+	void detachItem();
 public:
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
@@ -28,5 +33,6 @@ public:
 	void setDropTableUI(class DropTableUI* pDropTableUI) { this->pDropTableUI = pDropTableUI; };
 	void setIndex(int index) { this->index = index; }
 	void deleteSlot();
+	int getIndex() { return index; }
 };
 
