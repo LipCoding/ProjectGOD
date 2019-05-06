@@ -52,6 +52,9 @@ public:
 
 	// 사용자 함수
 public:
+	void SetCollideObject(class CGameObject* object) { m_pCollideObject = object; }
+
+public:
 	void UpdateView();
 	void UpdateInput(const float& fTime);
 	void UpdateObject(const float& fTime);

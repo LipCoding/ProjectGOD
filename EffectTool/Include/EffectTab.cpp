@@ -8,6 +8,7 @@
 
 #include "MainFrm.h"
 #include "EaseSheetDlg.h"
+#include "EditForm.h"
 
 #include "Core/PathManager.h"
 #include "Resources/Mesh.h"
@@ -21,7 +22,6 @@
 #include "Component/Camera.h"
 #include "Component/ColliderAABB.h"
 #include "Component/ColliderSphere.h"
-
 
 #include "Component/EffectAssist.h"
 // CEffectTab 대화 상자
@@ -126,6 +126,7 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MAIN_END_TIME, m_editMainEndTime);
 	DDX_Control(pDX, IDC_EDIT_MAIN_REPEAT, m_editMainRepeat);
 	DDX_Text(pDX, IDC_EDIT_STATIC_MAIN_TIME, m_fMainStaticTime);
+	DDX_Control(pDX, IDC_CHECK_MAIN_SELECT_ALL, m_checkPartOrAll);
 }
 
 BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
@@ -165,6 +166,7 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_INFO_MAIN, &CEffectTab::OnBnClickedButtonInfoMain)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_PLAY, &CEffectTab::OnBnClickedButtonMainPlay)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_STOP, &CEffectTab::OnBnClickedButtonMainStop)
+	ON_BN_CLICKED(IDC_BUTTON_COPY_CURRENT_EFFECT, &CEffectTab::OnBnClickedButtonCopyCurrentEffect)
 END_MESSAGE_MAP()
 
 // CEffectTab 메시지 처리기
@@ -417,6 +419,23 @@ void CEffectTab::UpdatePattern()
 			m_fPatternStaticScaleEndTime = pAssistScale->GetEndTime();
 			m_iPatternStaticScaleRepeat = pAssistScale->GetRepeat();
 
+
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fPatternStaticScaleX);
+			m_editPatternScaleX.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticScaleY);
+			m_editPatternScaleY.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticScaleZ);
+			m_editPatternScaleZ.SetWindowTextW(tempNum);
+
+			tempNum.Format(_T("%.2f"), m_fPatternStaticScaleStartTime);
+			m_editPatternScaleStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticScaleEndTime);
+			m_editPatternScaleEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iPatternStaticScaleRepeat);
+			m_editPatternScaleRepeat.SetWindowTextW(tempNum);
+
+
 			m_comboEaseSheet_Scale.SetCurSel(pAssistScale->GetEaseType());
 			m_checkSclaling.SetCheck(1);
 		}
@@ -442,6 +461,21 @@ void CEffectTab::UpdatePattern()
 
 			m_comboEaseSheet_Rot.SetCurSel(pAssistRot->GetEaseType());
 			m_checkRotating.SetCheck(1);
+
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fPatternStaticRotX);
+			m_editPatternRotX.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticRotY);
+			m_editPatternRotY.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticRotZ);
+			m_editPatternRotZ.SetWindowTextW(tempNum);
+
+			tempNum.Format(_T("%.2f"), m_fPatternStaticRotStartTime);
+			m_editPatternRotStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fPatternStaticRotEndTime);
+			m_editPatternRotEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iPatternStaticRepeat);
+			m_editPatternRotRepeat.SetWindowTextW(tempNum);
 		}
 		else
 		{
@@ -893,6 +927,18 @@ void CEffectTab::SetInfoScale()
 
 	pTr->SetWorldScale(vNewScale);
 
+	CEffect *pEffect = m_pTargetObject->FindComponentFromTag<CEffect>("Effect");
+
+	if (pEffect)
+	{
+		CEffectAssist* pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_SCALE);
+		if (pAssist)
+		{
+			pAssist->FirstStatusSet(m_pTargetObject);
+		}
+		SAFE_RELEASE(pEffect);
+	}
+
 	SAFE_RELEASE(pTr);
 }
 
@@ -938,6 +984,18 @@ void CEffectTab::SetInfoRot()
 	vNewRot.z = XMConvertToRadians(vNewRot.z);
 
 	pTr->SetWorldRot(vNewRot);
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromTag<CEffect>("Effect");
+
+	if (pEffect)
+	{
+		CEffectAssist* pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_ROT);
+		if (pAssist)
+		{
+			pAssist->FirstStatusSet(m_pTargetObject);
+		}
+		SAFE_RELEASE(pEffect);
+	}
 
 	SAFE_RELEASE(pTr);
 }
@@ -1601,15 +1659,30 @@ void CEffectTab::OnBnClickedButtonMainPlay()
 	if (!m_pTargetObject)
 		return;
 
-	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
-	if (!pEffect)
-		return;
+	int check = m_checkPartOrAll.GetCheck();
 
-	/* Main을 재생하기 전에 모든 EffectAssist의 재생을 정지한다.*/
-	pEffect->SetOperationCheck(false);
-	pEffect->SetOperationCheck(true);
+	/* All */
+	if (check == 1)
+	{
+		for (auto& effect : *((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffects())
+		{
+			effect->pEffect->SetOperationCheck(false);
+			effect->pEffect->SetOperationCheck(true);
+		}
+	}
+	/* Part */
+	else
+	{
+		CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+		if (!pEffect)
+			return;
 
-	SAFE_RELEASE(pEffect);
+		/* Main을 재생하기 전에 모든 EffectAssist의 재생을 정지한다.*/
+		pEffect->SetOperationCheck(false);
+		pEffect->SetOperationCheck(true);
+
+		SAFE_RELEASE(pEffect);
+	}
 }
 
 
@@ -1626,4 +1699,11 @@ void CEffectTab::OnBnClickedButtonMainStop()
 	pEffect->SetOperationCheck(false);
 
 	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedButtonCopyCurrentEffect()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->CloneTarget();
 }

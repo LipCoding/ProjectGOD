@@ -66,7 +66,6 @@ private:
 	/* */
 	void InitForm();
 
-
 	/* Total */
 	void InitFormValue();
 	/* Main */
@@ -193,6 +192,7 @@ private:
 
 	CButton m_checkSclaling;
 	CButton m_checkRotating;
+	CButton m_checkPartOrAll;
 
 	bool m_bFirstTargetCheck = true;
 
@@ -228,6 +228,6 @@ public:
 	afx_msg void OnBnClickedCheckRotating();
 	afx_msg void OnBnClickedButtonInfoMain();
 	afx_msg void OnBnClickedButtonMainPlay();
-	afx_msg void OnBnClickedButtonMainStop();
-
+	afx_msg void OnBnClickedButtonMainStop();	
+	afx_msg void OnBnClickedButtonCopyCurrentEffect();
 };

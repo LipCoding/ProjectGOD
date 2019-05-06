@@ -29,6 +29,11 @@ CEffectTab1::CEffectTab1(CWnd* pParent /*=nullptr*/)
 	, m_fUVSpriteStaticEndTime(0)
 	, m_iUVSpriteStaticNum(0)
 	, m_fUVSpriteTime(0)
+	, m_fMoveUVStaticStartTime(0)
+	, m_fMoveUVStaticEndTime(0)
+	, m_fMoveUVStaticDirX(0)
+	, m_fMoveUVStaticDirY(0)
+	, m_fMoveUVStaticTime(0)
 {
 
 }
@@ -64,6 +69,16 @@ void CEffectTab1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_NUM, m_editUVSpriteNum);
 	DDX_Control(pDX, IDC_CHECK_UV_SPRITE, m_checkUVSprite);
 	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_TIME, m_fUVSpriteTime);
+	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_START_TIME, m_fMoveUVStaticStartTime);
+	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_END_TIME, m_fMoveUVStaticEndTime);
+	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_MOVE_X, m_fMoveUVStaticDirX);
+	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_MOVE_Y, m_fMoveUVStaticDirY);
+	DDX_Control(pDX, IDC_EDIT_UV_MOVE_START_TIME, m_editMoveUVStartTime);
+	DDX_Control(pDX, IDC_EDIT_UV_MOVE_END_TIME, m_editMoveUVEndTime);
+	DDX_Control(pDX, IDC_EDIT_UV_MOVE_DIR_X, m_editMoveUVDirX);
+	DDX_Control(pDX, IDC_EDIT_UV_MOVE_DIR_Y, m_editMoveUVDirY);
+	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_TIME, m_fMoveUVStaticTime);
+	DDX_Control(pDX, IDC_CHECK_UV, m_checkUVMove);
 }
 
 
@@ -80,6 +95,10 @@ BEGIN_MESSAGE_MAP(CEffectTab1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_UV_SPRITE_PLAY, &CEffectTab1::OnBnClickedButtonUvSpritePlay)
 	ON_BN_CLICKED(IDC_BUTTON_UV_SPRITE_STOP, &CEffectTab1::OnBnClickedButtonUvSpriteStop)
 	ON_BN_CLICKED(IDC_CHECK_UV_SPRITE, &CEffectTab1::OnBnClickedCheckUvSprite)
+	ON_BN_CLICKED(IDC_BUTTON_UV_MOVE_INPUT, &CEffectTab1::OnBnClickedButtonUvMoveInput)
+	ON_BN_CLICKED(IDC_BUTTON_UV_MOVE_PLAY, &CEffectTab1::OnBnClickedButtonUvMovePlay)
+	ON_BN_CLICKED(IDC_BUTTON_UV_MOVE_STOP, &CEffectTab1::OnBnClickedButtonUvMoveStop)
+	ON_BN_CLICKED(IDC_CHECK_UV, &CEffectTab1::OnBnClickedCheckUv)
 END_MESSAGE_MAP()
 
 
@@ -323,10 +342,12 @@ void CEffectTab1::InitFormValue()
 	m_checkFadeIn.SetCheck(0);
 	m_checkFadeOut.SetCheck(0);
 	m_checkUVSprite.SetCheck(0);
+	m_checkUVMove.SetCheck(0);
 
 	InitFadeIn();
 	InitFadeOut();
 	InitUVSprite();
+	InitUVMove();
 }
 
 void CEffectTab1::InitFadeIn()
@@ -368,6 +389,21 @@ void CEffectTab1::InitUVSprite()
 	m_editUVSpriteNum.SetWindowTextW(L"");
 }
 
+void CEffectTab1::InitUVMove()
+{
+	m_fMoveUVStaticStartTime = -1.f;
+	m_fMoveUVStaticEndTime = -1.f;
+	m_fMoveUVStaticDirX = -1.f;
+	m_fMoveUVStaticDirY = -1.f;
+
+	m_fMoveUVStaticTime = -1.f;
+
+	m_editMoveUVStartTime.SetWindowTextW(L"");
+	m_editMoveUVEndTime.SetWindowTextW(L"");
+	m_editMoveUVDirX.SetWindowTextW(L"");
+	m_editMoveUVDirY.SetWindowTextW(L"");
+}
+
 void CEffectTab1::UpdateFade()
 {
 	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
@@ -382,6 +418,14 @@ void CEffectTab1::UpdateFade()
 			m_fFadeInStaticStartTime = pAssistFadeIn->GetStartTime();
 			m_fFadeInStaticEndTime = pAssistFadeIn->GetEndTime();
 			m_fFadeInStaticDegree = pAssistFadeIn->GetDegree();
+
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fFadeInStaticStartTime);
+			m_editFadeInStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fFadeInStaticEndTime);
+			m_editFadeInEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fFadeInStaticDegree);
+			m_editFadeInDegree.SetWindowTextW(tempNum);
 
 			m_checkFadeIn.SetCheck(1);
 		}
@@ -399,6 +443,14 @@ void CEffectTab1::UpdateFade()
 			m_fFadeOutStaticStartTime = pAssistFadeOut->GetStartTime();
 			m_fFadeOutStaticEndTime = pAssistFadeOut->GetEndTime();
 			m_fFadeOutStaticDegree = pAssistFadeOut->GetDegree();
+
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fFadeOutStaticStartTime);
+			m_editFadeOutStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fFadeOutStaticEndTime);
+			m_editFadeOutEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fFadeOutStaticDegree);
+			m_editFadeOutDegree.SetWindowTextW(tempNum);
 
 			m_checkFadeOut.SetCheck(1);
 		}
@@ -427,12 +479,48 @@ void CEffectTab1::UpdateUV()
 			m_fUVSpriteStaticEndTime = pAssistUVAni->GetEndTime();
 			m_iUVSpriteStaticNum = pAssistUVAni->GetNum();
 
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fUVSpriteStaticStartTime);
+			m_editUVSpriteStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fUVSpriteStaticEndTime);
+			m_editUVSpriteEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticNum);
+			m_editUVSpriteNum.SetWindowTextW(tempNum);
+
 			m_checkUVSprite.SetCheck(1);
 		}
 		else
 		{
 			InitUVSprite();
 			m_checkUVSprite.SetCheck(0);
+		}
+
+		/* UV Move */
+		CEffectAssist *pAssistUVMove = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_MOVE);
+
+		if (pAssistUVMove)
+		{
+			m_fMoveUVStaticStartTime = pAssistUVMove->GetStartTime();
+			m_fMoveUVStaticEndTime = pAssistUVMove->GetEndTime();
+			m_fMoveUVStaticDirX = pAssistUVMove->GetMoveUV_X();
+			m_fMoveUVStaticDirY = pAssistUVMove->GetMoveUV_Y();
+
+			CString tempNum;
+			tempNum.Format(_T("%.2f"), m_fMoveUVStaticStartTime);
+			m_editMoveUVStartTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fMoveUVStaticEndTime);
+			m_editMoveUVEndTime.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fMoveUVStaticDirX);
+			m_editMoveUVDirX.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%.2f"), m_fMoveUVStaticDirY);
+			m_editMoveUVDirY.SetWindowTextW(tempNum);
+
+			m_checkUVMove.SetCheck(1);
+		}
+		else
+		{
+			InitUVMove();
+			m_checkUVMove.SetCheck(0);
 		}
 
 		SAFE_RELEASE(pEffect);
@@ -476,6 +564,15 @@ void CEffectTab1::UpdateTime()
 
 		if (pAssist)
 			m_fUVSpriteTime = pAssist->GetTime();
+	}
+
+	/* UV Move */
+	if (m_checkUVMove.GetCheck() == 1)
+	{
+		pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_MOVE);
+
+		if (pAssist)
+			m_fMoveUVStaticTime = pAssist->GetTime();
 	}
 
 	SAFE_RELEASE(pEffect);
@@ -554,9 +651,41 @@ void CEffectTab1::AddUVSprite(CEffect * pEffect)
 	if (Num == L"")
 		m_iUVSpriteStaticNum = 0;
 	else
-		m_iUVSpriteStaticNum = (float)_wtoi(Num);
+		m_iUVSpriteStaticNum = (int)_wtoi(Num);
 
 	pEffect->AddUVAnimation(m_fUVSpriteStaticStartTime, m_fUVSpriteStaticEndTime, m_iUVSpriteStaticNum, 1);
+}
+
+void CEffectTab1::AddUVMove(CEffect * pEffect)
+{
+	CString StartTime, EndTime, DirX, DirY;
+
+	m_editMoveUVStartTime.GetWindowTextW(StartTime);
+	m_editMoveUVEndTime.GetWindowTextW(EndTime);
+	m_editMoveUVDirX.GetWindowTextW(DirX);
+	m_editMoveUVDirY.GetWindowTextW(DirY);
+
+	if (StartTime == L"")
+		m_fMoveUVStaticStartTime = 0.f;
+	else
+		m_fMoveUVStaticStartTime = (float)_wtof(StartTime);
+
+	if (EndTime == L"")
+		m_fMoveUVStaticEndTime = 0.f;
+	else
+		m_fMoveUVStaticEndTime = (float)_wtof(EndTime);
+
+	if (DirX == L"")
+		m_fMoveUVStaticDirX = 0.f;
+	else
+		m_fMoveUVStaticDirX = (float)_wtof(DirX);
+
+	if (DirY == L"")
+		m_fMoveUVStaticDirY = 0.f;
+	else
+		m_fMoveUVStaticDirY = (float)_wtof(DirY);
+
+	pEffect->AddUVMovement(m_fMoveUVStaticStartTime, m_fMoveUVStaticEndTime, m_fMoveUVStaticDirX, m_fMoveUVStaticDirY);
 }
 
 
@@ -655,6 +784,109 @@ void CEffectTab1::OnBnClickedCheckUvSprite()
 	{
 		pEffect->DeleteAssistEffectFromType(CEffectAssist::ASSIST_UV_ANI);
 		m_checkUVSprite.SetCheck(0);
+	}
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedButtonUvMoveInput()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkUVMove.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add UV Movement first!");
+		return;
+	}
+
+	AddUVMove(pEffect);
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedButtonUvMovePlay()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkUVMove.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add UV Movement first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_UV_MOVE, true);
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedButtonUvMoveStop()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	if (m_checkUVMove.GetCheck() == 0)
+	{
+		AfxMessageBox(L"Add UV Movement first!");
+		return;
+	}
+
+	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_UV_MOVE, false);
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedCheckUv()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkUVMove.GetCheck();
+
+
+	if (check == 1)
+	{
+		AddUVMove(pEffect);
+		m_checkUVMove.SetCheck(1);
+	}
+
+	else
+	{
+		pEffect->DeleteAssistEffectFromType(CEffectAssist::ASSIST_UV_MOVE);
+		m_checkUVMove.SetCheck(0);
 	}
 
 	UpdateUV();

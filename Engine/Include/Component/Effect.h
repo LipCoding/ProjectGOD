@@ -16,6 +16,7 @@ public:
 	~CEffect();
 
 public:
+	vector<CEffectAssist*>* GetAssists() { return &m_vecAssist; }
 	CEffectAssist* GetAssistFromType(CEffectAssist::ASSIST_TYPE type);
 
 	float GetMainStartTime() { return m_MainStartTime; }
@@ -23,6 +24,10 @@ public:
 	float GetMainTime() { return m_Timer; }
 
 	int GetMainRepeat() { return m_Repeat; }
+
+	const string& GetMeshPath() { return MeshPath; }
+	const string& GetLocalPath() { return LocalPath; }
+	const string& GetTexturePath() { return TexturePath; }
 
 	void SetOperationCheck(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
@@ -67,7 +72,7 @@ public:
 
 	/* UV */
 	void AddUVAnimation(const float& start, const float& end, const int& num, const int& repeat);
-	void AddUVMovement(const float& start, const float& end, const int& moveX, const int& moveY);
+	void AddUVMovement(const float& start, const float& end, const float& moveX, const float& moveY);
 
 	/* Delete Assist Effect */
 	void DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type);
@@ -89,14 +94,19 @@ private:
 
 	/* Name */
 	string EffectName = "";
-	string MeshPath = "";
 	string FileName = "";
 
 	string TextureFullPath = "";
+
+	string MeshPath = "";
+	string LocalPath = "";
 	string TexturePath = "";
+
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;
+
+	SHARECBUFFER     m_tshareBuffer = {};
 };
 
 PG_END

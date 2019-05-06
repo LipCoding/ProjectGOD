@@ -49,6 +49,7 @@ public:
 	~CEffectAssist();
 
 public:
+	void SetShareBuffer(SHARECBUFFER * sharebuffer) { m_pShareBuffer = sharebuffer; }
 	/* Getter */
 	ASSIST_TYPE GetType() { return m_AssistType; }
 	EASE_TYPE GetEaseType() { return m_EaseType; }
@@ -66,6 +67,9 @@ public:
 		
 	int GetRepeat() { return m_Repeat; }
 
+	float GetMoveUV_X() { return m_AniX; }
+	float GetMoveUV_Y() { return m_AniY; }
+
 	/* Setter */
 	void SetStartCheck(bool check) { m_StartCheck = check; }
 
@@ -81,12 +85,15 @@ public:
 
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
+	void SetMoveUV_X(const float& x) { m_AniX = x; }
+	void SetMoveUV_Y(const float& y) { m_AniY = y; }
+
 public:
 	void Init(class CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE easeType = EASE_END);
 	void Update(class CGameObject *object, const float& deltaTime);
-	
-private:
 	void FirstStatusSet(class CGameObject *object);
+
+private:
 	void ReturnToFirstSet(class CGameObject *object);
 	float Calc_Ease(EASE_TYPE type, const float& startValue, const float& variation, const float& duration);
 
@@ -125,10 +132,11 @@ private:
 	int m_Repeat = 0;
 	int m_Num = 0;
 
-	int m_AniX = 0;
-	int m_AniY = 0;
+	/* Move */
+	float m_AniX = 0.f;
+	float m_AniY = 0.f;
 
-	static SHARECBUFFER g_tShareBuffer;
+	SHARECBUFFER *m_pShareBuffer = nullptr;
 };
 
 PG_END

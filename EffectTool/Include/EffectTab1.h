@@ -66,10 +66,25 @@ private:
 	CEdit m_editUVSpriteEndTime;
 	CEdit m_editUVSpriteNum;
 	
+	/* UV Move */
+	float m_fMoveUVStaticStartTime;
+	float m_fMoveUVStaticEndTime;
+	float m_fMoveUVStaticDirX;
+	float m_fMoveUVStaticDirY;
+
+	float m_fMoveUVStaticTime;
+
+	CEdit m_editMoveUVStartTime;
+	CEdit m_editMoveUVEndTime;
+	CEdit m_editMoveUVDirX;
+	CEdit m_editMoveUVDirY;
+
+
 	/* Check */
 	CButton m_checkFadeIn;
 	CButton m_checkFadeOut;
 	CButton m_checkUVSprite;
+	CButton m_checkUVMove;
 
 public:
 	void UpdateForm();
@@ -80,15 +95,20 @@ private:
 
 	/* Total */
 	void InitFormValue();
+
 	/* Fade */
 	void InitFadeIn();
 	void InitFadeOut();
+
 	/* UV */
 	void InitUVSprite();
+	void InitUVMove();
 
 	void UpdateFade();
 	void UpdateUV();
 	void UpdateTime();
+
+	/**/
 
 private:
 	CGameObject *m_pTargetObject = nullptr;
@@ -98,6 +118,8 @@ private:
 	void AddFadeIn(class CEffect *pEffect);
 	void AddFadeOut(class CEffect *pEffect);
 	void AddUVSprite(class CEffect *pEffect);
+	void AddUVMove(class CEffect *pEffect);
+
 public:
 	afx_msg void OnBnClickedButtonFadeInInput();
 	afx_msg void OnBnClickedButtonFadeInPlay();
@@ -112,4 +134,8 @@ public:
 	afx_msg void OnBnClickedButtonUvSpritePlay();
 	afx_msg void OnBnClickedButtonUvSpriteStop();
 	afx_msg void OnBnClickedCheckUvSprite();
+	afx_msg void OnBnClickedButtonUvMoveInput();
+	afx_msg void OnBnClickedButtonUvMovePlay();
+	afx_msg void OnBnClickedButtonUvMoveStop();
+	afx_msg void OnBnClickedCheckUv();
 };
