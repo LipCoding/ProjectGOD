@@ -67,7 +67,7 @@ bool CUIPanel::Init()
 	CColliderRect*	pRC = m_pGameObject->AddComponent<CColliderRect>("PanelRC");
 
 	pRC->SetCollisionGroup("UI");
-	pRC->SetRect(0.f, 0.f, 10.f, 10.f);
+	pRC->SetRect(0.f, 0.f, 0.f, 0.f);
 
 	SAFE_RELEASE(pRC);
 

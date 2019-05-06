@@ -40,13 +40,14 @@
 #include "../ObjectScript/Player_Test.h"
 #include "../ObjectScript/Sword.h"
 
-
 CTestScene::CTestScene()
 {
+
 }
 
 CTestScene::~CTestScene()
 {
+
 }
 
 bool CTestScene::Init()

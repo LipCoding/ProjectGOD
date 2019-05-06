@@ -78,7 +78,7 @@ bool CUIButton::Init()
 
 	CColliderRect*	pRC = m_pGameObject->AddComponent<CColliderRect>("Button");
 
-	pRC->SetRect(0.f, 0.f, 10.f, 10.f);
+	pRC->SetRect(0.f, 0.f, 0.f, 0.f);
 	pRC->SetViewType(VT_UI);
 
 	SAFE_RELEASE(pRC);

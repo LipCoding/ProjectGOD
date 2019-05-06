@@ -33,12 +33,9 @@ bool CTexture::LoadTexture(const string & strKey, const wchar_t * pFileName,
 	const string & strPathKey)
 {
 	m_strKey = strKey;
-	char	strPath[MAX_PATH] = {};
+	string strPath = strconv(pFileName);
 
-	WideCharToMultiByte(CP_ACP, 0, pFileName, -1, strPath,
-		lstrlen(pFileName), 0, 0);
-
-	return LoadTexture(strKey, strPath, strPathKey);
+	return LoadTexture(strKey, strPath.c_str(), strPathKey);
 }
 
 bool CTexture::LoadTexture(const string & strKey, const wstring& pFileName,

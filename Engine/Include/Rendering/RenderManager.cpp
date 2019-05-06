@@ -546,6 +546,8 @@ void CRenderManager::AddRenderObject(CGameObject * pObj)
 	if (pObj->GetCulling())
 		return;
 
+	if (false == pObj->GetAlive())
+		return;
 	// UI인지 아닌지 구분
 	if (pObj->CheckComponentFromType(CT_UI))
 	{
