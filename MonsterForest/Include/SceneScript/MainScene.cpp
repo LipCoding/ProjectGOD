@@ -230,7 +230,7 @@ bool CMainScene::Init()
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
+			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker.msh");
 			//pRenderer->SetForwardShader();
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
@@ -240,10 +240,10 @@ bool CMainScene::Init()
 			//CAnimation* pAnimation = pPlayerObj->AddComponent<CAnimation>("PlayerAnimation");
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker.dat";
 
 			CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
-			pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+			pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 2.f);
 			SAFE_RELEASE(pCollider);
 
 			FILE* pFile_Player = nullptr;
@@ -1387,6 +1387,7 @@ int CMainScene::Update(float fTime)
 			char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
 			int id = pPacket->id;
+			
 			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 
@@ -1396,7 +1397,7 @@ int CMainScene::Update(float fTime)
 				if (nullptr != pGameObject)
 				{
 					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-					pAnimation->ChangeClip("Attack");
+					pAnimation->ChangeClip("Attack1");
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pGameObject);
 				}
@@ -1415,6 +1416,13 @@ int CMainScene::Update(float fTime)
 							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("golem");
 
 							int hp = pGolem->getCurrentHP() - pPacket->damage;
+							CTransform* pTransform = pGolem->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
 							if (hp < 0)
 							{
 								float ratio = (float)hp / (float)pGolem->getMaxHP();
@@ -1465,6 +1473,15 @@ int CMainScene::Update(float fTime)
 							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
 
 							int hp = pSeuteompi->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pSeuteompi->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
 							if (hp < 0)
 							{
 								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
@@ -1485,6 +1502,102 @@ int CMainScene::Update(float fTime)
 			}
 			else if (id < NPC_START)
 			{
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Attack1");
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pGolem->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pMino->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
+						{
+							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
+
+							int hp = pSeuteompi->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pSeuteompi->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
+								pSeuteompi->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
+								pSeuteompi->setCurrentHP(hp);
+							}
+						}
+					}
+				}
 			}
 			else
 			{
@@ -1503,24 +1616,28 @@ int CMainScene::Update(float fTime)
 					string appendTag = to_string(target);
 					string objectTag = "Player" + appendTag;
 					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					
 					if (nullptr != pTargetObject)
 					{
-						CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
-						int hp = pPlayer->getCurrentHP() - pPacket->damage;
-						if (hp < 0)
+						if (NetworkManager::getInstance()->getMyClientID() == pPacket->targetid)
 						{
-							float ratio = (float)hp / (float)pPlayer->getMaxHP();
-							pPlayer->setCurrentHP(hp);
-							CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
-							pUIHearthBar->setLengthRatio(0.f);
-							_cprintf("플레이어 사망처리");
-						}
-						else
-						{
-							float ratio = (float)hp / (float)pPlayer->getMaxHP();
-							pPlayer->setCurrentHP(hp);
-							CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
-							pUIHearthBar->setLengthRatio(ratio);
+							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
+							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+								pUIHearthBar->setLengthRatio(0.f);
+								_cprintf("플레이어 사망처리");
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+								pUIHearthBar->setLengthRatio(ratio);
+							}
 						}
 					}
 
@@ -1531,7 +1648,7 @@ int CMainScene::Update(float fTime)
 		break;
 		case SC_PACKET_ATTACK_SWORD_SKILL1:
 		{
-			char str[128];
+			/*char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
 			int id = pPacket->id;
 			string appendTag = _itoa(id, str, 10);
@@ -1622,7 +1739,7 @@ int CMainScene::Update(float fTime)
 						}
 					}
 				}
-			}
+			}*/
 		}
 		break;
 		case SC_PACKET_ROTATE_X:

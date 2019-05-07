@@ -436,6 +436,7 @@ void UserInterfaceManager::addPartyPlayer(const string& playerName)
 			player->setPlayerName(playerName);
 			player->enableRender(true);
 			player->setUsed(true);
+			break;
 		}
 	}
 }

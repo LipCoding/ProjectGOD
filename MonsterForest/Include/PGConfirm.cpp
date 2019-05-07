@@ -42,6 +42,7 @@ void PGConfirm::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 	{
 		if ( pDest->GetTag() == "MousePoint")
 		{
+			//_cprintf("패킷전송");
 			cs_packet_party * pPacket = reinterpret_cast<cs_packet_party*>(NetworkManager::getInstance()->getSendBuffer());
 			pPacket->size = sizeof(cs_packet_party);
 			pPacket->type = CS_PACKET_PARTY_CONFIRM;
