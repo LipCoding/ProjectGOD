@@ -12,6 +12,8 @@
 #include "../ObjectScript/Effect.h"
 #include "Core/QuadTreeManager.h"
 #include "Core/NaviManager.h"
+#include "../TargetPlayerUI.h"
+#include "../UserInterfaceManager.h"
 
 CPlayer::CPlayer()
 {
@@ -338,10 +340,27 @@ void CPlayer::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 
 void CPlayer::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
+	if (KEYDOWN("MouseRButton"))
+	{
+		if ((pSrc->GetTag() == "MouseRay" || pDest->GetTag() == "MouseRay") && GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+		{
+			// UI¸¦ ¶ç¿î´Ù.
+			TargetPlayerUI* pTargetPlayerUI = GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI();
+			CTransform* pTargetPlayerUITransform = pTargetPlayerUI->GetTransform();
+			POINT pos = GET_SINGLE(CInput)->GetMousePos();
+			pTargetPlayerUITransform->SetWorldPos(Vector3(pos.x, pos.y, 0));
+			pTargetPlayerUI->enableRender(true);
 
+			string tag = m_pGameObject->GetTag();
+			tag.erase(0, 6);
+			int id = atoi(tag.c_str());
+			pTargetPlayerUI->setPlayerNumber(id);
+			SAFE_RELEASE(pTargetPlayerUITransform);
+		}
+	}
 }
 
 void CPlayer::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
 {
-
+	
 }

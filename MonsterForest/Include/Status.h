@@ -19,6 +19,7 @@ class Status :
 	CUIButton*  pUIPureBarBackground;
 	CUIButton*	pUIPureBar;
 	//CUIButton*  pUIManaBar;
+	float scale = 1.f;
 public:
 
 	Status();
@@ -26,6 +27,8 @@ public:
 public:
 	bool initialize();
 public:
+	void setScale(float ratio) { this->scale = ratio; }
+	float getScale() { return this->scale; }
 	CUIButton* getUIHearthBar() { return pUIHearthBar; }
 	void setUIHeearthBar(CUIButton* pUIHearthBar) { this->pUIHearthBar = pUIHearthBar; }
 public:

@@ -100,11 +100,10 @@ int DropItemSlot::Update(float fTime)
 
 void DropItemSlot::detachItem()
 {
-	//pItemUI->Enable(false);
-	pItemUI->Die();
-	//SAFE_RELEASE(pItemUI);
-	SAFE_DELETE(pItemUI);
-	pItemUI = nullptr;
+	CGameObject* pGameObject = this->pItemUI->GetGameObject();
+	pGameObject->Die();
+	SAFE_RELEASE(pGameObject);
+	this->pItemUI = nullptr;
 }
 
 void DropItemSlot::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)

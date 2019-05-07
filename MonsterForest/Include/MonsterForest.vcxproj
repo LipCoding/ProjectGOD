@@ -158,6 +158,7 @@
     <ClInclude Include="DropItemSlot.h" />
     <ClInclude Include="DropTableUI.h" />
     <ClInclude Include="Inventory.h" />
+    <ClInclude Include="InviteToParty.h" />
     <ClInclude Include="MiniMap.h" />
     <ClInclude Include="ObjectScript\Actor.h" />
     <ClInclude Include="ObjectScript\Bullet.h" />
@@ -182,6 +183,10 @@
     <ClInclude Include="ObjectScript\Sword.h" />
     <ClInclude Include="ObjectScript\Villager1.h" />
     <ClInclude Include="Option.h" />
+    <ClInclude Include="PartyStatus.h" />
+    <ClInclude Include="PGCancel.h" />
+    <ClInclude Include="PGConfirm.h" />
+    <ClInclude Include="PGMessageBox.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuickSlot.h" />
     <ClInclude Include="resource.h" />
@@ -191,6 +196,9 @@
     <ClInclude Include="SkillWindow.h" />
     <ClInclude Include="Slot.h" />
     <ClInclude Include="Status.h" />
+    <ClInclude Include="TargetPlayerUI.h" />
+    <ClInclude Include="TradeUI.h" />
+    <ClInclude Include="UserInfoUI.h" />
     <ClInclude Include="UserInterfaceManager.h" />
     <ClInclude Include="WorldMap.h" />
   </ItemGroup>
@@ -206,6 +214,7 @@
     <ClCompile Include="DropTableUI.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="client_main.cpp" />
+    <ClCompile Include="InviteToParty.cpp" />
     <ClCompile Include="MiniMap.cpp" />
     <ClCompile Include="ObjectScript\Actor.cpp" />
     <ClCompile Include="ObjectScript\Bullet.cpp" />
@@ -228,6 +237,10 @@
     <ClCompile Include="ObjectScript\Sword.cpp" />
     <ClCompile Include="ObjectScript\Villager1.cpp" />
     <ClCompile Include="Option.cpp" />
+    <ClCompile Include="PartyStatus.cpp" />
+    <ClCompile Include="PGCancel.cpp" />
+    <ClCompile Include="PGConfirm.cpp" />
+    <ClCompile Include="PGMessageBox.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuickSlot.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
@@ -236,6 +249,9 @@
     <ClCompile Include="SkillWindow.cpp" />
     <ClCompile Include="Slot.cpp" />
     <ClCompile Include="Status.cpp" />
+    <ClCompile Include="TargetPlayerUI.cpp" />
+    <ClCompile Include="TradeUI.cpp" />
+    <ClCompile Include="UserInfoUI.cpp" />
     <ClCompile Include="UserInterfaceManager.cpp" />
     <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>

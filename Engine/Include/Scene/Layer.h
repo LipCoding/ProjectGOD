@@ -19,6 +19,9 @@ private:
 	int		m_iZOrder;
 
 public:
+	list<class CGameObject*>& getObjectList() { return m_ObjList; }
+
+public:
 	void SetZOrder(int iZOrder);
 	void SetScene(class CScene* pScene);
 	class CScene* GetScene()	const;

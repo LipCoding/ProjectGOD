@@ -18,7 +18,9 @@
 #include "ObjectScript/Player.h"
 #include "MiniMap.h"
 #include "DropTableUI.h"
-
+#include "TargetPlayerUI.h"
+#include "PGMessageBox.h"
+#include "PartyStatus.h"
 DEFINITION_SINGLE(UserInterfaceManager);
 
 
@@ -37,6 +39,8 @@ bool UserInterfaceManager::initialize()
 	this->pChatting->initialize();
 	this->pInventory = new Inventory;
 	this->pInventory->initialize();
+	for (auto& player : partyCont)
+		player = nullptr;
 	//this->pStatus = new Status;
 	//this->pStatus->initialize();
 	//this->pEnemyStatus = new Status;
@@ -117,7 +121,6 @@ bool UserInterfaceManager::initialize()
 		//pRC->SetTag("DropTable");
 		//SAFE_RELEASE(pRC);
 
-		pDropTableUI->initialize();
 		pDropTableUI->enableRender(false);
 
 		SAFE_RELEASE(pDropTableTr);
@@ -196,7 +199,170 @@ bool UserInterfaceManager::initialize()
 	}
 #pragma endregion
 
+#pragma region TargetPlayerUI
+	{
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
 
+		CGameObject* pTargetPlayerUIObj = CGameObject::CreateObject("TargetPlayerUI", pLayer);
+
+
+		this->pTargetPlayerUI = pTargetPlayerUIObj->AddComponent<TargetPlayerUI>("TargetPlayerUI");
+		pTargetPlayerUI->initialize();
+		CRenderer2D* pRenderer = pTargetPlayerUIObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "UI_TargetPlayerUI",
+			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
+
+		CTransform* pDropTableTr = pTargetPlayerUIObj->GetTransform();
+		pDropTableTr->SetWorldScale(200.f, 150.f, 1.f);
+		pDropTableTr->SetWorldPos(300.f, 300.f, 0.f);
+
+		pTargetPlayerUI->enableRender(false);
+
+		SAFE_RELEASE(pDropTableTr);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pTargetPlayerUIObj);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+	}
+#pragma endregion
+
+#pragma region PGMessageBox
+	{
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
+
+		CGameObject* pPGMessageBoxObj = CGameObject::CreateObject("MessageBox", pLayer);
+
+		this->pPGMessageBox = pPGMessageBoxObj->AddComponent<PGMessageBox>("TargetPlayerUI");
+		pPGMessageBox->initialize();
+		CRenderer2D* pRenderer = pPGMessageBoxObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "UI_TargetPlayerUI",
+			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
+
+		CTransform* pDropTableTr = pPGMessageBoxObj->GetTransform();
+		pDropTableTr->SetWorldScale(200.f, 150.f, 1.f);
+		pDropTableTr->SetWorldPos(300.f, 300.f, 0.f);
+
+		pPGMessageBox->enableRender(false);
+
+		SAFE_RELEASE(pDropTableTr);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pPGMessageBoxObj);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+	}
+#pragma endregion
+
+#pragma region PartyFrame
+	{
+		// first
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CLayer*	pLayer = pScene->GetLayer("UI+1");
+			CGameObject* pPartyFrameObj = CGameObject::CreateObject("PartyFrame1", pLayer);
+			CTransform* pPartyFrameTr = pPartyFrameObj->GetTransform();
+			pPartyFrameTr->SetWorldPos(0.f, 150.f, 1.f);
+			partyCont[0] = pPartyFrameObj->AddComponent<PartyStatus>("Status");
+			partyCont[0]->setScale(0.75f);
+			partyCont[0]->initialize();
+			CRenderer2D* pRenderer = pPartyFrameObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CMaterial* pMaterial = pRenderer->GetMaterial();
+
+			pMaterial->SetDiffuseTexInfo("Linear", "PartyFrame1",
+				0, 0, L"UserInterface/UI_GAUGE_PLAYER.png");
+			partyCont[0]->enableRender(false);
+			pPartyFrameTr->SetWorldScale(75.f, 75.f, 1.f);
+			SAFE_RELEASE(pPartyFrameTr);
+			SAFE_RELEASE(pMaterial);
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pPartyFrameObj);
+			SAFE_RELEASE(pLayer);
+			SAFE_RELEASE(pScene);
+		}
+
+		// second
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CLayer*	pLayer = pScene->GetLayer("UI+1");
+			CGameObject* pPartyFrameObj = CGameObject::CreateObject("PartyFrame1", pLayer);
+			CTransform* pPartyFrameTr = pPartyFrameObj->GetTransform();
+			pPartyFrameTr->SetWorldPos(0.f, 230.f, 1.f);
+			partyCont[1] = pPartyFrameObj->AddComponent<PartyStatus>("Status");
+			partyCont[1]->setScale(0.75f);
+			partyCont[1]->initialize();
+			CRenderer2D* pRenderer = pPartyFrameObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CMaterial* pMaterial = pRenderer->GetMaterial();
+
+			pMaterial->SetDiffuseTexInfo("Linear", "PartyFrame1",
+				0, 0, L"UserInterface/UI_GAUGE_PLAYER.png");
+			partyCont[1]->enableRender(false);
+			pPartyFrameTr->SetWorldScale(75.f, 75.f, 1.f);
+			SAFE_RELEASE(pPartyFrameTr);
+			SAFE_RELEASE(pMaterial);
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pPartyFrameObj);
+			SAFE_RELEASE(pLayer);
+			SAFE_RELEASE(pScene);
+		}
+
+		// third
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CLayer*	pLayer = pScene->GetLayer("UI+1");
+			CGameObject* pPartyFrameObj = CGameObject::CreateObject("PartyFrame1", pLayer);
+			CTransform* pPartyFrameTr = pPartyFrameObj->GetTransform();
+			pPartyFrameTr->SetWorldPos(0.f, 310.f, 1.f);
+			partyCont[2] = pPartyFrameObj->AddComponent<PartyStatus>("Status");
+			partyCont[2]->setScale(0.75f);
+			partyCont[2]->initialize();
+			CRenderer2D* pRenderer = pPartyFrameObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CMaterial* pMaterial = pRenderer->GetMaterial();
+
+			pMaterial->SetDiffuseTexInfo("Linear", "PartyFrame1",
+				0, 0, L"UserInterface/UI_GAUGE_PLAYER.png");
+			partyCont[2]->enableRender(false);
+			pPartyFrameTr->SetWorldScale(75.f, 75.f, 1.f);
+			SAFE_RELEASE(pPartyFrameTr);
+			SAFE_RELEASE(pMaterial);
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pPartyFrameObj);
+			SAFE_RELEASE(pLayer);
+			SAFE_RELEASE(pScene);
+		}
+
+		// forth
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CLayer*	pLayer = pScene->GetLayer("UI+1");
+			CGameObject* pPartyFrameObj = CGameObject::CreateObject("PartyFrame1", pLayer);
+			CTransform* pPartyFrameTr = pPartyFrameObj->GetTransform();
+			pPartyFrameTr->SetWorldPos(0.f, 390.f, 1.f);
+			partyCont[3] = pPartyFrameObj->AddComponent<PartyStatus>("Status");
+			partyCont[3]->setScale(0.75f);
+			partyCont[3]->initialize();
+			CRenderer2D* pRenderer = pPartyFrameObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CMaterial* pMaterial = pRenderer->GetMaterial();
+
+			pMaterial->SetDiffuseTexInfo("Linear", "PartyFrame1",
+				0, 0, L"UserInterface/UI_GAUGE_PLAYER.png");
+			partyCont[3]->enableRender(false);
+			pPartyFrameTr->SetWorldScale(75.f, 75.f, 1.f);
+			SAFE_RELEASE(pPartyFrameTr);
+			SAFE_RELEASE(pMaterial);
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pPartyFrameObj);
+			SAFE_RELEASE(pLayer);
+			SAFE_RELEASE(pScene);
+		}
+	}
+#pragma endregion
 
 	return true;
 }
@@ -259,4 +425,22 @@ void UserInterfaceManager::update(float time)
 	}
 
 
+}
+
+void UserInterfaceManager::addPartyPlayer(const string& playerName)
+{
+	for (auto& player : partyCont)
+	{
+		if (false == player->getUsed())
+		{
+			player->setPlayerName(playerName);
+			player->enableRender(true);
+			player->setUsed(true);
+		}
+	}
+}
+
+void UserInterfaceManager::removePartyPlayer(const string& playerName)
+{
+	// 앞으로 옮겨준다.
 }

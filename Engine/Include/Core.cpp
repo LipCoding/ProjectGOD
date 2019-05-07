@@ -26,6 +26,7 @@ PG_USING
 DEFINITION_SINGLE(CCore)
 
 bool CCore::m_bLoop = true;
+bool CCore::isFocus = true;
 
 CCore::CCore()
 {
@@ -126,10 +127,12 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 	if (!GET_SINGLE(SoundManager)->Init())
 		return false;
 
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->SetScene(GET_SINGLE(CSceneManager)->GetCurrentScene());
-	SAFE_RELEASE(pMouseObj);
-
+	if (isFocus)
+	{
+		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		pMouseObj->SetScene(GET_SINGLE(CSceneManager)->GetCurrentScene());
+		SAFE_RELEASE(pMouseObj);
+	}
 	ShowCursor(FALSE);
 
 	return true;
@@ -177,15 +180,18 @@ void CCore::Logic()
 
 	GET_SINGLE(CScheduler)->Update(fTime);
 
-	Input(fTime);
+	if(isFocus)
+		Input(fTime);
 	if (Update(fTime) == SC_CHANGE)
 	{
-		GET_SINGLE(CInput)->ClearWheel();
+		if(isFocus)
+			GET_SINGLE(CInput)->ClearWheel();
 		return;
 	}
 	if (LateUpdate(fTime) == SC_CHANGE)
 	{
-		GET_SINGLE(CInput)->ClearWheel();
+		if(isFocus)
+			GET_SINGLE(CInput)->ClearWheel();
 		return;
 	}
 	Collision(fTime);
@@ -205,28 +211,37 @@ void CCore::Logic()
 // 수정
 void CCore::Input(float fTime)
 {
-	GET_SINGLE(CInput)->Update(fTime);
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->Input(fTime);
-	SAFE_RELEASE(pMouseObj);
-	GET_SINGLE(CSceneManager)->Input(fTime);
+	if (isFocus)
+	{
+		GET_SINGLE(CInput)->Update(fTime);
+		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		pMouseObj->Input(fTime);
+		SAFE_RELEASE(pMouseObj);
+		GET_SINGLE(CSceneManager)->Input(fTime);
+	}
 }
 
 // 수정
 int CCore::Update(float fTime)
 {
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->Update(fTime);
-	SAFE_RELEASE(pMouseObj);
+	if (isFocus)
+	{
+		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		pMouseObj->Update(fTime);
+		SAFE_RELEASE(pMouseObj);
+	}
 	return GET_SINGLE(CSceneManager)->Update(fTime);
 }
 
 // 수정
 int CCore::LateUpdate(float fTime)
 {
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->LateUpdate(fTime);
-	SAFE_RELEASE(pMouseObj);
+	if (isFocus)
+	{
+		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		pMouseObj->LateUpdate(fTime);
+		SAFE_RELEASE(pMouseObj);
+	}
 	return GET_SINGLE(CSceneManager)->LateUpdate(fTime);
 }
 
@@ -254,14 +269,18 @@ void CCore::Render(float fTime)
 	GET_SINGLE(CRenderManager)->Render(fTime);
 	
 	GET_SINGLE(CNaviManager)->Render(fTime);
-
-	CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
-	pMouseObj->Render(fTime);
-	SAFE_RELEASE(pMouseObj);
-
+	if (isFocus)
+	{
+		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
+		pMouseObj->Render(fTime);
+		SAFE_RELEASE(pMouseObj);
+	}
 	GET_SINGLE(CDevice)->Present();
 
-	GET_SINGLE(CInput)->ClearWheel();
+	if (isFocus)
+	{
+		GET_SINGLE(CInput)->ClearWheel();
+	}
 }
 
 ATOM CCore::WindowRegisterClass(TCHAR * pClass, int iIconID)
@@ -330,6 +349,12 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
+	case WM_SETFOCUS:
+		isFocus = true;
+		break;
+	case WM_KILLFOCUS:
+		isFocus = false;
+		break;
 
 	case WM_SOCKET:
 	{
@@ -354,7 +379,8 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 
 	case WM_MOUSEWHEEL:
-		GET_SINGLE(CInput)->SetWheel(HIWORD(wParam));
+		if(isFocus)
+			GET_SINGLE(CInput)->SetWheel(HIWORD(wParam));
 		break;
 	case WM_DESTROY:
 		m_bLoop = false;

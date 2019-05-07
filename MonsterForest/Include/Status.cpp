@@ -29,7 +29,7 @@ bool Status::initialize()
 		this->pUIHearthBarBackground = pUIHearthBarBackgroundObj->AddComponent<CUIButton>("Status");
 		CTransform* pStatusTr = pUIHearthBarBackgroundObj->GetTransform();
 		pStatusTr->SetWorldPos(basePos.x + 100.f, basePos.y + 5.f, 1.f);
-		pStatusTr->SetWorldScale(200.f, 30.f, 1.f);
+		pStatusTr->SetWorldScale(200.f * scale, 30.f*scale, 1.f);
 		CRenderer2D* pRenderer = pUIHearthBarBackgroundObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
@@ -52,7 +52,7 @@ bool Status::initialize()
 
 		CTransform* pStatusTr = pUIManaBarBackgroundObj->GetTransform();
 		pStatusTr->SetWorldPos(basePos.x + 100.f, basePos.y + 35.f, 1.f);
-		pStatusTr->SetWorldScale(200.f, 30.f, 1.f);
+		pStatusTr->SetWorldScale(200.f*scale, 30.f*scale, 1.f);
 		CRenderer2D* pRenderer = pUIManaBarBackgroundObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
@@ -74,7 +74,7 @@ bool Status::initialize()
 
 		CTransform* pStatusTr = pUIPureBarBackgroundObj->GetTransform();
 		pStatusTr->SetWorldPos(basePos.x + 100.f, basePos.y + 65.f, 1.f);
-		pStatusTr->SetWorldScale(200.f, 30.f, 1.f);
+		pStatusTr->SetWorldScale(200.f*scale, 30.f*scale, 1.f);
 		CRenderer2D* pRenderer = pUIPureBarBackgroundObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
@@ -98,7 +98,7 @@ bool Status::initialize()
 
 		CTransform*	pButtonTr = pMPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f, 20.f, 1.f);
+		pButtonTr->SetWorldScale(125.f*scale, 20.f*scale, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 127.f, basePos.y + 41.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
@@ -141,7 +141,7 @@ bool Status::initialize()
 
 		CTransform*	pButtonTr = pHPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
+		pButtonTr->SetWorldScale(125.f*scale, 25.f*scale, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 127.f, basePos.y + 6.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
@@ -166,7 +166,7 @@ bool Status::initialize()
 		CFont* HPFont = pHPUIObj->AddComponent<CFont>("HPFont");
 		HPFont->SetFont("³ª´®°íµñ");
 		HPFont->SetText(L"");
-		HPFont->SetArea(25, 0, 200, 25.f);
+		HPFont->SetArea(25*scale, 0, 200, 25.f);
 		SAFE_RELEASE(HPFont);
 
 		SAFE_RELEASE(pHPUIObj);
@@ -184,7 +184,7 @@ bool Status::initialize()
 
 		CTransform*	pButtonTr = pHPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f, 25.f, 1.f);
+		pButtonTr->SetWorldScale(125.f*scale, 25.f*scale, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 127.f, basePos.y + 68.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);

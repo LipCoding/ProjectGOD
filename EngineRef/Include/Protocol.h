@@ -44,6 +44,11 @@ const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char CS_PACKET_MOVEITEM_INVENTORY = 152;
 const unsigned char CS_PACKET_ROOTING_TABLE = 155;
+const unsigned char CS_PACKET_INVITE_PARTY = 200;
+const unsigned char CS_PACKET_PARTY_CONFIRM = 201;
+const unsigned char CS_PACKET_PARTY_CANCEL = 202;
+const unsigned char CS_PACKET_PARTY_ADD = 203;
+const unsigned char CS_PACKET_PARTY_REMOVE = 204;
 
 const unsigned char SC_PACKET_MOVE = 0;
 const unsigned char SC_PACKET_PUT_PLAYER = 1;
@@ -70,6 +75,11 @@ const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char SC_PACKET_MOVEITEM_INVENTORY = 152;
 const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
+const unsigned char SC_PACKET_INVITE_PARTY = 200;
+const unsigned char SC_PACKET_PARTY_CONFIRM = 201;
+const unsigned char SC_PACKET_PARTY_CANCEL = 202;
+const unsigned char SC_PACKET_PARTY_ADD = 203;
+const unsigned char SC_PACKET_PARTY_REMOVE = 204;
 
 
 /*
@@ -187,6 +197,14 @@ struct cs_packet_moveitem_inventory
 	unsigned char toslot;
 };
 
+struct cs_packet_party
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int fromID;
+	unsigned int toID;
+};
+
 struct sc_packet_connect
 {
 	unsigned short size;
@@ -302,6 +320,14 @@ struct sc_packet_moveitem_inventory
 	unsigned char type;
 	unsigned char fromslot;
 	unsigned char toslot;
+};
+
+struct sc_packet_party
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int fromID;
+	unsigned int toID;
 };
 
 #pragma pack(pop)

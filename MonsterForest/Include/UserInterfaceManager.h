@@ -18,6 +18,8 @@ class UserInterfaceManager
 	//CUIButton*	pUIHearthBar;
 	//CUIButton*	pEnemyUIHearthBar;
 
+	array<class PartyStatus*, 4> partyCont;
+	
 
 	class Inventory* pInventory;
 	class MiniMap* pMiniMap;
@@ -27,8 +29,9 @@ class UserInterfaceManager
 	class Chatting* pChatting;
 	class QuickSlot* pQuickSlot;
 	class DropTableUI* pDropTableUI;
+	class TargetPlayerUI* pTargetPlayerUI;
 	class CPlayer* pPlayer = nullptr;
-
+	class PGMessageBox* pPGMessageBox= nullptr;
 public:
 	bool initialize();
 	void update(float time);
@@ -36,11 +39,15 @@ public:
 	CUIButton* getUIHeartBar() { return this->pStatus->getUIHearthBar(); }
 	CUIButton* getEnemyUIHearthBar() { return this->pEnemyStatus->getUIHearthBar(); }
 	class CPlayer* getPlayer() { return this->pPlayer; }
+	class TargetPlayerUI* getTargetPlayerUI() { return this->pTargetPlayerUI; }
 
 	void setUIHearthBar(CUIButton* ui) { this->pStatus->setUIHeearthBar(ui); }
 	void setEnemyUIHearthBar(CUIButton* ui) { this->pEnemyStatus->setUIHeearthBar(ui);}
 	void setPlayer(class CPlayer* pPlayer) { this->pPlayer = pPlayer; }
+
 public:
+	void addPartyPlayer(const string& playerName);
+	void removePartyPlayer(const string& playerName);
 	Inventory* getInventory() { return this->pInventory; }
 	MiniMap* getMiniMap() { return this->pMiniMap; }
 	WorldMap* getWorldMap() { return this->pWorldMap; }
@@ -49,6 +56,7 @@ public:
 	Chatting* getChatting() { return this->pChatting; }
 	QuickSlot* getQuickSlot() { return this->pQuickSlot; }
 	DropTableUI* getDropTableUI() { return this->pDropTableUI; }
+	PGMessageBox* getPGMessageBox() { return this->pPGMessageBox; }
 
 	DECLARE_SINGLE(UserInterfaceManager);
 };

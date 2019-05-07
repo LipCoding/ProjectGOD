@@ -133,6 +133,33 @@
     <Filter Include="03. UserInterface\10. DropTableUI\01. DropItemSlot">
       <UniqueIdentifier>{31a8a84b-0e02-41ec-bdf8-9ae51292f598}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. UserInterface\11. TargetPlayerUI">
+      <UniqueIdentifier>{1e13dae6-9140-4993-a3a2-c81082b6c1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\12. MessageBox">
+      <UniqueIdentifier>{eaf09db5-fd2b-4472-a313-ccde17220698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\11. TargetPlayerUI\01. UserInfoUI">
+      <UniqueIdentifier>{e78043a2-da8b-4062-a532-22ced7e7b011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\11. TargetPlayerUI\03. TradeUI">
+      <UniqueIdentifier>{024a50f5-80de-489b-806f-07946ef7a959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\11. TargetPlayerUI\02. InviteToPartyUI">
+      <UniqueIdentifier>{1cf019a2-c52b-447a-bb40-8d1b6a0ebfba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\12. MessageBox\02. Cancel">
+      <UniqueIdentifier>{7731ef96-8312-4b50-8047-8de41ee9b5e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\12. MessageBox\01. Confirm">
+      <UniqueIdentifier>{f4dd665a-8c7a-477a-86c5-a06189df523d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\12. MessageBox\03. Static">
+      <UniqueIdentifier>{ec8d3dbc-bd20-46c7-a113-21d4f4620e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. UserInterface\06. Status\PartyStatus">
+      <UniqueIdentifier>{47f1d821-fd49-42d0-9176-a77baf4123d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -255,6 +282,30 @@
     <ClInclude Include="DropItemSlot.h">
       <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
     </ClInclude>
+    <ClInclude Include="TargetPlayerUI.h">
+      <Filter>03. UserInterface\11. TargetPlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInfoUI.h">
+      <Filter>03. UserInterface\11. TargetPlayerUI\01. UserInfoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeUI.h">
+      <Filter>03. UserInterface\11. TargetPlayerUI\03. TradeUI</Filter>
+    </ClInclude>
+    <ClInclude Include="InviteToParty.h">
+      <Filter>03. UserInterface\11. TargetPlayerUI\02. InviteToPartyUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PGMessageBox.h">
+      <Filter>03. UserInterface\12. MessageBox</Filter>
+    </ClInclude>
+    <ClInclude Include="PGCancel.h">
+      <Filter>03. UserInterface\12. MessageBox\02. Cancel</Filter>
+    </ClInclude>
+    <ClInclude Include="PGConfirm.h">
+      <Filter>03. UserInterface\12. MessageBox\01. Confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="PartyStatus.h">
+      <Filter>03. UserInterface\06. Status\PartyStatus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -367,6 +418,30 @@
     </ClCompile>
     <ClCompile Include="DropItemSlot.cpp">
       <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetPlayerUI.cpp">
+      <Filter>03. UserInterface\11. TargetPlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInfoUI.cpp">
+      <Filter>03. UserInterface\11. TargetPlayerUI\01. UserInfoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeUI.cpp">
+      <Filter>03. UserInterface\11. TargetPlayerUI\03. TradeUI</Filter>
+    </ClCompile>
+    <ClCompile Include="InviteToParty.cpp">
+      <Filter>03. UserInterface\11. TargetPlayerUI\02. InviteToPartyUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PGMessageBox.cpp">
+      <Filter>03. UserInterface\12. MessageBox</Filter>
+    </ClCompile>
+    <ClCompile Include="PGCancel.cpp">
+      <Filter>03. UserInterface\12. MessageBox\02. Cancel</Filter>
+    </ClCompile>
+    <ClCompile Include="PGConfirm.cpp">
+      <Filter>03. UserInterface\12. MessageBox\01. Confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="PartyStatus.cpp">
+      <Filter>03. UserInterface\06. Status\PartyStatus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

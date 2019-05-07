@@ -8,6 +8,7 @@
 #include <queue>
 #include <list>
 #include <vector>
+#include <array>
 #include <stack>
 #include <string>
 #include <algorithm>

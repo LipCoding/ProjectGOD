@@ -14,7 +14,7 @@ private:
 	HWND			m_hWnd;
 	RESOLUTION		m_tResolution;
 	WNDPROC	 oldProc;
-
+	static bool isFocus;
 public:
 	HWND GetWindowHandle()	const;
 

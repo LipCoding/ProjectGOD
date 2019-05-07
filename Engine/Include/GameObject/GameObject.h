@@ -64,6 +64,9 @@ private:
 	bool	m_bCulling;
 
 public:
+
+
+public:
 	void SetCulling(bool bCulling);
 	bool GetCulling()	const;
 	void DontDestroyOnLoad(bool bDontDestroy = true);

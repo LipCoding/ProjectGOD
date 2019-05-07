@@ -51,6 +51,8 @@
 #include "../DropTableUI.h"
 #include <random>
 #include "Component/UIButton.h"
+#include "../PGMessageBox.h"
+#include "../TargetPlayerUI.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -1839,6 +1841,29 @@ int CMainScene::Update(float fTime)
 			pDropTableUI->detachDropItemSlot(pPacket->index);
 		}
 		break;
+		case SC_PACKET_INVITE_PARTY:
+		{
+			sc_packet_party* pPacket = reinterpret_cast<sc_packet_party*>(packet);
+			PGMessageBox* pMessageBox = GET_SINGLE(UserInterfaceManager)->getPGMessageBox();
+			pMessageBox->enableRender(true);
+			GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->setFromID(pPacket->fromID);
+			GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->setToID(pPacket->toID);
+		}
+		break;
+
+		case SC_PACKET_PARTY_ADD:
+		{
+			// 해당 플레이어의 정보로 왼쪽 파티 프레임에 띄운다.
+			sc_packet_party* pPacket = reinterpret_cast<sc_packet_party*>(packet);
+			
+			string objectID = "Player" + to_string(pPacket->toID);
+			//CGameObject* pPlayerObj = CGameObject::FindObject(objectID);
+
+			GET_SINGLE(UserInterfaceManager)->addPartyPlayer(objectID);
+			//SAFE_RELEASE(pPlayerObj);
+		}
+		break;
+
 		default:
 			break;
 		}

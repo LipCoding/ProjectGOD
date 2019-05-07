@@ -86,7 +86,7 @@ void DropTableUI::detachDropItemSlot(int slotNumber)
 		++iter;
 	}
 	static_cast<DropItemSlot*>((*iter))->detachItem();
-	/*(*iter)->Die();
+	(*iter)->Die();
 
 	CUIButton* pButton = (*iter);
 	CGameObject* pObject = pButton->GetGameObject();
@@ -99,7 +99,7 @@ void DropTableUI::detachDropItemSlot(int slotNumber)
 	for (int i = 0; i < dropItemSlots.size(); ++i)
 	{
 		static_cast<DropItemSlot*>(dropItemSlots[i])->setIndex(i);
-	}*/
+	}
 }
 
 int DropTableUI::Update(float fTime)
