@@ -53,6 +53,7 @@
 #include "Component/UIButton.h"
 #include "../PGMessageBox.h"
 #include "../TargetPlayerUI.h"
+#include "Core/EffectManager.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -81,7 +82,10 @@ void CMainScene::chat_callback(float fTime)
 
 bool CMainScene::Init()
 {
-
+	/* Effect */
+	GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -118,7 +122,7 @@ bool CMainScene::Init()
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
-		pLandScape->Load_Terrain("village_500");
+		pLandScape->Load_Terrain("Main_Scene_1");
 
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
@@ -142,7 +146,7 @@ bool CMainScene::Init()
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\village_500.bin");
+	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
 
 	ifstream file;
 	file.open(strPath, ios::in);
@@ -724,7 +728,7 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pParticleLayer);
 	}
 #pragma endregion
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("NaviTest0423");
+	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
 	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 
 
@@ -1416,7 +1420,6 @@ int CMainScene::Update(float fTime)
 								pGolem->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(0.f);
-								_cprintf("플레이어 사망처리");
 							}
 							else
 							{
@@ -1431,13 +1434,21 @@ int CMainScene::Update(float fTime)
 							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
 
 							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pMino->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
 							if (hp < 0)
 							{
 								float ratio = (float)hp / (float)pMino->getMaxHP();
 								pMino->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(0.f);
-								_cprintf("플레이어 사망처리");
 							}
 							else
 							{
@@ -1445,6 +1456,7 @@ int CMainScene::Update(float fTime)
 								pMino->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(ratio);
+
 							}
 						}
 						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
@@ -1458,7 +1470,6 @@ int CMainScene::Update(float fTime)
 								pSeuteompi->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(0.f);
-								_cprintf("플레이어 사망처리");
 							}
 							else
 							{
