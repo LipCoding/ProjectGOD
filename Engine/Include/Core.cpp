@@ -36,9 +36,9 @@ CCore::CCore()
 	//_CrtSetBreakAlloc(179728);
 
 #ifdef _DEBUG
-	AllocConsole();
+	//AllocConsole();
 #endif
-	AllocConsole();
+	//AllocConsole();
 }
 
 CCore::~CCore()
@@ -58,7 +58,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CNaviManager);
 
 //#ifdef _DEBUG
-	FreeConsole();
+	//FreeConsole();
 //#endif // _DEBUG
 }
 
