@@ -160,6 +160,9 @@
     <Filter Include="03. UserInterface\06. Status\PartyStatus">
       <UniqueIdentifier>{47f1d821-fd49-42d0-9176-a77baf4123d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Boem%27s">
+      <UniqueIdentifier>{effd5d11-a639-4e6f-b053-b1e49a55bbca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -306,6 +309,9 @@
     <ClInclude Include="PartyStatus.h">
       <Filter>03. UserInterface\06. Status\PartyStatus</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectScript\Player_Test.h">
+      <Filter>Boem%27s</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -419,6 +425,7 @@
     <ClCompile Include="DropItemSlot.cpp">
       <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
     </ClCompile>
+
     <ClCompile Include="TargetPlayerUI.cpp">
       <Filter>03. UserInterface\11. TargetPlayerUI</Filter>
     </ClCompile>
@@ -442,6 +449,9 @@
     </ClCompile>
     <ClCompile Include="PartyStatus.cpp">
       <Filter>03. UserInterface\06. Status\PartyStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Player_Test.cpp">
+      <Filter>Boem%27s</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

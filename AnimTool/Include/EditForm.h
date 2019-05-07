@@ -94,4 +94,6 @@ public:
 	afx_msg void OnBnClickedRadioClipType2();
 	afx_msg void OnBnClickedSliderArmRotX();
 	afx_msg void OnBnClickedRadioClipType3();
+	afx_msg void OnBnClickedButtonSaveAll();
+	afx_msg void OnBnClickedButtonLoadAll();
 };

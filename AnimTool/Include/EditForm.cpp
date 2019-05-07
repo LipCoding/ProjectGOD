@@ -58,6 +58,8 @@ BEGIN_MESSAGE_MAP(CEditForm, CView)
 	ON_BN_CLICKED(IDC_RADIO_CLIP_TYPE_2, &CEditForm::OnBnClickedRadioClipType2)
 	ON_BN_CLICKED(IDC_SLIDER_ARM_ROT_X, &CEditForm::OnBnClickedSliderArmRotX)
 	ON_BN_CLICKED(IDC_RADIO_CLIP_TYPE_3, &CEditForm::OnBnClickedRadioClipType3)
+	ON_BN_CLICKED(IDC_BUTTON_SAVE_ALL, &CEditForm::OnBnClickedButtonSaveAll)
+	ON_BN_CLICKED(IDC_BUTTON_LOAD_ALL, &CEditForm::OnBnClickedButtonLoadAll)
 END_MESSAGE_MAP()
 
 // EditForm 진단
@@ -124,6 +126,21 @@ void CEditForm::OnInitialUpdate()
 
 void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 {
+	/* 파일 존재여부 확인 */
+	{
+		char	strFullPath[256] = {};
+		WideCharToMultiByte(CP_ACP, 0, path, -1, strFullPath,
+			lstrlen(path), 0, 0);
+
+		FILE*	pFile = NULL;
+		fopen_s(&pFile, strFullPath, "rb");
+
+		if (!pFile)
+			return;
+
+		fclose(pFile);
+	}
+
 	if (m_pEditObj)
 	{
 		CAnimation* pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
@@ -242,8 +259,31 @@ void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
 
 void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 {
+	/* 파일 존재여부 확인 */
+	{
+		char	strFullPath[256] = {};
+		WideCharToMultiByte(CP_ACP, 0, path, -1, strFullPath,
+			lstrlen(path), 0, 0);
+
+		FILE*	pFile = NULL;
+		fopen_s(&pFile, strFullPath, "rb");
+
+		if (!pFile)
+			return;
+
+		fclose(pFile);
+	}
+
 	if (m_pEditObj)
 	{
+		CRenderer* pRenderer = m_pEditObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+		
+		if (!pRenderer->GetMesh())
+		{
+			SAFE_RELEASE(pRenderer);
+			return;
+		}
+
 		CAnimation*	pAnimationCheck = m_pEditObj->FindComponentFromTag<CAnimation>("Animation");
 
 		if (pAnimationCheck)
@@ -265,7 +305,12 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 		SAFE_RELEASE(pTr);
 
 		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("Animation");
-		pAnimation->LoadFromFullPath(path);
+
+		if (!pAnimation->LoadFromFullPath(path))
+		{
+			SAFE_RELEASE(pAnimation);
+			return;
+		}
 
 		const unordered_map<string, class CAnimationClip*>*	pClips =
 			pAnimation->GetAllClip();
@@ -296,7 +341,11 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 	{
 		CAnimation*	pAnimation = m_pEditObj->AddComponent<CAnimation>("Animation");
 
-		pAnimation->LoadFromFullPath(path);
+		if (!pAnimation->LoadFromFullPath(path))
+		{
+			SAFE_RELEASE(pAnimation);
+			return;
+		}
 
 		const unordered_map<string, class CAnimationClip*>*	pClips =
 			pAnimation->GetAllClip();
@@ -949,4 +998,91 @@ void CEditForm::OnBnClickedSliderArmRotX()
 
 void CEditForm::OnBnClickedRadioClipType3()
 {
+}
+
+
+void CEditForm::OnBnClickedButtonSaveAll()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pEditObj)
+	{
+		AfxMessageBox(L"Error : No Mesh to save!");
+		return;
+	}
+
+	wchar_t	strFilter[] = L"모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(FALSE, NULL, NULL,
+		OFN_OVERWRITEPROMPT, strFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	// 올바른(확장자명이 제외된) 파일 이름 추가
+	path += name;
+
+	m_pAnimMeshInfoDlg->SaveMeshAuto(path + L".msh");
+	m_pAnimMeshInfoDlg->SaveAnimationAuto(path + L".anm");
+	m_pAnimMeshInfoDlg->SaveLocalAuto(path + L".dat");
+}
+
+
+void CEditForm::OnBnClickedButtonLoadAll()
+{
+	wchar_t	strFilter[] = L"모든파일(*.*)|*.*|||";
+	CFileDialog	dlg(TRUE, NULL, NULL,
+		OFN_HIDEREADONLY, strFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString name = dlg.GetFileTitle();
+
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	// 올바른(확장자명이 제외된) 파일 이름 추가
+	path += name;
+
+	m_pAnimMeshInfoDlg->LoadMeshAuto(path + L".msh", name);
+	m_pAnimMeshInfoDlg->LoadAnimationAuto(path + L".anm", name);
+	m_pAnimMeshInfoDlg->LoadLocalAuto(path + L".dat");
 }

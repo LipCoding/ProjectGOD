@@ -38,6 +38,7 @@ public:
 	void SetArrPixel(int type);
 public:
 	void MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const float& fTime);
+	void MoveHeightZero(list<QUADTREENODE*>* list, Vector3 mousePos);
 	void MovePixel(Vector3 mousePos, const float& fTime, bool erase = false);
 	void ResetHeight();
 

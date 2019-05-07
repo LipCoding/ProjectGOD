@@ -149,7 +149,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonCreateArmObj()
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"MESHFile(*.MSH)|*.msh|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
+	CFileDialog	dlg(TRUE, L"*.msh", L"Mesh",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -321,7 +321,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveArm()
 	}
 
 	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(FALSE, L".DAT", L"Data",
+	CFileDialog	dlg(FALSE, L"*.dat", L"Data",
 		OFN_OVERWRITEPROMPT, strFilter);
 
 	// 경로 지정
@@ -394,7 +394,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadArm()
 	}
 
 	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".DAT", L"Data",
+	CFileDialog	dlg(TRUE, L"*.dat", L"Data",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -473,7 +473,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveMesh()
 	}
 
 	wchar_t	strFilter[] = L"MESHFile(*.msh)|*.msh|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(FALSE, L".MSH", L"Mesh",
+	CFileDialog	dlg(FALSE, L"*.msh", L"Mesh",
 		OFN_OVERWRITEPROMPT, strFilter);
 
 	// 경로 지정
@@ -504,7 +504,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadMesh()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"MESHFile(*.msh)|*.msh|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
+	CFileDialog	dlg(TRUE, L"*.msh", L"Mesh",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -536,7 +536,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveAnimation()
 	}
 
 	wchar_t	strFilter[] = L"AnimationFile(*.anm)|*.anm|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(FALSE, L".ANM", L"Animation",
+	CFileDialog	dlg(FALSE, L"*.anm", L"Animation",
 		OFN_OVERWRITEPROMPT, strFilter);
 
 	// 경로 지정
@@ -564,7 +564,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadAnimation()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"AnimationFile(*.anm)|*.anm|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".ANM", L"Animation",
+	CFileDialog	dlg(TRUE, L"*.anm", L"Animation",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -596,7 +596,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonSaveLocalInfo()
 	}
 
 	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(FALSE, L".DAT", L"Data",
+	CFileDialog	dlg(FALSE, L"*.dat", L"Data",
 		OFN_OVERWRITEPROMPT, strFilter);
 
 	// 경로 지정
@@ -638,7 +638,7 @@ void CAnimMeshInfoTab::OnBnClickedButtonLoadLocalLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"DATAFile(*.dat)|*.dat|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".DAT", L"Data",
+	CFileDialog	dlg(TRUE, L"*.dat", L"Data",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -694,6 +694,83 @@ void CAnimMeshInfoTab::OnBnClickedButtonAdjustScaleArm()
 	CTransform* pTr = m_pArmObj->GetTransform();
 	pTr->SetLocalScale(m_fArmScale, m_fArmScale, m_fArmScale);
 	SAFE_RELEASE(pTr);
+}
+
+void CAnimMeshInfoTab::SaveMeshAuto(const CString & path)
+{
+	CRenderer* pRenderer = m_pEditObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+	CMesh*	   pMesh = pRenderer->GetMesh();
+	pMesh->SaveFromFullPath(path);
+
+	SAFE_RELEASE(pMesh);
+	SAFE_RELEASE(pRenderer);
+}
+
+void CAnimMeshInfoTab::SaveAnimationAuto(const CString & path)
+{
+	CAnimation*	pAnimation = m_pEditObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	
+	if (!pAnimation)
+		return;
+
+	pAnimation->SaveFromFullPath(path);
+	SAFE_RELEASE(pAnimation);
+}
+
+void CAnimMeshInfoTab::SaveLocalAuto(const CString & path)
+{
+	FILE* pFile = nullptr;
+
+	char	strPath[MAX_PATH] = {};
+	WideCharToMultiByte(CP_ACP, 0, path, -1,
+		strPath, lstrlen(path), 0, 0);
+
+	fopen_s(&pFile, strPath, "wb");
+
+	if (!pFile)
+		return;
+
+	CTransform* pTr = m_pEditObj->GetTransform();
+	pTr->Save_Local(pFile);
+
+	SAFE_RELEASE(pTr);
+
+	fclose(pFile);
+}
+
+void CAnimMeshInfoTab::LoadMeshAuto(const CString & path, const CString & name)
+{
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->MeshLoadFromMeshInfoTab(path, name);
+}
+
+void CAnimMeshInfoTab::LoadAnimationAuto(const CString & path, const CString & name)
+{
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->AnimationLoadFromMeshInfoTab(path, name);
+}
+
+void CAnimMeshInfoTab::LoadLocalAuto(const CString & path)
+{
+	if (m_pEditObj)
+	{
+		FILE* pFile = nullptr;
+
+		char	strPath[MAX_PATH] = {};
+		WideCharToMultiByte(CP_ACP, 0, path, -1,
+			strPath, lstrlen(path), 0, 0);
+
+		fopen_s(&pFile, strPath, "rb");
+
+		if (!pFile)
+			return;
+
+		CTransform* pTr = m_pEditObj->GetTransform();
+		pTr->Load_Local(pFile);
+		SAFE_RELEASE(pTr);
+
+		SetMeshInfo();
+
+		fclose(pFile);
+	}
 }
 
 

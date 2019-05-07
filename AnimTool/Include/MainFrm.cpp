@@ -81,7 +81,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 
 	// 창 크기 조정
 	cs.cx = 1800;
-	cs.cy = 900;
+	cs.cy = 1000;
 
 	return TRUE;
 }
@@ -116,14 +116,14 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 
 	// View의 사이즈에 맞게 생성
 	if (!m_SplitWnd.CreateView(0, 0, RUNTIME_CLASS(CAnimToolView),
-		CSize(1400, 900), pContext))
+		CSize(1400, 1000), pContext))
 	{
 		return FALSE;
 	}
 
 	// Form의 사이즈에 맞게 생성
 	if (!m_SplitWnd.CreateView(0, 1, RUNTIME_CLASS(CEditForm),
-		CSize(400, 900), pContext))
+		CSize(400, 1000), pContext))
 	{
 		return FALSE;
 	}

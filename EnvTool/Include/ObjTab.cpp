@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CObjTab, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST_OBJECTS, &CObjTab::OnLbnSelchangeListObjects)
 	ON_BN_CLICKED(IDC_BUTTON_OBJECT_SAVE, &CObjTab::OnBnClickedButtonObjectSave)
 	ON_BN_CLICKED(IDC_BUTTON_OBJECT_LOAD, &CObjTab::OnBnClickedButtonObjectLoad)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_SELECTED, &CObjTab::OnBnClickedButtonResetSelected)
 END_MESSAGE_MAP()
 
 
@@ -117,6 +118,8 @@ void CObjTab::OnLbnSelchangeListObjectType()
 	int iPos = m_listObjType.GetCurSel();
 
 	m_listObjType.GetText(iPos, meshRestPath);
+
+	m_currentTypePath = meshRestPath;
 
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer *pLayer = pScene->GetLayer("Default");
@@ -484,7 +487,7 @@ void CObjTab::OnBnClickedButtonObjectSave()
 		// -> Transform(World)
 		CTransform* pTr = iter->GetTransform();
 		
-		// Scalea
+		// Scale
 		Vector3 vScale = pTr->GetWorldScale();
 		file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
 		
@@ -632,4 +635,24 @@ void CObjTab::OnBnClickedButtonObjectLoad()
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 	
+}
+
+
+void CObjTab::OnBnClickedButtonResetSelected()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	for (auto& iter : m_vecObjects)
+	{
+		CRenderer* pRenderer = iter->FindComponentFromType<CRenderer>(CT_RENDERER);
+
+		SHARECBUFFER tShareBuffer = {};
+
+		tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 1.f };
+
+		pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
+
+		SAFE_RELEASE(pRenderer);
+	}
+
+	m_listObjList.SetCurSel(-1);
 }

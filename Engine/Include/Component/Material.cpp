@@ -186,7 +186,6 @@ void CMaterial::SetDiffuseTexInfoFromFullPath(const string & strSmpKey,
 
 	if (!pFullPath)
 		m_pDifInfo->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strDifKey);
-
 	else
 		m_pDifInfo->pTexture = GET_SINGLE(CResourcesManager)->LoadTextureFromFullPath(strDifKey, pFullPath);
 

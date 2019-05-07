@@ -178,6 +178,7 @@
     <ClInclude Include="ObjectScript\PlayerIdle.h" />
     <ClInclude Include="ObjectScript\PlayerMove.h" />
     <ClInclude Include="ObjectScript\PlayerState.h" />
+    <ClInclude Include="ObjectScript\Player_Test.h" />
     <ClInclude Include="ObjectScript\Seuteompi.h" />
     <ClInclude Include="ObjectScript\Shield.h" />
     <ClInclude Include="ObjectScript\Sword.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="ObjectScript\PlayerAttack.cpp" />
     <ClCompile Include="ObjectScript\PlayerIdle.cpp" />
     <ClCompile Include="ObjectScript\PlayerMove.cpp" />
+    <ClCompile Include="ObjectScript\Player_Test.cpp" />
     <ClCompile Include="ObjectScript\Seuteompi.cpp" />
     <ClCompile Include="ObjectScript\Shield.cpp" />
     <ClCompile Include="ObjectScript\Sword.cpp" />

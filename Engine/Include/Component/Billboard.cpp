@@ -14,6 +14,20 @@ CBillboard::CBillboard()
 	SetTypeID<CBillboard>();
 }
 
+CBillboard::CBillboard(const CBillboard & billboard)
+{
+	m_pCam = billboard.m_pCam;
+	billboard.m_pCam->AddRef();
+
+	m_pObjTr = billboard.m_pObjTr;
+	billboard.m_pObjTr->AddRef();
+
+	m_pCameraTr = billboard.m_pCameraTr;
+	billboard.m_pCameraTr->AddRef();
+
+	m_isOperate = billboard.m_isOperate;
+}
+
 CBillboard::~CBillboard()
 {
 	SAFE_RELEASE(m_pObjTr);
@@ -78,5 +92,5 @@ void CBillboard::Render(float fTime)
 
 CBillboard * CBillboard::Clone()
 {
-	return nullptr;
+	return new CBillboard(*this);
 }

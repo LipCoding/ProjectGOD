@@ -188,8 +188,6 @@ void CEditForm::CloneTarget()
 	
 	cloneEffect->pTr = cloneEffect->pObject->GetTransform();
 
-	cloneEffect->m_bBillMode = m_pCurEffect->m_bBillMode;
-
 	m_vecEffect.push_back(cloneEffect);
 
 	/* list box 추가 */
@@ -265,7 +263,7 @@ void CEditForm::OnBnClickedButtonLoadMeshTexture()
 
 	CString originPath = strPath;
 
-	wcscat_s(strPath, MAX_PATH, L"Effect_Mesh\\");
+	wcscat_s(strPath, MAX_PATH, L"Effect_Texture\\");
 
 	dlg.m_ofn.lpstrInitialDir = strPath;
 
@@ -283,7 +281,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	wchar_t	strFilter[] = L"MESHFile(*.msh)|*.msh|모든파일(*.*)|*.*|||";
-	CFileDialog	dlg(TRUE, L".MSH", L"Mesh",
+	CFileDialog	dlg(TRUE, L"*.msh", L"Mesh",
 		OFN_HIDEREADONLY, strFilter);
 
 	// 경로 지정
@@ -434,7 +432,6 @@ void CEditForm::OnBnClickedCheckBillboard()
 		}
 	}
 }
-
 
 void CEditForm::OnLbnSelchangeListEffectContainer()
 {
@@ -635,6 +632,25 @@ void CEditForm::OnBnClickedButtonEffectSave()
 			mainFile << (*pVecAssist)[j]->GetMoveUV_X() << endl;
 			mainFile << (*pVecAssist)[j]->GetMoveUV_Y() << endl;
 		}
+
+		int iBillbordCheck = 0;
+		CBillboard *pBillboard = m_vecEffect[i]->pObject->FindComponentFromTag<CBillboard>("Billboard");
+
+		if (pBillboard)
+		{
+			if (pBillboard->GetOperateBillboard())
+				iBillbordCheck = 1;
+			else
+				iBillbordCheck = 0;
+
+			SAFE_RELEASE(pBillboard);
+		}
+		else
+		{
+			iBillbordCheck = 0;
+		}
+		
+		mainFile << iBillbordCheck << endl;
 	}
 
 	mainFile.close();
@@ -834,6 +850,15 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 			default:
 				break;
 			}
+		}
+
+		int iBillbordCheck = 0;
+		mainFile >> iBillbordCheck;
+		
+		if (iBillbordCheck)
+		{
+			CBillboard *pBillboard = pData->pObject->AddComponent<CBillboard>("Billboard");
+			SAFE_RELEASE(pBillboard);
 		}
 
 		m_vecEffect.push_back(pData);

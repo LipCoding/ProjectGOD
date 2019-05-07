@@ -46,7 +46,7 @@ private:
 	CCell* m_pSelectCell = nullptr;
 
 	int m_NumCell = 0;
-	float m_BrushSize = 3.0f;
+	float m_BrushSize = 0.5f;
 
 public:
 	afx_msg void OnBnClickedCheckNavi();

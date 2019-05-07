@@ -63,6 +63,7 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT4, m_editDetail_Tex4);
 	DDX_Control(pDX, IDC_SLIDER_SPLAT_POWER, m_ctrSlideSplatPower);
 	DDX_Control(pDX, IDC_EDIT_SPLAT_POWER, m_editSplatPower);
+	DDX_Control(pDX, IDC_CHECK_HEIGHT_INIT, m_checkHeightZero);
 }
 
 

@@ -273,9 +273,11 @@ bool CScene::Init()
 
 	SAFE_RELEASE(pLayer);
 
-
-
 	pLayer = CreateLayer("UI", UI_LAYER);
+
+	SAFE_RELEASE(pLayer);
+
+	pLayer = CreateLayer("Effect");
 
 	SAFE_RELEASE(pLayer);
 
