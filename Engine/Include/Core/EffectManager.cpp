@@ -182,8 +182,13 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 
 		if (iBillbordCheck)
 		{
+			pData->isBillboardCheck = true;
 			//CBillboard *pBillboard = pData->pObject->AddComponent<CBillboard>("Billboard");
 			//SAFE_RELEASE(pBillboard);
+		}
+		else
+		{
+			pData->isBillboardCheck = false;
 		}
 
 		vecData.push_back(pData);
@@ -215,20 +220,23 @@ void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOper
 	{
 		CGameObject *pEffectObj = CGameObject::CreateClone(effect->strName, pLayer);
 
-		CBillboard *pBillboard = pEffectObj->AddComponent<CBillboard>("Billboard");
-		SAFE_RELEASE(pBillboard);
+		if (effect->isBillboardCheck)
+		{
+			CBillboard *pBillboard = pEffectObj->AddComponent<CBillboard>("Billboard");
+			SAFE_RELEASE(pBillboard);
+		}
 
 		CTransform *pEffectTr = pEffectObj->GetTransform();
 		//CTransform *pOperatorTr = pOperator->GetTransform();
 
 		Vector3 vOriginPos = pEffectTr->GetWorldPos();
+
 		pEffectTr->SetWorldPos(vPos + vOriginPos);
 		
 		SAFE_RELEASE(pEffectTr);
 
 		CEffect *pEffect = pEffectObj->FindComponentFromType<CEffect>(CT_EFFECT);
 		pEffect->SetErase(true);
-
 		pEffect->SetOperationCheck(true);
 
 		SAFE_RELEASE(pEffect);

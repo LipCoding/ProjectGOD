@@ -263,7 +263,7 @@ void CEditForm::OnBnClickedButtonLoadMeshTexture()
 
 	CString originPath = strPath;
 
-	wcscat_s(strPath, MAX_PATH, L"Effect_Mesh\\");
+	wcscat_s(strPath, MAX_PATH, L"Effect_Texture\\");
 
 	dlg.m_ofn.lpstrInitialDir = strPath;
 

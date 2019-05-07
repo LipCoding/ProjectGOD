@@ -35,7 +35,10 @@ CEffect::CEffect(const CEffect & effect) :
 	TextureFullPath = effect.TextureFullPath;
 	TexturePath = effect.TexturePath;
 
-	m_tshareBuffer = effect.m_tshareBuffer;
+	m_tshareBuffer = {};
+
+	m_pRenderer = effect.m_pRenderer;
+	effect.m_pRenderer->AddRef();
 
 	for(const auto& assist : effect.m_vecAssist)
 	{
@@ -149,12 +152,12 @@ bool CEffect::Init()
 	/* Alpha용 상수 버퍼 */
 	m_pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
 
-	SHARECBUFFER tShareBuffer = {};
-	tShareBuffer.fAlphaFadeIn = 0.f;
-	tShareBuffer.fAlphaFadeOut = 0.f;
-	tShareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+	m_tshareBuffer = {};
+	m_tshareBuffer.fAlphaFadeIn = 0.f;
+	m_tshareBuffer.fAlphaFadeOut = 0.f;
+	m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
 
-	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &tShareBuffer);
+	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
 
 	/* Animation용 상수 버퍼 */
 	m_pRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
@@ -190,8 +193,11 @@ int CEffect::Update(float fTime)
 		{
 			if (m_EraseCheck)
 			{
+				/* 이펙트가 끝나면 삭제한다. */
 				m_pGameObject->Die();
 				CGameObject::EraseObj(m_pGameObject);
+
+				return 0;
 			}
 			else
 			{
