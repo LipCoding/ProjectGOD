@@ -194,11 +194,11 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	// x가 min보다 작으면 0을 리턴하고 max보다 크다면 1을 리턴한다.
 	// 1
 
-	//float rimWidth = 0.5f;
-	//float fRimLightColor = smoothstep(1.f - rimWidth, 1.f, 1 - max(0, saturate(dot(input.vNormal,
-	//	vCamDir))));
+	float rimWidth = 0.5f;
+	float fRimLightColor = smoothstep(1.f - rimWidth, 1.f, 1 - max(0, saturate(dot(input.vNormal,
+		vCamDir))));
 
-	//vColor += pow(fRimLightColor, 10.f) * 0.55f;
+	vColor += pow(fRimLightColor, 10.f) * 0.55f;
 
 
 	// 2
@@ -206,15 +206,15 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	float4 rc = float4(1.f, 1.f, 1.f, 1.f) * 0.75f;
 	vColor += pow(fRim, 2.f) * rc;*/
 
-	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	/*float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
 	float degree = float(degrees(acos(dotProduct)));
 
-	/*if (degree > 70.f)
+	if (degree > 70.f)
 	{
 		vColor *= float4(1.f, 0.f, 0.f, 1.f);
-	}*/
+	}
 
-	/*if (dotProduct < 0.3f)
+	if (dotProduct < 0.3f)
 	{
 		vColor = float4(0.f, 0.f, 0.f, 1.f);
 	}*/

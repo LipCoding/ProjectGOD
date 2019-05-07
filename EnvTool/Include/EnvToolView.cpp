@@ -590,6 +590,19 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			}
 		}
 	}
+
+	if (type == TAB_NAVI)
+	{
+		if (KEYDOWN("ArrowUp"))
+		{
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Set_Brush_Size(0.25f);
+		}
+
+		if (KEYDOWN("ArrowDown"))
+		{
+			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Set_Brush_Size(-0.25f);
+		}
+	}
 }
 
 void CEnvToolView::UpdateObject(const float & fTime)
