@@ -1,13 +1,9 @@
-Terrain\Height_test_scene
-Terrain\Texture_test_scene
-4
-Terrain\Bitmap_test_scene_0.bmp
+Terrain\Height_Test_Scene
+Terrain\Texture_Test_Scene
+2
+Terrain\Bitmap_Test_Scene_0.bmp
 1
-Terrain\Bitmap_test_scene_1.bmp
+Terrain\Bitmap_Test_Scene_1.bmp
 1
-Terrain\Bitmap_test_scene_2.bmp
-1
-Terrain\Bitmap_test_scene_3.bmp
-1
-12
-256 256
+31
+128 128

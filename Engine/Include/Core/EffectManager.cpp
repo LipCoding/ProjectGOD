@@ -206,6 +206,46 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 	m_mapEffects.insert(make_pair(effectTag, vecData));
 }
 
+vector<PEFFECTDATA>* CEffectManager::FindEffect(const string & effectTag)
+{
+	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
+	
+	if (iter == m_mapEffects.end())
+		return nullptr;
+
+	return &iter->second;
+}
+
+void CEffectManager::DeleteEffect(const string & effectTag)
+{
+	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
+
+	if (iter == m_mapEffects.end())
+		return;
+
+	for (auto& effect : iter->second)
+	{
+		FreeEffectData(effect);
+	}
+
+	iter->second.clear();
+
+	m_mapEffects.erase(iter->first);
+}
+
+void CEffectManager::ClearAll()
+{
+	for (auto& iter : m_mapEffects)
+	{
+		for (auto& effect : iter.second)
+		{
+			FreeEffectData(effect);
+		}
+		iter.second.clear();
+	}
+	m_mapEffects.clear();
+}
+
 void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos)
 {
 	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
