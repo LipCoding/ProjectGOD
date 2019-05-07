@@ -16,8 +16,8 @@ class Status :
 	CUIButton*  pUIManaBarBackground;
 	CUIButton*	pUIManaBar;
 
-	CUIButton*  pUISkillBarBackground;
-
+	CUIButton*  pUIPureBarBackground;
+	CUIButton*	pUIPureBar;
 	//CUIButton*  pUIManaBar;
 public:
 
@@ -28,7 +28,8 @@ public:
 public:
 	CUIButton* getUIHearthBar() { return pUIHearthBar; }
 	void setUIHeearthBar(CUIButton* pUIHearthBar) { this->pUIHearthBar = pUIHearthBar; }
-
+public:
+	void enableRender(bool show);
 public:
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);

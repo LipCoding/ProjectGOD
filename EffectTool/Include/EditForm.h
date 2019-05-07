@@ -17,8 +17,6 @@ public:
 		CGameObject		*pObject;
 		CEffect			*pEffect;
 		CTransform		*pTr;
-		EFFECT_TYPE		eType;
-		bool			m_bBillMode;
 	}EFFECTDATA;
 
 public:
@@ -71,20 +69,30 @@ private:
 	class CEffectTab1	*m_pEffect1Dlg = nullptr;
 	TOOLTAB_TYPE		m_eTabType = TAB_END;
 
-	
-
 	int m_iEffectNumber = 0;
 
 public:
 	virtual void OnInitialUpdate();
 	void UpdateForm();
+	void UpdateTarget(class CGameObject* object);
+	
+	void CloneTarget();
+
+private:
 	void FreeEffectData(EFFECTDATA* effect);
 private:
 	CTabCtrl m_Tab;
 	CListBox m_listEffectList;
+	CButton m_checkBillBoard;
 public:
 	afx_msg void OnTcnSelchangeTabEffect(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLoadParticle();
 	afx_msg void OnBnClickedButtonLoadMeshTexture();
 	afx_msg void OnBnClickedButtonLoadMesh();
+	afx_msg void OnBnClickedCheckBillboard();
+	afx_msg void OnLbnSelchangeListEffectContainer();
+	afx_msg void OnBnClickedButtonDelete();
+	afx_msg void OnBnClickedButtonClearAll();
+	afx_msg void OnBnClickedButtonEffectSave();
+	afx_msg void OnBnClickedButtonEffectLoad();
 };

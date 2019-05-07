@@ -11,7 +11,7 @@
 #include "AnimToolDoc.h"
 #include "AnimToolView.h"
 #include "Core.h"
-
+#include "EditForm.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CAnimToolApp, CWinApp)
 	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 	// 표준 인쇄 설정 명령입니다.
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO_CLIP_TYPE_1, IDC_RADIO_CLIP_TYPE_3, &CEditForm::OnRadioAnimTypeCheck)
 END_MESSAGE_MAP()
 
 

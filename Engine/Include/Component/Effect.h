@@ -16,6 +16,7 @@ public:
 	~CEffect();
 
 public:
+	vector<CEffectAssist*>* GetAssists() { return &m_vecAssist; }
 	CEffectAssist* GetAssistFromType(CEffectAssist::ASSIST_TYPE type);
 
 	float GetMainStartTime() { return m_MainStartTime; }
@@ -24,12 +25,18 @@ public:
 
 	int GetMainRepeat() { return m_Repeat; }
 
+	const string& GetMeshPath() { return MeshPath; }
+	const string& GetLocalPath() { return LocalPath; }
+	const string& GetTexturePath() { return TexturePath; }
+
 	void SetOperationCheck(bool check);
+	void SetErase(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
 
 	void SetMainStartTime(const float& start) { m_MainStartTime = start; }
 	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
+
 
 public:
 	virtual bool Init();
@@ -66,9 +73,8 @@ public:
 	void AddFadeOut(const float& start, const float& end, const float& degree);
 
 	/* UV */
-	void AddUVAnimation(const float& start, const float& end,
-						const int& width, const int& height, const int& repeat, const int& num);
-	void AddUVMovement(const float& start, const float& end, const int& moveX, const int& moveY);
+	void AddUVAnimation(const float& start, const float& end, const int& num, const int& repeat);
+	void AddUVMovement(const float& start, const float& end, const float& moveX, const float& moveY);
 
 	/* Delete Assist Effect */
 	void DeleteAssistEffectFromType(CEffectAssist::ASSIST_TYPE type);
@@ -79,6 +85,7 @@ private:
 
 	/* Check */
 	bool m_OperationCheck = false;
+	bool m_EraseCheck = false;
 
 	/* Timer */
 	float m_MainStartTime = 0.f;
@@ -90,11 +97,19 @@ private:
 
 	/* Name */
 	string EffectName = "";
-	string MeshPath = "";
 	string FileName = "";
+
+	string TextureFullPath = "";
+
+	string MeshPath = "";
+	string LocalPath = "";
+	string TexturePath = "";
+
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;
+
+	SHARECBUFFER     m_tshareBuffer = {};
 };
 
 PG_END

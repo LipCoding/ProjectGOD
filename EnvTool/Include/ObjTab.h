@@ -52,4 +52,5 @@ public:
 	afx_msg void OnLbnSelchangeListObjects();
 	afx_msg void OnBnClickedButtonObjectSave();
 	afx_msg void OnBnClickedButtonObjectLoad();
+	afx_msg void OnBnClickedButtonResetSelected();
 };

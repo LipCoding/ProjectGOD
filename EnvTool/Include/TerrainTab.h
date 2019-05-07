@@ -20,6 +20,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+public:
+	int GetHeightZeroCheck() { return m_checkHeightZero.GetCheck(); }
+
 private:
 	int   m_iSizeX;
 	int   m_iSizeZ;
@@ -78,4 +81,6 @@ private:
 	CString m_diffuseName = L"Terrain/TerrainTex0_D.tga";
 	CString m_normalName = L"Terrain/TerrainTex0_N.tga";
 	CString m_specularName = L"Terrain/TerrainTex0_S.tga";
+
+	CButton m_checkHeightZero;
 };

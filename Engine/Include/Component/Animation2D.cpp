@@ -101,6 +101,12 @@ bool CAnimation2D::CreateClip(const string & strKey,
 	else
 		pClip->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strTexKey);
 
+	if (!pClip->pTexture)
+	{
+		SAFE_DELETE(pClip);
+		return false;
+	}
+
 	m_mapClip.insert(make_pair(strKey, pClip));
 
 	if (m_strCurrentAnim.empty())
@@ -142,6 +148,12 @@ bool CAnimation2D::CreateClip(const string & strKey, ANIMATION2D_TYPE eType,
 	else
 		pClip->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strTexKey);
 
+	if (!pClip->pTexture)
+	{
+		SAFE_DELETE(pClip);
+		return false;
+	}
+
 	m_mapClip.insert(make_pair(strKey, pClip));
 
 	if (m_strCurrentAnim.empty())
@@ -152,6 +164,11 @@ bool CAnimation2D::CreateClip(const string & strKey, ANIMATION2D_TYPE eType,
 	}
 
 	return true;
+}
+
+PANIMATIONCLIP2D CAnimation2D::GetClip(const string & strKey)
+{
+	return FindClip(strKey);
 }
 
 bool CAnimation2D::AddClip(const string & strKey, PANIMATIONCLIP2D pClip)

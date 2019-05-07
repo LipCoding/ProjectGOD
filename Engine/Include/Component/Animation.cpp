@@ -976,6 +976,8 @@ int CAnimation::Update(float fTime)
 			}
 		}
 
+		//m_fAnimationGlobalTime = m_vecChannel[m_iCurChannel].pClip->m_tInfo.fTimeLength;
+
 		float	fAnimationTime = m_fAnimationGlobalTime +
 			m_vecChannel[m_iCurChannel].pClip->m_tInfo.fStartTime;
 
@@ -986,7 +988,7 @@ int CAnimation::Update(float fTime)
 
 		int	iFrameIndex = (int)(fAnimationTime * m_iFrameMode);
 		m_iCurrentFrame = iFrameIndex;
-
+		
 		if (m_bEnd)
 		{
 			switch (m_vecChannel[m_iCurChannel].pClip->m_tInfo.eOption)
@@ -994,15 +996,20 @@ int CAnimation::Update(float fTime)
 			case AO_LOOP:
 				iFrameIndex = iStartFrame;
 				break;
+
 			case AO_ONCE_RETURN:
 				ChangeClip(m_strDefaultClip);
 				break;
+
 			case AO_ONCE_DESTROY:
 				m_pGameObject->Die();
 				break;
+
+			case AO_ENDFRAME_TO_STOP:
+				m_bStopCheck = true;
+				break;
 			}
 		}
-
 		else
 		{
 			int	iNextFrameIndex = iFrameIndex + 1;

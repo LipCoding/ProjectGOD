@@ -19,7 +19,7 @@ private:
 	int maxMP = 150;
 
 	int attackDamage = 15;
-
+	bool dieState = false;
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
 	bool returnToInitialPos{ false };
@@ -67,7 +67,7 @@ public:
 		float fTime);
 	virtual void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
-
+	virtual void setDieState(bool state) { this->dieState = state; }
 public:
 public:
 	int getCurrentHP() { return currentHP; }

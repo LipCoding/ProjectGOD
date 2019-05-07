@@ -14,6 +14,7 @@
 #include <conio.h>
 #include <functional>
 #include <fstream>
+#include <atlconv.h>
 #include "PGTypes.h"
 #include "Protocol.h"
 #include "fmod/fmod.hpp"
@@ -62,6 +63,7 @@ using namespace FMOD;
 #define	STANDARD_COLOR_NORMAL_SHADER	"StandardColorNormalShader"
 #define	STANDARD_TEX_SHADER		"StandardTexShader"
 #define	STANDARD_TEX_NORMAL_SHADER		"StandardTexNormalShader"
+#define	STANDARD_EFFECT_TEX_NORMAL_SHADER		"StandardEffectTexNormalShader"
 #define	STANDARD_BUMP_SHADER		"StandardBumpShader"
 #define	STANDARD_TEX_NORMAL_ANIM_SHADER		"StandardTexNormalAnimShader"
 #define	STANDARD_BUMP_ANIM_SHADER		"StandardBumpAnimShader"
@@ -172,3 +174,6 @@ void Safe_Delete_Map(T& p)
 
 	p.clear();
 }
+
+extern std::wstring strconv(const std::string& _src);
+extern std::string strconv(const std::wstring& _src);

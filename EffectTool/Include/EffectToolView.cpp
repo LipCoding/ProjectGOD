@@ -374,18 +374,25 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 	if (m_pCollideObject)
 	{
 		CColliderSphere *pColl = m_pCollideObject->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
-		pColl->SetColliderRenderCheck(false);
-		SAFE_RELEASE(pColl);
+		if (pColl)
+		{
+			pColl->SetColliderRenderCheck(false);
+			SAFE_RELEASE(pColl);
+		}
 	}
 
 	/* 초기화 */
 	m_pCollideObject = nullptr;
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(nullptr);
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(nullptr);
 	((CMainFrame*)AfxGetMainWnd())->GetEdit()->SetTargetEffect(nullptr);
 
 	for (const auto& object : CGameObject::getObjectList())
 	{
 		CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
+
+		if (!pColl)
+			continue;
 
 		if (pRay->CheckCollList(pColl))
 		{
@@ -404,6 +411,8 @@ void CEffectToolView::OnRButtonDown(UINT nFlags, CPoint point)
 				pColl->SetColliderRenderCheck(true);
 				m_pCollideObject = object;
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffectTab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffect1Tab()->SetTargetObject(object);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->UpdateTarget(object);
 			}
 			SAFE_RELEASE(pColl);
 			SAFE_RELEASE(pRay);

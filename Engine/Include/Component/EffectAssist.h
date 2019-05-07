@@ -49,6 +49,7 @@ public:
 	~CEffectAssist();
 
 public:
+	void SetShareBuffer(SHARECBUFFER * sharebuffer) { m_pShareBuffer = sharebuffer; }
 	/* Getter */
 	ASSIST_TYPE GetType() { return m_AssistType; }
 	EASE_TYPE GetEaseType() { return m_EaseType; }
@@ -62,11 +63,12 @@ public:
 		  
 	float GetDegree() { return m_Degree; }
 
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
 	int GetNum() { return m_Num; }
 		
 	int GetRepeat() { return m_Repeat; }
+
+	float GetMoveUV_X() { return m_AniX; }
+	float GetMoveUV_Y() { return m_AniY; }
 
 	/* Setter */
 	void SetStartCheck(bool check) { m_StartCheck = check; }
@@ -79,18 +81,19 @@ public:
 
 	void SetDegree(const float& degree) { m_Degree = degree; }
 
-	void SetWidth(const int& width) { m_Width = width; }
-	void SetHeight(const int& height) { m_Height = height; }
 	void SetNum(const int& num) { m_Num = num; }
 
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
+	void SetMoveUV_X(const float& x) { m_AniX = x; }
+	void SetMoveUV_Y(const float& y) { m_AniY = y; }
+
 public:
 	void Init(class CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE easeType = EASE_END);
 	void Update(class CGameObject *object, const float& deltaTime);
-	
-private:
 	void FirstStatusSet(class CGameObject *object);
+
+private:
 	void ReturnToFirstSet(class CGameObject *object);
 	float Calc_Ease(EASE_TYPE type, const float& startValue, const float& variation, const float& duration);
 
@@ -118,17 +121,22 @@ private:
 	float m_PowerZ = 0.f;
 
 	/* For Fade (In / Out) */
+	float m_StartFadeIn = 0.f;
+	float m_StartFadeOut = 0.f;
+
 	float m_Degree = 0.f;
 
 	/* For UV */
-	int m_Width = 0;
-	int m_Height = 0;
-	int m_Num = 0;
-
-	int m_AniX = 0;
-	int m_AniY = 0;
+	class CAnimation2D *m_pAnimation = nullptr;
 
 	int m_Repeat = 0;
+	int m_Num = 0;
+
+	/* Move */
+	float m_AniX = 0.f;
+	float m_AniY = 0.f;
+
+	SHARECBUFFER *m_pShareBuffer = nullptr;
 };
 
 PG_END

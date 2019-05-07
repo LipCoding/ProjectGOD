@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component/Script.h"
+#include "GameObject/GameObject.h"
 
 PG_USING
 
@@ -9,11 +10,12 @@ class CSword :
 {
 public:
 	CSword();
-	CSword(const CSword& gun);
+	CSword(const CSword& sword);
 	~CSword();
 
 private:
 	Matrix* m_pBoneMatrix = nullptr;
+	class CTransform* m_pParentTr = nullptr;
 
 public:
 	virtual bool Init();

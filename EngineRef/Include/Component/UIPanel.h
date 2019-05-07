@@ -9,7 +9,7 @@ class PG_DLL CUIPanel :
 protected:
 	friend class CGameObject;
 
-protected:
+public:
 	CUIPanel();
 	CUIPanel(const CUIPanel& panel);
 	~CUIPanel();

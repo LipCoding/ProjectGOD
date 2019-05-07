@@ -256,6 +256,12 @@
     <Filter Include="00. Core\00. Math\Ease">
       <UniqueIdentifier>{a712eae5-7dba-42fd-8f1c-6b4c65ec67eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\03. Camera\Billboard">
+      <UniqueIdentifier>{36c4693b-1a61-4d68-8fcc-6ae91730284b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Core\10. EffectManager">
+      <UniqueIdentifier>{20681522-2a3b-4056-9da8-e8ea8e7a0a0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -509,6 +515,15 @@
     </ClCompile>
     <ClCompile Include="Ease.cpp">
       <Filter>00. Core\00. Math\Ease</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Billboard.cpp">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="PGEngine.cpp">
+      <Filter>98. Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EffectManager.cpp">
+      <Filter>00. Core\10. EffectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -784,6 +799,12 @@
     </ClInclude>
     <ClInclude Include="Ease.h">
       <Filter>00. Core\00. Math\Ease</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Billboard.h">
+      <Filter>06. Component\03. Camera\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EffectManager.h">
+      <Filter>00. Core\10. EffectManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

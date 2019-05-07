@@ -75,6 +75,8 @@ bool Seuteompi::Init()
 	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\seuteompi.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
+
+
 	if (!m_pAnimation)
 		m_pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
 

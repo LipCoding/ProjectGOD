@@ -2,13 +2,14 @@
 #include "../Ease.h"
 #include "Transform.h"
 #include "../GameObject/GameObject.h"
+#include "../Component/Renderer.h"
+#include "../Component/Animation2D.h"
 
 PG_USING
 
 CEffectAssist::CEffectAssist()
 {
 }
-
 
 CEffectAssist::~CEffectAssist()
 {
@@ -20,6 +21,10 @@ void CEffectAssist::Init(CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE 
 	m_EaseType = easeType;
 
 	FirstStatusSet(object);
+
+	//CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+	//pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
+	//SAFE_RELEASE(pRenderer);
 }
 
 void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
@@ -60,18 +65,51 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 		}
 		case ASSIST_FADE_IN:
 		{
+			float fAlpha = Calc_Ease(m_EaseType, m_StartFadeIn, m_Degree, m_LifeTime);
+
+			if (fAlpha >= 1.f)
+				fAlpha = 1.f;
+
+			m_pShareBuffer->fAlphaFadeOut = 1.f;
+			m_pShareBuffer->fAlphaFadeIn = fAlpha;
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		case ASSIST_FADE_OUT:
 		{
+			m_pShareBuffer->fAlphaFadeIn = 0.f;
+			m_pShareBuffer->fAlphaFadeOut = Calc_Ease(m_EaseType, m_StartFadeOut, m_Degree, m_LifeTime);
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		case ASSIST_UV_ANI:
 		{
+			CAnimation2D *pAnimation = object->FindComponentFromType<CAnimation2D>(CT_ANIMATION2D);
+			if (pAnimation)
+			{
+				pAnimation->ChangeAnimation("Effect");
+				SAFE_RELEASE(pAnimation);
+			}
 			break;
 		}
 		case ASSIST_UV_MOVE:
 		{
+			m_pShareBuffer->fMoveUV_X += m_AniX * deltaTime;
+			m_pShareBuffer->fMoveUV_Y += m_AniY * deltaTime;
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+
 			break;
 		}
 		default:
@@ -82,6 +120,21 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 	if (m_Time >= m_EndTime)
 	{
 		ReturnToFirstSet(object);
+
+		if (m_pShareBuffer)
+		{
+			/* Fade */
+			m_pShareBuffer->fAlphaFadeIn = 0.f;
+			m_pShareBuffer->fAlphaFadeOut = 0.f;
+			m_pShareBuffer->vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+			m_pShareBuffer->fMoveUV_X = 0.f;
+			m_pShareBuffer->fMoveUV_Y = 0.f;
+
+			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
+			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
+			SAFE_RELEASE(pRenderer);
+		}
+
 		m_StartCheck = false;
 	}
 }
@@ -90,6 +143,7 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 {
 	m_LifeTime = m_EndTime - m_StartTime;
 	m_Time = 0.f;
+
 	switch (m_AssistType)
 	{
 	case ASSIST_SCALE:
@@ -114,10 +168,12 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 	}
 	case ASSIST_FADE_IN:
 	{
+		m_StartFadeIn = 0.f;
 		break;
 	}
 	case ASSIST_FADE_OUT:
 	{
+		m_StartFadeOut = 0.f;
 		break;
 	}
 	case ASSIST_UV_ANI:
@@ -143,14 +199,26 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	case ASSIST_SCALE:
 	{
 		CTransform *pTr = object->GetTransform();
-		pTr->SetWorldScale(m_StartX, m_StartY, m_StartZ);
+		
+		if (pTr->GetWorldScale() != Vector3(m_StartX, m_StartY, m_StartZ))
+			pTr->SetWorldScale(m_StartX, m_StartY, m_StartZ);
+
 		SAFE_RELEASE(pTr);
 		break;
 	}
 	case ASSIST_ROT:
 	{
 		CTransform *pTr = object->GetTransform();
-		pTr->SetWorldRot(XMConvertToRadians(m_StartX), XMConvertToRadians(m_StartY), XMConvertToRadians(m_StartZ));
+
+		if (pTr->GetWorldRot() != Vector3(XMConvertToRadians(m_StartX),
+										  XMConvertToRadians(m_StartY),
+										  XMConvertToRadians(m_StartZ)))
+		{
+			pTr->SetWorldRot(XMConvertToRadians(m_StartX),
+				XMConvertToRadians(m_StartY),
+				XMConvertToRadians(m_StartZ));
+		}
+
 		SAFE_RELEASE(pTr);
 		break;
 	}
@@ -164,6 +232,19 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	}
 	case ASSIST_UV_ANI:
 	{
+		CAnimation2D *pAnimation = object->FindComponentFromType<CAnimation2D>(CT_ANIMATION2D);
+		if (pAnimation)
+		{
+			pAnimation->ChangeAnimation("Default");
+			PANIMATIONCLIP2D pClip = pAnimation->GetClip("Effect");
+			if (pClip)
+			{
+				pClip->iFrameMaxX = m_Num;
+				pClip->iLengthX = m_Num;
+				pClip->fAnimLimitTime = m_LifeTime;
+			}
+			SAFE_RELEASE(pAnimation);
+		}
 		break;
 	}
 	case ASSIST_UV_MOVE:

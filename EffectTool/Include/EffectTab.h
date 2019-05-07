@@ -38,6 +38,11 @@ public:
 		return m_pTargetObject;
 	}
 
+	bool GetFirstCheck()
+	{
+		return m_bFirstTargetCheck;
+	}
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
@@ -60,7 +65,6 @@ public:
 private:
 	/* */
 	void InitForm();
-
 
 	/* Total */
 	void InitFormValue();
@@ -175,10 +179,11 @@ private:
 	class CEaseSheetDlg *m_pEaseSheetDlg = nullptr;
 
 	CGameObject *m_pObjectMesh = nullptr;
-	CGameObject *m_pTargetObject = nullptr;
 	Matrix		*m_pBoneMatrix = nullptr;
 
 	string		m_boneNameAttachTo = "";
+
+	CGameObject *m_pTargetObject = nullptr;
 
 	CComboBox m_comboBoxBoneInfo;
 	CComboBox m_comboBoxAnimInfo;
@@ -187,6 +192,7 @@ private:
 
 	CButton m_checkSclaling;
 	CButton m_checkRotating;
+	CButton m_checkPartOrAll;
 
 	bool m_bFirstTargetCheck = true;
 
@@ -222,6 +228,6 @@ public:
 	afx_msg void OnBnClickedCheckRotating();
 	afx_msg void OnBnClickedButtonInfoMain();
 	afx_msg void OnBnClickedButtonMainPlay();
-	afx_msg void OnBnClickedButtonMainStop();
-
+	afx_msg void OnBnClickedButtonMainStop();	
+	afx_msg void OnBnClickedButtonCopyCurrentEffect();
 };

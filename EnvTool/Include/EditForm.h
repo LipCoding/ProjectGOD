@@ -30,6 +30,7 @@ protected:
 
 public:
 	const TOOLTAB_TYPE GetTabType() { return m_eTabType; }
+	class CTerrainTab* GetTerrainTab() { return m_pTerrainDlg; }
 	class CObjTab* GetObjectTab() { return m_pObjDlg; }
 	class CNaviTab* GetNaviTab() { return m_pNaviDlg; }
 

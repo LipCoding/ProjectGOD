@@ -13,7 +13,7 @@ public:
 	CAnimMeshInfoTab(CWnd* pParent = nullptr);   // 표준 생성자입니다.
 	virtual ~CAnimMeshInfoTab();
 
-// 대화 상자 데이터입니다.
+	// 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DIALOG_MESH_INFO };
 #endif
@@ -27,6 +27,7 @@ public:
 	void SetEditObj(CGameObject* editObj) { m_pEditObj = editObj; }
 	void SetArmObj(CGameObject* armObj) { m_pArmObj = armObj; }
 	void SetMeshInfo();
+
 public:
 	afx_msg void OnRadioAnimTypeCheck(UINT id);
 	afx_msg void OnBnClickedButtonModifyLocalInfo();
@@ -44,6 +45,15 @@ public:
 	afx_msg void OnBnClickedButtonSaveLocalInfo();
 	afx_msg void OnBnClickedButtonLoadLocalLoad();
 	afx_msg void OnBnClickedButtonAdjustScaleArm();
+
+public:
+	void SaveMeshAuto(const CString& path);
+	void SaveAnimationAuto(const CString& path);
+	void SaveLocalAuto(const CString& path);
+
+	void LoadMeshAuto(const CString& path, const CString& name);
+	void LoadAnimationAuto(const CString& path, const CString& name);
+	void LoadLocalAuto(const CString& path);
 private:
 	float m_fScaleX;
 	float m_fScaleY;
