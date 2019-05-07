@@ -58,8 +58,8 @@ bool CPlayer::Init()
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
 	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Player.anm");
-	m_pAnimation->SetDefaultClip("Idle");
-
+	m_pAnimation->SetDefaultClip("Idle1");
+#ifdef _BOEM_
 	GET_SINGLE(CInput)->CreateKey("RotInvY", 'Q');
 	GET_SINGLE(CInput)->CreateKey("RotY", 'E');
 
@@ -70,7 +70,7 @@ bool CPlayer::Init()
 	GET_SINGLE(CInput)->CreateKey("ShieldOff", VK_F2);
 	GET_SINGLE(CInput)->CreateKey("ShieldRangeOn", VK_F3);
 	GET_SINGLE(CInput)->CreateKey("ShieldRangeOff", VK_F4);
-
+#endif
 	return true;
 }
 

@@ -353,7 +353,7 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		isFocus = true;
 		break;
 	case WM_KILLFOCUS:
-		isFocus = false;
+		//isFocus = false;
 		break;
 
 	case WM_SOCKET:
