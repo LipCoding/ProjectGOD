@@ -27,6 +27,9 @@ public:
 	virtual BOOL OnInitDialog();
 
 public:
+	void Set_Brush_Size(const float& size);
+
+public:
 	void Process_ChangeTab();
 	void Process_ShowTab();
 	void UpdateForm();
@@ -46,7 +49,7 @@ private:
 	CCell* m_pSelectCell = nullptr;
 
 	int m_NumCell = 0;
-	float m_BrushSize = 0.5f;
+	float m_BrushSize = 1.f;
 
 public:
 	afx_msg void OnBnClickedCheckNavi();
@@ -55,4 +58,5 @@ public:
 	afx_msg void OnBnClickedButtonNaviLoad();
 	afx_msg void OnBnClickedButtonNaviDelete();
 	afx_msg void OnBnClickedButtonNaviClearall();
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

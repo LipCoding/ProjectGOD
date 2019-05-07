@@ -409,6 +409,9 @@ void CObjTab::OnLbnSelchangeListObjects()
 
 	int iPos = m_listObjList.GetCurSel();
 
+	if (iPos == -1)
+		return;
+
 	CRenderer* pRenderer = m_vecObjects[iPos]->FindComponentFromType<CRenderer>(CT_RENDERER);
 
 	SHARECBUFFER tShareBuffer = {};
