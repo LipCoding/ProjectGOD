@@ -230,7 +230,7 @@ bool CMainScene::Init()
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker.msh");
+			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
 			//pRenderer->SetForwardShader();
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
@@ -240,7 +240,7 @@ bool CMainScene::Init()
 			//CAnimation* pAnimation = pPlayerObj->AddComponent<CAnimation>("PlayerAnimation");
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.dat";
 
 			CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
 			pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 2.f);
