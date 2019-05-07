@@ -54,6 +54,7 @@
 #include "../PGMessageBox.h"
 #include "../TargetPlayerUI.h"
 #include "Core/EffectManager.h"
+#include "../ObjectScript/Sword.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -73,6 +74,7 @@ CMainScene::CMainScene()
 
 CMainScene::~CMainScene()
 {
+
 }
 
 void CMainScene::chat_callback(float fTime)
@@ -91,14 +93,17 @@ bool CMainScene::Init()
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
 		SAFE_RELEASE(pLayer);
 	}
+
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
 		SAFE_RELEASE(pLayer);
 	}
+
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
 		SAFE_RELEASE(pLayer);
 	}
+
 	{
 		CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
 		SAFE_RELEASE(pParticleLayer);
@@ -106,12 +111,12 @@ bool CMainScene::Init()
 #pragma endregion
 	GET_SINGLE(UserInterfaceManager)->initialize();
 
-
 #pragma region KeySetting
 	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
 	GET_SINGLE(CInput)->CreateKey("QUICKSLOT-Q", 'Q');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
 #pragma endregion
+
 #pragma region Terrain
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -728,12 +733,9 @@ bool CMainScene::Init()
 //		SAFE_RELEASE(pParticleLayer);
 //	}
 //#pragma endregion
+
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
-
-
-
-
+	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 
 	return true;
 }
@@ -1109,6 +1111,14 @@ int CMainScene::Update(float fTime)
 					GET_SINGLE(UserInterfaceManager)->setPlayer(pPlayer);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
+
+					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					pSword->setTargetPlayerID(id);
+					pSword->initialize();
+					SAFE_RELEASE(pSword);
+					SAFE_RELEASE(pSwordObj);
+
 					//CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("PlayerCollider");
 					//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
 					//pCollider->setColor(Vector4::Green);
@@ -1168,9 +1178,18 @@ int CMainScene::Update(float fTime)
 
 					//pPlayerObj->SetTag(objectTag);
 					pPlayerObj->SetTag(objectTag);
+
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
+
+					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					pSword->setTargetPlayerID(id);
+					pSword->initialize();
+					SAFE_RELEASE(pSword);
+					SAFE_RELEASE(pSwordObj);
+
 					CTransform*	pTr = pPlayerObj->GetTransform();
 					CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
 					pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
@@ -1336,7 +1355,7 @@ int CMainScene::Update(float fTime)
 				Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
 				pLightTransform->SetWorldPos(LightPos);
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Run");
+				pAnimation->ChangeClip("Run1");
 
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
@@ -1354,7 +1373,7 @@ int CMainScene::Update(float fTime)
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 				pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Run");
+				pAnimation->ChangeClip("Run1");
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
 				SAFE_RELEASE(pGameObject);

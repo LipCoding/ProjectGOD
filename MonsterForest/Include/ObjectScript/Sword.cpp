@@ -23,7 +23,7 @@ CSword::~CSword()
 	m_pBoneMatrix = nullptr;
 }
 
-bool CSword::Init()
+bool CSword::initialize()
 {
 	// 따로 Class 필요
 	FILE* pFile = nullptr;
@@ -61,7 +61,11 @@ bool CSword::Init()
 	fread(&boneSize, sizeof(size_t), 1, pFile);
 	fread(&strBoneName, sizeof(char), boneSize, pFile);
 
-	CGameObject *pPlayerObj = CGameObject::FindObject("PlayerCharacter");
+
+	string appendTag = to_string(this->targetPlayerID);
+	string objectTag = "Player" + appendTag;
+
+	CGameObject *pPlayerObj = CGameObject::FindObject(objectTag);
 	CAnimation* pAnimation = pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
 	PBONE pBone = pAnimation->FindBone(strBoneName);
 
