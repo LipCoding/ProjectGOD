@@ -678,56 +678,56 @@ bool CMainScene::Init()
 //	SAFE_RELEASE(pParticleLayer);
 //#pragma endregion
 
-#pragma region billboard
-	{
-		default_random_engine dre;
-		uniform_int_distribution<> ui;
-
-		CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
-
-		for (int i = 0; i < 10; ++i)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				string number_tag = to_string(i);
-				string object_tag = "ParticleObj" + number_tag;
-				CGameObject*    pParticleObj = CGameObject::CreateObject(object_tag, pParticleLayer);
-
-				CTransform*    pParticleTr = pParticleObj->GetTransform();
-				pParticleTr->SetWorldPos(300.f + (0.2 * i), 2.f, 300.f + (0.2*j));
-				SAFE_RELEASE(pParticleTr);
-
-				CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
-				pParticleSingle->SetSize(10.f, 10.f);
-				SAFE_RELEASE(pParticleSingle);
-
-				CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
-				pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
-					SCT_VERTEX | SCT_PIXEL);
-				pParticleRenderer->SetRenderState(ALPHA_BLEND);
-				CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
-				pParticleAnimation->SetRenderer2DEnable(false);
-
-				vector<wstring>    vecExplosion;
-				for (int i = 1; i <= 1; ++i)
-				{
-					wchar_t    strPath[MAX_PATH] = {};
-					wsprintf(strPath, L"Billboard/grass.tga", i);
-
-					vecExplosion.push_back(strPath);
-				}
-
-				pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
-					1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
-
-				SAFE_RELEASE(pParticleAnimation);
-				SAFE_RELEASE(pParticleRenderer);
-				SAFE_RELEASE(pParticleObj);
-			}
-		}
-		SAFE_RELEASE(pParticleLayer);
-	}
-#pragma endregion
+//#pragma region billboard
+//	{
+//		default_random_engine dre;
+//		uniform_int_distribution<> ui;
+//
+//		CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
+//
+//		for (int i = 0; i < 10; ++i)
+//		{
+//			for (int j = 0; j < 10; ++j)
+//			{
+//				string number_tag = to_string(i);
+//				string object_tag = "ParticleObj" + number_tag;
+//				CGameObject*    pParticleObj = CGameObject::CreateObject(object_tag, pParticleLayer);
+//
+//				CTransform*    pParticleTr = pParticleObj->GetTransform();
+//				pParticleTr->SetWorldPos(300.f + (0.2 * i), 2.f, 300.f + (0.2*j));
+//				SAFE_RELEASE(pParticleTr);
+//
+//				CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
+//				pParticleSingle->SetSize(10.f, 10.f);
+//				SAFE_RELEASE(pParticleSingle);
+//
+//				CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+//				pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+//					SCT_VERTEX | SCT_PIXEL);
+//				pParticleRenderer->SetRenderState(ALPHA_BLEND);
+//				CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
+//				pParticleAnimation->SetRenderer2DEnable(false);
+//
+//				vector<wstring>    vecExplosion;
+//				for (int i = 1; i <= 1; ++i)
+//				{
+//					wchar_t    strPath[MAX_PATH] = {};
+//					wsprintf(strPath, L"Billboard/grass.tga", i);
+//
+//					vecExplosion.push_back(strPath);
+//				}
+//
+//				pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
+//					1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
+//
+//				SAFE_RELEASE(pParticleAnimation);
+//				SAFE_RELEASE(pParticleRenderer);
+//				SAFE_RELEASE(pParticleObj);
+//			}
+//		}
+//		SAFE_RELEASE(pParticleLayer);
+//	}
+//#pragma endregion
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
 	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 
@@ -1310,7 +1310,7 @@ int CMainScene::Update(float fTime)
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				char str[128];
-				string appendTag = _itoa(myClientID, str, 10);
+				string appendTag = to_string(myClientID);
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
@@ -1345,7 +1345,8 @@ int CMainScene::Update(float fTime)
 			else if (id < NPC_START)
 			{
 				char str[128];
-				string appendTag = _itoa(id, str, 10);
+				_cprintf("%d", id);
+				string appendTag = to_string(id);
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
@@ -1361,7 +1362,7 @@ int CMainScene::Update(float fTime)
 			else
 			{
 				char str[128];
-				string appendTag = _itoa(id, str, 10);
+				string appendTag = to_string(id);
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
@@ -1386,7 +1387,7 @@ int CMainScene::Update(float fTime)
 			char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
 			int id = pPacket->id;
-			string appendTag = _itoa(id, str, 10);
+			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 
 			if (id == NetworkManager::getInstance()->getMyClientID())
@@ -1499,7 +1500,7 @@ int CMainScene::Update(float fTime)
 				{
 					int target = pPacket->targetid;
 					int damage = pPacket->damage;
-					string appendTag = _itoa(target, str, 10);
+					string appendTag = to_string(target);
 					string objectTag = "Player" + appendTag;
 					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
 					if (nullptr != pTargetObject)
@@ -1548,9 +1549,10 @@ int CMainScene::Update(float fTime)
 				}
 
 				{
+
 					int target = pPacket->targetid;
 					int damage = pPacket->damage;
-					string appendTag = _itoa(target, str, 10);
+					string appendTag = to_string(target);
 					string objectTag = "Player" + appendTag;
 					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
 					if (nullptr != pTargetObject)
@@ -1633,7 +1635,8 @@ int CMainScene::Update(float fTime)
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				char str[128];
-				string appendTag = _itoa(myClientID, str, 10);
+				_cprintf("%d", myClientID);
+				string appendTag = to_string(myClientID);
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
@@ -1662,9 +1665,11 @@ int CMainScene::Update(float fTime)
 			else if (id < NPC_START)
 			{
 				char str[128];
-				string appendTag = _itoa(id, str, 10);
+				_cprintf("%d", id);
+				string appendTag = to_string(id);
 				string objectTag = "Player" + appendTag;
-
+				_cprintf("%s", appendTag.c_str());
+				_cprintf("%s", objectTag.c_str());
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				CTransform* pTransform = pGameObject->GetTransform();
 
