@@ -23,7 +23,11 @@ public:
 	void AddEffect(const string& effectTag, const string& filePath);
 
 	// 검색
+	vector<PEFFECTDATA>* FindEffect(const string& effectTag);
+
 	// 삭제, 전체삭제
+	void DeleteEffect(const string& effectTag);
+	void ClearAll();
 	
 	// 실행
 	void OperateEffect(const string& effectTag, CGameObject *pOperator, Vector3 vPos);

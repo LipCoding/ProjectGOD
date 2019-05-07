@@ -163,6 +163,12 @@ bool CEffect::Init()
 	m_pRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
 		SCT_VERTEX | SCT_PIXEL);
 
+	ANIMATION2DBUFFER tanimBuffer = {};
+	tanimBuffer.iType = 0;
+
+	m_pRenderer->UpdateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER), 
+		SCT_VERTEX | SCT_PIXEL, &tanimBuffer);
+
 	CMaterial *pMaterial = m_pRenderer->CreateMaterial();
 	SAFE_RELEASE(pMaterial);
 
