@@ -735,7 +735,7 @@ bool CMainScene::Init()
 //#pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 
 	return true;
 }
@@ -970,10 +970,20 @@ void CMainScene::Input(float fTime)
 			SAFE_RELEASE(pColl);
 		}
 		if (clickedEnemy == false)
+		{
 			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
+			GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->enableRender(false);
+		}
 
 		SAFE_RELEASE(pRay);
 		SAFE_RELEASE(pMouseObj);
+	}
+
+	if (KEYDOWN("ESC"))
+	{
+		GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
+		GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->enableRender(false);
+		GET_SINGLE(UserInterfaceManager)->getInventory()->enableRender(false);
 	}
 
 	if (KEYDOWN("Attack"))

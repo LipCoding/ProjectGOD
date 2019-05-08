@@ -108,6 +108,7 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	CreateKey(VK_LSHIFT, "LShift");
 	CreateKey(VK_CONTROL, "Ctrl");
 	CreateKey(VK_SPACE, "Space");
+	CreateKey(VK_ESCAPE, "ESC");
 
 	CreateKey(VK_LBUTTON, "MouseLButton");
 	CreateKey(VK_RBUTTON, "MouseRButton");

@@ -344,9 +344,6 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:	// 키를 누를때 들어오는 메세지이다.
 		switch (wParam)
 		{
-		case VK_ESCAPE:
-			DestroyWindow(hWnd);
-			break;
 		}
 		break;
 	case WM_SETFOCUS:

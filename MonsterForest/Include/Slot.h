@@ -9,8 +9,10 @@ class Slot :
 {
 private:
 	int index = 0;
+	bool equipslot = false;
 	//CGameObject* pSlot = nullptr;
 	CGameObject* pItem = nullptr;
+	Vector3 offsetPos = Vector3::Zero;
 public:
 	Slot();
 	~Slot();
@@ -27,6 +29,13 @@ public:
 public:
 	CGameObject* getItem() { return this->pItem; }
 	void showItem(bool show);
+	bool isEquipSlot() { return equipslot; }
+	void enableEquipSlot(bool enable) { this->equipslot = enable; }
+
+public:
+	Vector3 getOffsetPos() { return offsetPos; }
+	void setOffsetPos(const Vector3& pos) { this->offsetPos = pos; }
+
 public:
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
