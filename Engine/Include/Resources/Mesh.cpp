@@ -888,7 +888,15 @@ bool CMesh::ConvertFbx(CFbxLoader * pLoader)
 	MoveFileA(strFullName, strChange);
 
 	// Mesh\\ 까지의 경로를 제거한다.
+
+	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH)) - 1;
 	iLength = strlen(strChange);
+
+	memset(strChange, 0, sizeof(char) * (meshPathSize + 1));
+	memcpy(strChange, &strChange[meshPathSize + 1], sizeof(char) * (iLength - (meshPathSize + 1)));
+	memset(strChange + (iLength - (meshPathSize + 1)), 0, sizeof(char) * (MAX_PATH - (meshPathSize + 1)));
+
+	/*iLength = strlen(strChange);
 	for (int i = iLength - 2; i >= 0; --i)
 	{
 		char	cText[5] = {};
@@ -902,7 +910,7 @@ bool CMesh::ConvertFbx(CFbxLoader * pLoader)
 			memset(strChange + (i + 1), 0, sizeof(char) * (iLength - (i + 1)));
 			break;
 		}
-	}
+	}*/
 
 	for (size_t i = 0; i < m_vecMeshContainer.size(); ++i)
 	{
