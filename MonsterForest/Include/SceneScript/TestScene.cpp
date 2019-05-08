@@ -168,7 +168,7 @@ bool CTestScene::Init()
 		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells())[0]->Get_CenterPos();
 
 		pTr->SetWorldPos(vFirstNodeCenterPos);
-		pTr->SetWorldScale(2.f, 2.f, 2.f);
+		pTr->SetWorldScale(1.f, 1.f, 1.f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);	
 
 		/* Cam */
@@ -189,6 +189,7 @@ bool CTestScene::Init()
 		// 따로 Class 필요
 		CGameObject *pSwordObj = CGameObject::CreateObject("Sword_Player", pLayer);
 		CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+		pSword->initialize();
 		SAFE_RELEASE(pSword);
 		SAFE_RELEASE(pSwordObj);
 
