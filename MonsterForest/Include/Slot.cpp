@@ -12,7 +12,7 @@
 #include "UserInterfaceManager.h"
 #include "Inventory.h"
 #include "Core/NetworkManager.h"
-
+#include "ObjectScript/Sword.h"
 Slot::Slot()
 {
 	SetTag("Slot");
@@ -151,6 +151,23 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 				}
 				else
 				{
+					this->pItem = GET_SINGLE(UserInterfaceManager)->getInventory()->getTempItem();
+					int prevIndex = GET_SINGLE(UserInterfaceManager)->getInventory()->getCurrentIndex();
+					int row = prevIndex / 5;
+					int col = prevIndex % 5;
+					GET_SINGLE(UserInterfaceManager)->getInventory()->getSlot()[row][col]->pItem = nullptr;
+
+
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					int id = NetworkManager::getInstance()->getMyClientID();
+					string objectTag = "Player" + to_string(id);
+					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					pSword->setTargetPlayerID(id);
+					pSword->initialize();
+					SAFE_RELEASE(pSword);
+					SAFE_RELEASE(pSwordObj);
+					SAFE_RELEASE(pLayer);
 				}
 			}
 		}

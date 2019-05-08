@@ -55,6 +55,7 @@
 #include "../TargetPlayerUI.h"
 #include "Core/EffectManager.h"
 #include "../ObjectScript/Sword.h"
+#include "Component/ColliderAABB.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -246,11 +247,16 @@ bool CMainScene::Init()
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.dat";
-
-			CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
-			pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 2.f);
-			SAFE_RELEASE(pCollider);
-
+			{
+				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			{
+				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider2");
+				pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
 			FILE* pFile_Player = nullptr;
 
 			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
@@ -274,6 +280,11 @@ bool CMainScene::Init()
 			pTr->SetWorldScale(1.f, 1.f, 1.f);
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
+			{
+				CColliderSphere* pCollider = pGolemObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
 			CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
 
 			pRenderer->SetMesh("golem", L"99.Dynamic_Mesh\\02.Monster\\golem.msh");
@@ -306,7 +317,21 @@ bool CMainScene::Init()
 			CRenderer*	pRenderer = pMinoObj->AddComponent<CRenderer>("PlayerRenderer");
 
 			pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino.msh");
-
+			{
+				CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			{
+				CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider2");
+				pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			//{
+			//	CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider2");
+			//	pCollider->SetSphere(Vector3(0.f, 3.f, 0.f), 1.f);
+			//	SAFE_RELEASE(pCollider);
+			//}
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
@@ -352,7 +377,11 @@ bool CMainScene::Init()
 
 			pRenderer->SetMesh("seuteompi", L"99.Dynamic_Mesh\\02.Monster\\seuteompi.msh");
 
-
+			{
+				CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\seuteompi.dat";
@@ -1122,12 +1151,12 @@ int CMainScene::Update(float fTime)
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
 
-					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
-					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
-					pSword->setTargetPlayerID(id);
-					pSword->initialize();
-					SAFE_RELEASE(pSword);
-					SAFE_RELEASE(pSwordObj);
+					//CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					//CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					//pSword->setTargetPlayerID(id);
+					//pSword->initialize();
+					//SAFE_RELEASE(pSword);
+					//SAFE_RELEASE(pSwordObj);
 
 					//CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("PlayerCollider");
 					//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
@@ -1254,9 +1283,9 @@ int CMainScene::Update(float fTime)
 						Mino*	pMino = pMinoObject->AddComponent<Mino>("Mino");
 						SAFE_RELEASE(pMino);
 						CTransform*	pTr = pMinoObject->GetTransform();
-						CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider");
-						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
-						SAFE_RELEASE(pCollider);
+						//CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetLocalRotY(XMConvertToRadians(180.f));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
@@ -1282,9 +1311,9 @@ int CMainScene::Update(float fTime)
 						Seuteompi*	pSeuteompi = pSeuteompiObj->AddComponent<Seuteompi>("Seuteompi");
 						SAFE_RELEASE(pSeuteompi);
 						CTransform*	pTr = pSeuteompiObj->GetTransform();
-						CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
-						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
-						SAFE_RELEASE(pCollider);
+						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
@@ -1313,9 +1342,9 @@ int CMainScene::Update(float fTime)
 
 						pAnimation->Load("99.Dynamic_Mesh\\01.npc\\npc.anm");
 
-						CColliderSphere* pCollider = pNpcObj->AddComponent<CColliderSphere>("collider");
-						pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
-						SAFE_RELEASE(pCollider);
+						//CColliderSphere* pCollider = pNpcObj->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
 						CTransform*	pTr = pNpcObj->GetTransform();
 
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
@@ -1483,6 +1512,7 @@ int CMainScene::Update(float fTime)
 
 							if (hp < 0)
 							{
+
 								float ratio = (float)hp / (float)pMino->getMaxHP();
 								pMino->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
@@ -1926,6 +1956,18 @@ int CMainScene::Update(float fTime)
 				if (nullptr != pMino)
 				{
 					pMino->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				Golem* pGolem = pGameObject->FindComponentFromTag<Golem>("Golem");
+				if (nullptr != pGolem)
+				{
+					pGolem->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				Seuteompi* pSeuteompi = pGameObject->FindComponentFromTag<Seuteompi>("Seuteompi");
+				if (nullptr != pSeuteompi)
+				{
+					pSeuteompi->setDieState(true);
 					SAFE_RELEASE(pMino);
 				}
 			}
