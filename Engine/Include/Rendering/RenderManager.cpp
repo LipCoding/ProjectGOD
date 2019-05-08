@@ -711,13 +711,26 @@ void CRenderManager::Render(float fTime)
 	{
 		for (int j = 0; j < m_tRenderGroup[i].iSize; ++j)
 		{
-			CCollider* pCollider = nullptr;
-			pCollider = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CCollider>(CT_COLLIDER);
-			if (pCollider != nullptr)
+			//CCollider* pCollider = nullptr;
+			//pCollider = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CCollider>(CT_COLLIDER);
+			//if (pCollider != nullptr)
+			//{
+			//	pCollider->ColliderRender(fTime);
+			//	SAFE_RELEASE(pCollider);
+			//}
+
+			const auto& pComponentLists = m_tRenderGroup[i].pRenderObj[j]->FindComponentsFromType(CT_COLLIDER);
+			if(nullptr != pComponentLists)
 			{
-				pCollider->ColliderRender(fTime);
-				SAFE_RELEASE(pCollider);
+				auto begin = pComponentLists->begin();
+				auto end = pComponentLists->end();
+				for(;begin != end; ++begin)
+				{
+					static_cast<CCollider*>((*begin))->ColliderRender(fTime);
+					//SAFE_RELEASE((*begin));
+				}
 			}
+
 
 			m_pDepthDisable->SetState();
 			CAxisLine* pAxis = m_tRenderGroup[i].pRenderObj[j]->FindComponentFromType<CAxisLine>(CT_AXIS);

@@ -123,12 +123,13 @@ bool Inventory::initialize()
 
 	// helmet
 	{
-		string appendTag = to_string(0);
+		string appendTag = to_string(EQUIP_HELMET);
 		string slotTag = "EquipSlot" + appendTag;
 		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
-		this->pEquipSlot[0] = pSlotObject->AddComponent<Slot>("Slot");
-		this->pEquipSlot[0]->initialize(0);
-		this->pEquipSlot[0]->setOffsetPos(Vector3(100.f, 20.f, 0.f));
+		this->pEquipSlot[EQUIP_HELMET] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[EQUIP_HELMET]->initialize(EQUIP_HELMET);
+		this->pEquipSlot[EQUIP_HELMET]->setOffsetPos(Vector3(100.f, 30.f, 0.f));
+		this->pEquipSlot[EQUIP_HELMET]->enableEquipSlot(true);
 		CTransform*	pSlotTr = pSlotObject->GetTransform();
 
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
@@ -145,6 +146,154 @@ bool Inventory::initialize()
 
 		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
 			0, 0, L"UserInterface/UI_INVEN_HELMET.png");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pSlotObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag(slotTag);
+		pRC->SetRect(0, 0, 32.f, 32.f);
+
+		SAFE_RELEASE(pRC);
+		SAFE_RELEASE(pSlotObject);
+	}
+
+	// Armor
+	{
+		string appendTag = to_string(EQUIP_ARMOR);
+		string slotTag = "EquipSlot" + appendTag;
+		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
+		this->pEquipSlot[EQUIP_ARMOR] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[EQUIP_ARMOR]->initialize(EQUIP_ARMOR);
+		this->pEquipSlot[EQUIP_ARMOR]->setOffsetPos(Vector3(100.f, 80.f, 0.f));
+		this->pEquipSlot[EQUIP_ARMOR]->enableEquipSlot(true);
+		CTransform*	pSlotTr = pSlotObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pSlotTr->SetWorldScale(48.f, 48.f, 1.f);
+		pSlotTr->SetWorldPos(300.f, 20, 0.f);
+
+		SAFE_RELEASE(pSlotTr);
+
+		//SAFE_RELEASE(pButton);
+		//this->pSlot[i][j] = new Slot;
+		//this->pSlot[i][j]->initialize((i*SLOT_ROW) + j);
+		CRenderer2D* pRenderer = pSlotObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
+			0, 0, L"UserInterface/UI_INVEN_ARMOR.png");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pSlotObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag(slotTag);
+		pRC->SetRect(0, 0, 32.f, 32.f);
+
+		SAFE_RELEASE(pRC);
+		SAFE_RELEASE(pSlotObject);
+	}
+
+	// Shoose
+	{
+		string appendTag = to_string(EQUIP_SHOOSE);
+		string slotTag = "EquipSlot" + appendTag;
+		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
+		this->pEquipSlot[EQUIP_SHOOSE] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[EQUIP_SHOOSE]->initialize(EQUIP_SHOOSE);
+		this->pEquipSlot[EQUIP_SHOOSE]->setOffsetPos(Vector3(100.f, 130.f, 0.f));
+		this->pEquipSlot[EQUIP_SHOOSE]->enableEquipSlot(true);
+		CTransform*	pSlotTr = pSlotObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pSlotTr->SetWorldScale(48.f, 48.f, 1.f);
+		pSlotTr->SetWorldPos(300.f, 20, 0.f);
+
+		SAFE_RELEASE(pSlotTr);
+
+		//SAFE_RELEASE(pButton);
+		//this->pSlot[i][j] = new Slot;
+		//this->pSlot[i][j]->initialize((i*SLOT_ROW) + j);
+		CRenderer2D* pRenderer = pSlotObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
+			0, 0, L"UserInterface/UI_INVEN_SHOES.png");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pSlotObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag(slotTag);
+		pRC->SetRect(0, 0, 32.f, 32.f);
+
+		SAFE_RELEASE(pRC);
+		SAFE_RELEASE(pSlotObject);
+	}
+
+	// WEAPON
+	{
+		string appendTag = to_string(EQUIP_WEAPON);
+		string slotTag = "EquipSlot" + appendTag;
+		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
+		this->pEquipSlot[EQUIP_WEAPON] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[EQUIP_WEAPON]->initialize(EQUIP_WEAPON);
+		this->pEquipSlot[EQUIP_WEAPON]->setOffsetPos(Vector3(50.f, 80.f, 0.f));
+		this->pEquipSlot[EQUIP_WEAPON]->enableEquipSlot(true);
+		CTransform*	pSlotTr = pSlotObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pSlotTr->SetWorldScale(48.f, 48.f, 1.f);
+		pSlotTr->SetWorldPos(300.f, 20, 0.f);
+
+		SAFE_RELEASE(pSlotTr);
+
+		//SAFE_RELEASE(pButton);
+		//this->pSlot[i][j] = new Slot;
+		//this->pSlot[i][j]->initialize((i*SLOT_ROW) + j);
+		CRenderer2D* pRenderer = pSlotObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
+			0, 0, L"UserInterface/UI_INVEN_WEAPON.png");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pSlotObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag(slotTag);
+		pRC->SetRect(0, 0, 32.f, 32.f);
+
+		SAFE_RELEASE(pRC);
+		SAFE_RELEASE(pSlotObject);
+	}
+
+	// RING
+	{
+		string appendTag = to_string(EQUIP_RING);
+		string slotTag = "EquipSlot" + appendTag;
+		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
+		this->pEquipSlot[EQUIP_RING] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[EQUIP_RING]->initialize(EQUIP_RING);
+		this->pEquipSlot[EQUIP_RING]->setOffsetPos(Vector3(150.f, 80.f, 0.f));
+		this->pEquipSlot[EQUIP_RING]->enableEquipSlot(true);
+		CTransform*	pSlotTr = pSlotObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pSlotTr->SetWorldScale(48.f, 48.f, 1.f);
+		pSlotTr->SetWorldPos(300.f, 20, 0.f);
+
+		SAFE_RELEASE(pSlotTr);
+
+		//SAFE_RELEASE(pButton);
+		//this->pSlot[i][j] = new Slot;
+		//this->pSlot[i][j]->initialize((i*SLOT_ROW) + j);
+		CRenderer2D* pRenderer = pSlotObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
+			0, 0, L"UserInterface/UI_INVEN_RING.png");
 
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);

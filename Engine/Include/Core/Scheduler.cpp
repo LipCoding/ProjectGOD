@@ -4,6 +4,7 @@ PG_USING
 
 DEFINITION_SINGLE(CScheduler)
 
+
 CScheduler::CScheduler()
 {
 }

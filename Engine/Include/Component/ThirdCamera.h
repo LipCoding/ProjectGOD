@@ -15,10 +15,10 @@ private:
 	~CThirdCamera();
 
 private:
-	int		m_iMoveDir;
-	float	m_fZoomSpeed;
+	int		m_iMoveDir = 0;
+	float	m_fZoomSpeed = 0;
 	class CArm*	m_pArm;
-	int		m_iDragCount;
+	int		m_iDragCount = 0;
 
 private:
 	void Zoom();

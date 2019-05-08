@@ -10,12 +10,15 @@ PG_USING
 class Monster :
 	public CScript
 {
+protected:
 	OBJECT_SET_TYPE objectSetType = OBJECT_SET_TYPE::NONE;
+	bool dieState = false;
 public:
 	Monster();
 	~Monster();
 
 public:
+	virtual void setDieState(bool state) { this->dieState = state; }
 	void setObjectSetType(OBJECT_SET_TYPE type) { objectSetType = type; }
 	OBJECT_SET_TYPE getObjectSetType() { return objectSetType; }
 };
