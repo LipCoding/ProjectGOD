@@ -547,8 +547,10 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 
 	CString originPath = strPath;
 
-	dlg.m_ofn.lpstrInitialDir = strPath;
+	CString dirFBXPath = L"00.FBX_FILES\\";
 
+	dlg.m_ofn.lpstrInitialDir = strPath + dirFBXPath;
+	
 	// do modal error 해결
 	if (dlg.DoModal() != IDOK)
 		return;
