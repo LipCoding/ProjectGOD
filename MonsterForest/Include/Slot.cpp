@@ -59,14 +59,16 @@ void Slot::update(float time)
 {
 	if (pItem != nullptr)
 	{
+
 		CTransform* pSlotTr = this->m_pGameObject->GetTransform();
 		CTransform* pItemTr = this->pItem->GetTransform();
 
 		Vector3 slotPos = pSlotTr->GetWorldPos();
-		pItemTr->SetWorldPos(Vector3(slotPos.x+1, slotPos.y+1, 0.f));
+		pItemTr->SetWorldPos(Vector3(slotPos.x + 1, slotPos.y + 1, 0.f));
 
 		SAFE_RELEASE(pItemTr);
 		SAFE_RELEASE(pSlotTr);
+
 	}
 }
 
@@ -74,8 +76,14 @@ void Slot::move(const Vector3& movement)
 {
 	CTransform*	pSlotTr = this->m_pGameObject->GetTransform();
 
-	pSlotTr->SetWorldPos(movement.x-15 + ((index % 5) * 32) + 50 + ((index % 5) * 5), movement.y + ((index / 5) * 32) + 200 + ((index / 5) * 5), 0.f);
-
+	if (false == equipslot)
+	{
+		pSlotTr->SetWorldPos(movement.x - 15 + ((index % 5) * 32) + 50 + ((index % 5) * 5), movement.y + ((index / 5) * 32) + 200 + ((index / 5) * 5), 0.f);
+	}
+	else
+	{
+		pSlotTr->SetWorldPos(movement.x + offsetPos.x, movement.y + offsetPos.y, 0.f);
+	}
 	SAFE_RELEASE(pSlotTr);
 }
 
@@ -100,12 +108,19 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		// 아이템을 
 		if (pDest->GetTag() == "MousePoint")
 		{
-			GET_SINGLE(UserInterfaceManager)->getInventory()->setCurrentIndex(-1);
-			GET_SINGLE(UserInterfaceManager)->getInventory()->setTempItem(nullptr);
-			GET_SINGLE(UserInterfaceManager)->getInventory()->setCurrentIndex(this->index);
-			if (this->pItem != nullptr)
+			if (false == equipslot)
 			{
-				GET_SINGLE(UserInterfaceManager)->getInventory()->setTempItem(this->pItem);
+				GET_SINGLE(UserInterfaceManager)->getInventory()->setCurrentIndex(-1);
+				GET_SINGLE(UserInterfaceManager)->getInventory()->setTempItem(nullptr);
+				GET_SINGLE(UserInterfaceManager)->getInventory()->setCurrentIndex(this->index);
+				if (this->pItem != nullptr)
+				{
+					GET_SINGLE(UserInterfaceManager)->getInventory()->setTempItem(this->pItem);
+				}
+			}
+			else
+			{
+
 			}
 		}
 	}
@@ -115,22 +130,28 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		{
 			if (this->pItem == nullptr)
 			{
-				this->pItem = GET_SINGLE(UserInterfaceManager)->getInventory()->getTempItem();
-				int prevIndex = GET_SINGLE(UserInterfaceManager)->getInventory()->getCurrentIndex();
-				int row = prevIndex / 5;
-				int col = prevIndex % 5;
-				GET_SINGLE(UserInterfaceManager)->getInventory()->getSlot()[row][col]->pItem = nullptr;
+				if (false == equipslot)
+				{
+					this->pItem = GET_SINGLE(UserInterfaceManager)->getInventory()->getTempItem();
+					int prevIndex = GET_SINGLE(UserInterfaceManager)->getInventory()->getCurrentIndex();
+					int row = prevIndex / 5;
+					int col = prevIndex % 5;
+					GET_SINGLE(UserInterfaceManager)->getInventory()->getSlot()[row][col]->pItem = nullptr;
 
-				// 서버에 아이템 이동패킷을 보낸다.
-				cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
-				packet->size = sizeof(cs_packet_moveitem_inventory);
-				packet->type = CS_PACKET_MOVEITEM_INVENTORY;
-				packet->fromslot = prevIndex;
-				packet->toslot = this->index;
+					// 서버에 아이템 이동패킷을 보낸다.
+					cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+					packet->size = sizeof(cs_packet_moveitem_inventory);
+					packet->type = CS_PACKET_MOVEITEM_INVENTORY;
+					packet->fromslot = prevIndex;
+					packet->toslot = this->index;
 
-				DWORD iobyte;
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+					DWORD iobyte;
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+				else
+				{
+				}
 			}
 		}
 	}

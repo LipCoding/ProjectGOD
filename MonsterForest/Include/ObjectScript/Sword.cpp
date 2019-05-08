@@ -4,6 +4,7 @@
 #include "Core/PathManager.h"
 #include "Component/Renderer.h"
 #include "Component/Transform.h"
+#include "../Client.h"
 
 CSword::CSword()
 {
@@ -23,13 +24,13 @@ CSword::~CSword()
 	m_pBoneMatrix = nullptr;
 }
 
-bool CSword::Init()
+bool CSword::initialize()
 {
 	// 따로 Class 필요
 	FILE* pFile = nullptr;
 
 	string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-	string swordPath = meshBasePath + "00.test\\Attach_Sword_Player_Tanker.dat";
+	string swordPath = meshBasePath + "00.test\\Attach_Sword_Player_Warrior.dat";
 
 	fopen_s(&pFile, swordPath.c_str(), "rb");
 
@@ -61,7 +62,18 @@ bool CSword::Init()
 	fread(&boneSize, sizeof(size_t), 1, pFile);
 	fread(&strBoneName, sizeof(char), boneSize, pFile);
 
+
+	string appendTag = to_string(this->targetPlayerID);
+	string objectTag = "Player" + appendTag;
+
+#ifdef _TAEHO_
+	CGameObject *pPlayerObj = CGameObject::FindObject(objectTag);
+#endif
+
+#ifdef _BOEM_
 	CGameObject *pPlayerObj = CGameObject::FindObject("PlayerCharacter");
+#endif
+
 	CAnimation* pAnimation = pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION);
 	PBONE pBone = pAnimation->FindBone(strBoneName);
 

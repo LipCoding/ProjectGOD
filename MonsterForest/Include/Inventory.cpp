@@ -9,7 +9,7 @@
 #include "Component/Material.h"
 #include "Component/Transform.h"
 #include "Slot.h"
-
+#include "Item.h"
 Inventory::Inventory()
 {
 }
@@ -21,6 +21,9 @@ Inventory::~Inventory()
 
 bool Inventory::initialize()
 {
+	for (int i = 0; i < EQUIP_END; ++i)
+		pEquipSlot[i] = nullptr;
+
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI+1");
@@ -117,6 +120,43 @@ bool Inventory::initialize()
 			SAFE_RELEASE(pSlotObject);
 		}
 	}
+
+	// helmet
+	{
+		string appendTag = to_string(0);
+		string slotTag = "EquipSlot" + appendTag;
+		CGameObject* pSlotObject = CGameObject::CreateObject(slotTag, pLayer);
+		this->pEquipSlot[0] = pSlotObject->AddComponent<Slot>("Slot");
+		this->pEquipSlot[0]->initialize(0);
+		this->pEquipSlot[0]->setOffsetPos(Vector3(100.f, 20.f, 0.f));
+		CTransform*	pSlotTr = pSlotObject->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pSlotTr->SetWorldScale(48.f, 48.f, 1.f);
+		pSlotTr->SetWorldPos(300.f, 20, 0.f);
+
+		SAFE_RELEASE(pSlotTr);
+
+		//SAFE_RELEASE(pButton);
+		//this->pSlot[i][j] = new Slot;
+		//this->pSlot[i][j]->initialize((i*SLOT_ROW) + j);
+		CRenderer2D* pRenderer = pSlotObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", slotTag,
+			0, 0, L"UserInterface/UI_INVEN_HELMET.png");
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+
+		CColliderRect* pRC = pSlotObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag(slotTag);
+		pRC->SetRect(0, 0, 32.f, 32.f);
+
+		SAFE_RELEASE(pRC);
+		SAFE_RELEASE(pSlotObject);
+	}
+
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 	enableShowInventory();
@@ -170,13 +210,23 @@ void Inventory::update(float time)
 			pSlot[i][j]->move(pos);
 		}
 	}
-
+	for (int i = 0; i < EQUIP_END; ++i)
+	{
+		if (nullptr != pEquipSlot[i])
+			pEquipSlot[i]->move(pos);
+	}
 	for (int i = 0; i < SLOT_ROW; ++i)
 	{
 		for (int j = 0; j < SLOT_COL; ++j)
 		{
 			pSlot[i][j]->update(time);
 		}
+	}
+
+	for (int i = 0; i < EQUIP_END; ++i)
+	{
+		if(nullptr != pEquipSlot[i])
+			pEquipSlot[i]->update(time);
 	}
 	SAFE_RELEASE(pInventoryTr);
 }
@@ -199,6 +249,16 @@ void Inventory::enableShowInventory()
 				SAFE_RELEASE(pSlotObject);
 			}
 		}
+		for (int i = 0; i < EQUIP_END; ++i)
+		{
+			if (nullptr != pEquipSlot[i])
+			{
+				pEquipSlot[i]->showItem(false);
+				CGameObject* pSlotObject = pEquipSlot[i]->GetGameObject();
+				pSlotObject->Enable(false);
+				SAFE_RELEASE(pSlotObject);
+			}
+		}
 	}
 	else
 	{
@@ -213,6 +273,46 @@ void Inventory::enableShowInventory()
 				pSlotObject->Enable(true);
 				SAFE_RELEASE(pSlotObject);
 			}
+		}
+
+		for (int i = 0; i < EQUIP_END; ++i)
+		{
+			if (nullptr != pEquipSlot[i])
+			{
+				pEquipSlot[i]->showItem(true);
+				CGameObject* pSlotObject = pEquipSlot[i]->GetGameObject();
+				pSlotObject->Enable(true);
+				SAFE_RELEASE(pSlotObject);
+			}
+		}
+
+
+	}
+}
+
+void Inventory::enableRender(bool show)
+{
+	this->show = show;
+	this->pInventory->Enable(show);
+
+	for (int i = 0; i < SLOT_ROW; ++i)
+	{
+		for (int j = 0; j < SLOT_COL; ++j)
+		{
+			pSlot[i][j]->showItem(show);
+			CGameObject* pSlotObject = pSlot[i][j]->GetGameObject();
+			pSlotObject->Enable(show);
+			SAFE_RELEASE(pSlotObject);
+		}
+	}
+	for (int i = 0; i < EQUIP_END; ++i)
+	{
+		if (nullptr != pEquipSlot[i])
+		{
+			pEquipSlot[i]->showItem(show);
+			CGameObject* pSlotObject = pEquipSlot[i]->GetGameObject();
+			pSlotObject->Enable(show);
+			SAFE_RELEASE(pSlotObject);
 		}
 	}
 }
