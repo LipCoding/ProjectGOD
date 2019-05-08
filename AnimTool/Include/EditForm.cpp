@@ -94,6 +94,7 @@ void CEditForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_CLIP_INFO, m_ctrlSliderClipFrame);
 	DDX_Control(pDX, IDC_EDIT_POS_CLIP, m_editFramePosition);
 	DDX_Control(pDX, IDC_COMBO_BONE_INFO, m_comboBoxBoneInfo);
+	DDX_Control(pDX, IDC_EDIT_OBJ_NAME, m_editObjName);
 }
 
 
@@ -213,6 +214,8 @@ void CEditForm::MeshLoadFromMeshInfoTab(CString path, CString name)
 	m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
 	m_pAnimMeshInfoDlg->SetMeshInfo();
 	
+	m_editObjName.SetWindowTextW(name);
+
 	SAFE_RELEASE(pArm);
 	SAFE_RELEASE(pThirdCam);
 	SAFE_RELEASE(pCameraObj);
@@ -253,7 +256,6 @@ void CEditForm::ArmMeshLoadFromMeshInfoTab(CString path, CString name)
 		SAFE_RELEASE(pLayer);
 	}
 	
-
 	m_pAnimMeshInfoDlg->SetArmObj(m_pArmObj);
 }
 
@@ -278,7 +280,7 @@ void CEditForm::AnimationLoadFromMeshInfoTab(CString path, CString name)
 	{
 		CRenderer* pRenderer = m_pEditObj->FindComponentFromType<CRenderer>(CT_RENDERER);
 		
-		if (!pRenderer->GetMesh())
+		if (pRenderer && !(pRenderer->GetMesh()))
 		{
 			SAFE_RELEASE(pRenderer);
 			return;
@@ -645,6 +647,8 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	// Tab
 	m_pAnimMeshInfoDlg->SetEditObj(m_pEditObj);
 	m_pAnimMeshInfoDlg->SetMeshInfo();
+
+	m_editObjName.SetWindowTextW(name);
 
 	SAFE_RELEASE(pArm);
 	SAFE_RELEASE(pThirdCam);

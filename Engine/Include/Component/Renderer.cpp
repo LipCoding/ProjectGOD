@@ -149,6 +149,9 @@ void CRenderer::AlphaEnable(bool bAlpha)
 
 CMesh * CRenderer::GetMesh() const
 {
+	if (!m_pMesh)
+		return nullptr;
+
 	if (m_pMesh)
 		m_pMesh->AddRef();
 	return m_pMesh;

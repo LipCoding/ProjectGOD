@@ -702,6 +702,7 @@ void CAnimMeshInfoTab::SaveMeshAuto(const CString & path)
 	CMesh*	   pMesh = pRenderer->GetMesh();
 	pMesh->SaveFromFullPath(path);
 
+
 	SAFE_RELEASE(pMesh);
 	SAFE_RELEASE(pRenderer);
 }

@@ -53,6 +53,7 @@ private:
 	int		m_iStartFrame = 0;
 	int		m_iEndFrame = 0;
 	CEdit	m_editFramePosition;
+	CEdit m_editObjName;
 	CListBox m_listClips;
 	int		 m_iPos = 0;
 	int		 m_iRadioAnimType = 0;
@@ -96,4 +97,5 @@ public:
 	afx_msg void OnBnClickedRadioClipType3();
 	afx_msg void OnBnClickedButtonSaveAll();
 	afx_msg void OnBnClickedButtonLoadAll();
+	
 };

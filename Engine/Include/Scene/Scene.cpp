@@ -441,7 +441,7 @@ bool CScene::Init()
 
 	CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
-	pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Sky.dds");
+	pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, L"Skybox\\Sky.dds");
 
 	SAFE_RELEASE(pMaterial);
 
