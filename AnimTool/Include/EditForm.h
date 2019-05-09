@@ -98,4 +98,5 @@ public:
 	afx_msg void OnBnClickedButtonSaveAll();
 	afx_msg void OnBnClickedButtonLoadAll();
 	
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

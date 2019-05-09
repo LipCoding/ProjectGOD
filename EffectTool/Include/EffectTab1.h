@@ -138,4 +138,5 @@ public:
 	afx_msg void OnBnClickedButtonUvMovePlay();
 	afx_msg void OnBnClickedButtonUvMoveStop();
 	afx_msg void OnBnClickedCheckUv();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

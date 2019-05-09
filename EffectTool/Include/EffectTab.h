@@ -230,4 +230,5 @@ public:
 	afx_msg void OnBnClickedButtonMainPlay();
 	afx_msg void OnBnClickedButtonMainStop();	
 	afx_msg void OnBnClickedButtonCopyCurrentEffect();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
