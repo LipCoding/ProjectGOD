@@ -14,6 +14,10 @@
 #include "Core/NaviManager.h"
 #include "Core/PathManager.h"
 #include "Core/EffectManager.h"
+#include "Component/Animation.h"
+#include "Component/AnimationClip.h"
+#include "Resources/ResourcesManager.h"
+#include "Resources/Mesh.h"
 
 
 CPlayer_Test::CPlayer_Test()
@@ -59,7 +63,7 @@ bool CPlayer_Test::Init()
 	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("PlayerRenderer");
 
 	/* Mesh */
-	pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker.msh");
+	pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.msh");
 	pRenderer->SetForwardShader();
 
 	pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
@@ -76,13 +80,13 @@ bool CPlayer_Test::Init()
 	/* Animation */
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Tanker.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.anm");
 	m_pAnimation->SetDefaultClip("Idle2");
 	m_pAnimation->ChangeClip("Idle2");
 
 	/* Local */
 	CTransform*	pTr = m_pGameObject->GetTransform();
-	string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker.dat";
+	string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
 
 	FILE* pFile_Player = nullptr;
 
@@ -116,6 +120,11 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");*/
 
+	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
 	return true;
 }
 
@@ -249,35 +258,53 @@ void CPlayer_Test::Input(float fTime)
 
 	if (KEYDOWN("Attack1"))
 	{
-		Vector3 vPos = m_pTransform->GetWorldPos();
-		Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
-		vPos += vLook * 1.75f;
-		vPos.y += 0.75f;
-		GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+		//Vector3 vPos = m_pTransform->GetWorldPos();
+		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		//vPos += vLook * 1.75f;
+		//vPos.y += 0.75f;
+		//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
 		m_pAnimation->ChangeClip("Attack1");
 	}
 
 	if (KEYDOWN("Attack2"))
 	{
-		Vector3 vPos = m_pTransform->GetWorldPos();
-		Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
-		vPos += vLook * 1.75f;
-		vPos.y += 0.75f;
-		GET_SINGLE(CEffectManager)->OperateEffect("Critical", nullptr, vPos);
+		//Vector3 vPos = m_pTransform->GetWorldPos();
+		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		//vPos += vLook * 1.75f;
+		//vPos.y += 0.75f;
+		//GET_SINGLE(CEffectManager)->OperateEffect("Critical", nullptr, vPos);
 		m_pAnimation->ChangeClip("Attack2");
 	}
 
 	if (KEYDOWN("Attack3"))
 	{
 		Vector3 vPos = m_pTransform->GetWorldPos();
-		GET_SINGLE(CEffectManager)->OperateEffect("Rune", nullptr, vPos);
-		m_pAnimation->ChangeClip("Spell2");
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
+		m_pAnimation->ChangeClip("Spell4");
 	}
 #endif
 }
 
 int CPlayer_Test::Update(float fTime)
 {
+	ANIMATION3DCLIP clipInfo = m_pAnimation->GetCurrentClip()->GetClipInfo();
+
+	if("Attack1" == clipInfo.strName)
+	{
+		int iCurrentFrame = m_pAnimation->GetClipFrame();
+
+		if (18 == iCurrentFrame)
+		{
+			Vector3 vPos = m_pTransform->GetWorldPos();
+			Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+			vPos += vLook * 1.75f;
+			vPos.y += 0.75f;
+			GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+			_cprintf("effect!\n");
+		}
+	}
+
+
 	return 0;
 }
 

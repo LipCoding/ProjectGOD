@@ -288,7 +288,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(MESH_PATH));
 
-	wcscat_s(strPath, MAX_PATH, L"Effect_Tool\\");
+	wcscat_s(strPath, MAX_PATH, L"97.Effect_Mesh\\");
 
 	CString originPath = strPath;
 

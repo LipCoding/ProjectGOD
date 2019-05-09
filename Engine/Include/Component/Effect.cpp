@@ -35,10 +35,21 @@ CEffect::CEffect(const CEffect & effect) :
 	TextureFullPath = effect.TextureFullPath;
 	TexturePath = effect.TexturePath;
 
+	m_pRenderer = m_pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+	
 	m_tshareBuffer = {};
+	m_tshareBuffer.fAlphaFadeIn = 0.f;
+	m_tshareBuffer.fAlphaFadeOut = 0.f;
+	m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
 
-	m_pRenderer = effect.m_pRenderer;
-	effect.m_pRenderer->AddRef();
+	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+
+	ANIMATION2DBUFFER tanimBuffer = {};
+	tanimBuffer.iType = 0;
+
+	m_pRenderer->UpdateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+		SCT_VERTEX | SCT_PIXEL, &tanimBuffer);
+
 
 	for(const auto& assist : effect.m_vecAssist)
 	{

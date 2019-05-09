@@ -8,6 +8,9 @@ mixamorig:LeftShoulder
 mixamorig:LeftArm
 mixamorig:LeftForeArm
 mixamorig:LeftHand
+mixamorig:LeftHandThumb1
+mixamorig:LeftHandThumb2
+mixamorig:LeftHandThumb3
 mixamorig:LeftHandIndex1
 mixamorig:LeftHandIndex2
 mixamorig:LeftHandIndex3
@@ -15,6 +18,9 @@ mixamorig:RightShoulder
 mixamorig:RightArm
 mixamorig:RightForeArm
 mixamorig:RightHand
+mixamorig:RightHandThumb1
+mixamorig:RightHandThumb2
+mixamorig:RightHandThumb3
 mixamorig:RightHandIndex1
 mixamorig:RightHandIndex2
 mixamorig:RightHandIndex3
