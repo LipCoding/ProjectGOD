@@ -163,6 +163,9 @@
     <Filter Include="Boem%27s">
       <UniqueIdentifier>{effd5d11-a639-4e6f-b053-b1e49a55bbca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord">
+      <UniqueIdentifier>{aad4dd5d-5902-45e9-b5eb-4698cbd2d202}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -312,6 +315,9 @@
     <ClInclude Include="ObjectScript\Player_Test.h">
       <Filter>Boem%27s</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectScript\DemonLord.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -425,7 +431,6 @@
     <ClCompile Include="DropItemSlot.cpp">
       <Filter>03. UserInterface\10. DropTableUI\01. DropItemSlot</Filter>
     </ClCompile>
-
     <ClCompile Include="TargetPlayerUI.cpp">
       <Filter>03. UserInterface\11. TargetPlayerUI</Filter>
     </ClCompile>
@@ -452,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="ObjectScript\Player_Test.cpp">
       <Filter>Boem%27s</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\DemonLord.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
