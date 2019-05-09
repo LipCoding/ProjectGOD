@@ -95,4 +95,5 @@ public:
 	afx_msg void OnBnClickedButtonClearAll();
 	afx_msg void OnBnClickedButtonEffectSave();
 	afx_msg void OnBnClickedButtonEffectLoad();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

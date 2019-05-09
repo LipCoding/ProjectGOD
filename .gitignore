@@ -262,3 +262,59 @@ __pycache__/
 
 # Big Files
 
+# Conflict File
+# Engine
+Engine\\Bin64\\Engine64.dll
+Engine\\Bin64\\Engine64.iobj
+Engine\\Bin64\\Engine64.ipdb
+Engine\\Bin64_Debug\\Engine64_Debug.dll
+Engine\\Bin64_Debug\\Engine64_Debug.iobj
+Engine\\Bin64_Debug\\Engine64_Debug.ipdb
+EngineRef\\Bin64\\Engine64.dll
+EngineRef\\Bin64\\Engine64.iobj
+EngineRef\\Bin64\\Engine64.ipdb
+EngineRef\\Bin64_Debug\\Engine64_Debug.dll
+EngineRef\\Bin64_Debug\\Engine64_Debug.iobj
+EngineRef\\Bin64_Debug\\Engine64_Debug.ipdb
+
+# AnimTool
+AnimTool\\Bin64\\Engine64.dll
+AnimTool\\Bin64\\Engine64.iobj
+AnimTool\\Bin64\\Engine64.ipdb
+AnimTool\\Bin64\\AnimTool.exe
+AnimTool\\Bin64_Debug\\Engine64_Debug.dll
+AnimTool\\Bin64_Debug\\Engine64_Debug.iobj
+AnimTool\\Bin64_Debug\\Engine64_Debug.ipdb
+AnimTool\\Bin64_Debug\\AnimTool.exe
+AnimTool\\Include\\AnimationBoneName.txt
+
+# EnvTool
+EnvTool\\Bin64\\Engine64.dll
+EnvTool\\Bin64\\Engine64.iobj
+EnvTool\\Bin64\\Engine64.ipdb
+EnvTool\\Bin64\\EnvTool.exe
+EnvTool\\Bin64_Debug\\Engine64_Debug.dll
+EnvTool\\Bin64_Debug\\Engine64_Debug.iobj
+EnvTool\\Bin64_Debug\\Engine64_Debug.ipdb
+EnvTool\\Bin64_Debug\\EnvTool.exe
+
+# EffectTool
+EffectTool\\Bin64\\Engine64.dll
+EffectTool\\Bin64\\Engine64.iobj
+EffectTool\\Bin64\\Engine64.ipdb
+EffectTool\\Bin64\\EffectTool.exe
+EffectTool\\Bin64_Debug\\Engine64_Debug.dll
+EffectTool\\Bin64_Debug\\Engine64_Debug.iobj
+EffectTool\\Bin64_Debug\\Engine64_Debug.ipdb
+EffectTool\\Bin64_Debug\\EffectTool.exe
+
+# Main Client
+MonsterForest\\Bin64\\Engine64.dll
+MonsterForest\\Bin64\\Engine64.iobj
+MonsterForest\\Bin64\\Engine64.ipdb
+MonsterForest\\Bin64\\MonsterForest.exe
+MonsterForest\\Bin64_Debug\\Engine64_Debug.dll
+MonsterForest\\Bin64_Debug\\Engine64_Debug.iobj
+MonsterForest\\Bin64_Debug\\Engine64_Debug.ipdb
+MonsterForest\\Bin64_Debug\\MonsterForest.exe
+

@@ -69,6 +69,7 @@ const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
 const unsigned char SC_PACKET_DIE_ANIMATION = 52;
+const unsigned char SC_PACKET_IDLE_ANIMATION = 53;
 
 const unsigned char SC_PACKET_COLLISION = 100;
 const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
@@ -195,6 +196,7 @@ struct cs_packet_moveitem_inventory
 	unsigned char type;
 	unsigned char fromslot;
 	unsigned char toslot;
+	bool isEquipSlot;
 };
 
 struct cs_packet_party

@@ -59,4 +59,5 @@ public:
 	afx_msg void OnBnClickedButtonNaviDelete();
 	afx_msg void OnBnClickedButtonNaviClearall();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

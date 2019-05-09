@@ -127,7 +127,7 @@ bool Golem::Init()
 	//m_pAnimation = m_pGameObject->AddComponent<CAnimation>("GolemAnimation");
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\golem.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Golem\\golem.anm");
 	m_pAnimation->SetDefaultClip("Idle1");
 
 	GolemAttack* pAttackState = new GolemAttack;

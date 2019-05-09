@@ -53,6 +53,7 @@ public:
 	afx_msg void OnBnClickedButtonCamLight();
 	CEdit m_editCamSpeed;
 	afx_msg void OnBnClickedCheckCollider();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 

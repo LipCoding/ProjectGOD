@@ -56,6 +56,7 @@
 #include "Core/EffectManager.h"
 #include "../ObjectScript/Sword.h"
 #include "Component/ColliderAABB.h"
+#include "../ObjectScript/DemonLord.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -86,9 +87,9 @@ void CMainScene::chat_callback(float fTime)
 bool CMainScene::Init()
 {
 	/* Effect */
-	GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -109,6 +110,8 @@ bool CMainScene::Init()
 		CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
 		SAFE_RELEASE(pParticleLayer);
 	}
+
+
 #pragma endregion
 	GET_SINGLE(UserInterfaceManager)->initialize();
 
@@ -122,7 +125,6 @@ bool CMainScene::Init()
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
-
 
 		// Load Terrain
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
@@ -149,76 +151,76 @@ bool CMainScene::Init()
 #pragma endregion
 
 #pragma region StaticObject
-	// 경로 지정
-	wchar_t strPath[MAX_PATH] = {};
-	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
+	//// 경로 지정
+	//wchar_t strPath[MAX_PATH] = {};
+	//wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	//wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
 
-	ifstream file;
-	file.open(strPath, ios::in);
+	//ifstream file;
+	//file.open(strPath, ios::in);
 
-	if (!file.is_open())
-		return false;
+	//if (!file.is_open())
+	//	return false;
 
-	int iObjSize = 0;
-	file >> iObjSize;
+	//int iObjSize = 0;
+	//file >> iObjSize;
 
-	for (int i = 0; i < iObjSize; i++)
-	{
-		string objName = "ObjName_" + to_string(i);
+	//for (int i = 0; i < iObjSize; i++)
+	//{
+	//	string objName = "ObjName_" + to_string(i);
 
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer* pLayer = pScene->GetLayer("Default");
-		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
+	//	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	//	CLayer* pLayer = pScene->GetLayer("Default");
+	//	CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
 
-		string objTag;
-		file >> objTag;
+	//	string objTag;
+	//	file >> objTag;
 
-		// Mesh
-		string meshPath, meshRestPath;
-		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-		meshRestPath = objTag;
+	//	// Mesh
+	//	string meshPath, meshRestPath;
+	//	meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+	//	meshRestPath = objTag;
 
-		string meshDataPath;
-		meshDataPath = meshPath + meshRestPath + ".msh";
+	//	string meshDataPath;
+	//	meshDataPath = meshPath + meshRestPath + ".msh";
 
-		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
+	//	CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
 
-		wstring wMeshDataPath;
-		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
+	//	wstring wMeshDataPath;
+	//	wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
+	//	pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
 
-		SAFE_RELEASE(pRenderer);
+	//	SAFE_RELEASE(pRenderer);
 
-		// Transform
-		// Local Transform Data
-		string localDataPath;
+	//	// Transform
+	//	// Local Transform Data
+	//	string localDataPath;
 
-		localDataPath = meshPath + meshRestPath + ".dat";
+	//	localDataPath = meshPath + meshRestPath + ".dat";
 
-		FILE* pFile = nullptr;
+	//	FILE* pFile = nullptr;
 
-		fopen_s(&pFile, localDataPath.c_str(), "rb");
+	//	fopen_s(&pFile, localDataPath.c_str(), "rb");
 
-		if (!pFile)
-			return false;
+	//	if (!pFile)
+	//		return false;
 
-		CTransform* pTr = pObj->GetTransform();
-		pTr->Load_Local(pFile);
-		fclose(pFile);
+	//	CTransform* pTr = pObj->GetTransform();
+	//	pTr->Load_Local(pFile);
+	//	fclose(pFile);
 
-		// World Transform Data
-		Vector3 vScale, vRotation, vPos;
-		file >> vScale.x >> vScale.y >> vScale.z;
-		file >> vRotation.x >> vRotation.y >> vRotation.z;
-		file >> vPos.x >> vPos.y >> vPos.z;
+	//	// World Transform Data
+	//	Vector3 vScale, vRotation, vPos;
+	//	file >> vScale.x >> vScale.y >> vScale.z;
+	//	file >> vRotation.x >> vRotation.y >> vRotation.z;
+	//	file >> vPos.x >> vPos.y >> vPos.z;
 
-		pTr->SetWorldScale(vScale);
-		pTr->SetWorldRot(vRotation);
-		pTr->SetWorldPos(vPos);
+	//	pTr->SetWorldScale(vScale);
+	//	pTr->SetWorldRot(vRotation);
+	//	pTr->SetWorldPos(vPos);
 
-		SAFE_RELEASE(pTr);
-	}
+	//	SAFE_RELEASE(pTr);
+	//}
 #pragma endregion
 
 	{
@@ -236,7 +238,7 @@ bool CMainScene::Init()
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Player.msh");
+			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.msh");
 			//pRenderer->SetForwardShader();
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
@@ -246,12 +248,13 @@ bool CMainScene::Init()
 			//CAnimation* pAnimation = pPlayerObj->AddComponent<CAnimation>("PlayerAnimation");
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Player.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
 			{
 				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider1");
 				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
 				SAFE_RELEASE(pCollider);
 			}
+
 			{
 				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider2");
 				pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
@@ -287,11 +290,11 @@ bool CMainScene::Init()
 			}
 			CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
 
-			pRenderer->SetMesh("golem", L"99.Dynamic_Mesh\\02.Monster\\golem.msh");
+			pRenderer->SetMesh("golem", L"99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.msh");
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\golem.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Golem\\golem.dat";
 
 			FILE* pFile_Player = nullptr;
 
@@ -316,7 +319,7 @@ bool CMainScene::Init()
 
 			CRenderer*	pRenderer = pMinoObj->AddComponent<CRenderer>("PlayerRenderer");
 
-			pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino.msh");
+			pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.msh");
 			{
 				CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider1");
 				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
@@ -335,7 +338,7 @@ bool CMainScene::Init()
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Mino.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.dat";
 
 			FILE* pFile_Player = nullptr;
 
@@ -375,7 +378,7 @@ bool CMainScene::Init()
 
 			CRenderer*	pRenderer = pSeuteompiObj->AddComponent<CRenderer>("PlayerRenderer");
 
-			pRenderer->SetMesh("seuteompi", L"99.Dynamic_Mesh\\02.Monster\\seuteompi.msh");
+			pRenderer->SetMesh("seuteompi", L"99.Dynamic_Mesh\\02.Monster\\Seuteompi\\Seuteompi.msh");
 
 			{
 				CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider1");
@@ -384,7 +387,7 @@ bool CMainScene::Init()
 			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\seuteompi.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Seuteompi\\seuteompi.dat";
 
 			FILE* pFile_Player = nullptr;
 
@@ -402,6 +405,48 @@ bool CMainScene::Init()
 			SAFE_RELEASE(pSeuteompiObj);
 			SAFE_RELEASE(pLayer);
 		}
+#pragma endregion
+
+#pragma region DEMONLORD
+		{
+			CLayer*	pLayer = m_pScene->GetLayer("Default");
+			CGameObject*	pSeuteompiObj = CGameObject::CreatePrototypeDontDestroy("DemonLordObjeect", m_pScene);
+			CTransform*	pTr = pSeuteompiObj->GetTransform();
+
+			CRenderer*	pRenderer = pSeuteompiObj->AddComponent<CRenderer>("DemonRnederer");
+
+			pRenderer->SetMesh("DemonLord", L"99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.msh");
+
+			{
+				CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
+			pCollider->SetSphere(Vector3(0.f, 1.5f, 0.f), 3.f);
+			SAFE_RELEASE(pCollider);
+
+			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.dat";
+
+			FILE* pFile_Player = nullptr;
+
+			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+			if (!pFile_Player)
+				return false;
+
+			pTr->Load_Local(pFile_Player);
+
+			fclose(pFile_Player);
+			SAFE_RELEASE(pTr);
+
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pSeuteompiObj);
+			SAFE_RELEASE(pLayer);
+		}
+#pragma endregion
 
 
 		SAFE_RELEASE(pLayer);
@@ -1266,6 +1311,7 @@ int CMainScene::Update(float fTime)
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 						pTr->SetWorldScale(0.5f, 0.5f, 0.5f);
+						SAFE_RELEASE(pGolemObject);
 					}
 				}
 				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
@@ -1290,9 +1336,10 @@ int CMainScene::Update(float fTime)
 						pTr->SetLocalRotY(XMConvertToRadians(180.f));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
-						//pTr->SetWorldScale(0.5f, 0.5f, 0.5f);
+						pTr->SetWorldScale(2.f, 2.f, 2.f);
 						
 						SAFE_RELEASE(pTr);
+						SAFE_RELEASE(pMinoObject);
 					}
 				}
 				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
@@ -1317,44 +1364,108 @@ int CMainScene::Update(float fTime)
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+						SAFE_RELEASE(pSeuteompiObj);
 					}
 				}
-				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::NPC1)
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
 				{
-					/// < NPC 생성하게끔해야함. >
+
 					char str[128];
 					string appendTag = _itoa(id, str, 10);
 					string objectTag = "Player" + appendTag;
 
-					CLayer * pLayer = m_pScene->GetLayer("Default");
-					CGameObject* pNpcObj = CGameObject::FindObject(objectTag);
-					if (nullptr == pNpcObj)
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					CGameObject* pGolemObj = CGameObject::FindObject(objectTag);
+					if (nullptr == pGolemObj)
 					{
-						pNpcObj = CGameObject::CreateObject(objectTag, pLayer);
-
-						CRenderer*	pRenderer = pNpcObj->AddComponent<CRenderer>("PlayerRenderer");
-
-						pRenderer->SetMesh("npc", L"99.Dynamic_Mesh\\01.npc\\npc.msh");
-
-						pNpcObj->SetTag(objectTag);
-
-						CAnimation* pAnimation = pNpcObj->AddComponent<CAnimation>("NpcAnimation");
-
-						pAnimation->Load("99.Dynamic_Mesh\\01.npc\\npc.anm");
-
-						//CColliderSphere* pCollider = pNpcObj->AddComponent<CColliderSphere>("collider");
-						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
-						//SAFE_RELEASE(pCollider);
-						CTransform*	pTr = pNpcObj->GetTransform();
+						CGameObject* pDemonLordObj = CGameObject::CreateClone("DemonLordObjeect", pLayer);
+						pDemonLordObj->SetTag(objectTag);
+						DemonLord*	pDemonLord = pDemonLordObj->AddComponent<DemonLord>("DemonLord");
+						SAFE_RELEASE(pDemonLord);
+						CTransform*	pTr = pDemonLordObj->GetTransform();
 
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
-						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
-
-						string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-						string transformPath = meshBasePath + "99.Dynamic_Mesh\\01.npc\\npc.dat";
-						SAFE_RELEASE(pTr);
+						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+						SAFE_RELEASE(pDemonLordObj);
 					}
+				}
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::NPC1)
+				{
+					/////// < NPC 생성하게끔해야함. >
+					////char str[128];
+					////string appendTag = _itoa(id, str, 10);
+					////string objectTag = "Player" + appendTag;
+
+					////CLayer * pLayer = m_pScene->GetLayer("Default");
+					////CGameObject* pNpcObj = CGameObject::FindObject(objectTag);
+					////if (nullptr == pNpcObj)
+					////{
+					////	pNpcObj = CGameObject::CreateObject(objectTag, pLayer);
+
+					////	CRenderer*	pRenderer = pNpcObj->AddComponent<CRenderer>("PlayerRenderer");
+
+					////	pRenderer->SetMesh("npc", L"99.Dynamic_Mesh\\01.npc\\npc.msh");
+
+					////	pNpcObj->SetTag(objectTag);
+
+					////	CAnimation* pAnimation = pNpcObj->AddComponent<CAnimation>("NpcAnimation");
+
+					////	pAnimation->Load("99.Dynamic_Mesh\\01.npc\\npc.anm");
+
+					////	//CColliderSphere* pCollider = pNpcObj->AddComponent<CColliderSphere>("collider");
+					////	//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+					////	//SAFE_RELEASE(pCollider);
+					////	CTransform*	pTr = pNpcObj->GetTransform();
+
+					////	float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+					////	pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+					////	pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
+
+					////	string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+					////	string transformPath = meshBasePath + "99.Dynamic_Mesh\\01.npc\\npc.dat";
+					////	SAFE_RELEASE(pTr);
+					////}
+				}
+			}
+		}
+		break;
+		case SC_PACKET_IDLE_ANIMATION:
+		{
+			sc_packet_animation_player* pPacket = reinterpret_cast<sc_packet_animation_player*>(packet);
+			int id = pPacket->id;
+			char str[128];
+			string appendTag = _itoa(id, str, 10);
+			string objectTag = "Player" + appendTag;
+			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			if (pGameObject != nullptr)
+			{
+				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+				pAnimation->ChangeClip("Idle1");
+				SAFE_RELEASE(pAnimation);
+				Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
+				if (nullptr != pMino)
+				{
+					pMino->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				Golem* pGolem = pGameObject->FindComponentFromTag<Golem>("Golem");
+				if (nullptr != pGolem)
+				{
+					pGolem->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				Seuteompi* pSeuteompi = pGameObject->FindComponentFromTag<Seuteompi>("Seuteompi");
+				if (nullptr != pSeuteompi)
+				{
+					pSeuteompi->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+				if (nullptr != pDemonLord)
+				{
+					pDemonLord->setDieState(true);
+					SAFE_RELEASE(pMino);
 				}
 			}
 		}
@@ -1431,7 +1542,7 @@ int CMainScene::Update(float fTime)
 					float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 					pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
 					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-					pAnimation->ChangeClip("Walk");
+					pAnimation->ChangeClip("Run1");
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pTransform);
 					SAFE_RELEASE(pGameObject);
@@ -1474,13 +1585,13 @@ int CMainScene::Update(float fTime)
 							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("golem");
 
 							int hp = pGolem->getCurrentHP() - pPacket->damage;
-							CTransform* pTransform = pGolem->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 							if (hp < 0)
 							{
 								float ratio = (float)hp / (float)pGolem->getMaxHP();
@@ -1502,13 +1613,13 @@ int CMainScene::Update(float fTime)
 
 							int hp = pMino->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pMino->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
@@ -1533,13 +1644,13 @@ int CMainScene::Update(float fTime)
 
 							int hp = pSeuteompi->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pSeuteompi->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
@@ -1552,6 +1663,35 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
 								pSeuteompi->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(ratio);
 							}
@@ -1655,6 +1795,31 @@ int CMainScene::Update(float fTime)
 								pSeuteompi->setCurrentHP(hp);
 							}
 						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							CTransform* pTransform = pDemonLord->GetTransform();
+							Vector3 vPos = pTransform->GetWorldPos();
+							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							vPos += vLook * 1.25f;
+							vPos.y += 0.95f;
+							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+							}
+						}
 					}
 				}
 			}
@@ -1664,7 +1829,7 @@ int CMainScene::Update(float fTime)
 				if (nullptr != pGameObject)
 				{
 					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-					pAnimation->ChangeClip("Attack");
+					pAnimation->ChangeClip("Attack1");
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pGameObject);
 				}
@@ -1832,7 +1997,7 @@ int CMainScene::Update(float fTime)
 				}
 
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("MOVE");
+				pAnimation->ChangeClip("Run1");
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
 				SAFE_RELEASE(pGameObject);
@@ -1862,7 +2027,7 @@ int CMainScene::Update(float fTime)
 					pTransform->SetWorldRotZ(XMConvertToRadians(pPacket->angle));
 				}
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("MOVE");
+				pAnimation->ChangeClip("Run1");
 
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
@@ -1892,7 +2057,7 @@ int CMainScene::Update(float fTime)
 						pTransform->SetWorldRotZ(XMConvertToRadians(pPacket->angle));
 					}
 					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-					pAnimation->ChangeClip("Walk");
+					pAnimation->ChangeClip("Run1");
 
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pTransform);
@@ -1930,7 +2095,7 @@ int CMainScene::Update(float fTime)
 					pTransform->RotateWorldZ(XMConvertToRadians(pPacket->angle));
 				}
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Walk");
+				pAnimation->ChangeClip("Run1");
 
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
@@ -1950,7 +2115,7 @@ int CMainScene::Update(float fTime)
 			if (pGameObject != nullptr)
 			{
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Die");
+				pAnimation->ChangeClip("Die1");
 				SAFE_RELEASE(pAnimation);
 				Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
 				if (nullptr != pMino)
@@ -1968,6 +2133,12 @@ int CMainScene::Update(float fTime)
 				if (nullptr != pSeuteompi)
 				{
 					pSeuteompi->setDieState(true);
+					SAFE_RELEASE(pMino);
+				}
+				DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+				if (nullptr != pDemonLord)
+				{
+					pDemonLord->setDieState(true);
 					SAFE_RELEASE(pMino);
 				}
 			}
