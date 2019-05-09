@@ -71,7 +71,7 @@ bool Mino::Init()
 
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Mino.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
 	if (!m_pAnimation)

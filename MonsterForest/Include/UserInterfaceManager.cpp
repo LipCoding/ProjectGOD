@@ -370,7 +370,8 @@ bool UserInterfaceManager::initialize()
 void UserInterfaceManager::update(float time)
 {
 	pInventory->update(time);
-
+	if (pDropTableUI->isEmpty())
+		pDropTableUI->enableRender(false);
 	CTimer*	pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
 	pTimer->Update();
 	float fTime = pTimer->GetFPS();

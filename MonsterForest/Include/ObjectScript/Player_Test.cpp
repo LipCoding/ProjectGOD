@@ -59,7 +59,7 @@ bool CPlayer_Test::Init()
 	CRenderer*	pRenderer = m_pGameObject->AddComponent<CRenderer>("PlayerRenderer");
 
 	/* Mesh */
-	pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Warrior.msh");
+	pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker.msh");
 	pRenderer->SetForwardShader();
 
 	pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
@@ -76,13 +76,13 @@ bool CPlayer_Test::Init()
 	/* Animation */
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Warrior.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Tanker.anm");
 	m_pAnimation->SetDefaultClip("Idle2");
 	m_pAnimation->ChangeClip("Idle2");
 
 	/* Local */
 	CTransform*	pTr = m_pGameObject->GetTransform();
-	string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Warrior.dat";
+	string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker.dat";
 
 	FILE* pFile_Player = nullptr;
 
@@ -112,9 +112,9 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CInput)->CreateKey("Attack3", '3');
 
 	/* Effect */
-	GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
+	/*GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");*/
 
 	return true;
 }

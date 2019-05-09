@@ -130,9 +130,6 @@
     <Filter Include="06. Component\15. Decal">
       <UniqueIdentifier>{12bb65d7-8b39-413f-bd7d-4a58da2977cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06. Component\01. Renderer\RendererD2">
-      <UniqueIdentifier>{2fe50868-60fd-4147-80c5-fbc414ebcf47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\06. Collider\AABB">
       <UniqueIdentifier>{e4f50f13-ed78-46e8-b648-0a613f6cb73a}</UniqueIdentifier>
     </Filter>
@@ -262,6 +259,9 @@
     <Filter Include="00. Core\10. EffectManager">
       <UniqueIdentifier>{20681522-2a3b-4056-9da8-e8ea8e7a0a0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\01. Renderer\Renderer2D">
+      <UniqueIdentifier>{2fe50868-60fd-4147-80c5-fbc414ebcf47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -367,7 +367,7 @@
       <Filter>06. Component\01. Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Component\Renderer2D.cpp">
-      <Filter>06. Component\01. Renderer\RendererD2</Filter>
+      <Filter>06. Component\01. Renderer\Renderer2D</Filter>
     </ClCompile>
     <ClCompile Include="Component\Script.cpp">
       <Filter>06. Component\02. Script</Filter>
@@ -636,7 +636,7 @@
       <Filter>06. Component\01. Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Component\Renderer2D.h">
-      <Filter>06. Component\01. Renderer\RendererD2</Filter>
+      <Filter>06. Component\01. Renderer\Renderer2D</Filter>
     </ClInclude>
     <ClInclude Include="Component\Script.h">
       <Filter>06. Component\02. Script</Filter>

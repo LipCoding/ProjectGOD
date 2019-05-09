@@ -30,7 +30,7 @@ bool CSword::initialize()
 	FILE* pFile = nullptr;
 
 	string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-	string swordPath = meshBasePath + "00.test\\Attach_Sword_Player_Warrior.dat";
+	string swordPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Attach_Sword_Data.dat";
 
 	fopen_s(&pFile, swordPath.c_str(), "rb");
 

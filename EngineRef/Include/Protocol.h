@@ -195,6 +195,7 @@ struct cs_packet_moveitem_inventory
 	unsigned char type;
 	unsigned char fromslot;
 	unsigned char toslot;
+	bool isEquipSlot;
 };
 
 struct cs_packet_party

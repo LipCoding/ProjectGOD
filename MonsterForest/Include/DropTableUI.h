@@ -23,6 +23,7 @@ public:
 	void enableRender(bool show);
 public:
 	void addDropItemSlot(const wstring& itemname);
+	bool isEmpty() { return dropItemSlots.empty(); }
 public:
 	void detachDropItemSlot(int slotNumber);
 public:

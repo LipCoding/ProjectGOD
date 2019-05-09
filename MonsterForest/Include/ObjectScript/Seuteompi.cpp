@@ -74,7 +74,7 @@ bool Seuteompi::Init()
 	//m_pAnimation = m_pGameObject->AddComponent<CAnimation>("GolemAnimation");
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\seuteompi.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Seuteompi\\seuteompi.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
 
