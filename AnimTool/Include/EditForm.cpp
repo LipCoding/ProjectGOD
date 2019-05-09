@@ -1092,3 +1092,17 @@ void CEditForm::OnBnClickedButtonLoadAll()
 	m_pAnimMeshInfoDlg->LoadAnimationAuto(path + L".anm", name);
 	m_pAnimMeshInfoDlg->LoadLocalAuto(path + L".dat");
 }
+
+
+BOOL CEditForm::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_ESCAPE ||
+			pMsg->wParam == VK_RETURN)
+			return TRUE;
+	}
+
+	return CFormView::PreTranslateMessage(pMsg);
+}

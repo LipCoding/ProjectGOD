@@ -83,4 +83,6 @@ private:
 	CString m_specularName = L"Terrain/TerrainTex0_S.tga";
 
 	CButton m_checkHeightZero;
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

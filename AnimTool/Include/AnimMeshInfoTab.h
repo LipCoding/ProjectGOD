@@ -80,4 +80,5 @@ private:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
