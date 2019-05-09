@@ -168,6 +168,17 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 					SAFE_RELEASE(pSword);
 					SAFE_RELEASE(pSwordObj);
 					SAFE_RELEASE(pLayer);
+
+					// 서버에 아이템 이동패킷을 보낸다.
+					cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+					packet->size = sizeof(cs_packet_moveitem_inventory);
+					packet->type = CS_PACKET_MOVEITEM_INVENTORY;
+					packet->fromslot = prevIndex;
+					packet->toslot = this->index;
+
+					DWORD iobyte;
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
 			}
 		}
