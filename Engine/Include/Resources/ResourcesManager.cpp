@@ -416,6 +416,17 @@ CTexture * CResourcesManager::LoadTexture(const string & strKey,
 
 	pTexture->AddRef();
 
+	if (!strPathKey.empty())
+	{
+		for (auto& fullPath : pTexture->m_vecFullPath)
+		{
+			size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(strPathKey));
+			size_t iLength = fullPath.size();
+
+			fullPath.erase(0, meshPathSize);
+		}
+	}
+
 	m_mapTexture.insert(make_pair(strKey, pTexture));
 
 	return pTexture;
