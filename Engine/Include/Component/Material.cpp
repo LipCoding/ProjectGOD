@@ -832,7 +832,7 @@ PTEXTUREINFO CMaterial::LoadTexture(FILE * pFile)
 	if (vecFullPath.size() == 1)
 	{
 		CTexture* pTex = GET_SINGLE(CResourcesManager)->LoadTexture(strKey, vecFullPath[0].c_str(), strPathKey);
-
+		pTex->SetTexturePathKey(strPathKey);
 		pTexInfo->pTexture = pTex;
 	}
 
@@ -850,7 +850,7 @@ PTEXTUREINFO CMaterial::LoadTexture(FILE * pFile)
 		}
 
 		CTexture* pTex = GET_SINGLE(CResourcesManager)->LoadTexture(strKey, vecPath, strPathKey);
-
+		pTex->SetTexturePathKey(strPathKey);
 		pTexInfo->pTexture = pTex;
 	}
 
