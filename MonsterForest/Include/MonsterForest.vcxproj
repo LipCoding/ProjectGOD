@@ -163,6 +163,7 @@
     <ClInclude Include="ObjectScript\Actor.h" />
     <ClInclude Include="ObjectScript\Bullet.h" />
     <ClInclude Include="ObjectScript\CharacterPanel.h" />
+    <ClInclude Include="ObjectScript\DemonLord.h" />
     <ClInclude Include="ObjectScript\Effect.h" />
     <ClInclude Include="ObjectScript\Golem.h" />
     <ClInclude Include="ObjectScript\GolemAttack.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="ObjectScript\Actor.cpp" />
     <ClCompile Include="ObjectScript\Bullet.cpp" />
     <ClCompile Include="ObjectScript\CharacterPanel.cpp" />
+    <ClCompile Include="ObjectScript\DemonLord.cpp" />
     <ClCompile Include="ObjectScript\Effect.cpp" />
     <ClCompile Include="ObjectScript\Golem.cpp" />
     <ClCompile Include="ObjectScript\GolemAttack.cpp" />
