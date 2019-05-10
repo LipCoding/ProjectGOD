@@ -1267,13 +1267,6 @@ int CMainScene::Update(float fTime)
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
 
-					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
-					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
-					pSword->setTargetPlayerID(id);
-					pSword->initialize();
-					SAFE_RELEASE(pSword);
-					SAFE_RELEASE(pSwordObj);
-
 					CTransform*	pTr = pPlayerObj->GetTransform();
 					CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
 					pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
@@ -1441,9 +1434,9 @@ int CMainScene::Update(float fTime)
 			if (pGameObject != nullptr)
 			{
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Idle1");
+				pAnimation->ChangeClip("Idle2");
 				SAFE_RELEASE(pAnimation);
-				Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
+				/*Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
 				if (nullptr != pMino)
 				{
 					pMino->setDieState(true);
@@ -1466,13 +1459,12 @@ int CMainScene::Update(float fTime)
 				{
 					pDemonLord->setDieState(true);
 					SAFE_RELEASE(pMino);
-				}
+				}*/
 			}
 		}
 		break;
 		case SC_PACKET_MOVE:
 		{
-			const auto test = CGameObject::getObjectList();
 			sc_packet_pos* pPacket = reinterpret_cast<sc_packet_pos*>(packet);
 			int id = pPacket->id;
 			int myClientID = NetworkManager::getInstance()->getMyClientID();
@@ -1828,11 +1820,24 @@ int CMainScene::Update(float fTime)
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
-					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-					pAnimation->ChangeClip("Attack1");
-					SAFE_RELEASE(pAnimation);
-					SAFE_RELEASE(pGameObject);
+					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+					{
+						//DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+						//pDemonLord->changeAnimation();
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						pAnimation->ChangeClip("Attack1");
+						SAFE_RELEASE(pAnimation);
+					}
+					else
+					{
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						wstring temp_animation_name = reinterpret_cast<sc_packet_attack_player*>(packet)->animation_name;
+						string animation_name = strconv(temp_animation_name);
+						pAnimation->ChangeClip(animation_name);
+						SAFE_RELEASE(pAnimation);
+					}
 				}
+				SAFE_RELEASE(pGameObject);
 
 				{
 					int target = pPacket->targetid;
@@ -2225,7 +2230,52 @@ int CMainScene::Update(float fTime)
 			GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->setToID(pPacket->toID);
 		}
 		break;
-
+		case SC_PACKET_EQUIPITEM_PLAYER:
+		{
+			sc_packet_equip_player* pPacket = reinterpret_cast<sc_packet_equip_player*>(packet);
+			int id = pPacket->playerID;
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == myClientID)
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					//int id = NetworkManager::getInstance()->getMyClientID();
+					//string objectTag = "Player" + to_string(id);
+					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					pSword->setTargetPlayerID(id);
+					pSword->initialize();
+					SAFE_RELEASE(pSword);
+					SAFE_RELEASE(pSwordObj);
+					SAFE_RELEASE(pLayer);
+				}
+			}
+			else if (id < NPC_START)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					//int id = NetworkManager::getInstance()->getMyClientID();
+					//string objectTag = "Player" + to_string(id);
+					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
+					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
+					pSword->setTargetPlayerID(id);
+					pSword->initialize();
+					SAFE_RELEASE(pSword);
+					SAFE_RELEASE(pSwordObj);
+					SAFE_RELEASE(pLayer);
+				}
+			}
+			
+		}
+		break;
 		case SC_PACKET_PARTY_ADD:
 		{
 			// 해당 플레이어의 정보로 왼쪽 파티 프레임에 띄운다.

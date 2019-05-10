@@ -45,9 +45,11 @@ size_t DemonLord::getNextAnimation()
 	return nextAnimation;
 }
 
-void DemonLord::changeAnimation()
+void DemonLord::changeAttackAnimation()
 {
-	//m_pAnimation->ChangeClip(stateMap[nextAnimation].first);
+	CAnimation* pAnimation = m_pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Attack1");
+	SAFE_RELEASE(pAnimation);
 }
 
 void DemonLord::SetTarget(const string & strTag)

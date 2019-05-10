@@ -42,7 +42,7 @@ public:
 public:
 	size_t getCurrentAnimation();
 	size_t getNextAnimation();
-	void changeAnimation();
+	void changeAttackAnimation();
 	const Vector3& getInitialPos() { return initial_pos; }
 	const Vector3& getRoamingPos() { return roaming_pos; }
 public:

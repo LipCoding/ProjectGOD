@@ -38,7 +38,10 @@ const unsigned char CS_PACKET_ROTATE_INV_Y = 15;
 const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
 
 const unsigned char CS_PACKET_ATTACK = 50;
-const unsigned char CS_PACKET_ATTACK_SWORD_SKILL1 = 51;
+const unsigned char CS_PACKET_ATTACK_SKILL1 = 51;
+const unsigned char CS_PACKET_ATTACK_SKILL2 = 52;
+const unsigned char CS_PACKET_ATTACK_SKILL3 = 53;
+
 
 const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
@@ -68,13 +71,16 @@ const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
 
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
-const unsigned char SC_PACKET_DIE_ANIMATION = 52;
-const unsigned char SC_PACKET_IDLE_ANIMATION = 53;
+const unsigned char SC_PACKET_ATTACK_SKILL2 = 52;
+const unsigned char SC_PACKET_ATTACK_SKILL3 = 53;
+const unsigned char SC_PACKET_DIE_ANIMATION = 90;
+const unsigned char SC_PACKET_IDLE_ANIMATION = 91;
 
 const unsigned char SC_PACKET_COLLISION = 100;
 const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char SC_PACKET_MOVEITEM_INVENTORY = 152;
+const unsigned char SC_PACKET_EQUIPITEM_PLAYER = 153;
 const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
 const unsigned char SC_PACKET_INVITE_PARTY = 200;
 const unsigned char SC_PACKET_PARTY_CONFIRM = 201;
@@ -286,6 +292,7 @@ struct sc_packet_attack_player
 	unsigned targetid;
 	unsigned char objectSetType;
 	int damage;
+	wchar_t animation_name[MAX_STR_SIZE];
 };
 
 struct sc_packet_chat
@@ -322,6 +329,14 @@ struct sc_packet_moveitem_inventory
 	unsigned char type;
 	unsigned char fromslot;
 	unsigned char toslot;
+};
+
+struct sc_packet_equip_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int playerID;
+	WCHAR itemname[MAX_STR_SIZE];
 };
 
 struct sc_packet_party

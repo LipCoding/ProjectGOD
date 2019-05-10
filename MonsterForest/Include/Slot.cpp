@@ -144,7 +144,7 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 					packet->type = CS_PACKET_MOVEITEM_INVENTORY;
 					packet->fromslot = prevIndex;
 					packet->toslot = this->index;
-
+					packet->isEquipSlot = false;
 					DWORD iobyte;
 					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
@@ -157,28 +157,16 @@ void Slot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 					int col = prevIndex % 5;
 					GET_SINGLE(UserInterfaceManager)->getInventory()->getSlot()[row][col]->pItem = nullptr;
 
-
-					CLayer*	pLayer = m_pScene->GetLayer("Default");
-					int id = NetworkManager::getInstance()->getMyClientID();
-					string objectTag = "Player" + to_string(id);
-					CGameObject *pSwordObj = CGameObject::CreateObject(objectTag + "Sword", pLayer);
-					CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
-					pSword->setTargetPlayerID(id);
-					pSword->initialize();
-					SAFE_RELEASE(pSword);
-					SAFE_RELEASE(pSwordObj);
-					SAFE_RELEASE(pLayer);
-
-					//// 서버에 아이템 이동패킷을 보낸다.
-					//cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
-					//packet->size = sizeof(cs_packet_moveitem_inventory);
-					//packet->type = CS_PACKET_MOVEITEM_INVENTORY;
-					//packet->fromslot = prevIndex;
-					//packet->toslot = this->index;
-
-					//DWORD iobyte;
-					//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
-					//int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+					// 서버에 아이템 이동패킷을 보낸다.
+					cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+					packet->size = sizeof(cs_packet_moveitem_inventory);
+					packet->type = CS_PACKET_MOVEITEM_INVENTORY;
+					packet->fromslot = prevIndex;
+					packet->toslot = this->index;
+					packet->isEquipSlot = true;
+					DWORD iobyte;
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_moveitem_inventory);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
 			}
 		}
