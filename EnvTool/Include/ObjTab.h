@@ -42,6 +42,7 @@ public:
 public:
 	void AddObject();
 	void Undo();
+	void UpdateMousePos(const Vector3& mousePos);
 private:
 	CListBox m_listObjType;
 	CListBox m_listObjList;	
@@ -54,4 +55,7 @@ public:
 	afx_msg void OnBnClickedButtonObjectLoad();
 	afx_msg void OnBnClickedButtonResetSelected();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	CEdit m_editMousePosX;
+	CEdit m_editMousePosY;
+	CEdit m_editMousePosZ;
 };

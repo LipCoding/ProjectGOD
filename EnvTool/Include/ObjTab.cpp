@@ -41,6 +41,9 @@ void CObjTab::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_OBJECT_TYPE, m_listObjType);
 	DDX_Control(pDX, IDC_LIST_OBJECTS, m_listObjList);
+	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_X, m_editMousePosX);
+	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_Y, m_editMousePosY);
+	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_Z, m_editMousePosZ);
 }
 
 
@@ -246,7 +249,7 @@ void CObjTab::AddObject()
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
 
-	// Transform
+	/* Transform */
 	CTransform* pOriginTr = m_pTempObject->GetTransform();
 	CTransform* pTr = pObj->GetTransform();
 
@@ -258,7 +261,7 @@ void CObjTab::AddObject()
 	// World
 	pTr->SetWorldScale(pOriginTr->GetWorldScale());
 	pTr->SetWorldRot(pOriginTr->GetWorldRot());
-	pTr->SetWorldPos(pOriginTr->GetWorldPos());
+	pTr->SetWorldPos(pOriginTr->GetWorldPos() + pOriginTr->GetWorldTempPos());
 
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pOriginTr);
@@ -271,7 +274,7 @@ void CObjTab::AddObject()
 	SAFE_RELEASE(pRenderer);
 	SAFE_RELEASE(pOriginRenderer);
 
-	// Mesh
+	// Animation
 	CAnimation* pOriginAnimation = m_pTempObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 	if (nullptr != pOriginAnimation)
 	{
@@ -317,6 +320,13 @@ void CObjTab::Undo()
 		m_listObjList.DeleteString(m_listObjList.GetCount() - 1);
 		g_iObjNumber--;
 	}
+}
+
+void CObjTab::UpdateMousePos(const Vector3 & mousePos)
+{
+	m_editMousePosX.SetWindowTextW(to_wstring(mousePos.x).c_str());
+	m_editMousePosY.SetWindowTextW(to_wstring(mousePos.y).c_str());
+	m_editMousePosZ.SetWindowTextW(to_wstring(mousePos.z).c_str());
 }
 
 
@@ -500,6 +510,7 @@ void CObjTab::OnBnClickedButtonObjectSave()
 
 		// Position
 		Vector3 vPosition = pTr->GetWorldPos();
+
 		file << vPosition.x << ' ' << vPosition.y << ' ' << vPosition.z << endl;
 		SAFE_RELEASE(pTr);
 

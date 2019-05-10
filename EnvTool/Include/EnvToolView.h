@@ -69,6 +69,8 @@ private:
 
 // 사용자 변수
 private:
+	class CEditForm *m_pEditForm = nullptr;
+
 	CGameObject	*m_pCamera = nullptr;
 	CTransform	*m_pCamTr = nullptr;
 	CTimer		*m_pTimer = nullptr;

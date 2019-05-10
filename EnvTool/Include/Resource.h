@@ -32,9 +32,13 @@
 #define IDC_EDIT1                       1014
 #define IDC_EDIT_CAMSPEED               1014
 #define IDC_EDIT_HEIGHTPOWER            1014
+#define IDC_EDIT_MOUSE_POS_X            1014
 #define IDC_EDIT2                       1015
 #define IDC_EDIT_BRUSH_RANGE            1015
+#define IDC_EDIT_MOUSE_POS_Y            1015
 #define IDC_BUTTON_ADJ_CAMSPEED         1016
+#define IDC_EDIT8                       1016
+#define IDC_EDIT_MOUSE_POS_Z            1016
 #define IDC_RADIO1                      1017
 #define IDC_RADIO_UPTYPE_HEIGHT_1       1017
 #define IDC_RADIO2                      1018
