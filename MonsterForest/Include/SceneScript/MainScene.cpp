@@ -87,9 +87,11 @@ void CMainScene::chat_callback(float fTime)
 bool CMainScene::Init()
 {
 	/* Effect */
-	//GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -809,7 +811,7 @@ bool CMainScene::Init()
 //#pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 
 	return true;
 }
@@ -1875,7 +1877,60 @@ int CMainScene::Update(float fTime)
 
 		}
 		break;
-		case SC_PACKET_ATTACK_SWORD_SKILL1:
+		case SC_PACKET_ATTACK_SKILL1_EFFECT:
+		{
+			sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
+			int id = pPacket->playerID;
+
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				int x = pPlayerTr->GetWorldPos().x;
+				int y = pPlayerTr->GetWorldPos().y;
+				int z = pPlayerTr->GetWorldPos().z;
+
+				Vector3 vLook = pPlayerTr->GetWorldAxis(AXIS_Z).Normalize();
+				x += (vLook * 1.75f).x;
+				y += (vLook * 1.75f).y;
+				z += (vLook * 1.75f).z;
+				y += 1;
+				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, Vector3(x,y,z));
+
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			else if (id < NPC_START)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				Vector3 vPos = pPlayerTr->GetWorldPos();
+				Vector3 vLook = pPlayerTr->GetWorldAxis(AXIS_Z).Normalize();
+				vPos += vLook * 1.75f;
+				vPos.y += 0.75f;
+				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			//	Vector3 vPos = m_pTransform->GetWorldPos();
+			//	Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+			//	vPos += vLook * 1.75f;
+			//	vPos.y += 0.75f;
+			//	GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+			//	_cprintf("effect!\n");
+
+
+		}
+		break;
+		case SC_PACKET_ATTACK_SKILL1:
 		{
 			/*char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);

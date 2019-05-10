@@ -20,7 +20,12 @@
 98.Static_Mesh\07.Enterance\Wall_Enterance
 98.Static_Mesh\99.Etc\Stone_1
 98.Static_Mesh\99.Etc\Stone_2
-99.Dynamic_Mesh\01.npc\npc
-99.Dynamic_Mesh\02.Monster\golem
-99.Dynamic_Mesh\02.Monster\seuteompi
+99.Dynamic_Mesh\01.NPC\Villager1
+99.Dynamic_Mesh\01.NPC\Villager2
+99.Dynamic_Mesh\02.Monster\Armored_BlueLizard
+99.Dynamic_Mesh\02.Monster\Armored_GreenLizard
+99.Dynamic_Mesh\02.Monster\BlueLizard
+99.Dynamic_Mesh\02.Monster\DemonLizard
+99.Dynamic_Mesh\02.Monster\Golem
 99.Dynamic_Mesh\02.Monster\Mino
+99.Dynamic_Mesh\02.Monster\DemonLord

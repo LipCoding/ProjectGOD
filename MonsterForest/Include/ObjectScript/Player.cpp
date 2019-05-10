@@ -14,7 +14,10 @@
 #include "Core/NaviManager.h"
 #include "../TargetPlayerUI.h"
 #include "../UserInterfaceManager.h"
-
+#include "Component/Animation.h"
+#include "Component/AnimationClip.h"
+#include "Core/EffectManager.h"
+#include "Core/NetworkManager.h"
 CPlayer::CPlayer()
 {
 	SetTag("Player");
@@ -319,7 +322,50 @@ int CPlayer::Update(float fTime)
 {
 
 	//_cprintf("x :  %f     z :  %f     angle :  %f\n", m_pTransform->GetWorldPos().x, m_pTransform->GetWorldPos().z, m_fRecentRot);
+	int id = NetworkManager::getInstance()->getMyClientID();
+	string playerTag = "Player" + to_string(id);
 
+	if (this->m_pGameObject->GetTag() == playerTag)
+	{
+		//ANIMATION3DCLIP clipInfo = m_pAnimation->GetCurrentClip()->GetClipInfo();
+
+		//if ("Attack1" == clipInfo.strName)
+		//{
+		//	int iCurrentFrame = m_pAnimation->GetClipFrame();
+
+		//	if (18 == iCurrentFrame)
+		//	{
+		//		Vector3 vPos = m_pTransform->GetWorldPos();
+		//		Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+		//		vPos += vLook * 1.75f;
+		//		vPos.y += 0.75f;
+		//		GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+		//		_cprintf("effect!\n");
+		//	}
+		//}
+		
+		ANIMATION3DCLIP clipInfo = m_pAnimation->GetCurrentClip()->GetClipInfo();
+
+		if ("Attack1" == clipInfo.strName)
+		{
+			int iCurrentFrame = m_pAnimation->GetClipFrame();
+
+			//if (18 == iCurrentFrame)
+			if(16 == iCurrentFrame)
+			{
+				cs_packet_attack_skill_player* packet = reinterpret_cast<cs_packet_attack_skill_player*>(NetworkManager::getInstance()->getSendBuffer());
+				packet->size = sizeof(cs_packet_attack_skill_player);
+				packet->type = CS_PACKET_ATTACK_SKILL1_EFFECT;
+				packet->playerID = id;
+				wstring effectName = L"Attack3";
+				wcscpy_s(packet->effect_name, effectName.c_str());
+				DWORD iobyte;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_skill_player);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+			}
+		}
+
+	}
 	return 0;
 }
 
