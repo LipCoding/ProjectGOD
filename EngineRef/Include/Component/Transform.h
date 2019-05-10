@@ -82,6 +82,7 @@ private:
 	Vector3		m_vWorldRot;
 	Vector3		m_vWorldRelativeRot;
 	Vector3		m_vWorldPos;
+	Vector3		m_vWorldTempPos;
 	Vector3		m_vWorldRelativePos;
 	Vector3		m_vWorldAxis[AXIS_END];	// รเ
 	AXIS		m_eOriginAxis;
@@ -99,6 +100,7 @@ public:
 	Vector3 GetWorldScale()	const;
 	Vector3 GetWorldRot()	const;
 	Vector3 GetWorldPos()	const;
+	Vector3 GetWorldTempPos() const;
 	Vector3 GetWorldAxis(AXIS axis)	const;
 	Vector3 GetParentScale()	const;
 	Vector3 GetParentRot()	const;
@@ -123,6 +125,7 @@ public:
 	void SetWorldRotX(float x);
 	void SetWorldRotY(float y);
 	void SetWorldRotZ(float z);
+	void SetWorldTempPos(const Vector3& v);
 	void SetWorldPos(float x, float y, float z, bool bSelf = false);
 	void SetWorldPos(float f[3], bool bSelf = false);
 	void SetWorldPos(const Vector3& v, bool bSelf = false);

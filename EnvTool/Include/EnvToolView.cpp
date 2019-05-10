@@ -71,6 +71,8 @@ CEnvToolView::~CEnvToolView()
 	SAFE_RELEASE(m_pCamTr);
 	SAFE_RELEASE(m_pTimer);
 	DESTROY_SINGLE(CCore);
+
+	m_pEditForm = nullptr;
 }
 
 BOOL CEnvToolView::PreCreateWindow(CREATESTRUCT& cs)
@@ -217,7 +219,13 @@ void CEnvToolView::UpdateView()
 
 void CEnvToolView::UpdateInput(const float& fTime)
 {
-	TOOLTAB_TYPE type = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTabType();
+	if (!m_pEditForm)
+	{
+		m_pEditForm = ((CMainFrame*)AfxGetMainWnd())->GetEdit();
+	}
+
+	TOOLTAB_TYPE type = m_pEditForm->GetTabType();
+
 
 	/*POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
 	POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();*/
@@ -377,7 +385,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 					
 					if (!pNodes->empty())
 					{
-						int iZeroCheck = ((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetTerrainTab()->GetHeightZeroCheck();
+						int iZeroCheck = m_pEditForm->GetTerrainTab()->GetHeightZeroCheck();
 
 						if (iZeroCheck == 0)
 							pBrushTool->MoveHeight(pNodes, m_vPickPos, fTime);
@@ -432,6 +440,8 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	
 	if (type == TAB_OBJECT)
 	{
+		m_pEditForm->GetObjectTab()->UpdateMousePos(m_vPickPos);
+
 		if (KEYPUSH("Z"))
 		{
 			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
@@ -467,6 +477,21 @@ void CEnvToolView::UpdateInput(const float& fTime)
 						vRot.x -= ptMouseMove.y / 500.f * PG_PI;
 
 						pTr->SetWorldRot(vRot);
+					}
+				}
+				
+				if (KEYPUSH("LShift"))
+				{
+					// Position
+					Vector3 vPos = pTr->GetWorldTempPos();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.y != 0)
+					{
+						vPos.z -= ptMouseMove.y / 250.f;
+
+						pTr->SetWorldTempPos(vPos);
 					}
 				}
 
@@ -512,6 +537,21 @@ void CEnvToolView::UpdateInput(const float& fTime)
 					}
 				}
 
+				if (KEYPUSH("LShift"))
+				{
+					// Position
+					Vector3 vPos = pTr->GetWorldTempPos();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.x != 0)
+					{
+						vPos.x += ptMouseMove.x / 250.f;
+
+						pTr->SetWorldTempPos(vPos);
+					}
+				}
+
 				SAFE_RELEASE(pTr);
 				SAFE_RELEASE(pTempObject);
 			}
@@ -551,6 +591,21 @@ void CEnvToolView::UpdateInput(const float& fTime)
 						vRot.z -= ptMouseMove.x / 500.f * PG_PI;
 
 						pTr->SetWorldRot(vRot);
+					}
+				}
+
+				if (KEYPUSH("LShift"))
+				{
+					// Position
+					Vector3 vPos = pTr->GetWorldTempPos();
+					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
+					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
+
+					if (ptMouseMove.y != 0)
+					{
+						vPos.y -= ptMouseMove.y / 250.f;
+
+						pTr->SetWorldTempPos(vPos);
 					}
 				}
 
