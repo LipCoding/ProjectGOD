@@ -41,8 +41,7 @@ const unsigned char CS_PACKET_ATTACK = 50;
 const unsigned char CS_PACKET_ATTACK_SKILL1 = 51;
 const unsigned char CS_PACKET_ATTACK_SKILL2 = 52;
 const unsigned char CS_PACKET_ATTACK_SKILL3 = 53;
-
-
+const unsigned char CS_PACKET_ATTACK_SKILL1_EFFECT = 70;
 const unsigned char CS_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char CS_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char CS_PACKET_MOVEITEM_INVENTORY = 152;
@@ -70,9 +69,10 @@ const unsigned char SC_PACKET_ROTATE_Y_CI = 14;
 const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
 
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
-const unsigned char SC_PACKET_ATTACK_SWORD_SKILL1 = 51;
+const unsigned char SC_PACKET_ATTACK_SKILL1 = 51;
 const unsigned char SC_PACKET_ATTACK_SKILL2 = 52;
 const unsigned char SC_PACKET_ATTACK_SKILL3 = 53;
+const unsigned char SC_PACKET_ATTACK_SKILL1_EFFECT = 70;
 const unsigned char SC_PACKET_DIE_ANIMATION = 90;
 const unsigned char SC_PACKET_IDLE_ANIMATION = 91;
 
@@ -81,7 +81,7 @@ const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char SC_PACKET_MOVEITEM_INVENTORY = 152;
 const unsigned char SC_PACKET_EQUIPITEM_PLAYER = 153;
-const unsigned char SC_PACKET_ROOTING_TABLE = 155;;
+const unsigned char SC_PACKET_ROOTING_TABLE = 155;
 const unsigned char SC_PACKET_INVITE_PARTY = 200;
 const unsigned char SC_PACKET_PARTY_CONFIRM = 201;
 const unsigned char SC_PACKET_PARTY_CANCEL = 202;
@@ -180,6 +180,15 @@ struct cs_packet_attack_player
 	unsigned targetid;
 };
 
+struct cs_packet_attack_skill_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int playerID;
+	wchar_t effect_name[MAX_STR_SIZE];
+};
+
+
 struct cs_packet_additem_inventory
 {
 	unsigned short size;
@@ -255,6 +264,15 @@ struct sc_packet_animation_player
 	unsigned short size;
 	unsigned char type;
 	unsigned int id;
+	wchar_t animation_name[MAX_STR_SIZE];
+};
+
+struct sc_packet_attack_skill_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int playerID;
+	wchar_t effect_name[MAX_STR_SIZE];
 };
 
 struct sc_packet_remove_player
