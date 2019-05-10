@@ -168,12 +168,10 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 	}
 	case ASSIST_FADE_IN:
 	{
-		m_StartFadeIn = 0.f;
 		break;
 	}
 	case ASSIST_FADE_OUT:
 	{
-		m_StartFadeOut = 0.f;
 		break;
 	}
 	case ASSIST_UV_ANI:

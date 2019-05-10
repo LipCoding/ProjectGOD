@@ -160,6 +160,7 @@ bool CTestScene::Init()
 #pragma region Player
 		CGameObject*	pPlayerObj = CGameObject::CreateObject("PlayerCharacter", pLayer);
 		CPlayer_Test*		pPlayer = pPlayerObj->AddComponent<CPlayer_Test>("Player");
+
 		SAFE_RELEASE(pPlayer);
 		CTransform*	pTr = pPlayerObj->GetTransform();
 
