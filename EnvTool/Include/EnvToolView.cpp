@@ -546,7 +546,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.x != 0)
 					{
-						vPos.x += ptMouseMove.x / 250.f;
+						vPos.y += ptMouseMove.x / 250.f;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -603,7 +603,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.y != 0)
 					{
-						vPos.y -= ptMouseMove.y / 250.f;
+						vPos.z -= ptMouseMove.y / 250.f;
 
 						pTr->SetWorldTempPos(vPos);
 					}
