@@ -184,13 +184,41 @@ void CObjTab::OnLbnSelchangeListObjectType()
 
 	Vector3 pos = pTr->GetWorldPos();
 	*/
-	if (typeName == "npc")
+	if (typeName == "Villager1")
 	{
 		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::NPC1);
 	}
-	else if (typeName == "golem")
+	else if (typeName == "Villager2")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::NPC2);
+	}
+	else if (typeName == "GreenLizard")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::GREEN_LIZARD);
+	}
+	else if (typeName == "BlueLizard")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::BLUE_LIZARD);
+	}
+	else if (typeName == "Armored_GreenLizard")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD);
+	}
+	else if (typeName == "Armored_BlueLizard")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD);
+	}
+	else if (typeName == "Mino")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::MINO);
+	}
+	else if (typeName == "Golem")
 	{
 		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::GOLEM);
+	}
+	else if (typeName == "DemonLord")
+	{
+		m_pTempObject->setObjectSetType(OBJECT_SET_TYPE::DEMONLORD);
 	}
 	else
 		currentType = -1;
@@ -524,6 +552,8 @@ void CObjTab::OnBnClickedButtonObjectSave()
 
 	for (int i = 0; i < m_vecObjects.size(); ++i)
 	{
+		if (i == 85)
+			volatile char a = 0;
 		if (m_vecObjects[i]->getObjectSetType() != OBJECT_SET_TYPE::NONE)
 		{
 			CTransform* pTr = m_vecObjects[i]->GetTransform();

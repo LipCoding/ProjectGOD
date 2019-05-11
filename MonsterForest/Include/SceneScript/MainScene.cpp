@@ -153,76 +153,76 @@ bool CMainScene::Init()
 #pragma endregion
 
 #pragma region StaticObject
-	//// 경로 지정
-	//wchar_t strPath[MAX_PATH] = {};
-	//wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	//wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
 
-	//ifstream file;
-	//file.open(strPath, ios::in);
+	ifstream file;
+	file.open(strPath, ios::in);
 
-	//if (!file.is_open())
-	//	return false;
+	if (!file.is_open())
+		return false;
 
-	//int iObjSize = 0;
-	//file >> iObjSize;
+	int iObjSize = 0;
+	file >> iObjSize;
 
-	//for (int i = 0; i < iObjSize; i++)
-	//{
-	//	string objName = "ObjName_" + to_string(i);
+	for (int i = 0; i < iObjSize; i++)
+	{
+		string objName = "ObjName_" + to_string(i);
 
-	//	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	//	CLayer* pLayer = pScene->GetLayer("Default");
-	//	CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer* pLayer = pScene->GetLayer("Default");
+		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
 
-	//	string objTag;
-	//	file >> objTag;
+		string objTag;
+		file >> objTag;
 
-	//	// Mesh
-	//	string meshPath, meshRestPath;
-	//	meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-	//	meshRestPath = objTag;
+		// Mesh
+		string meshPath, meshRestPath;
+		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+		meshRestPath = objTag;
 
-	//	string meshDataPath;
-	//	meshDataPath = meshPath + meshRestPath + ".msh";
+		string meshDataPath;
+		meshDataPath = meshPath + meshRestPath + ".msh";
 
-	//	CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
+		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
 
-	//	wstring wMeshDataPath;
-	//	wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-	//	pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
+		wstring wMeshDataPath;
+		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
+		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
 
-	//	SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pRenderer);
 
-	//	// Transform
-	//	// Local Transform Data
-	//	string localDataPath;
+		// Transform
+		// Local Transform Data
+		string localDataPath;
 
-	//	localDataPath = meshPath + meshRestPath + ".dat";
+		localDataPath = meshPath + meshRestPath + ".dat";
 
-	//	FILE* pFile = nullptr;
+		FILE* pFile = nullptr;
 
-	//	fopen_s(&pFile, localDataPath.c_str(), "rb");
+		fopen_s(&pFile, localDataPath.c_str(), "rb");
 
-	//	if (!pFile)
-	//		return false;
+		if (!pFile)
+			return false;
 
-	//	CTransform* pTr = pObj->GetTransform();
-	//	pTr->Load_Local(pFile);
-	//	fclose(pFile);
+		CTransform* pTr = pObj->GetTransform();
+		pTr->Load_Local(pFile);
+		fclose(pFile);
 
-	//	// World Transform Data
-	//	Vector3 vScale, vRotation, vPos;
-	//	file >> vScale.x >> vScale.y >> vScale.z;
-	//	file >> vRotation.x >> vRotation.y >> vRotation.z;
-	//	file >> vPos.x >> vPos.y >> vPos.z;
+		// World Transform Data
+		Vector3 vScale, vRotation, vPos;
+		file >> vScale.x >> vScale.y >> vScale.z;
+		file >> vRotation.x >> vRotation.y >> vRotation.z;
+		file >> vPos.x >> vPos.y >> vPos.z;
 
-	//	pTr->SetWorldScale(vScale);
-	//	pTr->SetWorldRot(vRotation);
-	//	pTr->SetWorldPos(vPos);
+		pTr->SetWorldScale(vScale);
+		pTr->SetWorldRot(vRotation);
+		pTr->SetWorldPos(vPos);
 
-	//	SAFE_RELEASE(pTr);
-	//}
+		SAFE_RELEASE(pTr);
+	}
 #pragma endregion
 
 	{
@@ -1337,7 +1337,10 @@ int CMainScene::Update(float fTime)
 						SAFE_RELEASE(pMinoObject);
 					}
 				}
-				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
+					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD || 
+					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD || 
+					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
 				{
 
 					char str[128];
@@ -1632,7 +1635,10 @@ int CMainScene::Update(float fTime)
 
 							}
 						}
-						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
+						else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
 						{
 							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
 
@@ -1764,7 +1770,10 @@ int CMainScene::Update(float fTime)
 
 							}
 						}
-						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::SEUTEOMPI)
+						else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD ||
+							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
 						{
 							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
 
@@ -1822,7 +1831,7 @@ int CMainScene::Update(float fTime)
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
-					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType != OBJECT_SET_TYPE::DEMONLORD)
 					{
 						//DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
 						//pDemonLord->changeAnimation();
