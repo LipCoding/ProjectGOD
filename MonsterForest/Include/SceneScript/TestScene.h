@@ -14,6 +14,10 @@ public:
 
 	CGameObject *pPlayer;
 
+private:
+	bool	m_isCheckColliderQuadTree = false;
+	bool	m_isCheckColliderNaviMesh = false;
+
 public:
 	virtual bool Init();
 	virtual int Update(float fTime);
