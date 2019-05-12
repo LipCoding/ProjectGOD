@@ -4,12 +4,12 @@
 
 PG_USING
 
-class Mino :
+class Armored_GreenLizard :
 	public Monster
 {
 public:
-	Mino();
-	~Mino();
+	Armored_GreenLizard();
+	~Armored_GreenLizard();
 
 private:
 	int currentHP = 0;
@@ -19,11 +19,12 @@ private:
 	int maxMP = 0;
 
 	int attackDamage = 0;
-	//bool dieState = false;
+
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
 	bool returnToInitialPos{ false };
 	float hearth_point{ 0 };
+
 private:
 	CTransform*		m_pTarget;
 	CAnimation*		m_pAnimation;
@@ -35,16 +36,16 @@ protected:
 	//unordered_map<int, GOLEMSTATE> stateMap;
 	size_t currentAnimation{ 0 };
 	size_t nextAnimation{ 0 };
-	int level = 0;
-public:
-	int getLevel() { return level; }
-	void setLevel(int level) { this->level = level; }
 public:
 	//GolemState* getCurrentState();
 	//GolemState* getState(int stateID);
 public:
 	size_t getCurrentAnimation();
 	size_t getNextAnimation();
+	int level = 0;
+public:
+	int getLevel() { return level; }
+	void setLevel(int level) { this->level = level; }
 	void changeAnimation();
 	const Vector3& getInitialPos() { return initial_pos; }
 	const Vector3& getRoamingPos() { return roaming_pos; }
@@ -64,13 +65,14 @@ public:
 	virtual void Input(float fTime);
 	virtual int Update(float fTime);
 	virtual int LateUpdate(float fTime);
-	virtual Mino* Clone();
+	virtual Armored_GreenLizard* Clone();
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
 	virtual void OnCollision(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
 	virtual void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
+
 public:
 public:
 	int getCurrentHP() { return currentHP; }

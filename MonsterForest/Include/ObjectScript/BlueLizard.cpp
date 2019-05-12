@@ -1,4 +1,4 @@
-#include "Mino.h"
+#include "BlueLizard.h"
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "Component/Collider.h"
@@ -15,41 +15,42 @@
 #include "Player.h"
 #include "Core/NetworkManager.h"
 #include "../UserInterfaceManager.h"
+#include "../DropItemSlot.h"
 #include "../DropTableUI.h"
 
-Mino::Mino() :
+BlueLizard::BlueLizard() :
 	m_pTarget(NULL),
 	m_pNavigation(NULL)
 {
-	SetTag("Mino");
-	SetTypeName("Mino");
-	SetTypeID<Mino>();
+	SetTag("BlueLizard");
+	SetTypeName("BlueLizard");
+	SetTypeID<BlueLizard>();
 }
 
 
-Mino::~Mino()
+BlueLizard::~BlueLizard()
 {
 	SAFE_RELEASE(m_pNavigation);
 	SAFE_RELEASE(m_pAnimation);
 	SAFE_RELEASE(m_pTarget);
 }
 
-size_t Mino::getCurrentAnimation()
+size_t BlueLizard::getCurrentAnimation()
 {
 	return currentAnimation;
 }
 
-size_t Mino::getNextAnimation()
+size_t BlueLizard::getNextAnimation()
 {
 	return nextAnimation;
 }
 
-void Mino::changeAnimation()
+void BlueLizard::changeAnimation()
 {
 	//m_pAnimation->ChangeClip(stateMap[nextAnimation].first);
 }
 
-void Mino::SetTarget(const string & strTag)
+void BlueLizard::SetTarget(const string & strTag)
 {
 	CGameObject*	pTargetObj = CGameObject::FindObject(strTag);
 
@@ -60,19 +61,23 @@ void Mino::SetTarget(const string & strTag)
 	}
 }
 
-CAnimation * Mino::GetAnimation()
+CAnimation * BlueLizard::GetAnimation()
 {
 	return m_pAnimation;
 }
 
-bool Mino::Init()
+bool BlueLizard::Init()
 {
 	m_pTransform->SetOriginAxis(AXIS_Y);
+	//m_pTransform->SetWorldScale(3.f, 3.f, 3.f);
 
+	//m_pAnimation = m_pGameObject->AddComponent<CAnimation>("GolemAnimation");
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.anm");
 	m_pAnimation->SetDefaultClip("Idle");
+
+
 
 	if (!m_pAnimation)
 		m_pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
@@ -83,30 +88,30 @@ bool Mino::Init()
 	return true;
 }
 
-void Mino::Input(float fTime)
+void BlueLizard::Input(float fTime)
 {
 }
 
-int Mino::Update(float fTime)
-{
-	return 0;
-}
-
-int Mino::LateUpdate(float fTime)
+int BlueLizard::Update(float fTime)
 {
 	return 0;
 }
 
-Mino * Mino::Clone()
+int BlueLizard::LateUpdate(float fTime)
 {
-	return new Mino(*this);
+	return 0;
 }
 
-void Mino::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
+BlueLizard * BlueLizard::Clone()
+{
+	return new BlueLizard(*this);
+}
+
+void BlueLizard::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }
 
-void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
+void BlueLizard::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 	if (pDest->GetTag() == "MouseRay" && GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -122,7 +127,6 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		pPlayer->clickedID = id;
 
 		CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-
 		float ratio = (float)this->getCurrentHP() / (float)this->getMaxHP();
 		pEnemyUIHearthBar->setLengthRatio(ratio);
 
@@ -131,13 +135,13 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		SAFE_RELEASE(pUIObject);
 	}
 
-
 	if (KEYDOWN("MouseRButton"))
 	{
 		if (pDest->GetTag() == "MouseRay" && GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 		{
 			if (true == dieState)
 			{
+
 				string tag = m_pGameObject->GetTag();
 				tag.erase(0, 6);
 				int id = atoi(tag.c_str());
@@ -148,6 +152,7 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 				packet->targetId = id;
 				DWORD iobyte;
 				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+
 				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 
 				POINT mousePos = GET_SINGLE(CInput)->GetMousePos();
@@ -162,6 +167,6 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 	}
 }
 
-void Mino::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
+void BlueLizard::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }

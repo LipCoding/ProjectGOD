@@ -41,7 +41,7 @@
 #include "../Item.h"
 #include "../Inventory.h"
 #include "../ObjectScript/Mino.h"
-#include "../ObjectScript/Seuteompi.h"
+#include "../ObjectScript/GreenLizard.h"
 #include "Component/Picking.h"
 #include "Component/ParticleMultiple.h"
 #include "Core/QuadTreeManager.h"
@@ -57,6 +57,10 @@
 #include "../ObjectScript/Sword.h"
 #include "Component/ColliderAABB.h"
 #include "../ObjectScript/DemonLord.h"
+#include "../ObjectScript/GreenLizard.h"
+#include "../ObjectScript/BlueLizard.h"
+#include "../ObjectScript/Armored_GreenLizard.h"
+#include "../ObjectScript/Armored_BlueLizard.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -292,11 +296,11 @@ bool CMainScene::Init()
 			}
 			CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
 
-			pRenderer->SetMesh("golem", L"99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.msh");
+			pRenderer->SetMesh("Golem", L"99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.msh");
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Golem\\golem.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.dat";
 
 			FILE* pFile_Player = nullptr;
 
@@ -372,24 +376,24 @@ bool CMainScene::Init()
 		}
 #pragma endregion
 
-#pragma region SEUTEOMPI_MONSTER_PROTOTYPE
+#pragma region GREENLIZARD_MONSTER_PROTOTYPE
 		{
 			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pSeuteompiObj = CGameObject::CreatePrototypeDontDestroy("SeuteompiObject", m_pScene);
-			CTransform*	pTr = pSeuteompiObj->GetTransform();
+			CGameObject*	pGreenLizardObj = CGameObject::CreatePrototypeDontDestroy("GreenLizard", m_pScene);
+			CTransform*	pTr = pGreenLizardObj->GetTransform();
 
-			CRenderer*	pRenderer = pSeuteompiObj->AddComponent<CRenderer>("PlayerRenderer");
+			CRenderer*	pRenderer = pGreenLizardObj->AddComponent<CRenderer>("PlayerRenderer");
 
-			pRenderer->SetMesh("seuteompi", L"99.Dynamic_Mesh\\02.Monster\\Seuteompi\\Seuteompi.msh");
+			pRenderer->SetMesh("greenlizard", L"99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.msh");
 
 			{
-				CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider1");
+				CColliderSphere* pCollider = pGreenLizardObj->AddComponent<CColliderSphere>("collider1");
 				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
 				SAFE_RELEASE(pCollider);
 			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Seuteompi\\seuteompi.dat";
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.dat";
 
 			FILE* pFile_Player = nullptr;
 
@@ -404,7 +408,118 @@ bool CMainScene::Init()
 			SAFE_RELEASE(pTr);
 
 			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pSeuteompiObj);
+			SAFE_RELEASE(pGreenLizardObj);
+			SAFE_RELEASE(pLayer);
+		}
+#pragma endregion
+
+#pragma region BlueLizard
+		{
+			CLayer*	pLayer = m_pScene->GetLayer("Default");
+			CGameObject*	pBlueLizardObj = CGameObject::CreatePrototypeDontDestroy("BlueLizard", m_pScene);
+			CTransform*	pTr = pBlueLizardObj->GetTransform();
+
+			CRenderer*	pRenderer = pBlueLizardObj->AddComponent<CRenderer>("PlayerRenderer");
+
+			pRenderer->SetMesh("bluelizard", L"99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.msh");
+
+			{
+				CColliderSphere* pCollider = pBlueLizardObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.dat";
+
+			FILE* pFile_Player = nullptr;
+
+			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+			if (!pFile_Player)
+				return false;
+
+			pTr->Load_Local(pFile_Player);
+
+			fclose(pFile_Player);
+			SAFE_RELEASE(pTr);
+
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pBlueLizardObj);
+			SAFE_RELEASE(pLayer);
+		}
+#pragma endregion
+
+#pragma region Armored_GreenLizard
+		{
+			CLayer*	pLayer = m_pScene->GetLayer("Default");
+			CGameObject*	pArmoredGreenLizard = CGameObject::CreatePrototypeDontDestroy("Armored_GreenLizard", m_pScene);
+			CTransform*	pTr = pArmoredGreenLizard->GetTransform();
+
+			CRenderer*	pRenderer = pArmoredGreenLizard->AddComponent<CRenderer>("PlayerRenderer");
+
+			pRenderer->SetMesh("Armored_GreenLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.msh");
+
+			{
+				CColliderSphere* pCollider = pArmoredGreenLizard->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.dat";
+
+			FILE* pFile_Player = nullptr;
+
+			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+			if (!pFile_Player)
+				return false;
+
+			pTr->Load_Local(pFile_Player);
+
+			fclose(pFile_Player);
+			SAFE_RELEASE(pTr);
+
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pArmoredGreenLizard);
+			SAFE_RELEASE(pLayer);
+		}
+#pragma endregion
+
+#pragma region Armored_BlueLizard
+		{
+			CLayer*	pLayer = m_pScene->GetLayer("Default");
+			CGameObject*	pArmored_BlueLizardObj = CGameObject::CreatePrototypeDontDestroy("Armored_BlueLizard", m_pScene);
+			CTransform*	pTr = pArmored_BlueLizardObj->GetTransform();
+
+			CRenderer*	pRenderer = pArmored_BlueLizardObj->AddComponent<CRenderer>("PlayerRenderer");
+
+			pRenderer->SetMesh("Armored_BlueLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.msh");
+
+			{
+				CColliderSphere* pCollider = pArmored_BlueLizardObj->AddComponent<CColliderSphere>("collider1");
+				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+				SAFE_RELEASE(pCollider);
+			}
+			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.dat";
+
+			FILE* pFile_Player = nullptr;
+
+			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+			if (!pFile_Player)
+				return false;
+
+			pTr->Load_Local(pFile_Player);
+
+			fclose(pFile_Player);
+			SAFE_RELEASE(pTr);
+
+			SAFE_RELEASE(pRenderer);
+			SAFE_RELEASE(pArmored_BlueLizardObj);
 			SAFE_RELEASE(pLayer);
 		}
 #pragma endregion
@@ -1022,7 +1137,9 @@ void CMainScene::Input(float fTime)
 		}
 
 		if (clickedEnemy)
+		{
 			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
+		}
 		else
 			GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(false);
 
@@ -1194,6 +1311,13 @@ int CMainScene::Update(float fTime)
 					SAFE_RELEASE(pTr);
 
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
+					pPlayer->setCurrentHP(pPacket->current_hp);
+					pPlayer->setCurrentMP(pPacket->current_mp);
+					pPlayer->setLevel(pPacket->level);
+					pPlayer->setMaxHP(200 + pPacket->level * 50);
+					pPlayer->setMaxMP(30 + pPacket->level * 10);
+					pPlayer->setMaxEXP(pPacket->level * 100);
+					pPlayer->setAttackDamag(10 + pPacket->level * 5);
 					GET_SINGLE(UserInterfaceManager)->setPlayer(pPlayer);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
@@ -1266,6 +1390,13 @@ int CMainScene::Update(float fTime)
 					pPlayerObj->SetTag(objectTag);
 
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
+					pPlayer->setCurrentHP(pPacket->current_hp);
+					pPlayer->setCurrentMP(pPacket->current_mp);
+					pPlayer->setLevel(pPacket->level);
+					pPlayer->setMaxHP(200 + pPacket->level * 50);
+					pPlayer->setMaxMP(30 + pPacket->level * 10);
+					pPlayer->setMaxEXP(pPacket->level * 100);
+					pPlayer->setAttackDamag(10 + pPacket->level * 5);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
 
@@ -1297,6 +1428,12 @@ int CMainScene::Update(float fTime)
 						CGameObject* pGolemObject = CGameObject::CreateClone("GolemObject", pLayer);
 						pGolemObject->SetTag(objectTag);
 						Golem*	pGolem = pGolemObject->AddComponent<Golem>("Golem");
+						pGolem->setCurrentHP(pPacket->current_hp);
+						pGolem->setCurrentMP(pPacket->current_mp);
+						pGolem->setLevel(pPacket->level);
+						pGolem->setMaxHP(30 + pPacket->level * 10);
+						pGolem->setMaxMP(10);
+						pGolem->setAttackDamag(3 + pPacket->level * 1);
 						SAFE_RELEASE(pGolem);
 						CTransform*	pTr = pGolemObject->GetTransform();
 						CColliderSphere* pCollider = pGolemObject->AddComponent<CColliderSphere>("collider");
@@ -1305,7 +1442,7 @@ int CMainScene::Update(float fTime)
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
-						pTr->SetWorldScale(0.5f, 0.5f, 0.5f);
+						pTr->SetWorldScale(2.f, 2.f, 2.f);
 						SAFE_RELEASE(pGolemObject);
 					}
 				}
@@ -1322,6 +1459,12 @@ int CMainScene::Update(float fTime)
 						CGameObject* pMinoObject = CGameObject::CreateClone("MinoObject", pLayer);
 						pMinoObject->SetTag(objectTag);
 						Mino*	pMino = pMinoObject->AddComponent<Mino>("Mino");
+						pMino->setCurrentHP(pPacket->current_hp);
+						pMino->setCurrentMP(pPacket->current_mp);
+						pMino->setLevel(pPacket->level);
+						pMino->setMaxHP(50 + pPacket->level * 5);
+						pMino->setMaxMP(10);
+						pMino->setAttackDamag(5 + pPacket->level * 1);
 						SAFE_RELEASE(pMino);
 						CTransform*	pTr = pMinoObject->GetTransform();
 						//CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider");
@@ -1337,12 +1480,8 @@ int CMainScene::Update(float fTime)
 						SAFE_RELEASE(pMinoObject);
 					}
 				}
-				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
-					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD || 
-					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD || 
-					static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
 				{
-
 					char str[128];
 					string appendTag = _itoa(id, str, 10);
 					string objectTag = "Player" + appendTag;
@@ -1351,18 +1490,115 @@ int CMainScene::Update(float fTime)
 					CGameObject* pGolemObj = CGameObject::FindObject(objectTag);
 					if (nullptr == pGolemObj)
 					{
-						CGameObject* pSeuteompiObj = CGameObject::CreateClone("SeuteompiObject", pLayer);
-						pSeuteompiObj->SetTag(objectTag);
-						Seuteompi*	pSeuteompi = pSeuteompiObj->AddComponent<Seuteompi>("Seuteompi");
-						SAFE_RELEASE(pSeuteompi);
-						CTransform*	pTr = pSeuteompiObj->GetTransform();
+						CGameObject* pGreenLizardObj = CGameObject::CreateClone("GreenLizard", pLayer);
+						pGreenLizardObj->SetTag(objectTag);
+						GreenLizard*	pGreenLizard = pGreenLizardObj->AddComponent<GreenLizard>("GreenLizard");
+						pGreenLizard->setCurrentHP(pPacket->current_hp);
+						pGreenLizard->setCurrentMP(pPacket->current_mp);
+						pGreenLizard->setLevel(pPacket->level);
+						pGreenLizard->setMaxHP(30 + pPacket->level * 5);
+						pGreenLizard->setMaxMP(10);
+						pGreenLizard->setAttackDamag(3 + pPacket->level * 1);
+						SAFE_RELEASE(pGreenLizard);
+						CTransform*	pTr = pGreenLizardObj->GetTransform();
 						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
 						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
 						//SAFE_RELEASE(pCollider);
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
-						SAFE_RELEASE(pSeuteompiObj);
+						SAFE_RELEASE(pGreenLizardObj);
+					}
+				}
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
+				{
+					char str[128];
+					string appendTag = _itoa(id, str, 10);
+					string objectTag = "Player" + appendTag;
+
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					CGameObject* pGolemObj = CGameObject::FindObject(objectTag);
+					if (nullptr == pGolemObj)
+					{
+						CGameObject* pBlueLizardObj = CGameObject::CreateClone("BlueLizard", pLayer);
+						pBlueLizardObj->SetTag(objectTag);
+						BlueLizard*	pBlueLizard = pBlueLizardObj->AddComponent<BlueLizard>("BlueLizard");
+						pBlueLizard->setCurrentHP(pPacket->current_hp);
+						pBlueLizard->setCurrentMP(pPacket->current_mp);
+						pBlueLizard->setLevel(pPacket->level);
+						pBlueLizard->setMaxHP(30 + pPacket->level * 5);
+						pBlueLizard->setMaxMP(10);
+						pBlueLizard->setAttackDamag(3 + pPacket->level * 1);
+						SAFE_RELEASE(pBlueLizard);
+						CTransform*	pTr = pBlueLizardObj->GetTransform();
+						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
+						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
+						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+						SAFE_RELEASE(pBlueLizardObj);
+					}
+				}
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+				{
+					char str[128];
+					string appendTag = _itoa(id, str, 10);
+					string objectTag = "Player" + appendTag;
+
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					CGameObject* pGolemObj = CGameObject::FindObject(objectTag);
+					if (nullptr == pGolemObj)
+					{
+						CGameObject* pArmored_GreenLizardObj = CGameObject::CreateClone("Armored_GreenLizard", pLayer);
+						pArmored_GreenLizardObj->SetTag(objectTag);
+						BlueLizard*	pArmored_GreenLizard = pArmored_GreenLizardObj->AddComponent<BlueLizard>("Armored_GreenLizard");
+						pArmored_GreenLizard->setCurrentHP(pPacket->current_hp);
+						pArmored_GreenLizard->setCurrentMP(pPacket->current_mp);
+						pArmored_GreenLizard->setLevel(pPacket->level);
+						pArmored_GreenLizard->setMaxHP(50 + pPacket->level * 10);
+						pArmored_GreenLizard->setMaxMP(10);
+						pArmored_GreenLizard->setAttackDamag(10 + pPacket->level * 2);
+						SAFE_RELEASE(pArmored_GreenLizard);
+						CTransform*	pTr = pArmored_GreenLizardObj->GetTransform();
+						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
+						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
+						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+			
+						SAFE_RELEASE(pArmored_GreenLizardObj);
+					}
+				}
+				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+				{
+					char str[128];
+					string appendTag = _itoa(id, str, 10);
+					string objectTag = "Player" + appendTag;
+
+					CLayer*	pLayer = m_pScene->GetLayer("Default");
+					CGameObject* pGolemObj = CGameObject::FindObject(objectTag);
+					if (nullptr == pGolemObj)
+					{
+						CGameObject* pArmored_BlueLizardObj = CGameObject::CreateClone("Armored_BlueLizard", pLayer);
+						pArmored_BlueLizardObj->SetTag(objectTag);
+						BlueLizard*	pArmored_BlueLizard = pArmored_BlueLizardObj->AddComponent<BlueLizard>("Armored_GreenLizard");
+						pArmored_BlueLizard->setCurrentHP(pPacket->current_hp);
+						pArmored_BlueLizard->setCurrentMP(pPacket->current_mp);
+						pArmored_BlueLizard->setLevel(pPacket->level);
+						pArmored_BlueLizard->setMaxHP(50 + pPacket->level * 10);
+						pArmored_BlueLizard->setMaxMP(10);
+						pArmored_BlueLizard->setAttackDamag(10 + pPacket->level * 2);
+						SAFE_RELEASE(pArmored_BlueLizard);
+						CTransform*	pTr = pArmored_BlueLizardObj->GetTransform();
+						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
+						//pCollider->SetSphere(Vector3(0.f, 0.f, 0.f), 2.f);
+						//SAFE_RELEASE(pCollider);
+						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
+						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+						SAFE_RELEASE(pArmored_BlueLizardObj);
 					}
 				}
 				else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
@@ -1379,6 +1615,12 @@ int CMainScene::Update(float fTime)
 						CGameObject* pDemonLordObj = CGameObject::CreateClone("DemonLordObjeect", pLayer);
 						pDemonLordObj->SetTag(objectTag);
 						DemonLord*	pDemonLord = pDemonLordObj->AddComponent<DemonLord>("DemonLord");
+						pDemonLord->setCurrentHP(pPacket->current_hp);
+						pDemonLord->setCurrentMP(pPacket->current_mp);
+						pDemonLord->setLevel(pPacket->level);
+						pDemonLord->setMaxHP(1200);
+						pDemonLord->setMaxMP(300);
+						pDemonLord->setAttackDamag(25);
 						SAFE_RELEASE(pDemonLord);
 						CTransform*	pTr = pDemonLordObj->GetTransform();
 
@@ -1544,7 +1786,6 @@ int CMainScene::Update(float fTime)
 					SAFE_RELEASE(pTransform);
 					SAFE_RELEASE(pGameObject);
 				}
-
 			}
 		}
 		break;
@@ -1559,6 +1800,7 @@ int CMainScene::Update(float fTime)
 
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
+				_cprintf("MonsterType : %d", pPacket->objectSetType);
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
@@ -1579,7 +1821,7 @@ int CMainScene::Update(float fTime)
 
 						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
 						{
-							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("golem");
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
 
 							int hp = pGolem->getCurrentHP() - pPacket->damage;
 							//CTransform* pTransform = pGolem->GetTransform();
@@ -1635,14 +1877,11 @@ int CMainScene::Update(float fTime)
 
 							}
 						}
-						else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::GREEN_LIZARD)
 						{
-							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
 
-							int hp = pSeuteompi->getCurrentHP() - pPacket->damage;
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
 
 							//CTransform* pTransform = pSeuteompi->GetTransform();
 							//Vector3 vPos = pTransform->GetWorldPos();
@@ -1654,19 +1893,107 @@ int CMainScene::Update(float fTime)
 
 							if (hp < 0)
 							{
-								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
-								pSeuteompi->setCurrentHP(hp);
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(0.f);
 							}
 							else
 							{
-								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
-								pSeuteompi->setCurrentHP(hp);
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
 								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
 								pEnemyUIHearthBar->setLengthRatio(ratio);
 							}
 						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if(static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+
 						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
 						{
 							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
@@ -1725,13 +2052,13 @@ int CMainScene::Update(float fTime)
 
 							int hp = pGolem->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pGolem->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
@@ -1750,13 +2077,13 @@ int CMainScene::Update(float fTime)
 
 							int hp = pMino->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pMino->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
@@ -1770,47 +2097,120 @@ int CMainScene::Update(float fTime)
 
 							}
 						}
-						else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD ||
-							static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
 						{
-							Seuteompi* pSeuteompi = pTargetObject->FindComponentFromTag<Seuteompi>("Seuteompi");
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
 
-							int hp = pSeuteompi->getCurrentHP() - pPacket->damage;
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pSeuteompi->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
-								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
-								pSeuteompi->setCurrentHP(hp);
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
 							}
 							else
 							{
-								float ratio = (float)hp / (float)pSeuteompi->getMaxHP();
-								pSeuteompi->setCurrentHP(hp);
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
 							}
 						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+							}
+						}
+
 						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
 						{
 							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
 
 							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
 
-							CTransform* pTransform = pDemonLord->GetTransform();
-							Vector3 vPos = pTransform->GetWorldPos();
-							Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
-							vPos += vLook * 1.25f;
-							vPos.y += 0.95f;
-							GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-							SAFE_RELEASE(pTransform);
+							//CTransform* pTransform = pDemonLord->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
 
 							if (hp < 0)
 							{
@@ -1869,7 +2269,6 @@ int CMainScene::Update(float fTime)
 								pPlayer->setCurrentHP(hp);
 								CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
 								pUIHearthBar->setLengthRatio(0.f);
-								_cprintf("플레이어 사망처리");
 							}
 							else
 							{
@@ -1899,16 +2298,16 @@ int CMainScene::Update(float fTime)
 
 				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
 				CTransform* pPlayerTr = pPlayerObject->GetTransform();
-				int x = pPlayerTr->GetWorldPos().x;
-				int y = pPlayerTr->GetWorldPos().y;
-				int z = pPlayerTr->GetWorldPos().z;
+				double x = pPlayerTr->GetWorldPos().x;
+				double y = pPlayerTr->GetWorldPos().y;
+				double z = pPlayerTr->GetWorldPos().z;
 
 				Vector3 vLook = pPlayerTr->GetWorldAxis(AXIS_Z).Normalize();
 				x += (vLook * 1.75f).x;
 				y += (vLook * 1.75f).y;
 				z += (vLook * 1.75f).z;
-				y += 1;
-				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, Vector3(x,y,z));
+				y += 0.95f;
+				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, Vector3((float)x,(float)y,(float)z));
 
 				SAFE_RELEASE(pPlayerTr);
 				SAFE_RELEASE(pPlayerObject);
@@ -2045,7 +2444,6 @@ int CMainScene::Update(float fTime)
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				char str[128];
-				_cprintf("%d", myClientID);
 				string appendTag = to_string(myClientID);
 				string objectTag = "Player" + appendTag;
 
@@ -2173,6 +2571,44 @@ int CMainScene::Update(float fTime)
 		}
 		break;
 
+		case SC_PACKET_HP_REGENERATION:
+		{
+			sc_packet_hp_regeneration* pPacket = reinterpret_cast<sc_packet_hp_regeneration*>(packet);
+			int id = pPacket->targetID;
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == myClientID)
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CPlayer* pPlayer = pGameObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->hpRegeneration(pPacket->hpregen);
+
+					float ratio = (float)pPlayer->getCurrentHP() / (float)pPlayer->getMaxHP();
+					CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+					pUIHearthBar->setLengthRatio(ratio);
+				
+					SAFE_RELEASE(pPlayer);
+				}
+			}
+			else if (id < NPC_START)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CPlayer* pPlayer = pGameObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->hpRegeneration(pPacket->hpregen);
+					SAFE_RELEASE(pPlayer);
+				}
+			}
+
+		}
+		break;
+
 		case SC_PACKET_DIE_ANIMATION:
 		{
 			sc_packet_animation_player* pPacket = reinterpret_cast<sc_packet_animation_player*>(packet);
@@ -2196,13 +2632,31 @@ int CMainScene::Update(float fTime)
 				if (nullptr != pGolem)
 				{
 					pGolem->setDieState(true);
-					SAFE_RELEASE(pMino);
+					SAFE_RELEASE(pGolem);
 				}
-				Seuteompi* pSeuteompi = pGameObject->FindComponentFromTag<Seuteompi>("Seuteompi");
-				if (nullptr != pSeuteompi)
+				GreenLizard* pGreenLizard = pGameObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+				if (nullptr != pGreenLizard)
 				{
-					pSeuteompi->setDieState(true);
-					SAFE_RELEASE(pMino);
+					pGreenLizard->setDieState(true);
+					SAFE_RELEASE(pGreenLizard);
+				}
+				BlueLizard* pBlueLizard = pGameObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+				if (nullptr != pBlueLizard)
+				{
+					pBlueLizard->setDieState(true);
+					SAFE_RELEASE(pBlueLizard);
+				}
+				Armored_GreenLizard* pArmoredGreenLizard = pGameObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+				if (nullptr != pArmoredGreenLizard)
+				{
+					pArmoredGreenLizard->setDieState(true);
+					SAFE_RELEASE(pArmoredGreenLizard);
+				}
+				Armored_BlueLizard* pArmoredBlueLizard = pGameObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+				if (nullptr != pArmoredBlueLizard)
+				{
+					pArmoredBlueLizard->setDieState(true);
+					SAFE_RELEASE(pArmoredBlueLizard);
 				}
 				DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
 				if (nullptr != pDemonLord)

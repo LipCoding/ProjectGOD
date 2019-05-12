@@ -14,18 +14,18 @@ public:
 	~Golem();
 
 private:
-	int currentHP = 100;
-	int currentMP = 100;
+	int currentHP = 0;
+	int currentMP = 0;
 
-	int maxHP = 100;
-	int maxMP = 100;
+	int maxHP = 0;
+	int maxMP = 0;
 
-	int attackDamage = 5;
+	int attackDamage = 0;
 
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
 	bool returnToInitialPos{ false };
-	float hearth_point{ 50 };
+	float hearth_point{ 0 };
 private:
 	CTransform*		m_pTarget;
 	CAnimation*		m_pAnimation;
@@ -37,6 +37,10 @@ protected:
 	unordered_map<int, GOLEMSTATE> stateMap;
 	size_t currentAnimation{ 0 };
 	size_t nextAnimation{ 0 };
+	int level = 0;
+public:
+	int getLevel() { return level; }
+	void setLevel(int level) { this->level = level; }
 public:
 	GolemState* getCurrentState();
 	GolemState* getState(int stateID);

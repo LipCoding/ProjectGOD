@@ -1,4 +1,4 @@
-#include "Seuteompi.h"
+#include "Armored_BlueLizard.h"
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "Component/Collider.h"
@@ -18,39 +18,39 @@
 #include "../DropItemSlot.h"
 #include "../DropTableUI.h"
 
-Seuteompi::Seuteompi() :
+Armored_BlueLizard::Armored_BlueLizard() :
 	m_pTarget(NULL),
 	m_pNavigation(NULL)
 {
-	SetTag("Seuteompi");
-	SetTypeName("Seuteompi");
-	SetTypeID<Seuteompi>();
+	SetTag("Armored_BlueLizard");
+	SetTypeName("Armored_BlueLizard");
+	SetTypeID<Armored_BlueLizard>();
 }
 
 
-Seuteompi::~Seuteompi()
+Armored_BlueLizard::~Armored_BlueLizard()
 {
 	SAFE_RELEASE(m_pNavigation);
 	SAFE_RELEASE(m_pAnimation);
 	SAFE_RELEASE(m_pTarget);
 }
 
-size_t Seuteompi::getCurrentAnimation()
+size_t Armored_BlueLizard::getCurrentAnimation()
 {
 	return currentAnimation;
 }
 
-size_t Seuteompi::getNextAnimation()
+size_t Armored_BlueLizard::getNextAnimation()
 {
 	return nextAnimation;
 }
 
-void Seuteompi::changeAnimation()
+void Armored_BlueLizard::changeAnimation()
 {
 	//m_pAnimation->ChangeClip(stateMap[nextAnimation].first);
 }
 
-void Seuteompi::SetTarget(const string & strTag)
+void Armored_BlueLizard::SetTarget(const string & strTag)
 {
 	CGameObject*	pTargetObj = CGameObject::FindObject(strTag);
 
@@ -61,12 +61,12 @@ void Seuteompi::SetTarget(const string & strTag)
 	}
 }
 
-CAnimation * Seuteompi::GetAnimation()
+CAnimation * Armored_BlueLizard::GetAnimation()
 {
 	return m_pAnimation;
 }
 
-bool Seuteompi::Init()
+bool Armored_BlueLizard::Init()
 {
 	m_pTransform->SetOriginAxis(AXIS_Y);
 	//m_pTransform->SetWorldScale(3.f, 3.f, 3.f);
@@ -74,7 +74,7 @@ bool Seuteompi::Init()
 	//m_pAnimation = m_pGameObject->AddComponent<CAnimation>("GolemAnimation");
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Seuteompi\\seuteompi.anm");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.anm");
 	m_pAnimation->SetDefaultClip("Idle");
 
 
@@ -88,30 +88,30 @@ bool Seuteompi::Init()
 	return true;
 }
 
-void Seuteompi::Input(float fTime)
+void Armored_BlueLizard::Input(float fTime)
 {
 }
 
-int Seuteompi::Update(float fTime)
-{
-	return 0;
-}
-
-int Seuteompi::LateUpdate(float fTime)
+int Armored_BlueLizard::Update(float fTime)
 {
 	return 0;
 }
 
-Seuteompi * Seuteompi::Clone()
+int Armored_BlueLizard::LateUpdate(float fTime)
 {
-	return new Seuteompi(*this);
+	return 0;
 }
 
-void Seuteompi::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
+Armored_BlueLizard * Armored_BlueLizard::Clone()
+{
+	return new Armored_BlueLizard(*this);
+}
+
+void Armored_BlueLizard::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }
 
-void Seuteompi::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
+void Armored_BlueLizard::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 	if (pDest->GetTag() == "MouseRay" && GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -165,6 +165,6 @@ void Seuteompi::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 	}
 }
 
-void Seuteompi::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
+void Armored_BlueLizard::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }

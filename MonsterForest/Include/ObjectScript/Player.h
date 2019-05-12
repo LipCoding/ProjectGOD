@@ -44,6 +44,8 @@ public:
 	int clickedID = -1;
 	void setAnimation(CAnimation* pAnimation) { this->m_pAnimation = pAnimation; }
 
+	void hpRegeneration(int hpregenration) { this->currentHP += hpregenration; }
+
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -61,6 +63,8 @@ public:
 	int getEXP() { return EXP; }
 	int getMaxEXP() { return maxEXP; }
 public:
+	void setMaxEXP(int maxEXP) { this->maxEXP = maxEXP; }
+	void setLevel(int level) { this->Level = level; }
 	void setCharacterName(const wstring& characterName) { this->characterName = characterName; }
 	void setCurrentHP(int currentHP) { this->currentHP = currentHP; }
 	void setCurrentMP(int currentMP) { this->currentMP = currentMP; }

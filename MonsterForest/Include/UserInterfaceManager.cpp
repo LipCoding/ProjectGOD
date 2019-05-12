@@ -1,7 +1,7 @@
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
 #include "Inventory.h"
-
+#include "Core/NetworkManager.h"
 #include "Component/Renderer2D.h"
 #include "Scene/Layer.h"
 #include "GameObject/GameObject.h"
@@ -21,6 +21,13 @@
 #include "TargetPlayerUI.h"
 #include "PGMessageBox.h"
 #include "PartyStatus.h"
+#include "ObjectScript/Mino.h"
+#include "ObjectScript/Golem.h"
+#include "ObjectScript/Armored_BlueLizard.h"
+#include "ObjectScript/Armored_GreenLizard.h"
+#include "ObjectScript/BlueLizard.h"
+#include "ObjectScript/GreenLizard.h"
+#include "ObjectScript/DemonLord.h"
 DEFINITION_SINGLE(UserInterfaceManager);
 
 
@@ -425,6 +432,105 @@ void UserInterfaceManager::update(float time)
 		SAFE_RELEASE(pHearthBarObj);
 	}
 
+	string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+	string objectTag = "Player" + appendTag;
+	CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+	if (pGameObject != nullptr)
+	{
+		{
+			Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
+			if (nullptr != pMino)
+			{
+				wstring HPText = to_wstring(pMino->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pMino->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pMino);
+			}
+			Golem* pGolem = pGameObject->FindComponentFromTag<Golem>("Golem");
+			if (nullptr != pGolem)
+			{
+				wstring HPText = to_wstring(pGolem->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pGolem->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pGolem);
+			}
+			GreenLizard* pGreenLizard = pGameObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+			if (nullptr != pGreenLizard)
+			{
+				wstring HPText = to_wstring(pGreenLizard->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pGreenLizard->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pGreenLizard);
+			}
+			BlueLizard* pBlueLizard = pGameObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+			if (nullptr != pBlueLizard)
+			{
+				wstring HPText = to_wstring(pBlueLizard->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pBlueLizard->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pBlueLizard);
+			}
+			Armored_GreenLizard* pArmoredGreenLizard = pGameObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+			if (nullptr != pArmoredGreenLizard)
+			{
+				wstring HPText = to_wstring(pArmoredGreenLizard->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pArmoredGreenLizard->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pArmoredGreenLizard);
+			}
+			Armored_BlueLizard* pArmoredBlueLizard = pGameObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+			if (nullptr != pArmoredBlueLizard)
+			{
+				wstring HPText = to_wstring(pArmoredBlueLizard->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pArmoredBlueLizard->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pArmoredBlueLizard);
+			}
+			DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+			if (nullptr != pDemonLord)
+			{
+				wstring HPText = to_wstring(pDemonLord->getCurrentHP());
+				HPText += L" / ";
+				HPText += to_wstring(pDemonLord->getMaxHP());
+				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
+				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+				pFont->SetText(HPText);
+				SAFE_RELEASE(pFont);
+				SAFE_RELEASE(pHearthBarObj);
+				SAFE_RELEASE(pMino);
+			}
+		}
+	}
 
 }
 
