@@ -131,7 +131,7 @@ void Armored_BlueLizard::OnCollision(CCollider * pSrc, CCollider * pDest, float 
 		pEnemyUIHearthBar->setLengthRatio(ratio);
 
 		CGameObject* pUIObject = pEnemyUIHearthBar->GetGameObject();
-		pUIObject->Enable(true);
+		GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
 		SAFE_RELEASE(pUIObject);
 	}
 

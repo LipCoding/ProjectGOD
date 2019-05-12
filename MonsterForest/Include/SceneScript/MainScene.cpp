@@ -123,7 +123,10 @@ bool CMainScene::Init()
 
 #pragma region KeySetting
 	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
-	GET_SINGLE(CInput)->CreateKey("QUICKSLOT-Q", 'Q');
+	GET_SINGLE(CInput)->CreateKey("Skill1", 'Q');
+	GET_SINGLE(CInput)->CreateKey("Skill2", 'W');
+	GET_SINGLE(CInput)->CreateKey("Skill3", 'E');
+	GET_SINGLE(CInput)->CreateKey("Skill4", 'R');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
 #pragma endregion
 
@@ -934,32 +937,32 @@ bool CMainScene::Init()
 
 void CMainScene::Input(float fTime)
 {
-	if (KEYDOWN("QUICKSLOT-Q"))
+	if (KEYDOWN("Skill1"))
 	{
-		{
-#pragma region AlphaBlend
-			{
-				CLayer*	pLayer = m_pScene->GetLayer("UI+1");
-				CGameObject* pFadeInOut = CGameObject::CreateObject("FadeInOut", pLayer);
-				CTransform* pFadeInOutTr = pFadeInOut->GetTransform();
-				CUIButton* pButton = pFadeInOut->AddComponent<CUIButton>("d");
-				pButton->enableAlpha(true);
-				SAFE_RELEASE(pButton);
-				pFadeInOutTr->SetWorldScale(1280.f, 960.f, 1.f);
-				pFadeInOutTr->SetWorldPos(0.f, 0.f, 0.f);
-				CRenderer2D* pRenderer = pFadeInOut->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-				CMaterial* pMaterial = pRenderer->GetMaterial();
-
-				pMaterial->SetDiffuseTexInfo("Linear", "Fadeinout",
-					0, 0, L"Fadeinout.png");
-				SAFE_RELEASE(pFadeInOutTr);
-				SAFE_RELEASE(pMaterial);
-				SAFE_RELEASE(pRenderer);
-				SAFE_RELEASE(pFadeInOut);
-				SAFE_RELEASE(pLayer);
-			}
-#pragma endregion
-		}
+//		{
+//#pragma region AlphaBlend
+//			{
+//				CLayer*	pLayer = m_pScene->GetLayer("UI+1");
+//				CGameObject* pFadeInOut = CGameObject::CreateObject("FadeInOut", pLayer);
+//				CTransform* pFadeInOutTr = pFadeInOut->GetTransform();
+//				CUIButton* pButton = pFadeInOut->AddComponent<CUIButton>("d");
+//				pButton->enableAlpha(true);
+//				SAFE_RELEASE(pButton);
+//				pFadeInOutTr->SetWorldScale(1280.f, 960.f, 1.f);
+//				pFadeInOutTr->SetWorldPos(0.f, 0.f, 0.f);
+//				CRenderer2D* pRenderer = pFadeInOut->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+//				CMaterial* pMaterial = pRenderer->GetMaterial();
+//
+//				pMaterial->SetDiffuseTexInfo("Linear", "Fadeinout",
+//					0, 0, L"Fadeinout.png");
+//				SAFE_RELEASE(pFadeInOutTr);
+//				SAFE_RELEASE(pMaterial);
+//				SAFE_RELEASE(pRenderer);
+//				SAFE_RELEASE(pFadeInOut);
+//				SAFE_RELEASE(pLayer);
+//			}
+//#pragma endregion
+//		}
 		//string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
 		//string objectTag = "Player" + appendTag;
 		//CGameObject* pGameObject = CGameObject::FindObject(objectTag);
@@ -982,6 +985,20 @@ void CMainScene::Input(float fTime)
 		//	}
 		//}
 	}
+
+	if (KEYDOWN("Skill2"))
+	{
+
+	}
+	if (KEYDOWN("Skill3"))
+	{
+
+	}
+	if (KEYDOWN("Skill4"))
+	{
+
+	}
+
 
 	if (KEYDOWN("Enter"))
 	{
@@ -1854,6 +1871,14 @@ int CMainScene::Update(float fTime)
 			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 
+			string myappendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+			string myobjectTag = "Player" + myappendTag;
+			CGameObject* pMyPlayerObj = CGameObject::FindObject(myobjectTag);
+			CPlayer* pMyPlayer = pMyPlayerObj->FindComponentFromTag<CPlayer>("Player");
+			int myTargetID = pMyPlayer->clickedID;
+			SAFE_RELEASE(pMyPlayer);
+			SAFE_RELEASE(pMyPlayerObj);
+
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				_cprintf("MonsterType : %d", pPacket->objectSetType);
@@ -2084,6 +2109,7 @@ int CMainScene::Update(float fTime)
 			}
 			else if (id < NPC_START)
 			{
+				
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
@@ -2120,15 +2146,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pGolem->getMaxHP();
 								pGolem->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pGolem->getMaxHP();
 								pGolem->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
@@ -2149,16 +2181,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pMino->getMaxHP();
 								pMino->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pMino->getMaxHP();
 								pMino->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
-
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
@@ -2179,15 +2216,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
@@ -2208,15 +2251,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
@@ -2237,15 +2286,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
@@ -2266,15 +2321,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
 								pGreenLizard->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 
@@ -2296,15 +2357,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
 								pDemonLord->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(0);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
 								pDemonLord->setCurrentHP(hp);
-								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-								pEnemyUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 					}
@@ -2351,15 +2418,21 @@ int CMainScene::Update(float fTime)
 							{
 								float ratio = (float)hp / (float)pPlayer->getMaxHP();
 								pPlayer->setCurrentHP(hp);
-								CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
-								pUIHearthBar->setLengthRatio(0.f);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(0.f);
+								}
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pPlayer->getMaxHP();
 								pPlayer->setCurrentHP(hp);
-								CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
-								pUIHearthBar->setLengthRatio(ratio);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(ratio);
+								}
 							}
 						}
 					}
