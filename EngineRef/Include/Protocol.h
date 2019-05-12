@@ -72,6 +72,7 @@ const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SKILL1 = 51;
 const unsigned char SC_PACKET_ATTACK_SKILL2 = 52;
 const unsigned char SC_PACKET_ATTACK_SKILL3 = 53;
+const unsigned char SC_PACKET_ATTACK_SKILL4 = 54;
 const unsigned char SC_PACKET_ATTACK_SKILL1_EFFECT = 70;
 const unsigned char SC_PACKET_DIE_ANIMATION = 90;
 const unsigned char SC_PACKET_IDLE_ANIMATION = 91;

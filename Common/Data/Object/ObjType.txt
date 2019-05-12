@@ -5,6 +5,13 @@
 98.Static_Mesh\00.Tree\Tree_5
 98.Static_Mesh\00.Tree\Tree_6
 98.Static_Mesh\00.Tree\Tree_7
+98.Static_Mesh\00.Tree\Tree_8
+98.Static_Mesh\00.Tree\Tree_9
+98.Static_Mesh\00.Tree\Tree_10
+98.Static_Mesh\00.Tree\Tree_11
+98.Static_Mesh\00.Tree\Tree_12
+98.Static_Mesh\00.Tree\Tree_13
+98.Static_Mesh\00.Tree\Tree_14
 98.Static_Mesh\01.House\House_1
 98.Static_Mesh\01.House\House_2
 98.Static_Mesh\01.House\House_3
@@ -15,6 +22,7 @@
 98.Static_Mesh\02.Lamp\Wood_Lamp
 98.Static_Mesh\03.Plant\Bush01
 98.Static_Mesh\03.Plant\Weed
+98.Static_Mesh\03.Plant\Grass
 98.Static_Mesh\04.Deco\Logs
 98.Static_Mesh\04.Deco\Wagon
 98.Static_Mesh\04.Deco\DG_Statue
