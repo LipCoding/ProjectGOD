@@ -1310,6 +1310,55 @@ void CMainScene::Input(float fTime)
 		}
 	}
 
+
+	/* For Rendering Navi, QuadTree, etc */
+	if (KEYDOWN("F1"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+			if (!m_isCheckColliderQuadTree)
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(true);
+					SAFE_RELEASE(pCollider);
+				}
+				m_isCheckColliderQuadTree = true;
+			}
+			else
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(false);
+					SAFE_RELEASE(pCollider);
+				}
+
+				m_isCheckColliderQuadTree = false;
+			}
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
+	if (KEYDOWN("F2"))
+	{
+		if (!m_isCheckColliderNaviMesh)
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+			m_isCheckColliderNaviMesh = true;
+		}
+		else
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+			m_isCheckColliderNaviMesh = false;
+		}
+	}
 }
 
 

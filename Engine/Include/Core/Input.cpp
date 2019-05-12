@@ -120,6 +120,9 @@ bool CInput::Init(HWND hWnd, bool bOnMouseRenderer)
 	CreateKey(VK_UP, "ArrowUp");
 	CreateKey(VK_DOWN, "ArrowDown");
 
+	CreateKey(VK_F1, "F1");
+	CreateKey(VK_F2, "F2");
+
 	CreateKey("Z", 'Z');
 	CreateKey("X", 'X');
 	CreateKey("C", 'C');

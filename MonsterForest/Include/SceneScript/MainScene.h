@@ -24,6 +24,11 @@ public:
 public:
 public:
 	void chat_callback(float fTime);
+
+private:
+	bool m_isCheckColliderQuadTree = false;
+	bool m_isCheckColliderNaviMesh = false;
+
 public:
 	virtual bool Init();
 	virtual int Update(float fTime);

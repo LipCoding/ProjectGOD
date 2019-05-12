@@ -83,7 +83,7 @@ bool CTestScene::Init()
 #pragma region Object
 		wchar_t strPath[MAX_PATH] = {};
 		wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-		wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1_Elinia.bin");
+		wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
 
 		ifstream file;
 		file.open(strPath, ios::in);
@@ -154,7 +154,7 @@ bool CTestScene::Init()
 
 #pragma region Navigation
 		GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-		GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+		GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 #pragma endregion
 
 #pragma region Player
@@ -211,6 +211,53 @@ int CTestScene::Update(float fTime)
 
 void CTestScene::Input(float fTime)
 {
+	if (KEYDOWN("F1"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+			if (!m_isCheckColliderQuadTree)
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(true);
+					SAFE_RELEASE(pCollider);
+				}
+				m_isCheckColliderQuadTree = true;
+			}
+			else
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(false);
+					SAFE_RELEASE(pCollider);
+				}
+
+				m_isCheckColliderQuadTree = false;
+			}
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
+	if (KEYDOWN("F2"))
+	{
+		if (!m_isCheckColliderNaviMesh)
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+			m_isCheckColliderNaviMesh = true;
+		}
+		else
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+			m_isCheckColliderNaviMesh = false;
+		}
+	}
 }
 
 int CTestScene::LateUpdate(float fTime)
