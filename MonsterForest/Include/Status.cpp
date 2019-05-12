@@ -180,7 +180,7 @@ bool Status::initialize()
 		CGameObject*	pHPUIObj = CGameObject::CreateObject("PureUI", pUILayer);
 		pUIPureBar = pHPUIObj->AddComponent<CUIButton>("PureUI");
 		pUIPureBar->setUILength(125.f);
-		pUIPureBar->setLengthRatio(1.f);
+		pUIPureBar->setLengthRatio(0.f);
 
 		CTransform*	pButtonTr = pHPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);

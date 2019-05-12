@@ -52,7 +52,7 @@ public:
 	virtual int Update(float fTime);
 	virtual int LateUpdate(float fTime);
 	virtual CPlayer* Clone();
-
+	void addExp(int exp);
 public:
 	int getLevel() { return Level; }
 	int getCurrentHP() { return currentHP; }

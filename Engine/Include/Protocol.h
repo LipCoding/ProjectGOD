@@ -88,7 +88,8 @@ const unsigned char SC_PACKET_PARTY_CONFIRM = 201;
 const unsigned char SC_PACKET_PARTY_CANCEL = 202;
 const unsigned char SC_PACKET_PARTY_ADD = 203;
 const unsigned char SC_PACKET_PARTY_REMOVE = 204;
-
+const unsigned char SC_PACKET_ADD_EXP = 230;
+const unsigned char SC_PACKET_LEVELUP = 231;
 
 /*
 #define SC_PACKET_POS 0
@@ -373,4 +374,21 @@ struct sc_packet_hp_regeneration
 	unsigned char targetID;
 	unsigned int hpregen;
 };
+
+struct sc_packet_add_exp
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetID;
+	unsigned int exp;
+};
+
+struct sc_packet_levelup_player
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetID;
+	int level;
+};
+
 #pragma pack(pop)

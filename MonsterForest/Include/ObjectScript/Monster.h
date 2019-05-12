@@ -13,11 +13,13 @@ class Monster :
 protected:
 	OBJECT_SET_TYPE objectSetType = OBJECT_SET_TYPE::NONE;
 	bool dieState = false;
+	int experience = 0;
 public:
 	Monster();
 	~Monster();
 
 public:
+	void setExperience(int experience) { this->experience = experience; }
 	virtual void setDieState(bool state) { this->dieState = state; }
 	void setObjectSetType(OBJECT_SET_TYPE type) { objectSetType = type; }
 	OBJECT_SET_TYPE getObjectSetType() { return objectSetType; }
