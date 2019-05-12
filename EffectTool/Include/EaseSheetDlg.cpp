@@ -6,7 +6,9 @@
 #include "EaseSheetDlg.h"
 #include "afxdialogex.h"
 
+#include "Core/PathManager.h"
 
+PG_USING
 // CEaseSheetDlg 대화 상자
 
 IMPLEMENT_DYNAMIC(CEaseSheetDlg, CDialogEx)
@@ -42,7 +44,9 @@ int CEaseSheetDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
-	m_strBGImgPath = L".\\Resource\\Ease.png";
+	
+	m_strBGImgPath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+	m_strBGImgPath += L"Ease_View_Sheet\\Ease.png";
 
 	return 0;
 }
