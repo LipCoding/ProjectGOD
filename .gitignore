@@ -264,24 +264,24 @@ __pycache__/
 
 # Conflict File
 # Engine
-Engine\\Bin64/
-Engine\\Bin64_Debug/
-EngineRef\\Bin64/
-EngineRef\\Bin64_Debug/
+./Engine\\Bin64/
+./Engine\\Bin64_Debug/
+./EngineRef\\Bin64/
+./EngineRef\\Bin64_Debug/
 
 # AnimTool
-AnimTool\\Bin64/
-AnimTool\\Bin64_Debug/
-AnimTool\\Include\\AnimationBoneName.txt
+./\\AnimTool\\Bin64/
+./\\AnimTool\\Bin64_Debug/
+./\\AnimTool\\Include\\AnimationBoneName.txt
 
 # EnvTool
-EnvTool\\Bin64/
-EnvTool\\Bin64_Debug/
+./\\EnvTool\\Bin64/
+./\\EnvTool\\Bin64_Debug/
 
 # EffectTool
-EffectTool\\Bin64/
-EffectTool\\Bin64_Debug/
+./\\EffectTool\\Bin64/
+./\\EffectTool\\Bin64_Debug/
 
 # Main Client
-MonsterForest\\Bin64/
-MonsterForest\\Bin64_Debug/
+./\\MonsterForest\\Bin64/
+./\\MonsterForest\\Bin64_Debug/
