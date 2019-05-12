@@ -1,4 +1,4 @@
-#include "Mino.h"
+#include "Armored_GreenLizard.h"
 #include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "Component/Collider.h"
@@ -15,41 +15,42 @@
 #include "Player.h"
 #include "Core/NetworkManager.h"
 #include "../UserInterfaceManager.h"
+#include "../DropItemSlot.h"
 #include "../DropTableUI.h"
 
-Mino::Mino() :
+Armored_GreenLizard::Armored_GreenLizard() :
 	m_pTarget(NULL),
 	m_pNavigation(NULL)
 {
-	SetTag("Mino");
-	SetTypeName("Mino");
-	SetTypeID<Mino>();
+	SetTag("Armored_GreenLizard");
+	SetTypeName("Armored_GreenLizard");
+	SetTypeID<Armored_GreenLizard>();
 }
 
 
-Mino::~Mino()
+Armored_GreenLizard::~Armored_GreenLizard()
 {
 	SAFE_RELEASE(m_pNavigation);
 	SAFE_RELEASE(m_pAnimation);
 	SAFE_RELEASE(m_pTarget);
 }
 
-size_t Mino::getCurrentAnimation()
+size_t Armored_GreenLizard::getCurrentAnimation()
 {
 	return currentAnimation;
 }
 
-size_t Mino::getNextAnimation()
+size_t Armored_GreenLizard::getNextAnimation()
 {
 	return nextAnimation;
 }
 
-void Mino::changeAnimation()
+void Armored_GreenLizard::changeAnimation()
 {
 	//m_pAnimation->ChangeClip(stateMap[nextAnimation].first);
 }
 
-void Mino::SetTarget(const string & strTag)
+void Armored_GreenLizard::SetTarget(const string & strTag)
 {
 	CGameObject*	pTargetObj = CGameObject::FindObject(strTag);
 
@@ -60,19 +61,23 @@ void Mino::SetTarget(const string & strTag)
 	}
 }
 
-CAnimation * Mino::GetAnimation()
+CAnimation * Armored_GreenLizard::GetAnimation()
 {
 	return m_pAnimation;
 }
 
-bool Mino::Init()
+bool Armored_GreenLizard::Init()
 {
 	m_pTransform->SetOriginAxis(AXIS_Y);
+	//m_pTransform->SetWorldScale(3.f, 3.f, 3.f);
 
+	//m_pAnimation = m_pGameObject->AddComponent<CAnimation>("GolemAnimation");
 	m_pAnimation = m_pGameObject->AddComponent<CAnimation>("PlayerAnimation");
 
-	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.anm");
-	m_pAnimation->SetDefaultClip("Idle");
+	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.anm");
+	m_pAnimation->SetDefaultClip("Idle1");
+
+
 
 	if (!m_pAnimation)
 		m_pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
@@ -83,30 +88,30 @@ bool Mino::Init()
 	return true;
 }
 
-void Mino::Input(float fTime)
+void Armored_GreenLizard::Input(float fTime)
 {
 }
 
-int Mino::Update(float fTime)
-{
-	return 0;
-}
-
-int Mino::LateUpdate(float fTime)
+int Armored_GreenLizard::Update(float fTime)
 {
 	return 0;
 }
 
-Mino * Mino::Clone()
+int Armored_GreenLizard::LateUpdate(float fTime)
 {
-	return new Mino(*this);
+	return 0;
 }
 
-void Mino::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
+Armored_GreenLizard * Armored_GreenLizard::Clone()
+{
+	return new Armored_GreenLizard(*this);
+}
+
+void Armored_GreenLizard::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }
 
-void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
+void Armored_GreenLizard::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 	if (pDest->GetTag() == "MouseRay" && GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -122,7 +127,6 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		pPlayer->clickedID = id;
 
 		CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
-
 		float ratio = (float)this->getCurrentHP() / (float)this->getMaxHP();
 		pEnemyUIHearthBar->setLengthRatio(ratio);
 
@@ -130,7 +134,6 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		pUIObject->Enable(true);
 		SAFE_RELEASE(pUIObject);
 	}
-
 
 	if (KEYDOWN("MouseRButton"))
 	{
@@ -162,6 +165,6 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 	}
 }
 
-void Mino::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
+void Armored_GreenLizard::OnCollisionLeave(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 }

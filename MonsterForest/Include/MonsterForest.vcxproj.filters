@@ -163,8 +163,17 @@
     <Filter Include="Boem%27s">
       <UniqueIdentifier>{effd5d11-a639-4e6f-b053-b1e49a55bbca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord">
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\04. BlueLizard">
+      <UniqueIdentifier>{4aeef936-cf50-41dd-b8b6-5e08c2fee374}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\07. DemonLord">
       <UniqueIdentifier>{aad4dd5d-5902-45e9-b5eb-4698cbd2d202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\05. Armored_GreenLizard">
+      <UniqueIdentifier>{3026a1d6-556f-42c5-9661-39c0dac2e6a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\06. Armored_BlueLizard">
+      <UniqueIdentifier>{7c2dde14-eb4a-4430-a002-de289ce0be3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +230,6 @@
     </ClInclude>
     <ClInclude Include="ObjectScript\Golem.h">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectScript\Seuteompi.h">
-      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\Mino.h">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\02. Mino</Filter>
@@ -316,7 +322,19 @@
       <Filter>Boem%27s</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\DemonLord.h">
-      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\07. DemonLord</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Armored_BlueLizard.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\06. Armored_BlueLizard</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\BlueLizard.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. BlueLizard</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Armored_GreenLizard.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\05. Armored_GreenLizard</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\GreenLizard.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,9 +382,6 @@
     </ClCompile>
     <ClCompile Include="ObjectScript\Golem.cpp">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\01. Golem</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectScript\Seuteompi.cpp">
-      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\Mino.cpp">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\02. Mino</Filter>
@@ -459,7 +474,19 @@
       <Filter>Boem%27s</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\DemonLord.cpp">
-      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. DemonLord</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\07. DemonLord</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Armored_BlueLizard.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\06. Armored_BlueLizard</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\BlueLizard.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\04. BlueLizard</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\Armored_GreenLizard.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\05. Armored_GreenLizard</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectScript\GreenLizard.cpp">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,18 +12,18 @@ public:
 	~DemonLord();
 
 private:
-	int currentHP = 1500;
-	int currentMP = 300;
+	int currentHP = 0;
+	int currentMP = 0;
 
-	int maxHP = 1500;
-	int maxMP = 300;
+	int maxHP = 0;
+	int maxMP = 0;
 
-	int attackDamage = 10;
+	int attackDamage = 0;
 
 	Vector3 initial_pos;
 	Vector3 roaming_pos;
 	bool returnToInitialPos{ false };
-	float hearth_point{ 50 };
+	float hearth_point{ 0 };
 
 private:
 	CTransform*		m_pTarget;
@@ -39,9 +39,14 @@ protected:
 public:
 	//GolemState* getCurrentState();
 	//GolemState* getState(int stateID);
+
 public:
 	size_t getCurrentAnimation();
 	size_t getNextAnimation();
+	int level = 0;
+public:
+	int getLevel() { return level; }
+	void setLevel(int level) { this->level = level; }
 	void changeAttackAnimation();
 	const Vector3& getInitialPos() { return initial_pos; }
 	const Vector3& getRoamingPos() { return roaming_pos; }

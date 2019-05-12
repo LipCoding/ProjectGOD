@@ -77,6 +77,7 @@ const unsigned char SC_PACKET_DIE_ANIMATION = 90;
 const unsigned char SC_PACKET_IDLE_ANIMATION = 91;
 
 const unsigned char SC_PACKET_COLLISION = 100;
+const unsigned char SC_PACKET_HP_REGENERATION = 101;
 const unsigned char SC_PACKET_ADDITEM_INVENTORY = 150;
 const unsigned char SC_PACKET_REMOVEITEM_INVENTORY = 151;
 const unsigned char SC_PACKET_MOVEITEM_INVENTORY = 152;
@@ -239,6 +240,10 @@ struct sc_packet_put_player
 	float y;
 	float z;
 	float angle;
+	int current_hp;
+	int current_mp;
+	int level;
+	int exp;
 };
 
 struct sc_packet_pos
@@ -296,9 +301,6 @@ struct sc_packet_login
 	unsigned char type;
 	unsigned char state;
 	unsigned int id;
-	float x;
-	float y;
-	float z;
 	wchar_t character_name[MAX_STR_SIZE];
 };
 
@@ -364,5 +366,11 @@ struct sc_packet_party
 	unsigned int fromID;
 	unsigned int toID;
 };
-
+struct sc_packet_hp_regeneration
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned char targetID;
+	unsigned int hpregen;
+};
 #pragma pack(pop)

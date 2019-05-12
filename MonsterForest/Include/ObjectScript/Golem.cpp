@@ -200,7 +200,10 @@ void Golem::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		pPlayer->clickedID = id;
 
 		CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+
 		float ratio = (float)this->getCurrentHP() / (float)this->getMaxHP();
+		//pEnemyUIHearthBar->
+
 		pEnemyUIHearthBar->setLengthRatio(ratio);
 		CGameObject* pUIObject = pEnemyUIHearthBar->GetGameObject();
 		pUIObject->Enable(true);

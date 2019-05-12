@@ -32,6 +32,7 @@ class UserInterfaceManager
 	class TargetPlayerUI* pTargetPlayerUI;
 	class CPlayer* pPlayer = nullptr;
 	class PGMessageBox* pPGMessageBox= nullptr;
+	class Monster* pTarget = nullptr;
 public:
 	bool initialize();
 	void update(float time);
@@ -44,8 +45,10 @@ public:
 	void setUIHearthBar(CUIButton* ui) { this->pStatus->setUIHeearthBar(ui); }
 	void setEnemyUIHearthBar(CUIButton* ui) { this->pEnemyStatus->setUIHeearthBar(ui);}
 	void setPlayer(class CPlayer* pPlayer) { this->pPlayer = pPlayer; }
+	void setTarget(class Monster* pTarget) { this->pTarget = pTarget; }
 
 public:
+	class Monster* getTarget() { return pTarget; }
 	void addPartyPlayer(const string& playerName);
 	void removePartyPlayer(const string& playerName);
 	Inventory* getInventory() { return this->pInventory; }
