@@ -1434,6 +1434,7 @@ int CMainScene::Update(float fTime)
 						pGolem->setMaxHP(30 + pPacket->level * 10);
 						pGolem->setMaxMP(10);
 						pGolem->setAttackDamag(3 + pPacket->level * 1);
+						pGolem->setExperience(pPacket->exp);
 						SAFE_RELEASE(pGolem);
 						CTransform*	pTr = pGolemObject->GetTransform();
 						CColliderSphere* pCollider = pGolemObject->AddComponent<CColliderSphere>("collider");
@@ -1465,6 +1466,7 @@ int CMainScene::Update(float fTime)
 						pMino->setMaxHP(50 + pPacket->level * 5);
 						pMino->setMaxMP(10);
 						pMino->setAttackDamag(5 + pPacket->level * 1);
+						pMino->setExperience(pPacket->exp);
 						SAFE_RELEASE(pMino);
 						CTransform*	pTr = pMinoObject->GetTransform();
 						//CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider");
@@ -1499,6 +1501,7 @@ int CMainScene::Update(float fTime)
 						pGreenLizard->setMaxHP(30 + pPacket->level * 5);
 						pGreenLizard->setMaxMP(10);
 						pGreenLizard->setAttackDamag(3 + pPacket->level * 1);
+						pGreenLizard->setExperience(pPacket->exp);
 						SAFE_RELEASE(pGreenLizard);
 						CTransform*	pTr = pGreenLizardObj->GetTransform();
 						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
@@ -1529,6 +1532,7 @@ int CMainScene::Update(float fTime)
 						pBlueLizard->setMaxHP(30 + pPacket->level * 5);
 						pBlueLizard->setMaxMP(10);
 						pBlueLizard->setAttackDamag(3 + pPacket->level * 1);
+						pBlueLizard->setExperience(pPacket->exp);
 						SAFE_RELEASE(pBlueLizard);
 						CTransform*	pTr = pBlueLizardObj->GetTransform();
 						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
@@ -1559,6 +1563,7 @@ int CMainScene::Update(float fTime)
 						pArmored_GreenLizard->setMaxHP(50 + pPacket->level * 10);
 						pArmored_GreenLizard->setMaxMP(10);
 						pArmored_GreenLizard->setAttackDamag(10 + pPacket->level * 2);
+						pArmored_GreenLizard->setExperience(pPacket->exp);
 						SAFE_RELEASE(pArmored_GreenLizard);
 						CTransform*	pTr = pArmored_GreenLizardObj->GetTransform();
 						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
@@ -1590,6 +1595,7 @@ int CMainScene::Update(float fTime)
 						pArmored_BlueLizard->setMaxHP(50 + pPacket->level * 10);
 						pArmored_BlueLizard->setMaxMP(10);
 						pArmored_BlueLizard->setAttackDamag(10 + pPacket->level * 2);
+						pArmored_BlueLizard->setExperience(pPacket->exp);
 						SAFE_RELEASE(pArmored_BlueLizard);
 						CTransform*	pTr = pArmored_BlueLizardObj->GetTransform();
 						//CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
@@ -1621,6 +1627,7 @@ int CMainScene::Update(float fTime)
 						pDemonLord->setMaxHP(1200);
 						pDemonLord->setMaxMP(300);
 						pDemonLord->setAttackDamag(25);
+						pDemonLord->setExperience(pPacket->exp);
 						SAFE_RELEASE(pDemonLord);
 						CTransform*	pTr = pDemonLordObj->GetTransform();
 
@@ -2794,6 +2801,49 @@ int CMainScene::Update(float fTime)
 			
 		}
 		break;
+		case SC_PACKET_ADD_EXP:
+		{
+			sc_packet_add_exp* pPacket = reinterpret_cast<sc_packet_add_exp*>(packet);
+			int id = pPacket->targetID;
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == myClientID)
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				if (pPlayerObject != nullptr)
+				{
+					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->addExp(pPacket->exp);
+
+					Status* pStatus = GET_SINGLE(UserInterfaceManager)->getStatus();
+
+					float ratio = (float)(pPlayer->getEXP()) / (float)(pPlayer->getMaxEXP());
+					//pEnemyUIHearthBar->
+
+					pStatus->getUIPureBar()->setLengthRatio(ratio);
+					SAFE_RELEASE(pPlayer);
+
+				}
+
+
+			}
+			else if (id < MAX_USER)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				if (pPlayerObject != nullptr)
+				{
+					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->addExp(pPacket->exp);
+					SAFE_RELEASE(pPlayer);
+				}
+			}
+		}
+		break;
 		case SC_PACKET_PARTY_ADD:
 		{
 			// 해당 플레이어의 정보로 왼쪽 파티 프레임에 띄운다.
@@ -2804,6 +2854,7 @@ int CMainScene::Update(float fTime)
 
 			GET_SINGLE(UserInterfaceManager)->addPartyPlayer(objectID);
 			//SAFE_RELEASE(pPlayerObj);
+
 		}
 		break;
 

@@ -31,6 +31,9 @@ public:
 	float getScale() { return this->scale; }
 	CUIButton* getUIHearthBar() { return pUIHearthBar; }
 	void setUIHeearthBar(CUIButton* pUIHearthBar) { this->pUIHearthBar = pUIHearthBar; }
+	CUIButton* getUIManaBar() { return pUIManaBar; }
+	CUIButton* getUIPureBar() { return pUIPureBar; }
+	
 public:
 	void enableRender(bool show);
 public:

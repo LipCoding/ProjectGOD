@@ -379,6 +379,13 @@ CPlayer * CPlayer::Clone()
 	return new CPlayer(*this);
 }
 
+void CPlayer::addExp(int exp)
+{
+	this->EXP += exp;
+	// 인터페이스에 보여준다.
+
+}
+
 void CPlayer::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 
