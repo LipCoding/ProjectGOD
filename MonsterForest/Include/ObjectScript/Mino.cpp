@@ -127,7 +127,7 @@ void Mino::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		pEnemyUIHearthBar->setLengthRatio(ratio);
 
 		CGameObject* pUIObject = pEnemyUIHearthBar->GetGameObject();
-		pUIObject->Enable(true);
+		GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
 		SAFE_RELEASE(pUIObject);
 	}
 
