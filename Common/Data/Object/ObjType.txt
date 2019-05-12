@@ -17,12 +17,12 @@
 98.Static_Mesh\03.Plant\Weed
 98.Static_Mesh\04.Deco\Logs
 98.Static_Mesh\04.Deco\Wagon
-98.Static_Mesh\04.Deco\DG_Status
+98.Static_Mesh\04.Deco\DG_Statue
 98.Static_Mesh\05.Wall\Stone_Wall
 98.Static_Mesh\05.Wall\Wood_Fence
 98.Static_Mesh\06.Facility\Well
 98.Static_Mesh\07.Enterance\Wall_Enterance
-98.Static_Mesh\07.Enterance\DG_Enterance
+98.Static_Mesh\07.Enterance\DG_Entrance
 98.Static_Mesh\99.Etc\Stone_1
 98.Static_Mesh\99.Etc\Stone_2
 98.Static_Mesh\99.Etc\Stone_3
