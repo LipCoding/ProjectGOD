@@ -75,6 +75,7 @@ public:
 	bool Check_Position(const Vector3& vPos, Vector3* vDir);
 	
 	void FreeCell() { Safe_Delete_VecList(m_Cells); };
+	
 };
 
 PG_END

@@ -137,7 +137,7 @@ void CArm::RotationAxis(const Vector3 & vRotAxis, float fAngle)
 
 bool CArm::Init()
 {
-	m_vDist = Vector3(0.f, 0.f, -5.f);
+	m_vDist = Vector3(0.f, 1.f, -7.f);
 	m_vLookAtDist = Vector3::Zero;
 	m_fMinDist = 1.f;
 	m_fMaxDist = 50.f;

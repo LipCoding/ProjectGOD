@@ -63,6 +63,7 @@ public:
 	int getEXP() { return EXP; }
 	int getMaxEXP() { return maxEXP; }
 public:
+	void setEXP(int exp) { this->EXP = exp; }
 	void setMaxEXP(int maxEXP) { this->maxEXP = maxEXP; }
 	void setLevel(int level) { this->Level = level; }
 	void setCharacterName(const wstring& characterName) { this->characterName = characterName; }

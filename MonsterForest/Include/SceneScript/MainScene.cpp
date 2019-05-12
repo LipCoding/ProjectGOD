@@ -94,8 +94,13 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
+
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -124,9 +129,9 @@ bool CMainScene::Init()
 #pragma region KeySetting
 	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
 	GET_SINGLE(CInput)->CreateKey("Skill1", 'Q');
-	GET_SINGLE(CInput)->CreateKey("Skill2", 'W');
-	GET_SINGLE(CInput)->CreateKey("Skill3", 'E');
-	GET_SINGLE(CInput)->CreateKey("Skill4", 'R');
+	GET_SINGLE(CInput)->CreateKey("Skill2", 'E');
+	GET_SINGLE(CInput)->CreateKey("Skill3", 'R');
+	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
 #pragma endregion
 
@@ -261,12 +266,6 @@ bool CMainScene::Init()
 			{
 				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider1");
 				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
-
-			{
-				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider2");
-				pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
 				SAFE_RELEASE(pCollider);
 			}
 			FILE* pFile_Player = nullptr;
@@ -939,64 +938,151 @@ void CMainScene::Input(float fTime)
 {
 	if (KEYDOWN("Skill1"))
 	{
-//		{
-//#pragma region AlphaBlend
-//			{
-//				CLayer*	pLayer = m_pScene->GetLayer("UI+1");
-//				CGameObject* pFadeInOut = CGameObject::CreateObject("FadeInOut", pLayer);
-//				CTransform* pFadeInOutTr = pFadeInOut->GetTransform();
-//				CUIButton* pButton = pFadeInOut->AddComponent<CUIButton>("d");
-//				pButton->enableAlpha(true);
-//				SAFE_RELEASE(pButton);
-//				pFadeInOutTr->SetWorldScale(1280.f, 960.f, 1.f);
-//				pFadeInOutTr->SetWorldPos(0.f, 0.f, 0.f);
-//				CRenderer2D* pRenderer = pFadeInOut->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-//				CMaterial* pMaterial = pRenderer->GetMaterial();
-//
-//				pMaterial->SetDiffuseTexInfo("Linear", "Fadeinout",
-//					0, 0, L"Fadeinout.png");
-//				SAFE_RELEASE(pFadeInOutTr);
-//				SAFE_RELEASE(pMaterial);
-//				SAFE_RELEASE(pRenderer);
-//				SAFE_RELEASE(pFadeInOut);
-//				SAFE_RELEASE(pLayer);
-//			}
-//#pragma endregion
-//		}
-		//string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
-		//string objectTag = "Player" + appendTag;
-		//CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-		//CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
-		//if (pPlayerComponent->clickedID != -1)
-		//{
-		//	cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
-		//	pPacket->size = sizeof(cs_packet_attack_player);
-		//	NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
-		//	DWORD iobyte;
+		//		{
+		//#pragma region AlphaBlend
+		//			{
+		//				CLayer*	pLayer = m_pScene->GetLayer("UI+1");
+		//				CGameObject* pFadeInOut = CGameObject::CreateObject("FadeInOut", pLayer);
+		//				CTransform* pFadeInOutTr = pFadeInOut->GetTransform();
+		//				CUIButton* pButton = pFadeInOut->AddComponent<CUIButton>("d");
+		//				pButton->enableAlpha(true);
+		//				SAFE_RELEASE(pButton);
+		//				pFadeInOutTr->SetWorldScale(1280.f, 960.f, 1.f);
+		//				pFadeInOutTr->SetWorldPos(0.f, 0.f, 0.f);
+		//				CRenderer2D* pRenderer = pFadeInOut->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		//				CMaterial* pMaterial = pRenderer->GetMaterial();
+		//
+		//				pMaterial->SetDiffuseTexInfo("Linear", "Fadeinout",
+		//					0, 0, L"Fadeinout.png");
+		//				SAFE_RELEASE(pFadeInOutTr);
+		//				SAFE_RELEASE(pMaterial);
+		//				SAFE_RELEASE(pRenderer);
+		//				SAFE_RELEASE(pFadeInOut);
+		//				SAFE_RELEASE(pLayer);
+		//			}
+		//#pragma endregion
+		//		}
+				//string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+				//string objectTag = "Player" + appendTag;
+				//CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				//CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				//if (pPlayerComponent->clickedID != -1)
+				//{
+				//	cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+				//	pPacket->size = sizeof(cs_packet_attack_player);
+				//	NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+				//	DWORD iobyte;
 
-		//	pPacket->id = NetworkManager::getInstance()->getMyClientID();
-		//	pPacket->targetid = pPlayerComponent->clickedID;
-		//	pPacket->type = CS_PACKET_ATTACK_SWORD_SKILL1;
-		//	int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				//	pPacket->id = NetworkManager::getInstance()->getMyClientID();
+				//	pPacket->targetid = pPlayerComponent->clickedID;
+				//	pPacket->type = CS_PACKET_ATTACK_SWORD_SKILL1;
+				//	int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 
-		//	if (ret)
-		//	{
+				//	if (ret)
+				//	{
 
-		//	}
-		//}
+				//	}
+				//}
+		char str[128];
+		int id = NetworkManager::getInstance()->getMyClientID();
+		string appendTag = _itoa(id, str, 10);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+		if (pPlayerComponent->clickedID != -1)
+		{
+			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+			pPacket->size = sizeof(cs_packet_attack_player);
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+			DWORD iobyte;
+
+			pPacket->id = NetworkManager::getInstance()->getMyClientID();
+			pPacket->targetid = pPlayerComponent->clickedID;
+			pPacket->type = CS_PACKET_ATTACK_SKILL1;
+			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			if (ret)
+			{
+
+			}
+		}
 	}
 
 	if (KEYDOWN("Skill2"))
 	{
+		char str[128];
+		int id = NetworkManager::getInstance()->getMyClientID();
+		string appendTag = _itoa(id, str, 10);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+		if (pPlayerComponent->clickedID != -1)
+		{
+			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+			pPacket->size = sizeof(cs_packet_attack_player);
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+			DWORD iobyte;
 
+			pPacket->id = NetworkManager::getInstance()->getMyClientID();
+			pPacket->targetid = pPlayerComponent->clickedID;
+			pPacket->type = CS_PACKET_ATTACK_SKILL2;
+			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			if (ret)
+			{
+
+			}
+		}
 	}
 	if (KEYDOWN("Skill3"))
 	{
+		char str[128];
+		int id = NetworkManager::getInstance()->getMyClientID();
+		string appendTag = _itoa(id, str, 10);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+		if (pPlayerComponent->clickedID != -1)
+		{
+			cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+			pPacket->size = sizeof(cs_packet_attack_player);
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+			DWORD iobyte;
 
+			pPacket->id = NetworkManager::getInstance()->getMyClientID();
+			pPacket->targetid = pPlayerComponent->clickedID;
+			pPacket->type = CS_PACKET_ATTACK_SKILL3;
+			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			if (ret)
+			{
+
+			}
+		}
 	}
 	if (KEYDOWN("Skill4"))
 	{
+		char str[128];
+		int id = NetworkManager::getInstance()->getMyClientID();
+		string appendTag = _itoa(id, str, 10);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
 
+		cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
+		pPacket->size = sizeof(cs_packet_attack_player);
+		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_player);
+		DWORD iobyte;
+
+		pPacket->id = NetworkManager::getInstance()->getMyClientID();
+		pPacket->targetid = pPlayerComponent->clickedID;
+		pPacket->type = CS_PACKET_ATTACK_SKILL4;
+		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+		if (ret)
+		{
+
+		}
 	}
 
 
@@ -1194,6 +1280,7 @@ void CMainScene::Input(float fTime)
 		GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
 		GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->enableRender(false);
 		GET_SINGLE(UserInterfaceManager)->getInventory()->enableRender(false);
+		GET_SINGLE(UserInterfaceManager)->getPGMessageBox()->enableRender(false);
 	}
 
 	if (KEYDOWN("Attack"))
@@ -1229,22 +1316,22 @@ void CMainScene::Input(float fTime)
 int CMainScene::Update(float fTime)
 {
 
-//#pragma region Chatting
-//	{
-//		Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
-//		wstring edit_view = L"";
-//		for (auto input : pChatting->getChatCont())
-//		{
-//			//wchar_t temp[64];
-//			wchar_t temp2 = input;
-//			wstring appendString = L"";
-//			appendString = appendString + temp2;
-//			edit_view = edit_view + appendString;
-//		}
-//		pChatting->setChatString(edit_view);
-//		pChatting->getUIChatText()->SetText(edit_view);
-//	}
-//#pragma endregion
+	//#pragma region Chatting
+	//	{
+	//		Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
+	//		wstring edit_view = L"";
+	//		for (auto input : pChatting->getChatCont())
+	//		{
+	//			//wchar_t temp[64];
+	//			wchar_t temp2 = input;
+	//			wstring appendString = L"";
+	//			appendString = appendString + temp2;
+	//			edit_view = edit_view + appendString;
+	//		}
+	//		pChatting->setChatString(edit_view);
+	//		pChatting->getUIChatText()->SetText(edit_view);
+	//	}
+	//#pragma endregion
 
 	while (false == NetworkManager::getInstance()->getClientPacketQueue().empty())
 	{
@@ -1302,7 +1389,7 @@ int CMainScene::Update(float fTime)
 			sc_packet_put_player* pPacket = reinterpret_cast<sc_packet_put_player*>(packet);
 			int id = pPacket->id;
 			OBJECT_SET_TYPE ObjectSetType = (OBJECT_SET_TYPE)static_cast<sc_packet_put_player*>(packet)->objectSetType;
-			
+
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
 				char str[128];
@@ -1494,7 +1581,7 @@ int CMainScene::Update(float fTime)
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
 						pTr->SetWorldScale(2.f, 2.f, 2.f);
-						
+
 						SAFE_RELEASE(pTr);
 						SAFE_RELEASE(pMinoObject);
 					}
@@ -1589,7 +1676,7 @@ int CMainScene::Update(float fTime)
 						float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 						pTr->SetWorldRotY(XMConvertToRadians(pPacket->angle));
 						pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
-			
+
 						SAFE_RELEASE(pArmored_GreenLizardObj);
 					}
 				}
@@ -1747,13 +1834,13 @@ int CMainScene::Update(float fTime)
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				CTransform* pTransform = pGameObject->GetTransform();
-				
+
 				prevPos.x = pPacket->x;
 				prevPos.y = pPacket->y;
 				prevPos.z = pPacket->z;
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 				pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
-				
+
 				//Vector3 vPos = pTransform->GetWorldPos();
 				//Vector3 vDir = pTransform->GetWorldAxis(AXIS_Z) * 0.172f;
 				//if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
@@ -1818,7 +1905,7 @@ int CMainScene::Update(float fTime)
 			char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
 			int id = pPacket->id;
-			
+
 			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 
@@ -1967,7 +2054,7 @@ int CMainScene::Update(float fTime)
 								pEnemyUIHearthBar->setLengthRatio(ratio);
 							}
 						}
-						else if(static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
 						{
 							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
 
@@ -2060,7 +2147,7 @@ int CMainScene::Update(float fTime)
 			}
 			else if (id < NPC_START)
 			{
-				
+
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
@@ -2358,7 +2445,7 @@ int CMainScene::Update(float fTime)
 					string appendTag = to_string(target);
 					string objectTag = "Player" + appendTag;
 					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
-					
+
 					if (nullptr != pTargetObject)
 					{
 						if (NetworkManager::getInstance()->getMyClientID() == pPacket->targetid)
@@ -2393,6 +2480,1774 @@ int CMainScene::Update(float fTime)
 
 		}
 		break;
+
+		case SC_PACKET_ATTACK_SKILL1:
+		{
+			char str[128];
+			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
+			int id = pPacket->id;
+
+			string appendTag = to_string(id);
+			string objectTag = "Player" + appendTag;
+
+			string myappendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+			string myobjectTag = "Player" + myappendTag;
+			CGameObject* pMyPlayerObj = CGameObject::FindObject(myobjectTag);
+			CPlayer* pMyPlayer = pMyPlayerObj->FindComponentFromTag<CPlayer>("Player");
+			int myTargetID = pMyPlayer->clickedID;
+			SAFE_RELEASE(pMyPlayer);
+			SAFE_RELEASE(pMyPlayerObj);
+
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				_cprintf("MonsterType : %d", pPacket->objectSetType);
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell1");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+					}
+				}
+			}
+			else if (id < NPC_START)
+			{
+
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell1");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pDemonLord->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType != OBJECT_SET_TYPE::DEMONLORD)
+					{
+						//DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+						//pDemonLord->changeAnimation();
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						pAnimation->ChangeClip("Attack1");
+						SAFE_RELEASE(pAnimation);
+					}
+					else
+					{
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						wstring temp_animation_name = reinterpret_cast<sc_packet_attack_player*>(packet)->animation_name;
+						string animation_name = strconv(temp_animation_name);
+						pAnimation->ChangeClip(animation_name);
+						SAFE_RELEASE(pAnimation);
+					}
+				}
+				SAFE_RELEASE(pGameObject);
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = to_string(target);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+
+					if (nullptr != pTargetObject)
+					{
+						if (NetworkManager::getInstance()->getMyClientID() == pPacket->targetid)
+						{
+							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
+							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(0.f);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+
+				}
+			}
+
+		}
+		break;
+
+		case SC_PACKET_ATTACK_SKILL2:
+		{
+			char str[128];
+			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
+			int id = pPacket->id;
+
+			string appendTag = to_string(id);
+			string objectTag = "Player" + appendTag;
+
+			string myappendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+			string myobjectTag = "Player" + myappendTag;
+			CGameObject* pMyPlayerObj = CGameObject::FindObject(myobjectTag);
+			CPlayer* pMyPlayer = pMyPlayerObj->FindComponentFromTag<CPlayer>("Player");
+			int myTargetID = pMyPlayer->clickedID;
+			SAFE_RELEASE(pMyPlayer);
+			SAFE_RELEASE(pMyPlayerObj);
+
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				_cprintf("MonsterType : %d", pPacket->objectSetType);
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell2");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+					}
+				}
+			}
+			else if (id < NPC_START)
+			{
+
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell2");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pDemonLord->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType != OBJECT_SET_TYPE::DEMONLORD)
+					{
+						//DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+						//pDemonLord->changeAnimation();
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						pAnimation->ChangeClip("Attack1");
+						SAFE_RELEASE(pAnimation);
+					}
+					else
+					{
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						wstring temp_animation_name = reinterpret_cast<sc_packet_attack_player*>(packet)->animation_name;
+						string animation_name = strconv(temp_animation_name);
+						pAnimation->ChangeClip(animation_name);
+						SAFE_RELEASE(pAnimation);
+					}
+				}
+				SAFE_RELEASE(pGameObject);
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = to_string(target);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+
+					if (nullptr != pTargetObject)
+					{
+						if (NetworkManager::getInstance()->getMyClientID() == pPacket->targetid)
+						{
+							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
+							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(0.f);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+
+				}
+			}
+
+		}
+		break;
+
+		case SC_PACKET_ATTACK_SKILL3:
+		{
+			char str[128];
+			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
+			int id = pPacket->id;
+
+			string appendTag = to_string(id);
+			string objectTag = "Player" + appendTag;
+
+			string myappendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+			string myobjectTag = "Player" + myappendTag;
+			CGameObject* pMyPlayerObj = CGameObject::FindObject(myobjectTag);
+			CPlayer* pMyPlayer = pMyPlayerObj->FindComponentFromTag<CPlayer>("Player");
+			int myTargetID = pMyPlayer->clickedID;
+			SAFE_RELEASE(pMyPlayer);
+			SAFE_RELEASE(pMyPlayerObj);
+
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				_cprintf("MonsterType : %d", pPacket->objectSetType);
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell3");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == (int)OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(0.f);
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+								pEnemyUIHearthBar->setLengthRatio(ratio);
+							}
+						}
+					}
+				}
+			}
+			else if (id < NPC_START)
+			{
+
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					pAnimation->ChangeClip("Spell3");
+					CTransform* pTr = pGameObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pAnimation);
+					SAFE_RELEASE(pGameObject);
+				}
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = _itoa(target, str, 10);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+					if (nullptr != pTargetObject)
+					{
+
+						if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
+						{
+							Golem* pGolem = pTargetObject->FindComponentFromTag<Golem>("Golem");
+
+							int hp = pGolem->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pGolem->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGolem->getMaxHP();
+								pGolem->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
+						{
+							Mino* pMino = pTargetObject->FindComponentFromTag<Mino>("Mino");
+
+							int hp = pMino->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pMino->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pMino->getMaxHP();
+								pMino->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
+						{
+							GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<GreenLizard>("GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
+						{
+							BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<BlueLizard>("BlueLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
+						{
+							Armored_GreenLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+						else if (static_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
+						{
+							Armored_BlueLizard* pGreenLizard = pTargetObject->FindComponentFromTag<Armored_BlueLizard>("Armored_GreenLizard");
+
+							int hp = pGreenLizard->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pSeuteompi->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pGreenLizard->getMaxHP();
+								pGreenLizard->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+
+						else if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
+						{
+							DemonLord* pDemonLord = pTargetObject->FindComponentFromTag<DemonLord>("DemonLord");
+
+							int hp = pDemonLord->getCurrentHP() - pPacket->damage;
+
+							//CTransform* pTransform = pDemonLord->GetTransform();
+							//Vector3 vPos = pTransform->GetWorldPos();
+							//Vector3 vLook = pTransform->GetWorldAxis(AXIS_Z).Normalize();
+							//vPos += vLook * 1.25f;
+							//vPos.y += 0.95f;
+							//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
+							//SAFE_RELEASE(pTransform);
+
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(0);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pDemonLord->getMaxHP();
+								pDemonLord->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pEnemyUIHearthBar = GET_SINGLE(UserInterfaceManager)->getEnemyUIHearthBar();
+									pEnemyUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (nullptr != pGameObject)
+				{
+					if (reinterpret_cast<sc_packet_attack_player*>(packet)->objectSetType != OBJECT_SET_TYPE::DEMONLORD)
+					{
+						//DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
+						//pDemonLord->changeAnimation();
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						pAnimation->ChangeClip("Attack1");
+						SAFE_RELEASE(pAnimation);
+					}
+					else
+					{
+						CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+						wstring temp_animation_name = reinterpret_cast<sc_packet_attack_player*>(packet)->animation_name;
+						string animation_name = strconv(temp_animation_name);
+						pAnimation->ChangeClip(animation_name);
+						SAFE_RELEASE(pAnimation);
+					}
+				}
+				SAFE_RELEASE(pGameObject);
+
+				{
+					int target = pPacket->targetid;
+					int damage = pPacket->damage;
+					string appendTag = to_string(target);
+					string objectTag = "Player" + appendTag;
+					CGameObject* pTargetObject = CGameObject::FindObject(objectTag);
+
+					if (nullptr != pTargetObject)
+					{
+						if (NetworkManager::getInstance()->getMyClientID() == pPacket->targetid)
+						{
+							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
+							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(0.f);
+								}
+							}
+							else
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID == pPacket->targetid)
+								{
+									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+									pUIHearthBar->setLengthRatio(ratio);
+								}
+							}
+						}
+					}
+
+				}
+			}
+
+		}
+		break;
+
 		case SC_PACKET_ATTACK_SKILL1_EFFECT:
 		{
 			sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
@@ -2415,7 +4270,7 @@ int CMainScene::Update(float fTime)
 				y += (vLook * 1.75f).y;
 				z += (vLook * 1.75f).z;
 				y += 0.95f;
-				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, Vector3((float)x,(float)y,(float)z));
+				GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, Vector3((float)x, (float)y, (float)z));
 
 				SAFE_RELEASE(pPlayerTr);
 				SAFE_RELEASE(pPlayerObject);
@@ -2446,8 +4301,54 @@ int CMainScene::Update(float fTime)
 
 		}
 		break;
-		case SC_PACKET_ATTACK_SKILL1:
+		case SC_PACKET_ATTACK_SKILL4:
 		{
+			sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
+			int id = pPacket->playerID;
+
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				Vector3 pos = pPlayerTr->GetWorldPos();
+				GET_SINGLE(CEffectManager)->OperateEffect("Spell4", nullptr, pos);
+				CAnimation* pAnimation = pPlayerObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+				pAnimation->ChangeClip("Spell4");
+				SAFE_RELEASE(pAnimation);
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			else if (id < NPC_START)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				Vector3 pos = pPlayerTr->GetWorldPos();
+				GET_SINGLE(CEffectManager)->OperateEffect("Spell4", nullptr, pos);
+				CAnimation* pAnimation = pPlayerObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+				pAnimation->ChangeClip("Spell4");
+				SAFE_RELEASE(pAnimation);
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			//	Vector3 vPos = m_pTransform->GetWorldPos();
+			//	Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+			//	vPos += vLook * 1.75f;
+			//	vPos.y += 0.75f;
+			//	GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+			//	_cprintf("effect!\n");
+
+
+		}
+		break;
+		//case SC_PACKET_ATTACK_SKILL1:
+		//{
 			/*char str[128];
 			sc_packet_attack_player* pPacket = reinterpret_cast<sc_packet_attack_player*>(packet);
 			int id = pPacket->id;
@@ -2540,8 +4441,8 @@ int CMainScene::Update(float fTime)
 					}
 				}
 			}*/
-		}
-		break;
+			//}
+			//break;
 		case SC_PACKET_ROTATE_X:
 		case SC_PACKET_ROTATE_Y:
 		case SC_PACKET_ROTATE_Z:
@@ -2697,7 +4598,7 @@ int CMainScene::Update(float fTime)
 					float ratio = (float)pPlayer->getCurrentHP() / (float)pPlayer->getMaxHP();
 					CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
 					pUIHearthBar->setLengthRatio(ratio);
-				
+
 					SAFE_RELEASE(pPlayer);
 				}
 			}
@@ -2801,7 +4702,7 @@ int CMainScene::Update(float fTime)
 
 			for (int i = 0; i < pPacket->count; ++i)
 			{
-				pDropTableUI->addDropItemSlot(pPacket->itemname1 + (i*100));
+				pDropTableUI->addDropItemSlot(pPacket->itemname1 + (i * 100));
 			}
 			//pDropTableUI->addDropItemSlot(pPacket->itemname1);
 			//pDropTableUI->addDropItemSlot(pPacket->itemname2);
@@ -2828,7 +4729,7 @@ int CMainScene::Update(float fTime)
 			SAFE_RELEASE(pItemTr);
 			CRenderer2D* pRenderer = pItem->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 			CMaterial* pMaterial = pRenderer->GetMaterial();
-			tempitemname = L"ItemIcon/" +tempitemname +L".png";
+			tempitemname = L"ItemIcon/" + tempitemname + L".png";
 			string itemname = strconv(tempitemname);
 			pMaterial->SetDiffuseTexInfo("Linear", itemname, 0, 0, tempitemname.c_str());
 			SAFE_RELEASE(pMaterial);
@@ -2899,7 +4800,7 @@ int CMainScene::Update(float fTime)
 					SAFE_RELEASE(pLayer);
 				}
 			}
-			
+
 		}
 		break;
 		case SC_PACKET_ADD_EXP:
@@ -2945,11 +4846,60 @@ int CMainScene::Update(float fTime)
 			}
 		}
 		break;
+		case SC_PACKET_LEVELUP:
+		{
+			sc_packet_levelup_player* pPacket = reinterpret_cast<sc_packet_levelup_player*>(packet);
+			int id = pPacket->targetID;
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == myClientID)
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				if (pPlayerObject != nullptr)
+				{
+					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->setEXP(0);
+
+					Status* pStatus = GET_SINGLE(UserInterfaceManager)->getStatus();
+
+					float ratio = (float)(pPlayer->getEXP()) / (float)(pPlayer->getMaxEXP());
+					//pEnemyUIHearthBar->
+					CTransform* pTr = pPlayerObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					pStatus->getUIPureBar()->setLengthRatio(ratio);
+					SAFE_RELEASE(pPlayer);
+
+				}
+
+			}
+			else if (id < MAX_USER)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				if (pPlayerObject != nullptr)
+				{
+					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					//pPlayer->addExp(pPacket->exp);
+					CTransform* pTr = pPlayerObject->GetTransform();
+					Vector3 pos = pTr->GetWorldPos();
+					GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", nullptr, pos);
+					SAFE_RELEASE(pTr);
+					SAFE_RELEASE(pPlayer);
+				}
+			}
+		}
+		break;
 		case SC_PACKET_PARTY_ADD:
 		{
 			// 해당 플레이어의 정보로 왼쪽 파티 프레임에 띄운다.
 			sc_packet_party* pPacket = reinterpret_cast<sc_packet_party*>(packet);
-			
+
 			string objectID = "Player" + to_string(pPacket->toID);
 			//CGameObject* pPlayerObj = CGameObject::FindObject(objectID);
 

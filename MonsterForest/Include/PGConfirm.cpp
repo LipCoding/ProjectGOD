@@ -16,7 +16,7 @@
 #include "InviteToParty.h"
 #include "TradeUI.h"
 #include "TargetPlayerUI.h"
-
+#include "PGMessageBox.h"
 
 PGConfirm::PGConfirm()
 {
@@ -52,6 +52,7 @@ void PGConfirm::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 			DWORD iobyte;
 			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 		}
+		GET_SINGLE(UserInterfaceManager)->getPGMessageBox()->enableRender(false);
 	}
 }
 
