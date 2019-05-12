@@ -487,9 +487,9 @@ void CEnvToolView::UpdateInput(const float& fTime)
 					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
 					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
 
-					if (ptMouseMove.y != 0)
+					if (ptMouseMove.x != 0)
 					{
-						vPos.z -= ptMouseMove.y / 250.f;
+						vPos.z -= ptMouseMove.x / 250.f;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -544,9 +544,9 @@ void CEnvToolView::UpdateInput(const float& fTime)
 					POINT	ptMouse = GET_SINGLE(CInput)->GetMousePos();
 					POINT   ptMouseMove = GET_SINGLE(CInput)->GetMouseMove();
 
-					if (ptMouseMove.x != 0)
+					if (ptMouseMove.y != 0)
 					{
-						vPos.y += ptMouseMove.x / 250.f;
+						vPos.y += ptMouseMove.y / 250.f;
 
 						pTr->SetWorldTempPos(vPos);
 					}
