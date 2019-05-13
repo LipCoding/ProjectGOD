@@ -291,6 +291,7 @@ void CCollider::ColliderRender(float fTime)
 {
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
+
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("ColliderColor",
 		&m_vColor, SCT_VERTEX | SCT_PIXEL);
 
