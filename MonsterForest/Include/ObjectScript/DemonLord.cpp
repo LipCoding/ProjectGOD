@@ -157,6 +157,7 @@ void DemonLord::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 
 				POINT mousePos = GET_SINGLE(CInput)->GetMousePos();
 				DropTableUI* pDropTableUI = GET_SINGLE(UserInterfaceManager)->getDropTableUI();
+				pDropTableUI->clear();
 				//pDropTableUI->
 				//pDropTableUI->enableRender(true);
 				CTransform* pDropTableUITr = pDropTableUI->GetTransform();

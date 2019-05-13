@@ -30,6 +30,7 @@ public:
 	/*CUIButton* getItemTable1() { return pDropItemSlot1; }
 	CUIButton* getItemTable2() { return pDropItemSlot2; }
 	CUIButton* getItemTable3() { return pDropItemSlot3; }*/
+	void clear();
 public:
 	int Update(float fTime);
 

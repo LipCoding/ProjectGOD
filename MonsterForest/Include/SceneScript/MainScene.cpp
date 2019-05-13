@@ -263,11 +263,6 @@ bool CMainScene::Init()
 			//pAnimation->LoadFromFullPath(animPath.c_str());
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
-			{
-				CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			FILE* pFile_Player = nullptr;
 
 			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
@@ -291,11 +286,6 @@ bool CMainScene::Init()
 			pTr->SetWorldScale(1.f, 1.f, 1.f);
 			pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
-			{
-				CColliderSphere* pCollider = pGolemObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
 
 			pRenderer->SetMesh("Golem", L"99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.msh");
@@ -328,16 +318,6 @@ bool CMainScene::Init()
 			CRenderer*	pRenderer = pMinoObj->AddComponent<CRenderer>("PlayerRenderer");
 
 			pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.msh");
-			{
-				CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
-			{
-				CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider2");
-				pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			//{
 			//	CColliderSphere* pCollider = pMinoObj->AddComponent<CColliderSphere>("collider2");
 			//	pCollider->SetSphere(Vector3(0.f, 3.f, 0.f), 1.f);
@@ -388,11 +368,6 @@ bool CMainScene::Init()
 
 			pRenderer->SetMesh("greenlizard", L"99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.msh");
 
-			{
-				CColliderSphere* pCollider = pGreenLizardObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.dat";
@@ -425,11 +400,6 @@ bool CMainScene::Init()
 
 			pRenderer->SetMesh("bluelizard", L"99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.msh");
 
-			{
-				CColliderSphere* pCollider = pBlueLizardObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.dat";
@@ -462,11 +432,6 @@ bool CMainScene::Init()
 
 			pRenderer->SetMesh("Armored_GreenLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.msh");
 
-			{
-				CColliderSphere* pCollider = pArmoredGreenLizard->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.dat";
@@ -499,11 +464,6 @@ bool CMainScene::Init()
 
 			pRenderer->SetMesh("Armored_BlueLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.msh");
 
-			{
-				CColliderSphere* pCollider = pArmored_BlueLizardObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
 			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.dat";
@@ -535,15 +495,6 @@ bool CMainScene::Init()
 			CRenderer*	pRenderer = pSeuteompiObj->AddComponent<CRenderer>("DemonRnederer");
 
 			pRenderer->SetMesh("DemonLord", L"99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.msh");
-
-			{
-				CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider1");
-				pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
-				SAFE_RELEASE(pCollider);
-			}
-			CColliderSphere* pCollider = pSeuteompiObj->AddComponent<CColliderSphere>("collider");
-			pCollider->SetSphere(Vector3(0.f, 1.5f, 0.f), 3.f);
-			SAFE_RELEASE(pCollider);
 
 			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
 
@@ -1269,6 +1220,7 @@ void CMainScene::Input(float fTime)
 		{
 			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
 			GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->enableRender(false);
+			GET_SINGLE(UserInterfaceManager)->getDropTableUI()->clear();
 		}
 
 		SAFE_RELEASE(pRay);
@@ -1281,6 +1233,7 @@ void CMainScene::Input(float fTime)
 		GET_SINGLE(UserInterfaceManager)->getTargetPlayerUI()->enableRender(false);
 		GET_SINGLE(UserInterfaceManager)->getInventory()->enableRender(false);
 		GET_SINGLE(UserInterfaceManager)->getPGMessageBox()->enableRender(false);
+		GET_SINGLE(UserInterfaceManager)->getDropTableUI()->clear();
 	}
 
 	if (KEYDOWN("Attack"))
@@ -1452,6 +1405,12 @@ int CMainScene::Update(float fTime)
 				{
 					pPlayerObj = CGameObject::CreateClone("PlayerCharacter", pLayer);
 					this->pPlayer = pPlayerObj;
+
+					{
+						CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
+						pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+						SAFE_RELEASE(pCollider);
+					}
 					pPlayerObj->SetTag(objectTag);
 					CTransform*	pTr = pPlayerObj->GetTransform();
 					prevPos.x = pPacket->x;
@@ -1469,8 +1428,17 @@ int CMainScene::Update(float fTime)
 					pPlayer->setLevel(pPacket->level);
 					pPlayer->setMaxHP(200 + pPacket->level * 50);
 					pPlayer->setMaxMP(30 + pPacket->level * 10);
+					pPlayer->setEXP(pPacket->exp);
 					pPlayer->setMaxEXP(pPacket->level * 100);
 					pPlayer->setAttackDamag(10 + pPacket->level * 5);
+
+					Status* pStatus = GET_SINGLE(UserInterfaceManager)->getStatus();
+
+					float ratio = (float)(pPlayer->getEXP()) / (float)(pPlayer->getMaxEXP());
+					//pEnemyUIHearthBar->
+
+					pStatus->getUIPureBar()->setLengthRatio(ratio);
+
 					GET_SINGLE(UserInterfaceManager)->setPlayer(pPlayer);
 					pPlayer->setAnimation(pPlayerObj->FindComponentFromType<CAnimation>(CT_ANIMATION));
 					SAFE_RELEASE(pPlayer);
@@ -1541,7 +1509,11 @@ int CMainScene::Update(float fTime)
 
 					//pPlayerObj->SetTag(objectTag);
 					pPlayerObj->SetTag(objectTag);
-
+					{
+						CColliderSphere* pCollider = pPlayerObj->AddComponent<CColliderSphere>("collider");
+						pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+						SAFE_RELEASE(pCollider);
+					}
 					CPlayer*	pPlayer = pPlayerObj->AddComponent<CPlayer>("Player");
 					pPlayer->setCurrentHP(pPacket->current_hp);
 					pPlayer->setCurrentMP(pPacket->current_mp);
@@ -1580,6 +1552,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pGolemObject = CGameObject::CreateClone("GolemObject", pLayer);
 						pGolemObject->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pGolemObject->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						Golem*	pGolem = pGolemObject->AddComponent<Golem>("Golem");
 						pGolem->setCurrentHP(pPacket->current_hp);
 						pGolem->setCurrentMP(pPacket->current_mp);
@@ -1612,6 +1589,16 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pMinoObject = CGameObject::CreateClone("MinoObject", pLayer);
 						pMinoObject->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
+						{
+							CColliderSphere* pCollider = pMinoObject->AddComponent<CColliderSphere>("collider2");
+							pCollider->SetSphere(Vector3(0.f, 2.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						Mino*	pMino = pMinoObject->AddComponent<Mino>("Mino");
 						pMino->setCurrentHP(pPacket->current_hp);
 						pMino->setCurrentMP(pPacket->current_mp);
@@ -1647,6 +1634,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pGreenLizardObj = CGameObject::CreateClone("GreenLizard", pLayer);
 						pGreenLizardObj->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pGreenLizardObj->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						GreenLizard*	pGreenLizard = pGreenLizardObj->AddComponent<GreenLizard>("GreenLizard");
 						pGreenLizard->setCurrentHP(pPacket->current_hp);
 						pGreenLizard->setCurrentMP(pPacket->current_mp);
@@ -1678,6 +1670,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pBlueLizardObj = CGameObject::CreateClone("BlueLizard", pLayer);
 						pBlueLizardObj->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pBlueLizardObj->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						BlueLizard*	pBlueLizard = pBlueLizardObj->AddComponent<BlueLizard>("BlueLizard");
 						pBlueLizard->setCurrentHP(pPacket->current_hp);
 						pBlueLizard->setCurrentMP(pPacket->current_mp);
@@ -1709,6 +1706,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pArmored_GreenLizardObj = CGameObject::CreateClone("Armored_GreenLizard", pLayer);
 						pArmored_GreenLizardObj->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pArmored_GreenLizardObj->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						BlueLizard*	pArmored_GreenLizard = pArmored_GreenLizardObj->AddComponent<BlueLizard>("Armored_GreenLizard");
 						pArmored_GreenLizard->setCurrentHP(pPacket->current_hp);
 						pArmored_GreenLizard->setCurrentMP(pPacket->current_mp);
@@ -1741,6 +1743,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pArmored_BlueLizardObj = CGameObject::CreateClone("Armored_BlueLizard", pLayer);
 						pArmored_BlueLizardObj->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pArmored_BlueLizardObj->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						BlueLizard*	pArmored_BlueLizard = pArmored_BlueLizardObj->AddComponent<BlueLizard>("Armored_GreenLizard");
 						pArmored_BlueLizard->setCurrentHP(pPacket->current_hp);
 						pArmored_BlueLizard->setCurrentMP(pPacket->current_mp);
@@ -1773,6 +1780,11 @@ int CMainScene::Update(float fTime)
 					{
 						CGameObject* pDemonLordObj = CGameObject::CreateClone("DemonLordObjeect", pLayer);
 						pDemonLordObj->SetTag(objectTag);
+						{
+							CColliderSphere* pCollider = pDemonLordObj->AddComponent<CColliderSphere>("collider");
+							pCollider->SetSphere(Vector3(0.f, 1.f, 0.f), 1.f);
+							SAFE_RELEASE(pCollider);
+						}
 						DemonLord*	pDemonLord = pDemonLordObj->AddComponent<DemonLord>("DemonLord");
 						pDemonLord->setCurrentHP(pPacket->current_hp);
 						pDemonLord->setCurrentMP(pPacket->current_mp);
@@ -4739,6 +4751,16 @@ int CMainScene::Update(float fTime)
 			if (nullptr != pRemoveObject)
 			{
 				pRemoveObject->Die();
+			}
+			string myappendTag = to_string(NetworkManager::getInstance()->getMyClientID());
+			string myobjectTag = "Player" + myappendTag;
+			CGameObject* pMyPlayerObject = CGameObject::FindObject(myobjectTag);
+			if (pMyPlayerObject != nullptr)
+			{
+				CPlayer* pPlayer = pMyPlayerObject->FindComponentFromTag<CPlayer>("Player");
+				if (id == pPlayer->clickedID)
+					GET_SINGLE(UserInterfaceManager)->getDropTableUI()->clear();
+				SAFE_RELEASE(pPlayer);
 			}
 		}
 		break;

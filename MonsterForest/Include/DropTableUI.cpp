@@ -102,6 +102,19 @@ void DropTableUI::detachDropItemSlot(int slotNumber)
 	}
 }
 
+void DropTableUI::clear()
+{
+	for (auto& slot : dropItemSlots)
+	{
+		static_cast<DropItemSlot*>(slot)->detachItem();
+		slot->Die();
+		CGameObject* pGameObject = slot->GetGameObject();
+		pGameObject->Die();
+		SAFE_RELEASE(pGameObject);
+	}
+	dropItemSlots.clear();
+}
+
 int DropTableUI::Update(float fTime)
 {
 	CTransform* pDropTableTr = this->GetTransform();
