@@ -669,9 +669,9 @@ bool CMainScene::Init()
 	//}
 
 #pragma region sound
-	//GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
 
-	//GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
 #pragma region Item
@@ -1267,7 +1267,7 @@ void CMainScene::Input(float fTime)
 	/* For Rendering Navi, QuadTree, etc */
 	if (KEYDOWN("F1"))
 	{
-		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape");
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
 
 		if (pLandScapeObj)
 		{
