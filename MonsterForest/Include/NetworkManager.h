@@ -1,12 +1,16 @@
 #pragma once
 
-#include "../PGEngine.h"
-#include "../Singleton.h"
-#include "../Singleton.cpp"
+#include "PGEngine.h"
+#include "Singleton.h"
+#include "Singleton.cpp"
+#include "GameObject/GameObject.h"
+#include "Component/Font.h"
+#include <chrono>
+#include "Component/UIButton.h"
 
-PG_BEGIN
+PG_USING
 
-class PG_DLL NetworkManager :
+class NetworkManager :
 	public Singleton<NetworkManager>
 {
 private:
@@ -23,14 +27,18 @@ private:
 	char sendBuffer[MAX_BUFF_SIZE];
 	char recvBuffer[MAX_BUFF_SIZE];
 	char packetBuffer[MAX_BUFF_SIZE];
-	queue<void*> clientPacketQueue;
+	static queue<void*> clientPacketQueue;
 	string serverip_address;
 	//queue<void*> clientPacketQueue;
 public:
+	chrono::steady_clock::time_point inputTime;
+	//Vector3 prevPos;
+public:
+	static CGameObject* pPlayer;
 	void* fetchToClientPacket();
 	//void* fetchToClientPacket();
 	queue<void*>& getClientPacketQueue() { return clientPacketQueue; }
-	void  popData() { clientPacketQueue.pop(); }
+	static void  popData() { clientPacketQueue.pop(); }
 	void enableConnected(bool connected);
 	void setMyClientID(size_t id);
 public:
@@ -66,5 +74,3 @@ public:
 		//static void recvThread();
 
 };
-
-PG_END

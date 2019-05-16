@@ -11,7 +11,7 @@
 #include "Core/Input.h"
 #include "UserInterfaceManager.h"
 #include "Inventory.h"
-#include "Core/NetworkManager.h"
+#include "NetworkManager.h"
 #include "ObjectScript/Sword.h"
 Slot::Slot()
 {
