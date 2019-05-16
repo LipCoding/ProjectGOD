@@ -92,7 +92,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDesc.SampleDesc.Count = 1;
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	tDesc.Windowed = false; 
+	tDesc.Windowed = bWindowMode; 
 
 	D3D_FEATURE_LEVEL	eLevel = D3D_FEATURE_LEVEL_11_0;
 	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL,

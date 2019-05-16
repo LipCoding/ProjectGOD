@@ -17,7 +17,7 @@
 #include "Scene/SceneManager.h"
 #include "../Client.h"
 #include "Player.h"
-#include "Core/NetworkManager.h"
+#include "../NetworkManager.h"
 #include "../UserInterfaceManager.h"
 #include "../DropItemSlot.h"
 #include "../DropTableUI.h"

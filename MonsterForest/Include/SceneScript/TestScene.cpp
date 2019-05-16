@@ -27,7 +27,7 @@
 #include "Core/NavigationManager.h"
 #include "Core/NavigationMesh.h"
 #include "Resources/Mesh.h"
-#include "Core/NetworkManager.h"
+#include "../NetworkManager.h"
 #include "Core.h"
 #include "Device.h"
 #include "Component/Renderer2D.h"

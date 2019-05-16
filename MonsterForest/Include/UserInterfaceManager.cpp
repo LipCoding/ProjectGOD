@@ -1,7 +1,7 @@
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
 #include "Inventory.h"
-#include "Core/NetworkManager.h"
+#include "NetworkManager.h"
 #include "Component/Renderer2D.h"
 #include "Scene/Layer.h"
 #include "GameObject/GameObject.h"

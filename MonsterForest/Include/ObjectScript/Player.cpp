@@ -17,7 +17,7 @@
 #include "Component/Animation.h"
 #include "Component/AnimationClip.h"
 #include "Core/EffectManager.h"
-#include "Core/NetworkManager.h"
+#include "../NetworkManager.h"
 CPlayer::CPlayer()
 {
 	SetTag("Player");

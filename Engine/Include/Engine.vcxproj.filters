@@ -211,17 +211,8 @@
     <Filter Include="06. Component\17. Description\Sphere">
       <UniqueIdentifier>{83bdab40-f5a4-421e-b0fd-3c4c601af70e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Core\07. NetworkManager">
-      <UniqueIdentifier>{2999675a-39b4-4207-aebd-2f1c019855d4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. Core\08. QuadTreeManager">
-      <UniqueIdentifier>{687e4c00-22b3-4008-aee9-094fdc111277}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Core\06. NavigationManager">
       <UniqueIdentifier>{8c0c6441-0256-4f4d-a202-4ea6cbacf546}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. Core\09. SoundManager">
-      <UniqueIdentifier>{a190f05c-b06b-43a1-abc3-f0b83c49c18d}</UniqueIdentifier>
     </Filter>
     <Filter Include="00. Core\06. NavigationManager\Visualization">
       <UniqueIdentifier>{1f21595f-7f07-4f60-a78f-53a0b44538bf}</UniqueIdentifier>
@@ -256,11 +247,17 @@
     <Filter Include="06. Component\03. Camera\Billboard">
       <UniqueIdentifier>{36c4693b-1a61-4d68-8fcc-6ae91730284b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Core\10. EffectManager">
-      <UniqueIdentifier>{20681522-2a3b-4056-9da8-e8ea8e7a0a0c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Component\01. Renderer\Renderer2D">
       <UniqueIdentifier>{2fe50868-60fd-4147-80c5-fbc414ebcf47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Core\07. QuadTreeManager">
+      <UniqueIdentifier>{687e4c00-22b3-4008-aee9-094fdc111277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Core\08. SoundManager">
+      <UniqueIdentifier>{a190f05c-b06b-43a1-abc3-f0b83c49c18d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Core\09. EffectManager">
+      <UniqueIdentifier>{20681522-2a3b-4056-9da8-e8ea8e7a0a0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -477,11 +474,8 @@
     <ClCompile Include="Component\Font.cpp">
       <Filter>06. Component\18. Font</Filter>
     </ClCompile>
-    <ClCompile Include="Core\NetworkManager.cpp">
-      <Filter>00. Core\07. NetworkManager</Filter>
-    </ClCompile>
     <ClCompile Include="Core\QuadTreeManager.cpp">
-      <Filter>00. Core\08. QuadTreeManager</Filter>
+      <Filter>00. Core\07. QuadTreeManager</Filter>
     </ClCompile>
     <ClCompile Include="Component\Navi.cpp">
       <Filter>06. Component\10. Navigation</Filter>
@@ -502,7 +496,7 @@
       <Filter>00. Core\06. NavigationManager\Old</Filter>
     </ClCompile>
     <ClCompile Include="Core\SoundManager.cpp">
-      <Filter>00. Core\09. SoundManager</Filter>
+      <Filter>00. Core\08. SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleMultiple.cpp">
       <Filter>06. Component\13. Particle</Filter>
@@ -523,7 +517,7 @@
       <Filter>98. Headers</Filter>
     </ClCompile>
     <ClCompile Include="Core\EffectManager.cpp">
-      <Filter>00. Core\10. EffectManager</Filter>
+      <Filter>00. Core\09. EffectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -758,14 +752,11 @@
     <ClInclude Include="Component\Font.h">
       <Filter>06. Component\18. Font</Filter>
     </ClInclude>
-    <ClInclude Include="Core\NetworkManager.h">
-      <Filter>00. Core\07. NetworkManager</Filter>
-    </ClInclude>
     <ClInclude Include="Protocol.h">
       <Filter>98. Headers</Filter>
     </ClInclude>
     <ClInclude Include="Core\QuadTreeManager.h">
-      <Filter>00. Core\08. QuadTreeManager</Filter>
+      <Filter>00. Core\07. QuadTreeManager</Filter>
     </ClInclude>
     <ClInclude Include="Component\Navi.h">
       <Filter>06. Component\10. Navigation</Filter>
@@ -786,7 +777,7 @@
       <Filter>00. Core\06. NavigationManager\Old</Filter>
     </ClInclude>
     <ClInclude Include="Core\SoundManager.h">
-      <Filter>00. Core\09. SoundManager</Filter>
+      <Filter>00. Core\08. SoundManager</Filter>
     </ClInclude>
     <ClInclude Include="Component\ParticleMultiple.h">
       <Filter>06. Component\13. Particle</Filter>
@@ -804,7 +795,7 @@
       <Filter>06. Component\03. Camera\Billboard</Filter>
     </ClInclude>
     <ClInclude Include="Core\EffectManager.h">
-      <Filter>00. Core\10. EffectManager</Filter>
+      <Filter>00. Core\09. EffectManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "SceneScript\TestScene.h"
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
+#include "NetworkManager.h"
 PG_USING
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -55,6 +56,28 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 		break;
+
+	case WM_SOCKET:
+	{
+		if (WSAGETSELECTERROR(lParam)) {
+			NetworkManager::getInstance()->shutDownServer();
+			//closesocket((SOCKET)wParam);
+			//clienterror();
+			break;
+		}
+		switch (WSAGETSELECTEVENT(lParam)) {
+		case FD_READ:
+			NetworkManager::getInstance()->readPacket((SOCKET)wParam);
+			//ReadPacket((SOCKET)wParam);
+			break;
+		case FD_CLOSE:
+			NetworkManager::getInstance()->shutDownServer();
+			//closesocket((SOCKET)wParam);
+			//clienterror();
+			break;
+		}
+	}
+	break;
 	case WM_CHAR:
 		switch (wParam)
 		{
