@@ -9,6 +9,7 @@
 #include "AnimToolView.h"
 
 #include "AnimMeshInfoTab.h"
+#include "AnimColliderTab.h"
 #include "Core/PathManager.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Scene.h"
@@ -37,6 +38,8 @@ CEditForm::~CEditForm()
 {
 	delete m_pAnimMeshInfoDlg;
 	m_pAnimMeshInfoDlg = nullptr;
+	delete m_pAnimColliderDlg;
+	m_pAnimColliderDlg = nullptr;
 	m_pBoneMatrix = nullptr;
 	SAFE_RELEASE(m_pEditObj);
 	SAFE_RELEASE(m_pArmObj);
@@ -105,10 +108,10 @@ void CEditForm::OnInitialUpdate()
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	m_Tab.InsertItem(0, _T("ObjInfo"));
-	m_Tab.InsertItem(1, _T("Movement"));
-	m_Tab.InsertItem(2, _T("Collider"));
-	m_Tab.InsertItem(3, _T("OnOff"));
-	m_Tab.InsertItem(4, _T("CamShake"));
+	m_Tab.InsertItem(1, _T("Collider"));
+	m_Tab.InsertItem(2, _T("OnOff"));
+	m_Tab.InsertItem(3, _T("Movement"));
+	//m_Tab.InsertItem(4, _T("CamShake"));
 
 	CRect rect;
 	m_Tab.GetWindowRect(&rect);
@@ -119,6 +122,11 @@ void CEditForm::OnInitialUpdate()
 	m_pAnimMeshInfoDlg->Create(IDD_DIALOG_MESH_INFO, &m_Tab);
 	m_pAnimMeshInfoDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
 	m_pAnimMeshInfoDlg->ShowWindow(SW_SHOW);
+
+	m_pAnimColliderDlg = new CAnimColliderTab;
+	m_pAnimColliderDlg->Create(IDD_DIALOG_COLLIDER, &m_Tab);
+	m_pAnimColliderDlg->MoveWindow(0, 20, rect.Width(), rect.Height());
+	m_pAnimColliderDlg->ShowWindow(SW_HIDE);
 
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
@@ -520,9 +528,11 @@ void CEditForm::OnTcnSelchangeTabAnim(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 	case 0:
 		m_pAnimMeshInfoDlg->ShowWindow(SW_SHOW);
+		m_pAnimColliderDlg->ShowWindow(SW_HIDE);
 		break;
 	case 1:
 		m_pAnimMeshInfoDlg->ShowWindow(SW_HIDE);
+		m_pAnimColliderDlg->ShowWindow(SW_SHOW);
 		break;
 	case 2:
 		break;

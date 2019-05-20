@@ -8,6 +8,7 @@
 #define IDR_AnimToolTYPE                130
 #define IDD_DIALOG_FORM                 310
 #define IDD_DIALOG_MESH_INFO            312
+#define IDD_DIALOG_COLLIDER             314
 #define IDC_CHECK_PLAY                  1000
 #define IDC_TAB_ANIM                    1001
 #define IDC_LIST_CLIPS                  1005
@@ -63,14 +64,30 @@
 #define IDC_BUTTON_LOAD_ALL             1052
 #define IDC_BUTTON_SAVE_ALL             1053
 #define IDC_EDIT_OBJ_NAME               1054
+#define IDC_LIST_COLLIDER               1055
+#define IDC_BUTTON_DELETE_COLLIDER      1056
+#define IDC_BUTTON_CLEAR_ALL_COLLIDER   1057
+#define IDC_BUTTON_CREATE_COLLIDER_WORLDMATRIX 1058
+#define IDC_BUTTON_CREATE_COLLIDER_ATTACH_TO_BONE 1059
+#define IDC_EDIT_SCALE_COLLIDER         1061
+#define IDC_BUTTON_ADJUST_SCALE_COLLIDER 1062
+#define IDC_RADIO_COLLIDER_AXIS_1       1063
+#define IDC_RADIO_COLLIDER_AXIS_2       1064
+#define IDC_RADIO_COLLIDER_AXIS_3       1065
+#define IDC_BUTTON_SAVE_COLLIDER        1066
+#define IDC_BUTTON_LOAD_COLLIDER        1067
+#define IDC_BUTTON_COLLIDER_DOWN        1068
+#define IDC_BUTTON_COLLIDER_UP          1069
+#define IDC_BUTTON_SPEED_MODIFY_COLLIDER 1070
+#define IDC_EDIT_COLLIDER_SPEED         1071
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1055
+#define _APS_NEXT_CONTROL_VALUE         1072
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
