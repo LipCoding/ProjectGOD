@@ -25,6 +25,9 @@
     <Filter Include="00.Tab\Mesh">
       <UniqueIdentifier>{8b18c562-09d9-4337-996f-86c12a416f2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.Tab\Collider">
+      <UniqueIdentifier>{e87faf94-4177-4581-868f-d3030cf5994d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimTool.h">
@@ -54,6 +57,9 @@
     <ClInclude Include="AnimMeshInfoTab.h">
       <Filter>00.Tab\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="AnimColliderTab.h">
+      <Filter>00.Tab\Collider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimTool.cpp">
@@ -76,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="AnimMeshInfoTab.cpp">
       <Filter>00.Tab\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimColliderTab.cpp">
+      <Filter>00.Tab\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -78,7 +78,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	iFlag |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 	DXGI_SWAP_CHAIN_DESC	tDesc = {};
-
+	
 	tDesc.BufferDesc.Width = iWidth;
 	tDesc.BufferDesc.Height = iHeight;
 	tDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

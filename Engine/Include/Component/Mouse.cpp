@@ -114,16 +114,16 @@ int CMouse::Update(float fTime)
 	{
 		if (m_bMouseShow)
 		{
-			m_bMouseShow = false;
-			ShowCursor(false);
+			m_bMouseShow = true;
+			ShowCursor(true);
 		}
 	}
 	else
 	{
 		if (!m_bMouseShow)
 		{
-			m_bMouseShow = false;
-			ShowCursor(false);
+			m_bMouseShow = true;
+			ShowCursor(true);
 		}
 	}
 
