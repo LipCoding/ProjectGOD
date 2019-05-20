@@ -497,6 +497,56 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
+	#pragma region billboard
+	{
+		default_random_engine dre;
+		uniform_int_distribution<> ui;
+
+		CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
+
+		for (int i = 0; i < 10; ++i)
+		{
+			for (int j = 0; j < 10; ++j)
+			{
+				string number_tag = to_string(i);
+				string object_tag = "ParticleObj" + number_tag;
+				CGameObject*    pParticleObj = CGameObject::CreateObject(object_tag, pParticleLayer);
+
+				CTransform*    pParticleTr = pParticleObj->GetTransform();
+				pParticleTr->SetWorldPos(300.f + (0.2 * i), 2.f, 300.f + (0.2*j));
+				SAFE_RELEASE(pParticleTr);
+
+				CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
+				pParticleSingle->SetSize(10.f, 10.f);
+				SAFE_RELEASE(pParticleSingle);
+
+				CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
+				pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
+					SCT_VERTEX | SCT_PIXEL);
+				pParticleRenderer->SetRenderState(ALPHA_BLEND);
+				CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
+				pParticleAnimation->SetRenderer2DEnable(false);
+
+				vector<wstring>    vecExplosion;
+				for (int i = 1; i <= 1; ++i)
+				{
+					wchar_t    strPath[MAX_PATH] = {};
+					wsprintf(strPath, L"Billboard/test.dds", i);
+
+					vecExplosion.push_back(strPath);
+				}
+
+ 				pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
+					1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
+
+				SAFE_RELEASE(pParticleAnimation);
+				SAFE_RELEASE(pParticleRenderer);
+				SAFE_RELEASE(pParticleObj);
+			}
+		}
+		SAFE_RELEASE(pParticleLayer);
+	}
+#pragma endregion
 
 	// mainserver로의 접속요청을 한다.
 	{

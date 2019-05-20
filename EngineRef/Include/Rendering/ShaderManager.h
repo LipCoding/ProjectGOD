@@ -44,5 +44,4 @@ public:
 
 	DECLARE_SINGLE(CShaderManager)
 };
-
 PG_END
