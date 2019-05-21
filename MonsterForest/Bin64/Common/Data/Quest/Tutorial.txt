@@ -1,0 +1,4 @@
+@첫번째 퀘스트@
+<ContestsOfQuest>
+골렘 10마리를 잡아와라.
+</ContestsOfQuest>

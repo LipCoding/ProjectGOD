@@ -31,7 +31,10 @@ bool CSampler::CreateSampler(const string& strKey, D3D11_FILTER eFilter,
 	tDesc.AddressU = eAddrU;
 	tDesc.AddressV = eAddrV;
 	tDesc.AddressW = eAddrW;
-
+	tDesc.MaxLOD = +FLT_MAX;
+	tDesc.MinLOD = -FLT_MIN;
+	tDesc.MipLODBias = 0.f;
+	tDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
 	if (FAILED(DEVICE->CreateSamplerState(&tDesc, &m_pSampler)))
 		return false;
 

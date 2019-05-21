@@ -12,7 +12,7 @@
 #include "UserInterfaceManager.h"
 #include "Inventory.h"
 #include "DropTableUI.h"
-#include "Core/NetworkManager.h"
+#include "NetworkManager.h"
 #include "TargetPlayerUI.h"
 
 InviteToParty::InviteToParty()

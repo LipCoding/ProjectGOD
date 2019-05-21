@@ -53,5 +53,4 @@ public:
 public:
 	void SetShader();
 };
-
 PG_END

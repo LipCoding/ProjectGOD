@@ -175,6 +175,9 @@
     <Filter Include="02. Object\01. Actor\02. NPC\01. Monster\06. Armored_BlueLizard">
       <UniqueIdentifier>{7c2dde14-eb4a-4430-a002-de289ce0be3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. NetworkManager">
+      <UniqueIdentifier>{7857f871-9947-4d9d-ad51-1d7b1331aa51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -336,6 +339,9 @@
     <ClInclude Include="ObjectScript\GreenLizard.h">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>04. NetworkManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -487,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="ObjectScript\GreenLizard.cpp">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\03. Seuteompi</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>04. NetworkManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

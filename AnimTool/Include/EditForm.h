@@ -61,6 +61,7 @@ private:
 	CTabCtrl m_Tab;
 	// MeshInfo
 	class CAnimMeshInfoTab		*m_pAnimMeshInfoDlg = nullptr;
+	class CAnimColliderTab		*m_pAnimColliderDlg = nullptr;
 	CGameObject *m_pEditObj = nullptr;
 	CGameObject *m_pArmObj = nullptr;
 	Matrix *m_pBoneMatrix = nullptr;
