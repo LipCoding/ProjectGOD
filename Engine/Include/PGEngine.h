@@ -53,6 +53,7 @@ using namespace FMOD;
 // Sampler Key
 #define	SAMPLER_POINT	"Point"
 #define	SAMPLER_LINEAR	"Linear"
+#define SAMPLER_ANTISOTROPIC "Antisotropic"
 
 
 // Shader Key
