@@ -307,7 +307,7 @@ bool CScene::Init()
 	//m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
 
 	// 전역 조명을 생성한다.
-	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
+	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
@@ -315,14 +315,14 @@ bool CScene::Init()
 
 	SAFE_RELEASE(pLightTr);
 
-	SAFE_RELEASE(pGlobalLight);*/
-
-	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
-
-	pGlobalLight->SetLightRange(100000.f);
+	SAFE_RELEASE(pGlobalLight);
 
 	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
-		Vector4(0.f, 0.f, 0.f, 1.f));*/
+	Vector4(0.f, 0.f, 0.f, 1.f));*/
+
+	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
+
+	pGlobalLight->SetLightRange(100000.f);
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
@@ -332,7 +332,7 @@ bool CScene::Init()
 
 	SAFE_RELEASE(pLightTr);
 
-	SAFE_RELEASE(pGlobalLight);
+	SAFE_RELEASE(pGlobalLight);*/
 
 	//pGlobalLight = CreateLight("Light1", LT_POINT);
 
