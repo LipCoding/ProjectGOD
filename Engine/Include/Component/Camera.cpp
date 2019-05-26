@@ -164,7 +164,7 @@ void CCamera::SetShadowPerspectiveProj(float fViewAngle, float fAspect, float fN
 {
 	// 시야 기반 왼손 투시 투영 행렬 작성
 	*m_matShadowProj = XMMatrixPerspectiveFovLH(fViewAngle,
-		fAspect, fNear, 200.f);
+		fAspect, fNear, fFar);
 }
 
 void CCamera::ComputeOrthoView()
