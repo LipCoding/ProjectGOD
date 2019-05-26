@@ -450,9 +450,14 @@ void CRenderer2D::UpdateTransform()
 	CCamera*    pLightCamera = m_pScene->GetLightCamera();
 	CTransform* pLightTransform = m_pScene->GetLightCameraTr();
 
-	matLightWorld = pLightTransform->GetWorldMatrix().mat;
-	matLightView = pLightCamera->GetViewMatrix().mat;
-	matLightProj = pLightCamera->GetProjMatrix().mat;
+	
+	if (pLightTransform)
+		matLightWorld = pLightTransform->GetWorldMatrix().mat;
+	if (pLightCamera)
+	{
+		matLightView = pLightCamera->GetViewMatrix().mat;
+		matLightProj = pLightCamera->GetProjMatrix().mat;
+	}
 
 	matView = pCamera->GetViewMatrix().mat;
 	matProj = pCamera->GetProjMatrix().mat;

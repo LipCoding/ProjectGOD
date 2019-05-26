@@ -653,9 +653,13 @@ void CRenderer::UpdateTransform()
 	matView = pCamera->GetViewMatrix().mat;
 	matProj = pCamera->GetProjMatrix().mat;
 
-	matLightWorld = pLightTransform->GetWorldMatrix().mat;
-	matLightView = pLightCamera->GetViewMatrix().mat;
-	matLightProj = pLightCamera->GetProjMatrix().mat;
+	if (pLightTransform)
+		matLightWorld = pLightTransform->GetWorldMatrix().mat;
+	if (pLightCamera)
+	{
+		matLightView = pLightCamera->GetViewMatrix().mat;
+		matLightProj = pLightCamera->GetProjMatrix().mat;
+	}
 
 	tBuffer.matWorld = m_pTransform->GetLocalMatrix() *
 		m_pTransform->GetWorldMatrix();

@@ -301,7 +301,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
 
 	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
-	bias = 0.00001f;
+	bias = 0.01f;
 
 	projectTexCoord = float2(0.f, 0.f);
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
@@ -394,7 +394,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 		lightDepthValue = lightDepthValue - bias;
 
-		if (lightDepthValue < depthValue)
+		if (lightDepthValue  < depthValue)
 		{
 			float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
 
@@ -407,7 +407,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				vColor += vColor * lightIntensity;
+				vColor += float4(1.f, 1.f, 1.f, 1.f) * lightIntensity / 10.f;
 				vColor = saturate(vColor);
 			}
 		}

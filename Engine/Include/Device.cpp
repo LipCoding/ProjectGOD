@@ -77,6 +77,13 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 #endif // _DEBUG
 	iFlag |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
+	D3D_FEATURE_LEVEL	eLevel1 = D3D_FEATURE_LEVEL_11_0;
+	if (FAILED(D3D11CreateDevice(NULL,
+		D3D_DRIVER_TYPE_HARDWARE, NULL, 0, NULL, 0,
+		D3D11_SDK_VERSION,&m_pDevice, &eLevel1, &m_pContext)))
+		return false;
+
+
 	DXGI_SWAP_CHAIN_DESC	tDesc = {};
 	
 	tDesc.BufferDesc.Width = iWidth;
@@ -89,8 +96,15 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDesc.BufferCount = 1;
 	tDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	tDesc.OutputWindow = hWnd;
-	tDesc.SampleDesc.Count = 1;
-	tDesc.SampleDesc.Quality = 0;
+
+	UINT quality = 0;
+	HRESULT hr;
+	hr = m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &quality);
+	m_pDevice->Release();
+	m_pContext->Release();
+
+	tDesc.SampleDesc.Quality = quality - 1;
+	tDesc.SampleDesc.Count = 4;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	tDesc.Windowed = bWindowMode; 
 
@@ -116,13 +130,18 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	// 깊이버퍼용 텍스쳐를 만든다.
 	D3D11_TEXTURE2D_DESC	tDepthDesc = {};
 
+	
+	
+
 	tDepthDesc.Width = iWidth;
 	tDepthDesc.Height = iHeight;
 	tDepthDesc.MipLevels = 1;
 	tDepthDesc.ArraySize = 1;
 	tDepthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	tDepthDesc.SampleDesc.Quality = 0;
-	tDepthDesc.SampleDesc.Count = 1;
+
+	m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 4, &quality);
+	tDepthDesc.SampleDesc.Quality = quality - 1;
+	tDepthDesc.SampleDesc.Count = 4;
 
 	tDepthDesc.Usage = D3D11_USAGE_DEFAULT;
 	tDepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;

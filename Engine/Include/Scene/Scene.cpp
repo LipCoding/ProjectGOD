@@ -21,7 +21,10 @@ CScene::CScene() :
 	m_pUICameraObj(NULL),
 	m_pUICamera(NULL),
 	m_pUICameraTr(NULL),
-	m_pSkyObject(NULL)
+	m_pSkyObject(NULL),
+	m_pLightCameraObj(NULL),
+	m_pLightCameraTr(NULL),
+	m_pLightCamera(NULL)
 {
 	SetTag("Scene");
 	SetTypeName("CScene");
@@ -289,15 +292,16 @@ bool CScene::Init()
 	m_pMainCamera = m_pMainCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pMainCameraTr = m_pMainCameraObj->GetTransform();
 
+
 	// 라이트 카메라
 	m_pLightCameraObj = CreateCamera("LightCamera",
-		Vector3(0.f, 300.f, 0.f), XMConvertToRadians(90.f),
-		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 1000.f);
+		Vector3(512.f / 2.f, 950.f, 512.f / 2.f), XMConvertToRadians(30.f),
+		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iWidth, 850.f, 951.f);
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();
 
-	m_pLightCameraTr->SetWorldRotX(PG_PI / 4.f);
-	m_pLightCameraTr->SetWorldRotY(PG_PI / 4.f);
+	m_pLightCameraTr->SetWorldRotX(PG_PI / 2.f);
+	//m_pLightCameraTr->SetWorldRotY(PG_PI / 2.f);
 
 	//// UI 카메라 생성
 	m_pUICameraObj = CreateOrthoCamera("UICamera",
@@ -307,32 +311,32 @@ bool CScene::Init()
 	//m_pMainCameraTr->SetWorldRotX(PG_PI / -2.f);
 
 	// 전역 조명을 생성한다.
-	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
+	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_DIR);
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
-	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	SAFE_RELEASE(pLightTr);
-
-	SAFE_RELEASE(pGlobalLight);
-
-	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
-	Vector4(0.f, 0.f, 0.f, 1.f));*/
-
-	/*CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
-
-	pGlobalLight->SetLightRange(100000.f);
-
-	CTransform*	pLightTr = pGlobalLight->GetTransform();
-
-	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-	pLightTr->SetWorldPos(0.f, 10000.f, 0.f);
 	pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	SAFE_RELEASE(pLightTr);
 
 	SAFE_RELEASE(pGlobalLight);*/
+
+	/*pGlobalLight->SetLightColor(Vector4(0.2f, 0.2f, 0.2f, 1.f), Vector4(0.1f, 0.1f, 0.1f, 1.f),
+	Vector4(0.f, 0.f, 0.f, 1.f));*/
+
+	CLight*	pGlobalLight = CreateLight("GlobalLight", LT_POINT);
+
+	pGlobalLight->SetLightRange(100000.f);
+
+	CTransform*	pLightTr = pGlobalLight->GetTransform();
+
+	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+	pLightTr->SetWorldPos(512.f / 2.f, 950.f, 512.f / 2.f);
+	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
+
+	SAFE_RELEASE(pLightTr);
+
+	SAFE_RELEASE(pGlobalLight);
 
 	//pGlobalLight = CreateLight("Light1", LT_POINT);
 
@@ -502,7 +506,9 @@ void CScene::Input(float fTime)
 	}
 
 	m_pMainCameraObj->Input(fTime);
-	m_pLightCameraObj->Input(fTime);
+	
+	if(m_pLightCameraObj)
+		m_pLightCameraObj->Input(fTime);
 }
 
 int CScene::Update(float fTime)
@@ -554,7 +560,8 @@ int CScene::Update(float fTime)
 	}
 
 	m_pMainCameraObj->Update(fTime);
-	m_pLightCameraObj->Update(fTime);
+	if (m_pLightCameraObj)
+		m_pLightCameraObj->Update(fTime);
 	// 조명 업데이트
 	list<CGameObject*>::iterator	iterL;
 	list<CGameObject*>::iterator	iterLEnd = m_LightList.end();
@@ -633,7 +640,8 @@ int CScene::LateUpdate(float fTime)
 	}
 
 	m_pMainCameraObj->LateUpdate(fTime);
-	m_pLightCameraObj->LateUpdate(fTime);
+	if (m_pLightCameraObj)
+		m_pLightCameraObj->LateUpdate(fTime);
 	// 조명 업데이트
 	list<CGameObject*>::iterator	iterL;
 	list<CGameObject*>::iterator	iterLEnd = m_LightList.end();

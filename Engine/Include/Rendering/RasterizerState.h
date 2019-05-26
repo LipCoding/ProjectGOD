@@ -18,8 +18,8 @@ public:
 		D3D11_CULL_MODE eCull = D3D11_CULL_BACK,
 		bool bClockWise = false, int iDepthBias = 0, float fDepthBiasClamp = 0.f,
 		float fSlopeScale = 0.f, bool bDepthClipEnable = true,
-		bool bScissorEnable = false, bool bMultisampleEnable = false,
-		bool bAntialisedLineEnable = false);
+		bool bScissorEnable = false, bool bMultisampleEnable = true,
+		bool bAntialisedLineEnable = true);
 
 public:
 	virtual void SetState();
