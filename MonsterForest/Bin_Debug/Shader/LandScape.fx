@@ -267,13 +267,19 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		vSplatUV.xy = input.vUV;
 		//
 		float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
+		vSplatAlpha.w = 1.f;
+
 		vSplatNormal = (float4(vBumpNormal, 0.f) * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
 			(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
-		vBumpNormal += vSplatNormal;
+		
+		// 섞이는 비율이 반을 넘어 서는 경우부터 노말값을 적용해준다.
+		if(vSplatAlpha.x > 0.5f)
+			vBumpNormal = vSplatNormal;
 
 		//if (!g_fEmpty1)
 		{
+			// 보간
 			vColor = (vColor * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
 				vSplatColor * vSplatAlpha);
 		}

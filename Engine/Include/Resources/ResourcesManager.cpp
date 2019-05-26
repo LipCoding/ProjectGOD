@@ -216,6 +216,10 @@ bool CResourcesManager::Init()
 
 	SAFE_RELEASE(pSampler);
 
+	pSampler = CreateSampler(SAMPLER_ANTISOTROPIC, D3D11_FILTER_ANISOTROPIC);
+
+	SAFE_RELEASE(pSampler);
+
 	return true;
 }
 

@@ -299,7 +299,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 					break;
 				}
 
-				if (pBrushTool->GetSplattingCheck())
+				if (pBrushTool->GetSplattingCheck() && KEYPUSH("LShift"))
 				{
 					pBrushTool->MovePixel(m_vPickPos, fTime, true);
 				}
