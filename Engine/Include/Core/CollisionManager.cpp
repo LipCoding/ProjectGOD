@@ -564,7 +564,8 @@ void CCollisionManager::Collision(float fTime)
 				{
 					CGameObject*	pSrc = pGroup->pSectionList[i]->pArray[j]->GetGameObject();
 					CGameObject*	pDest = pGroup->pSectionList[i]->pArray[k]->GetGameObject();
-
+					if ((pSrc == nullptr) || (pDest == nullptr))
+						continue;
 					if (pSrc == pDest)
 					{
 						SAFE_RELEASE(pSrc);
