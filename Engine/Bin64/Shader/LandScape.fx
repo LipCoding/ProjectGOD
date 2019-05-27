@@ -401,7 +401,9 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 		lightDepthValue = lightDepthValue - bias;
 
+		
 		if (lightDepthValue  < depthValue)
+			// 그림자가 지지 않는 부분
 		{
 			float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
 
@@ -414,9 +416,15 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				vColor += vColor * lightIntensity / 10.f;
+				vColor += vColor * lightIntensity / 5.f;
 				vColor = saturate(vColor);
 			}
+		}
+		else
+			// 그림자가 지는 부분
+		{
+			vColor -= vColor / 4.f;
+			vColor = saturate(vColor);
 		}
 	}
 
@@ -452,7 +460,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
 		input.vUV, g_arrDetailLevelTex, g_iDetailLevel);
 
-	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz;
+	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
 	output.vColor.w = vColor.w;
 
 	// Brush
