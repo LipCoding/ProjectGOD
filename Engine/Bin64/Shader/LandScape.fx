@@ -308,7 +308,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
 
 	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
-	bias = 0.006f;
+	bias = 0.0001f;
 
 	projectTexCoord = float2(0.f, 0.f);
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
@@ -400,10 +400,9 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 
 		lightDepthValue = lightDepthValue - bias;
-
-		float per = CalcShadowFactor(cmpSampler, g_Shadow_Map,
-			projectTexCoord, lightDepthValue);
 		
+		float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+
 		if (lightDepthValue  < depthValue)
 			// 그림자가 지지 않는 부분
 		{
@@ -418,17 +417,65 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				/*vColor += vColor * per * lightIntensity / 5.f;
-				vColor = saturate(vColor);*/
+				vColor += vColor * lightIntensity / 5.f;
+				vColor = saturate(vColor);
 			}
 		}
 		else
 			// 그림자가 지는 부분
 		{
-			vColor -= vColor * per / 2.f;
+			vColor.xyz -= (vColor.xyz / 2.f);
 			vColor = saturate(vColor);
 		}
 	}
+
+	//float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+	//float factor = CalcShadowFactor1(g_DifSmp, g_Shadow_Map, projectTexCoord);
+
+	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	//{
+	//	depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+	//	lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+	//
+	//	lightDepthValue = lightDepthValue - bias;
+
+	//	if (lightDepthValue < depthValue)
+	//		// 그림자가 지지 않는 부분
+	//	{
+	//		float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+	//
+	//		//// 조명 방향을 구해준다.
+	//		float3 vLightDir = vLightPos - input.vViewPos;
+	//		vLightDir = normalize(vLightDir);
+	//
+	//		lightIntensity = saturate(dot(input.vNormal, vLightDir));
+	//
+	//		if (lightIntensity > 0.f)
+	//		{
+	//			//vColor += float4(1.f, 1.f, 1.f, 1.f);
+	//			vColor += vColor * 1.f * lightIntensity / 5.f;
+	//		}	vColor = saturate(vColor);
+	//	}
+	//	else
+	//		// 그림자가 지는 부분
+	//	{
+	//		vColor.xyz -= (vColor.xyz / 2.f) * 1.f;
+	//		vColor = saturate(vColor);
+	//	}
+	//}
+
+	//vColor = factor * vColor;
+	//vColor = saturate(vColor);
+
+	/*float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+
+	float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+	float3 vLightDir = vLightPos - input.vViewPos;
+	vLightDir = normalize(vLightDir);
+	lightIntensity = saturate(dot(input.vNormal, vLightDir));
+
+	vColor = factor * vColor * lightIntensity * 2.f;
+	vColor = saturate(vColor);*/
 
 	if (vColor.a == 0.f)
 		clip(-1);

@@ -133,11 +133,9 @@ Matrix CCamera::GetShadowProjMatrix() const
 
 XMMATRIX CCamera::GetLightView()
 {
-	Vector3 dir = m_pTransform->GetWorldAxis(AXIS_Z);
 	Vector3 center{ 512.f / 2.f, 0.f, 512.f / 2.f };
-	Vector3 lightCamPos = m_pTransform->GetWorldPos();//{ 512.f / 2.f, 100.f, 512.f / 2.f };
-	XMVECTOR lightDir = XMLoadFloat3(&dir.Normalize());
-	XMVECTOR lightPos = XMLoadFloat3(&lightCamPos);/*-2.f * 10.f * lightDir;*/
+	Vector3 lightCamPos = m_pTransform->GetWorldPos();
+	XMVECTOR lightPos = XMLoadFloat3(&lightCamPos);
 	XMVECTOR targetPos = XMLoadFloat3(&center);
 	XMVECTOR up = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
@@ -154,12 +152,14 @@ XMMATRIX CCamera::GetLightProj()
 	XMFLOAT3 sphereCenterLS;
 	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, m_xmatLightView));
 
-	float l = sphereCenterLS.x - 32.f;
-	float r = sphereCenterLS.x + 32.f;
-	float t = sphereCenterLS.y + 32.f;
-	float f = sphereCenterLS.z + 32.f;
-	float b = sphereCenterLS.y - 32.f;
-	float n = sphereCenterLS.z - 32.f;
+	float radius = 325.0f;
+
+	float l = sphereCenterLS.x - radius;
+	float r = sphereCenterLS.x + radius;
+	float t = sphereCenterLS.y + radius;
+	float f = sphereCenterLS.z + radius;
+	float b = sphereCenterLS.y - radius;
+	float n = sphereCenterLS.z - radius;
 
 	m_xmatLightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
 

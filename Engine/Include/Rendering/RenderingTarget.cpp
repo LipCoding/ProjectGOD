@@ -113,6 +113,31 @@ bool CRenderingTarget::CreateTarget(unsigned int iW, unsigned int iH,
 	if (FAILED(DEVICE->CreateShaderResourceView(m_pTargetTex, NULL, &m_pTargetSRV)))
 		return false;
 
+	//if (eDepthFmt != DXGI_FORMAT_UNKNOWN)
+	//{
+	//	memset(&tDesc, 0, sizeof(tDesc));
+	//	tDesc.ArraySize = 1;
+	//	tDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	//	tDesc.Usage = D3D11_USAGE_DEFAULT;
+	//	tDesc.Format = eDepthFmt;
+	//	tDesc.Height = iH;
+	//	tDesc.Width = iW;
+	//	tDesc.MipLevels = 1;
+
+	//	DEVICE->CheckMultisampleQualityLevels(eDepthFmt, 4, &quality);
+	//	/*tDesc.SampleDesc.Quality = quality - 1;
+	//	tDesc.SampleDesc.Count = 4;*/
+
+	//	tDesc.SampleDesc.Quality = 0;
+	//	tDesc.SampleDesc.Count = 1;
+
+	//	if (FAILED(DEVICE->CreateTexture2D(&tDesc, NULL, &m_pDepthTex)))
+	//		return false;
+
+	//	if (FAILED(DEVICE->CreateDepthStencilView(m_pDepthTex, NULL, &m_pDepthView)))
+	//		return false;
+	//}
+
 	if (eDepthFmt != DXGI_FORMAT_UNKNOWN)
 	{
 		memset(&tDesc, 0, sizeof(tDesc));
@@ -124,19 +149,43 @@ bool CRenderingTarget::CreateTarget(unsigned int iW, unsigned int iH,
 		tDesc.Width = iW;
 		tDesc.MipLevels = 1;
 
-		DEVICE->CheckMultisampleQualityLevels(eDepthFmt, 4, &quality);
+		//DEVICE->CheckMultisampleQualityLevels(eDepthFmt, 4, &quality);
 		/*tDesc.SampleDesc.Quality = quality - 1;
 		tDesc.SampleDesc.Count = 4;*/
 
 		tDesc.SampleDesc.Quality = 0;
 		tDesc.SampleDesc.Count = 1;
+		tDesc.CPUAccessFlags = 0;
+		tDesc.MiscFlags = 0;
 
 		if (FAILED(DEVICE->CreateTexture2D(&tDesc, NULL, &m_pDepthTex)))
+		{
 			return false;
+		}
 
-		if (FAILED(DEVICE->CreateDepthStencilView(m_pDepthTex, NULL, &m_pDepthView)))
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		dsvDesc.Flags = 0;
+		dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0;
+
+		if (FAILED(DEVICE->CreateDepthStencilView(m_pDepthTex, &dsvDesc, &m_pDepthView)))
+		{
 			return false;
+		}
+
+		/*D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = tDesc.MipLevels;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+
+		if (FAILED(DEVICE->CreateShaderResourceView(m_pDepthTex, &srvDesc, &m_pTargetSRV)))
+		{
+			return false;
+		}*/
 	}
+
 
 	return true;
 }

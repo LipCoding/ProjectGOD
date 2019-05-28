@@ -132,9 +132,6 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	// 깊이버퍼용 텍스쳐를 만든다.
 	D3D11_TEXTURE2D_DESC	tDepthDesc = {};
 
-	
-	
-
 	tDepthDesc.Width = iWidth;
 	tDepthDesc.Height = iHeight;
 	tDepthDesc.MipLevels = 1;

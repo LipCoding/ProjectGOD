@@ -296,15 +296,21 @@ bool CScene::Init()
 	// 라이트 카메라
 	/*m_pLightCameraObj = CreateCamera("LightCamera",
 		Vector3(512.f / 2.f, 260.f, 512.f / 2.f), XMConvertToRadians(90.f),
-		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 200.f, 261.f);
+		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iWidth, 200.f, 261.f);
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();*/
 
 	m_pLightCameraObj = CreateCamera("LightCamera",
+		Vector3(-512.f / 8.f, 400.f, -512.f / 8.f), XMConvertToRadians(90.f),
+		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 200.f, 261.f);
+	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
+	m_pLightCameraTr = m_pLightCameraObj->GetTransform();
+
+	/*m_pLightCameraObj = CreateCamera("LightCamera",
 		Vector3(512.f / 2.f, 10.f, 512.f / 2.f), XMConvertToRadians(90.f),
 		(float)DEVICE_RESOLUTION.iWidth / (float)DEVICE_RESOLUTION.iHeight, 1.f, 100.f);
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
-	m_pLightCameraTr = m_pLightCameraObj->GetTransform();
+	m_pLightCameraTr = m_pLightCameraObj->GetTransform();*/
 
 	m_pLightCameraTr->SetWorldRotX(PG_PI / 2.f);
 	//m_pLightCameraTr->SetWorldRotY(PG_PI / 2.f);
@@ -337,7 +343,7 @@ bool CScene::Init()
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
 	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-	pLightTr->SetWorldPos(512.f / 2.f, 950.f, 512.f / 2.f);
+	pLightTr->SetWorldPos(0.f, 950.f, 0.f);
 	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	SAFE_RELEASE(pLightTr);

@@ -471,42 +471,60 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 	return tSkinning;
 }
 
-static const float SMAP_SIZE = 512.0f;
+static const float SMAP_SIZE = 1400.0f * 4.0f;
 static const float SMAP_DX = 1.0f / SMAP_SIZE;
 
-SamplerComparisonState cmpSampler
-{
-	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-	AddressU = BORDER;
-	AddressV = BORDER;
-	AddressW = BORDER;
-	BorderColor = float4(0.f, 0.f, 0.f, 0.f);
+//SamplerComparisonState cmpSampler : register(s2)
+//{
+//	Filter = COMPARISON_MIN_MAG_MIP_LINEAR;
+//	AddressU = MIRROR;
+//	AddressV = MIRROR;
+//	ComparisonFunc = LESS_EQUAL;
+//};
 
-	ComparisonFunc = LESS;
+SamplerComparisonState cmpSampler : register(s2)
+{
+	Filter = COMPARISON_MIN_MAG_MIP_LINEAR;
+	AddressU = MIRROR;
+	AddressV = MIRROR;
+	ComparisonFunc = LESS_EQUAL;
 };
 
 float CalcShadowFactor(SamplerComparisonState samShadow,
-	Texture2D shadowMap,
-	float2 shadowPos,
-	float depth)
+	Texture2D shadowMap, float4 shadowPosH)
 {
-	// Texel size.
-	const float dx = SMAP_DX;
+	shadowPosH.xyz /= shadowPosH.w;
 
-	float percentLit = 0.0f;
-	const float2 offsets[9] =
+	if (shadowPosH.x < -1.0f || shadowPosH.x > 1.0f ||
+		shadowPosH.y < -1.0f || shadowPosH.y > 1.0f ||
+		shadowPosH.z < 0.0f || shadowPosH.z > 1.0f) return 1.0f;
+
+	shadowPosH.x = shadowPosH.x / 2.0f + 0.5f;
+	shadowPosH.y = shadowPosH.y / -2.0f + 0.5f;
+
+	shadowPosH.z -= 0.0001f;
+
+	float shadowFactor = shadowMap.SampleCmpLevelZero(samShadow, shadowPosH.xy, shadowPosH.z).r;
+
+	return shadowFactor;
+}
+
+float4 CalcShadowFactor1(SamplerState difSmp, Texture2D shadowMap, float2 texcoord)
+{
+	float4 output;
+
+	const float dx = SMAP_DX * 1.f;
+	const float2 offsets[5] =
 	{
-		float2(-dx,  -dx), float2(0.0f,  -dx), float2(dx,  -dx),
+		/*float2(-dx,  -dx), */float2(0.0f,  -dx)/*, float2(dx,  -dx)*/,
 		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
-		float2(-dx,  +dx), float2(0.0f,  +dx), float2(dx,  +dx)
+		/*float2(-dx,  +dx),*/ float2(0.0f,  +dx)/*, float2(dx,  +dx)*/
 	};
 
-	[unroll]
-	for (int i = 0; i < 9; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
-		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
-			shadowPos + offsets[i], depth).r;
+		output += shadowMap.Sample(difSmp, texcoord + offsets[i]);
 	}
 
-	return percentLit /= 9.0f;
+	return output / 5.f;
 }
