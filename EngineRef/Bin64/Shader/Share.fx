@@ -471,7 +471,10 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 	return tSkinning;
 }
 
-SamplerComparisonState cmpSampler : register(s2)
+static const float SMAP_SIZE = 512.0f;
+static const float SMAP_DX = 1.0f / SMAP_SIZE;
+
+SamplerComparisonState cmpSampler
 {
 	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 	AddressU = BORDER;
@@ -479,16 +482,31 @@ SamplerComparisonState cmpSampler : register(s2)
 	AddressW = BORDER;
 	BorderColor = float4(0.f, 0.f, 0.f, 0.f);
 
-	ComparisonFunc = LESS_EQUAL;
+	ComparisonFunc = LESS;
 };
 
-float2 texOffset(int u, int v)
+float CalcShadowFactor(SamplerComparisonState samShadow,
+	Texture2D shadowMap,
+	float2 shadowPos,
+	float depth)
 {
-	float SizeX;
-	float SizeY;
+	// Texel size.
+	const float dx = SMAP_DX;
 
-	g_Shadow_Map.GetDimensions(SizeX, SizeY);
+	float percentLit = 0.0f;
+	const float2 offsets[9] =
+	{
+		float2(-dx,  -dx), float2(0.0f,  -dx), float2(dx,  -dx),
+		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+		float2(-dx,  +dx), float2(0.0f,  +dx), float2(dx,  +dx)
+	};
 
-	return float2(u * 1.f / SizeX,
-				  v * 1.f / SizeY);
+	[unroll]
+	for (int i = 0; i < 9; ++i)
+	{
+		percentLit += shadowMap.SampleCmpLevelZero(samShadow,
+			shadowPos + offsets[i], depth).r;
+	}
+
+	return percentLit /= 9.0f;
 }

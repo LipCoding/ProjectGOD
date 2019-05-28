@@ -308,7 +308,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
 
 	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
-	bias = 0.01f;
+	bias = 0.006f;
 
 	projectTexCoord = float2(0.f, 0.f);
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
@@ -401,6 +401,8 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 		lightDepthValue = lightDepthValue - bias;
 
+		float per = CalcShadowFactor(cmpSampler, g_Shadow_Map,
+			projectTexCoord, lightDepthValue);
 		
 		if (lightDepthValue  < depthValue)
 			// 그림자가 지지 않는 부분
@@ -416,14 +418,14 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				vColor += vColor * lightIntensity / 5.f;
+				vColor += vColor * per * lightIntensity / 5.f;
 				vColor = saturate(vColor);
 			}
 		}
 		else
 			// 그림자가 지는 부분
 		{
-			vColor -= vColor / 4.f;
+			vColor -= vColor * per / 2.f;
 			vColor = saturate(vColor);
 		}
 	}
