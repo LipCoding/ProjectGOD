@@ -93,11 +93,11 @@ bool CRenderingTarget::CreateTarget(unsigned int iW, unsigned int iH,
 
 	UINT quality = 0;
 	DEVICE->CheckMultisampleQualityLevels(eFmt, 4, &quality);
-	tDesc.SampleDesc.Quality = quality - 1;
-	tDesc.SampleDesc.Count = 4;
+	/*tDesc.SampleDesc.Quality = quality - 1;
+	tDesc.SampleDesc.Count = 4;*/
 
-	/*tDesc.SampleDesc.Quality = 0;
-	tDesc.SampleDesc.Count = 1;*/
+	tDesc.SampleDesc.Quality = 0;
+	tDesc.SampleDesc.Count = 1;
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -125,11 +125,11 @@ bool CRenderingTarget::CreateTarget(unsigned int iW, unsigned int iH,
 		tDesc.MipLevels = 1;
 
 		DEVICE->CheckMultisampleQualityLevels(eDepthFmt, 4, &quality);
-		tDesc.SampleDesc.Quality = quality - 1;
-		tDesc.SampleDesc.Count = 4;
+		/*tDesc.SampleDesc.Quality = quality - 1;
+		tDesc.SampleDesc.Count = 4;*/
 
-		/*tDesc.SampleDesc.Quality = 0;
-		tDesc.SampleDesc.Count = 1;*/
+		tDesc.SampleDesc.Quality = 0;
+		tDesc.SampleDesc.Count = 1;
 
 		if (FAILED(DEVICE->CreateTexture2D(&tDesc, NULL, &m_pDepthTex)))
 			return false;

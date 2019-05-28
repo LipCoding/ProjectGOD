@@ -46,6 +46,14 @@ public:
 	Matrix GetShadowProjMatrix()	const;
 
 public:
+	XMMATRIX m_xmatLightView;
+	XMMATRIX m_xmatLightProj;
+	
+	XMMATRIX GetLightView();
+	XMMATRIX GetLightProj();
+
+
+public:
 	void SetOrthoProj(const RESOLUTION& tRS, float fNear, float fFar);
 	void SetPerspectiveProj(float fViewAngle, float fAspect,
 		float fNear, float fFar);

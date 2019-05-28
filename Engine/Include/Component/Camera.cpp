@@ -131,6 +131,41 @@ Matrix CCamera::GetShadowProjMatrix() const
 	return *m_matShadowProj;
 }
 
+XMMATRIX CCamera::GetLightView()
+{
+	Vector3 dir = m_pTransform->GetWorldAxis(AXIS_Z);
+	Vector3 center{ 512.f / 2.f, 0.f, 512.f / 2.f };
+	Vector3 lightCamPos = m_pTransform->GetWorldPos();//{ 512.f / 2.f, 100.f, 512.f / 2.f };
+	XMVECTOR lightDir = XMLoadFloat3(&dir.Normalize());
+	XMVECTOR lightPos = XMLoadFloat3(&lightCamPos);/*-2.f * 10.f * lightDir;*/
+	XMVECTOR targetPos = XMLoadFloat3(&center);
+	XMVECTOR up = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	m_xmatLightView = XMMatrixLookAtLH(lightPos, targetPos, up);
+
+	return m_xmatLightView;
+}
+
+XMMATRIX CCamera::GetLightProj()
+{
+	Vector3 center{ 512.f / 2.f, 0.f, 512.f / 2.f };
+	XMVECTOR targetPos = XMLoadFloat3(&center);
+
+	XMFLOAT3 sphereCenterLS;
+	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, m_xmatLightView));
+
+	float l = sphereCenterLS.x - 32.f;
+	float r = sphereCenterLS.x + 32.f;
+	float t = sphereCenterLS.y + 32.f;
+	float f = sphereCenterLS.z + 32.f;
+	float b = sphereCenterLS.y - 32.f;
+	float n = sphereCenterLS.z - 32.f;
+
+	m_xmatLightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	return m_xmatLightProj;
+}
+
 void CCamera::SetOrthoProj(const RESOLUTION & tRS, 
 	float fNear, float fFar)
 {
@@ -318,48 +353,48 @@ int CCamera::LateUpdate(float fTime)
 
 	// 그림자맵 전용 뷰 행렬 생성
 	// 전역 조명을 얻어온다.
-	CTransform*	pLightTr = m_pScene->GetGlobalLightTransform();
+	//CTransform*	pLightTr = m_pScene->GetGlobalLightTransform();
 
-	// 카메라 타겟을 기준으로 전역조명과의 방향을 구한다.
-	//if (m_pAttach)
-	{
-		Vector3	vLookAt = Vector3(0.f, 0.f, 0.f);
+	//// 카메라 타겟을 기준으로 전역조명과의 방향을 구한다.
+	////if (m_pAttach)
+	//{
+	//	Vector3	vLookAt = Vector3(0.f, 0.f, 0.f);
 
-		if (m_pAttach)
-			vLookAt = m_pAttach->GetWorldPos();
+	//	if (m_pAttach)
+	//		vLookAt = m_pAttach->GetWorldPos();
 
-		Vector3	vDir = Vector3(-1.f, 1.f, 0.f);
-		vDir = vDir.Normalize();
+	//	Vector3	vDir = Vector3(-1.f, 1.f, 0.f);
+	//	vDir = vDir.Normalize();
 
-		Vector3	vLightPos = vLookAt + vDir * 20.f;
-		//vLightPos = Vector3(3.f, 5.f, 0.f);
+	//	Vector3	vLightPos = vLookAt + vDir * 20.f;
+	//	//vLightPos = Vector3(3.f, 5.f, 0.f);
 
-		// 조명의 z축을 구한다.
-		vDir = vDir * -1.f;
+	//	// 조명의 z축을 구한다.
+	//	vDir = vDir * -1.f;
 
-		// 조명의 x축을 구한다.
-		Vector3	vUp = Vector3(0.f, 1.f, 0.f);
+	//	// 조명의 x축을 구한다.
+	//	Vector3	vUp = Vector3(0.f, 1.f, 0.f);
 
-		Vector3	vRight = vUp.Cross(vDir);
-		vRight = vRight.Normalize();
+	//	Vector3	vRight = vUp.Cross(vDir);
+	//	vRight = vRight.Normalize();
 
-		vUp = vDir.Cross(vRight);
-		vUp = vUp.Normalize();
+	//	vUp = vDir.Cross(vRight);
+	//	vUp = vUp.Normalize();
 
-		*m_matShadowView = XMMatrixIdentity();
+	//	*m_matShadowView = XMMatrixIdentity();
 
-		memcpy(&m_matShadowView->m[0][0], &vRight, sizeof(Vector3));
-		memcpy(&m_matShadowView->m[1][0], &vUp, sizeof(Vector3));
-		memcpy(&m_matShadowView->m[2][0], &vDir, sizeof(Vector3));
+	//	memcpy(&m_matShadowView->m[0][0], &vRight, sizeof(Vector3));
+	//	memcpy(&m_matShadowView->m[1][0], &vUp, sizeof(Vector3));
+	//	memcpy(&m_matShadowView->m[2][0], &vDir, sizeof(Vector3));
 
-		*m_matShadowView = m_matShadowView->Transpose();
+	//	*m_matShadowView = m_matShadowView->Transpose();
 
-		m_matShadowView->m[3][0] = -vLightPos.Dot(vRight);
-		m_matShadowView->m[3][1] = -vLightPos.Dot(vUp);
-		m_matShadowView->m[3][2] = -vLightPos.Dot(vDir);
-	}
+	//	m_matShadowView->m[3][0] = -vLightPos.Dot(vRight);
+	//	m_matShadowView->m[3][1] = -vLightPos.Dot(vUp);
+	//	m_matShadowView->m[3][2] = -vLightPos.Dot(vDir);
+	//}
 
-	SAFE_RELEASE(pLightTr);
+	//SAFE_RELEASE(pLightTr);
 
 	return 0;
 }

@@ -103,8 +103,10 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	m_pDevice->Release();
 	m_pContext->Release();
 
-	tDesc.SampleDesc.Quality = quality - 1;
-	tDesc.SampleDesc.Count = 4;
+	/*tDesc.SampleDesc.Quality = quality - 1;
+	tDesc.SampleDesc.Count = 4;*/
+	tDesc.SampleDesc.Quality = 0;
+	tDesc.SampleDesc.Count = 1;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	tDesc.Windowed = bWindowMode; 
 
@@ -140,8 +142,10 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDepthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 4, &quality);
-	tDepthDesc.SampleDesc.Quality = quality - 1;
-	tDepthDesc.SampleDesc.Count = 4;
+	/*tDepthDesc.SampleDesc.Quality = quality - 1;
+	tDepthDesc.SampleDesc.Count = 4;*/
+	tDepthDesc.SampleDesc.Quality = 0;
+	tDepthDesc.SampleDesc.Count = 1;
 
 	tDepthDesc.Usage = D3D11_USAGE_DEFAULT;
 	tDepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;

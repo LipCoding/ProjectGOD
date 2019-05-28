@@ -418,8 +418,8 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				vColor += vColor * per * lightIntensity / 5.f;
-				vColor = saturate(vColor);
+				/*vColor += vColor * per * lightIntensity / 5.f;
+				vColor = saturate(vColor);*/
 			}
 		}
 		else
