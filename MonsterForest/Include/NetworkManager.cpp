@@ -274,10 +274,10 @@ void NetworkManager::processPacket(char * ptr)
 
 					CGameObject*	pCameraObj = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
 					CTransform* pTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
-					CTransform* pLightTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
-					//Vector3 LightPos = m_pTransform->GetWorldPos();
-					Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
-					pLightTransform->SetWorldPos(LightPos);
+					//CTransform* pLightTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
+					////Vector3 LightPos = m_pTransform->GetWorldPos();
+					//Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
+					//pLightTransform->SetWorldPos(LightPos);
 
 					//pTransform->SetWorldPos(30.f, 30.f, -15.f);
 
@@ -724,9 +724,9 @@ void NetworkManager::processPacket(char * ptr)
 				//	pTransform->SetWorldPos(vPos);
 				//}
 
-				CTransform* pLightTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
+				/*CTransform* pLightTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLightCameraTr();
 				Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
-				pLightTransform->SetWorldPos(LightPos);
+				pLightTransform->SetWorldPos(LightPos);*/
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 				pAnimation->ChangeClip("Run1");
 

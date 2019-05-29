@@ -20,7 +20,7 @@ public:
 	//Vector3 prevPos;
 
 	//CGameObject* pPlayer;
-
+	bool isInitComplete = false;
 public:
 public:
 	void chat_callback(float fTime);

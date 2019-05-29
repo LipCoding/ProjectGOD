@@ -407,7 +407,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			if (lightIntensity > 0.f)
 			{
 				//vColor += float4(1.f, 1.f, 1.f, 1.f);
-				vColor += float4(1.f, 1.f, 1.f, 1.f) * lightIntensity / 10.f;
+				vColor += vColor * lightIntensity / 5.f;
 				vColor = saturate(vColor);
 			}
 		}
@@ -442,11 +442,11 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	}
 	output.vColor3 = vMtrlSpc;
 
-	/*_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
+	_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
 		input.vUV);
 
-	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz;
-	output.vColor.w = vColor.w;*/
+	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
+	output.vColor.w = vColor.w;
 
 	// Brush
 

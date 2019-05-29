@@ -12,6 +12,7 @@
 #include "UserInterfaceManager.h"
 #include "Inventory.h"
 #include "DropTableUI.h"
+#include "ObjectScript/Player.h"
 #include "NetworkManager.h"
 
 DropItemSlot::DropItemSlot()
@@ -118,13 +119,23 @@ void DropItemSlot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 	{
 		if ((pSrc->GetTag() == "MousePoint" || pDest->GetTag() == "MousePoint") && GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 		{
-			cs_packet_require_itemtable* pPacket = reinterpret_cast<cs_packet_require_itemtable*>(NetworkManager::getInstance()->getSendBuffer());
-			pPacket->size = sizeof(cs_packet_require_itemtable);
+			char str[128];
+			string appendTag = _itoa(NetworkManager::getInstance()->getMyClientID(), str, 10);
+			string objectTag = "Player" + appendTag;
+			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			CPlayer* pPlayer = pGameObject->FindComponentFromTag<CPlayer>("Player");
+
+			cs_packet_additem_inventory* pPacket = reinterpret_cast<cs_packet_additem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+			pPacket->size = sizeof(cs_packet_additem_inventory);
 			pPacket->type = CS_PACKET_ADDITEM_INVENTORY;
+			pPacket->targetId = pPlayer->clickedID;
 			pPacket->index = this->index;
-			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+			NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_additem_inventory);
 			DWORD iobyte;
 			int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			SAFE_RELEASE(pPlayer);
+			SAFE_RELEASE(pGameObject);
 		}
 	}
 
