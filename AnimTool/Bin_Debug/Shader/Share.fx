@@ -471,24 +471,60 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 	return tSkinning;
 }
 
+static const float SMAP_SIZE = 1400.0f * 4.0f;
+static const float SMAP_DX = 1.0f / SMAP_SIZE;
+
+//SamplerComparisonState cmpSampler : register(s2)
+//{
+//	Filter = COMPARISON_MIN_MAG_MIP_LINEAR;
+//	AddressU = MIRROR;
+//	AddressV = MIRROR;
+//	ComparisonFunc = LESS_EQUAL;
+//};
+
 SamplerComparisonState cmpSampler : register(s2)
 {
-	Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-	AddressU = BORDER;
-	AddressV = BORDER;
-	AddressW = BORDER;
-	BorderColor = float4(0.f, 0.f, 0.f, 0.f);
-
+	Filter = COMPARISON_MIN_MAG_MIP_LINEAR;
+	AddressU = MIRROR;
+	AddressV = MIRROR;
 	ComparisonFunc = LESS_EQUAL;
 };
 
-float2 texOffset(int u, int v)
+float CalcShadowFactor(SamplerComparisonState samShadow,
+	Texture2D shadowMap, float4 shadowPosH)
 {
-	float SizeX;
-	float SizeY;
+	shadowPosH.xyz /= shadowPosH.w;
 
-	g_Shadow_Map.GetDimensions(SizeX, SizeY);
+	if (shadowPosH.x < -1.0f || shadowPosH.x > 1.0f ||
+		shadowPosH.y < -1.0f || shadowPosH.y > 1.0f ||
+		shadowPosH.z < 0.0f || shadowPosH.z > 1.0f) return 1.0f;
 
-	return float2(u * 1.f / SizeX,
-				  v * 1.f / SizeY);
+	shadowPosH.x = shadowPosH.x / 2.0f + 0.5f;
+	shadowPosH.y = shadowPosH.y / -2.0f + 0.5f;
+
+	shadowPosH.z -= 0.0001f;
+
+	float shadowFactor = shadowMap.SampleCmpLevelZero(samShadow, shadowPosH.xy, shadowPosH.z).r;
+
+	return shadowFactor;
+}
+
+float4 CalcShadowFactor1(SamplerState difSmp, Texture2D shadowMap, float2 texcoord)
+{
+	float4 output;
+
+	const float dx = SMAP_DX * 1.f;
+	const float2 offsets[5] =
+	{
+		/*float2(-dx,  -dx), */float2(0.0f,  -dx)/*, float2(dx,  -dx)*/,
+		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+		/*float2(-dx,  +dx),*/ float2(0.0f,  +dx)/*, float2(dx,  +dx)*/
+	};
+
+	for (int i = 0; i < 5; ++i)
+	{
+		output += shadowMap.Sample(difSmp, texcoord + offsets[i]);
+	}
+
+	return output / 5.f;
 }

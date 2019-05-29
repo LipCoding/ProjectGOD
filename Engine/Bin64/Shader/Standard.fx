@@ -674,4 +674,3 @@ PS_OUTPUT_SINGLE ShadowCharacterPS(VS_OUTPUT_SHADOW_TEX input)
 
 	return output;
 }
-

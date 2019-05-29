@@ -112,11 +112,11 @@ bool CRenderManager::Init()
 	SAFE_RELEASE(pRS);
 
 	CRenderingTarget* pTarget = CreateRenderTarget("Shadow",
-		DEVICE_RESOLUTION.iWidth, DEVICE_RESOLUTION.iHeight,
+		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iWidth * 4.f,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4::Black, DXGI_FORMAT_D24_UNORM_S8_UINT);
 	//DXGI_FORMAT_R8G8B8A8_UNORM
-	//pTarget->SetDebugEnable(true);
-	pTarget->SetDebugInfo(Vector3(0.f, 600.f, 0.f), Vector3(100.f, 100.f, 1.f));
+	pTarget->SetDebugEnable(true);
+	pTarget->SetDebugInfo(Vector3(0.f, 600.f, 0.f), Vector3(300.f, 300.f, 1.f));
 
 	SAFE_RELEASE(pTarget);
 
@@ -180,7 +180,7 @@ bool CRenderManager::Init()
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4(0.f, 0.f, 0.f, 0.f), DXGI_FORMAT_D24_UNORM_S8_UINT);
 
 	//pTarget->SetDebugEnable(true); // 매쉬 찾고 , 셰이더 찾고 , 정점구조 찾고
-	pTarget->SetDebugInfo(Vector3(500.f, 0.f, 0.f), Vector3(100.f, 100.f, 1.f)); // 위치랑 크기 넣고
+	pTarget->SetDebugInfo(Vector3(500.f, 0.f, 0.f), Vector3(300.f, 300.f, 1.f)); // 위치랑 크기 넣고
 
 	SAFE_RELEASE(pTarget);
 
@@ -936,6 +936,14 @@ void CRenderManager::RenderGBuffer(float fTime)
 	pDepthTarget->ClearTarget();
 	pDepthTarget->SetShader(4);
 
+	D3D11_VIEWPORT	tVP = {};
+
+	tVP.Width = DEVICE_RESOLUTION.iWidth * 4.f;
+	tVP.Height = DEVICE_RESOLUTION.iWidth * 4.f;
+	tVP.MaxDepth = 1.f;
+
+	CONTEXT->RSSetViewports(1, &tVP);
+
 	CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
 
 	pShadowDepth->SetShader(18);
@@ -1116,7 +1124,11 @@ void CRenderManager::RenderGBuffer(float fTime)
 	pDepthTarget->SetShader(4);
 	m_pPointSmp->SetSampler(11, SCT_PIXEL);
 
+	tVP.Width = DEVICE_RESOLUTION.iWidth;
+	tVP.Height = DEVICE_RESOLUTION.iHeight;
+	tVP.MaxDepth = 1.f;
 
+	CONTEXT->RSSetViewports(1, &tVP);
 
 
 	for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)

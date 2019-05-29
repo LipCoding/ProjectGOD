@@ -53,7 +53,7 @@ VS_OUTPUT_BUMP LandScapeVS(VS_INPUT_BUMP input)
 }
 
 _tagLightInfo ComputeSplatLight(float3 vViewPos, float3 vViewNormal,
-	float2 vUV, float2 vAlphaUV)
+	float2 vUV, int iDetailLevel, float2 vAlphaUV, vector<float, 4> arrDetail)
 {
 	_tagLightInfo	tInfo = (_tagLightInfo)0;
 
@@ -186,22 +186,29 @@ _tagLightInfo ComputeSplatLight(float3 vViewPos, float3 vViewNormal,
 
 	if (g_vMtrlAmbient.w == 1)
 	{
-		vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, vUV);
+		vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, vUV / iDetailLevel);
 		for (int i = 0; i < g_iSplatCount; i++)
 		{
+			if (i == 4)
+				break;
+
 			float3	vSplatUV;
-			vSplatUV.xy = vUV;
+			vSplatUV.xy = vUV * (int)arrDetail[i];
 			vSplatUV.z = i;
+
 			float4	vSplatSpecular = g_SplatSpc.Sample(g_SplatSmp, vSplatUV);
 
 			vSplatUV.xy = vAlphaUV;
 			float4	vSplatAlpha = g_AlphaTex.Sample(g_SplatSmp, vSplatUV);
 
-			vMtrlSpc = (vMtrlSpc * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
+			float4 vSpc;
+			vSpc = (vMtrlSpc * (float4(1.f, 1.f, 1.f, 1.f) - vSplatAlpha) +
 				vSplatSpecular * vSplatAlpha);
+
+			if(vSplatAlpha.x > 0.f)
+				vMtrlSpc = vSpc;
 		}
 	}
-
 	else
 	{
 		vMtrlSpc = float4(g_vMtrlSpecular.xyz, 1.f);
@@ -273,8 +280,8 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 			(float4(vSplatNormal, 0.f) * vSplatAlpha)).xyz;
 		vSplatNormal = vSplatNormal * 2.f - 1.f;
 		
-		// 섞이는 비율이 반을 넘어 서는 경우부터 노말값을 적용해준다.
-		if(vSplatAlpha.x > 0.5f)
+		// 섞이는 비율이 99퍼를 넘어 서는 경우부터 노말값을 적용해준다.
+		if (vSplatAlpha.x == 1.f)
 			vBumpNormal = vSplatNormal;
 
 		//if (!g_fEmpty1)
@@ -301,7 +308,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//float4	vDepthTex = g_ShadowMap.Sample(g_DepthSmp, input.vUV);
 
 	// 부동 소수점 정밀도 문제 해결을 위한 바이어스값
-	bias = 0.01f;
+	bias = 0.0001f;
 
 	projectTexCoord = float2(0.f, 0.f);
 	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
@@ -393,8 +400,11 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 
 		lightDepthValue = lightDepthValue - bias;
+		
+		float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
 
 		if (lightDepthValue  < depthValue)
+			// 그림자가 지지 않는 부분
 		{
 			float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
 
@@ -411,7 +421,61 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 				vColor = saturate(vColor);
 			}
 		}
+		else
+			// 그림자가 지는 부분
+		{
+			vColor.xyz -= (vColor.xyz / 2.f);
+			vColor = saturate(vColor);
+		}
 	}
+
+	//float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+	//float factor = CalcShadowFactor1(g_DifSmp, g_Shadow_Map, projectTexCoord);
+
+	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	//{
+	//	depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+	//	lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+	//
+	//	lightDepthValue = lightDepthValue - bias;
+
+	//	if (lightDepthValue < depthValue)
+	//		// 그림자가 지지 않는 부분
+	//	{
+	//		float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+	//
+	//		//// 조명 방향을 구해준다.
+	//		float3 vLightDir = vLightPos - input.vViewPos;
+	//		vLightDir = normalize(vLightDir);
+	//
+	//		lightIntensity = saturate(dot(input.vNormal, vLightDir));
+	//
+	//		if (lightIntensity > 0.f)
+	//		{
+	//			//vColor += float4(1.f, 1.f, 1.f, 1.f);
+	//			vColor += vColor * 1.f * lightIntensity / 5.f;
+	//		}	vColor = saturate(vColor);
+	//	}
+	//	else
+	//		// 그림자가 지는 부분
+	//	{
+	//		vColor.xyz -= (vColor.xyz / 2.f) * 1.f;
+	//		vColor = saturate(vColor);
+	//	}
+	//}
+
+	//vColor = factor * vColor;
+	//vColor = saturate(vColor);
+
+	/*float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+
+	float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
+	float3 vLightDir = vLightPos - input.vViewPos;
+	vLightDir = normalize(vLightDir);
+	lightIntensity = saturate(dot(input.vNormal, vLightDir));
+
+	vColor = factor * vColor * lightIntensity * 2.f;
+	vColor = saturate(vColor);*/
 
 	if (vColor.a == 0.f)
 		clip(-1);
@@ -426,24 +490,24 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	output.vColor2.y = g_vMtrlDiffuse.x;
 	output.vColor2.z = g_vMtrlAmbient.x;
 
-	float4	vMtrlSpc;
-	if (g_vMtrlAmbient.w == 1)
-	{
-		vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, vUV);
-		vMtrlSpc.w = g_vMtrlSpecular.w;
-		output.vColor4.w = vMtrlSpc.w;
-		//vMtrlSpc = float4(g_vMtrlSpecular.xyz, 1.f);
-	}
+	//float4	vMtrlSpc;
+	//if (g_vMtrlAmbient.w == 1)
+	//{
+	//	vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, vUV);
+	//	vMtrlSpc.w = g_vMtrlSpecular.w;
+	//	output.vColor4.w = vMtrlSpc.w;
+	//	//vMtrlSpc = float4(g_vMtrlSpecular.xyz, 1.f);
+	//}
 
-	else
-	{
-		vMtrlSpc = g_vMtrlSpecular;
-		output.vColor4.w = g_vMtrlSpecular.w;
-	}
-	output.vColor3 = vMtrlSpc;
+	//else
+	//{
+	//	vMtrlSpc = g_vMtrlSpecular;
+	//	output.vColor4.w = g_vMtrlSpecular.w;
+	//}
+	//output.vColor3 = vMtrlSpc;
 
 	_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
-		input.vUV);
+		input.vUV, g_arrDetailLevelTex, g_iDetailLevel)
 
 	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
 	output.vColor.w = vColor.w;
