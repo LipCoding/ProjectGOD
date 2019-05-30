@@ -115,7 +115,7 @@ bool CRenderManager::Init()
 		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iWidth * 4.f,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4::Black, DXGI_FORMAT_D24_UNORM_S8_UINT);
 	//DXGI_FORMAT_R8G8B8A8_UNORM
-	pTarget->SetDebugEnable(true);
+	//pTarget->SetDebugEnable(true);
 	pTarget->SetDebugInfo(Vector3(0.f, 600.f, 0.f), Vector3(300.f, 300.f, 1.f));
 
 	SAFE_RELEASE(pTarget);

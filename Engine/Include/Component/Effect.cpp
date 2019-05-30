@@ -206,34 +206,37 @@ int CEffect::Update(float fTime)
 	{
 		m_Timer += fTime;
 
-		if (m_Timer >= m_MainEndTime)
+		if (m_InfiniteCheck == false)
 		{
-			if (m_EraseCheck)
+			if (m_Timer >= m_MainEndTime)
 			{
-				/* 이펙트가 끝나면 삭제한다. */
-				m_pGameObject->Die();
-				CGameObject::EraseObj(m_pGameObject);
-
-				return 0;
-			}
-			else
-			{
-				for (auto& assist : m_vecAssist)
+				if (m_EraseCheck)
 				{
-					assist->SetStartCheck(false);
+					/* 이펙트가 끝나면 삭제한다. */
+					m_pGameObject->Die();
+					CGameObject::EraseObj(m_pGameObject);
+
+					return 0;
+				}
+				else
+				{
+					for (auto& assist : m_vecAssist)
+					{
+						assist->SetStartCheck(false);
+					}
+
+					m_tshareBuffer.fAlphaFadeIn = 0.f;
+					m_tshareBuffer.fAlphaFadeOut = 0.f;
+					m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+					m_tshareBuffer.fMoveUV_X = 0.f;
+					m_tshareBuffer.fMoveUV_Y = 0.f;
+
+					m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
 				}
 
-				m_tshareBuffer.fAlphaFadeIn = 0.f;
-				m_tshareBuffer.fAlphaFadeOut = 0.f;
-				m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
-				m_tshareBuffer.fMoveUV_X = 0.f;
-				m_tshareBuffer.fMoveUV_Y = 0.f;
-
-				m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+				m_Timer = 0.f;
+				m_OperationCheck = false;
 			}
-
-			m_Timer = 0.f;
-			m_OperationCheck = false;
 		}
 	}
 
@@ -399,6 +402,18 @@ void CEffect::SetEffectTexture(const string & name, const string & fullPath)
 	SAFE_RELEASE(pMaterial);
 }
 
+void CEffect::SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_TYPE type, bool check)
+{
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == type)
+		{
+			assist->SetInfiniteCheck(check);
+			return;
+		}
+	}
+}
+
 void CEffect::AddPatternScale(const int& easeType, const float & start, const float & end, const float & powX, const float & powY, const float & powZ, const int & repeat)
 {
 	CEffectAssist *pAssistData = nullptr;
@@ -481,7 +496,7 @@ void CEffect::AddFadeIn(const float & start, const float & end, const float & de
 			pAssistData->SetStartTime(start);
 			pAssistData->SetEndTime(end);
 			pAssistData->SetDegree(degree);
-			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_NONE);
 			pAssistData->SetShareBuffer(&m_tshareBuffer);
 			return;
 		}
@@ -496,7 +511,7 @@ void CEffect::AddFadeIn(const float & start, const float & end, const float & de
 		pAssistData->SetShareBuffer(&m_tshareBuffer);
 	}
 
-	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_SINE_OUT);
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_FADE_IN, CEffectAssist::EASE_NONE);
 	m_vecAssist.push_back(pAssistData);
 }
 

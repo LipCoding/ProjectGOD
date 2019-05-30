@@ -295,12 +295,16 @@ VS_OUTPUT_TEX_NORMAL StandardEffectTexNormalVS(VS_INPUT_TEX_NORMAL input)
 	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
 	output.vViewPos = mul(float4(input.vPos, 1.f), g_matWV).xyz;
 
-	if (g_iAniType == 1)
-		output.vUV = ComputeUV(input.vUV);
-	else
+	//if (g_iAniType == 0)
+	{
+		//output.vUV = ComputeUV(input.vUV);
+	}
+	//else
+	{
 		output.vUV = input.vUV;
-	
-	output.iDecal = 1;
+	}
+
+	output.iDecal = 0;
 
 	return output;
 }

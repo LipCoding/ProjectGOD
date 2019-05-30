@@ -79,6 +79,9 @@ void CEffectTab1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_UV_MOVE_DIR_Y, m_editMoveUVDirY);
 	DDX_Text(pDX, IDC_EDIT_UV_MOVE_STATIC_TIME, m_fMoveUVStaticTime);
 	DDX_Control(pDX, IDC_CHECK_UV, m_checkUVMove);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_FADE_IN, m_checkInfiniteFadeIn);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_FADE_OUT, m_checkInfiniteFadeOut);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_UV_MOVE, m_checkInfiniteUVMove);
 }
 
 
@@ -99,6 +102,9 @@ BEGIN_MESSAGE_MAP(CEffectTab1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_UV_MOVE_PLAY, &CEffectTab1::OnBnClickedButtonUvMovePlay)
 	ON_BN_CLICKED(IDC_BUTTON_UV_MOVE_STOP, &CEffectTab1::OnBnClickedButtonUvMoveStop)
 	ON_BN_CLICKED(IDC_CHECK_UV, &CEffectTab1::OnBnClickedCheckUv)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_FADE_IN, &CEffectTab1::OnBnClickedCheckInfiniteFadeIn)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_FADE_OUT, &CEffectTab1::OnBnClickedCheckInfiniteFadeOut)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_UV_MOVE, &CEffectTab1::OnBnClickedCheckInfiniteUvMove)
 END_MESSAGE_MAP()
 
 
@@ -344,6 +350,10 @@ void CEffectTab1::InitFormValue()
 	m_checkUVSprite.SetCheck(0);
 	m_checkUVMove.SetCheck(0);
 
+	m_checkInfiniteFadeIn.SetCheck(0);
+	m_checkInfiniteFadeOut.SetCheck(0);
+	m_checkInfiniteUVMove.SetCheck(0);
+
 	InitFadeIn();
 	InitFadeOut();
 	InitUVSprite();
@@ -428,11 +438,17 @@ void CEffectTab1::UpdateFade()
 			m_editFadeInDegree.SetWindowTextW(tempNum);
 
 			m_checkFadeIn.SetCheck(1);
+
+			if (pAssistFadeIn->GetInifiniteCheck() == true)
+			{
+				m_checkInfiniteFadeIn.SetCheck(1);
+			}
 		}
 		else
 		{
 			InitFadeIn();
 			m_checkFadeIn.SetCheck(0);
+			m_checkInfiniteFadeIn.SetCheck(0);
 		}
 
 		/* Fade Out */
@@ -453,11 +469,17 @@ void CEffectTab1::UpdateFade()
 			m_editFadeOutDegree.SetWindowTextW(tempNum);
 
 			m_checkFadeOut.SetCheck(1);
+
+			if (pAssistFadeOut->GetInifiniteCheck() == true)
+			{
+				m_checkInfiniteFadeOut.SetCheck(1);
+			}
 		}
 		else
 		{
 			InitFadeOut();
 			m_checkFadeOut.SetCheck(0);
+			m_checkInfiniteFadeOut.SetCheck(0);
 		}
 
 		SAFE_RELEASE(pEffect);
@@ -516,11 +538,17 @@ void CEffectTab1::UpdateUV()
 			m_editMoveUVDirY.SetWindowTextW(tempNum);
 
 			m_checkUVMove.SetCheck(1);
+
+			if (pAssistUVMove->GetInifiniteCheck() == true)
+			{
+				m_checkInfiniteUVMove.SetCheck(1);
+			}
 		}
 		else
 		{
 			InitUVMove();
 			m_checkUVMove.SetCheck(0);
+			m_checkInfiniteUVMove.SetCheck(0);
 		}
 
 		SAFE_RELEASE(pEffect);
@@ -906,4 +934,124 @@ BOOL CEffectTab1::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CEffectTab1::OnBnClickedCheckInfiniteFadeIn()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkFadeIn.GetCheck();
+
+	/* 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteFadeIn.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteFadeIn.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_FADE_IN, true);
+		m_checkInfiniteFadeIn.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_FADE_IN, false);
+		m_checkInfiniteFadeIn.SetCheck(0);
+	}
+
+	UpdateFade();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedCheckInfiniteFadeOut()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkFadeOut.GetCheck();
+
+	/* 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteFadeOut.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteFadeOut.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_FADE_OUT, true);
+		m_checkInfiniteFadeOut.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_FADE_OUT, false);
+		m_checkInfiniteFadeOut.SetCheck(0);
+	}
+
+	UpdateFade();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedCheckInfiniteUvMove()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkUVMove.GetCheck();
+
+	/* 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteUVMove.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteUVMove.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_UV_MOVE, true);
+		m_checkInfiniteUVMove.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_UV_MOVE, false);
+		m_checkInfiniteUVMove.SetCheck(0);
+	}
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
 }

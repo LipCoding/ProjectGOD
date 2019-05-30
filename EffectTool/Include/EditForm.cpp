@@ -602,6 +602,8 @@ void CEditForm::OnBnClickedButtonEffectSave()
 		mainFile << m_vecEffect[i]->pEffect->GetMainStartTime() << endl;
 		mainFile << m_vecEffect[i]->pEffect->GetMainEndTime() << endl;
 
+		mainFile << (int)m_vecEffect[i]->pEffect->GetInfiniteMainCheck() << endl;
+
 		// Effect Assist 정보
 
 		// Assist 갯수 저장
@@ -631,6 +633,8 @@ void CEditForm::OnBnClickedButtonEffectSave()
 			//ani
 			mainFile << (*pVecAssist)[j]->GetMoveUV_X() << endl;
 			mainFile << (*pVecAssist)[j]->GetMoveUV_Y() << endl;
+			//infinite
+			mainFile << (int)(*pVecAssist)[j]->GetInifiniteCheck() << endl;
 		}
 
 		int iBillbordCheck = 0;

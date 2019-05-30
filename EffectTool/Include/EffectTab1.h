@@ -86,6 +86,10 @@ private:
 	CButton m_checkUVSprite;
 	CButton m_checkUVMove;
 
+	CButton m_checkInfiniteFadeIn;
+	CButton m_checkInfiniteFadeOut;
+	CButton m_checkInfiniteUVMove;
+
 public:
 	void UpdateForm();
 
@@ -139,4 +143,9 @@ public:
 	afx_msg void OnBnClickedButtonUvMoveStop();
 	afx_msg void OnBnClickedCheckUv();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnBnClickedCheckInfiniteFadeIn();
+
+	afx_msg void OnBnClickedCheckInfiniteFadeOut();
+	
+	afx_msg void OnBnClickedCheckInfiniteUvMove();
 };

@@ -190,12 +190,16 @@ private:
 	CComboBox m_comboEaseSheet_Scale;
 	CComboBox m_comboEaseSheet_Rot;
 
-	CButton m_checkSclaling;
+	CButton m_checkScaling;
 	CButton m_checkRotating;
 	CButton m_checkPartOrAll;
 
-	bool m_bFirstTargetCheck = true;
+	CButton m_checkInfiniteScaling;
+	CButton m_checkInfiniteRotation;
 
+	CButton m_checkInfiniteMain;
+
+	bool m_bFirstTargetCheck = true;
 public:
 	afx_msg void OnBnClickedButtonInputInfo();
 	afx_msg void OnBnClickedButtonInfoPosxUp();
@@ -231,4 +235,8 @@ public:
 	afx_msg void OnBnClickedButtonMainStop();	
 	afx_msg void OnBnClickedButtonCopyCurrentEffect();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	
+	afx_msg void OnBnClickedCheckInfiniteScale();
+	afx_msg void OnBnClickedCheckInfiniteRotation();
+	afx_msg void OnBnClickedCheckInfiniteMain();
 };

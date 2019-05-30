@@ -111,16 +111,21 @@
 #define IDC_CHECK1                      1060
 #define IDC_CHECK_MAIN_SELECT_ALL       1060
 #define IDC_CHECK_BILLBOARD             1060
+#define IDC_CHECK_INFINITE_UV_MOVE      1060
 #define IDC_CHECK2                      1061
 #define IDC_CHECK6                      1062
 #define IDC_CHECK_SCAILING              1062
+#define IDC_CHECK_INFINITE_UV_SPRITE    1062
 #define IDC_BUTTON_INPUT_INFO           1063
+#define IDC_CHECK_INFINITE_FADE_OUT     1063
+#define IDC_CHECK_INFINITE_FADE_IN      1064
 #define IDC_COMBO3                      1065
 #define IDC_COMBO_ANIM_LIST             1065
 #define IDC_RADIO2                      1066
 #define IDC_RADIO_TARGET_OBJ_TYPE_2     1066
 #define IDC_RADIO3                      1067
 #define IDC_RADIO_TARGET_OBJ_TYPE_3     1067
+#define IDC_CHECK_INFINITE_ROTATION     1068
 #define IDC_EDIT20                      1069
 #define IDC_EDIT_MAIN_STATIC_START_TIME 1069
 #define IDC_EDIT21                      1070
@@ -203,7 +208,9 @@
 #define IDC_CHECK7                      1108
 #define IDC_COMBO_VIEWSHEET             1108
 #define IDC_CHECK8                      1109
+#define IDC_CHECK_INFINITE_MAIN         1109
 #define IDC_CHECK9                      1110
+#define IDC_CHECK_INFINITE_SCALE        1110
 #define IDC_CHECK10                     1111
 #define IDC_EDIT52                      1112
 #define IDC_EDIT_PATTERN_STATIC_ROT_TIME 1112
@@ -325,7 +332,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1093
+#define _APS_NEXT_CONTROL_VALUE         1111
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

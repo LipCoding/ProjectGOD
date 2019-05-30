@@ -4,13 +4,15 @@ PG_USING
 
 float CEase_None::easeNone(float t, const float & s, const float & v, const float & d)
 {
-	if (t >= d)
+	//float postFix = t /= d;
+	return v * t + s;
+	/*if (t >= d)
 	{
 		t = d;
 		return v;
 	}
 
-	return s;
+	return s;*/
 }
 
 ////////////////////Back///////////////////////

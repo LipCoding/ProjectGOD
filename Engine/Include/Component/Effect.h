@@ -29,6 +29,8 @@ public:
 	const string& GetLocalPath() { return LocalPath; }
 	const string& GetTexturePath() { return TexturePath; }
 
+	bool GetInfiniteMainCheck() { return m_InfiniteCheck; }
+
 	void SetOperationCheck(bool check);
 	void SetErase(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
@@ -37,7 +39,7 @@ public:
 	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
-
+	void SetInfiniteMainCheck(bool check) { m_InfiniteCheck = check; }
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -55,6 +57,9 @@ public:
 
 	/* Material */
 	void SetEffectTexture(const string& name, const string& fullPath);
+
+	/* Infinite */
+	void SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_TYPE type, bool check);
 
 	/* Add Assist Effect */
 
@@ -105,6 +110,8 @@ private:
 	string LocalPath = "";
 	string TexturePath = "";
 
+	/* Infinite */
+	bool m_InfiniteCheck = false;
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;

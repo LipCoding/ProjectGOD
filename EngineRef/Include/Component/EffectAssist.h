@@ -70,6 +70,8 @@ public:
 	float GetMoveUV_X() { return m_AniX; }
 	float GetMoveUV_Y() { return m_AniY; }
 
+	bool GetInifiniteCheck() { return m_InfiniteCheck; }
+
 	/* Setter */
 	void SetStartCheck(bool check) { m_StartCheck = check; }
 
@@ -88,9 +90,15 @@ public:
 	void SetMoveUV_X(const float& x) { m_AniX = x; }
 	void SetMoveUV_Y(const float& y) { m_AniY = y; }
 
+	void SetInfiniteCheck(bool check) { m_InfiniteCheck = check; }
+
 public:
 	void Init(class CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE easeType = EASE_END);
 	void Update(class CGameObject *object, const float& deltaTime);
+	
+	void UpdateForTimeLimit(class CGameObject *object, const float& deltaTime);
+	void UpdateForInfinite(class CGameObject *object, const float& deltaTime);
+
 	void FirstStatusSet(class CGameObject *object);
 
 private:
@@ -110,6 +118,9 @@ private:
 	/* Life Time */
 	bool  m_StartCheck = false;
 	float m_LifeTime = 0.f;
+
+	/* Infinite */
+	bool m_InfiniteCheck = false;
 
 	/* For Pattern */
 	float m_StartX = 0.f;
