@@ -44,6 +44,13 @@ public:
 		EASE_END
 	};
 
+	enum SPRITE_TYPE
+	{
+		SPRITE_ATLAS,
+		SPRITE_FRAME,
+		SPRITE_END
+	};
+
 public:
 	CEffectAssist();
 	~CEffectAssist();
@@ -53,6 +60,7 @@ public:
 	/* Getter */
 	ASSIST_TYPE GetType() { return m_AssistType; }
 	EASE_TYPE GetEaseType() { return m_EaseType; }
+	SPRITE_TYPE GetSpriteType() { return m_SpriteType; }
 
 	float GetStartTime() { return m_StartTime; }
 	float GetEndTime() { return m_EndTime; }
@@ -64,7 +72,11 @@ public:
 	float GetDegree() { return m_Degree; }
 
 	int GetNum() { return m_Num; }
-		
+	int GetWidth() { return m_Width; }
+	int GetHeight() { return m_Height; }
+	int GetMaxX() { return m_Max_X; }
+	int GetMaxY() { return m_Max_Y; }
+
 	int GetRepeat() { return m_Repeat; }
 
 	float GetMoveUV_X() { return m_AniX; }
@@ -73,6 +85,7 @@ public:
 	bool GetInifiniteCheck() { return m_InfiniteCheck; }
 
 	/* Setter */
+	void SetSpriteType(SPRITE_TYPE type) { m_SpriteType = type; }
 	void SetStartCheck(bool check) { m_StartCheck = check; }
 
 	void SetStartTime(const float& start) { m_StartTime = start; }
@@ -84,6 +97,10 @@ public:
 	void SetDegree(const float& degree) { m_Degree = degree; }
 
 	void SetNum(const int& num) { m_Num = num; }
+	void SetWidth(const int& width) { m_Width = width; }
+	void SetHeight(const int& height) { m_Height = height; }
+	void SetMaxX(const int& X) { m_Max_X = X; }
+	void SetMaxY(const int& Y) { m_Max_Y = Y; }
 
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
@@ -109,6 +126,7 @@ private:
 	/* Type */
 	ASSIST_TYPE m_AssistType = ASSIST_END;
 	EASE_TYPE   m_EaseType = EASE_END;
+	SPRITE_TYPE m_SpriteType = SPRITE_END;
 
 	/* Common */
 	float m_StartTime = 0.f;
@@ -142,6 +160,11 @@ private:
 
 	int m_Repeat = 0;
 	int m_Num = 0;
+	
+	int m_Width = 0;
+	int m_Height = 0;
+	int m_Max_X = 0;
+	int m_Max_Y = 0;
 
 	/* Move */
 	float m_AniX = 0.f;

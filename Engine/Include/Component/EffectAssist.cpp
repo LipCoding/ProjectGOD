@@ -334,14 +334,25 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 		CAnimation2D *pAnimation = object->FindComponentFromType<CAnimation2D>(CT_ANIMATION2D);
 		if (pAnimation)
 		{
-			pAnimation->ChangeAnimation("Default");
+			pAnimation->ChangeAnimation("Default");	
 			PANIMATIONCLIP2D pClip = pAnimation->GetClip("Effect");
 			if (pClip)
 			{
-				pClip->iFrameMaxX = m_Num;
-				pClip->iLengthX = m_Num;
+				switch (m_SpriteType)
+				{
+				case SPRITE_ATLAS:
+					pClip->iFrameMaxX = m_Max_X / m_Width;
+					pClip->iFrameMaxY = m_Max_Y / m_Height;
+					break;
+				case SPRITE_FRAME:
+					pClip->iFrameMaxX = m_Num;
+					pClip->iLengthX = m_Num;
+					break;
+				}
+
 				pClip->fAnimLimitTime = m_LifeTime;
 			}
+
 			SAFE_RELEASE(pAnimation);
 		}
 		break;

@@ -14,6 +14,8 @@
 #include "../Component/Animation2D.h"
 #include "../Core/PathManager.h"
 
+#include "../Resources/ResourcesManager.h"
+
 PG_USING
 
 CEffect::CEffect()
@@ -555,6 +557,7 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 		if (assist->GetType() == CEffectAssist::ASSIST_UV_ANI)
 		{
 			pAssistData = assist;
+			pAssistData->SetSpriteType(CEffectAssist::SPRITE_FRAME);
 			pAssistData->SetStartTime(start);
 			pAssistData->SetEndTime(end);
 			pAssistData->SetNum(num);
@@ -567,6 +570,7 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 	if (pAssistData == nullptr)
 	{
 		pAssistData = new CEffectAssist;
+		pAssistData->SetSpriteType(CEffectAssist::SPRITE_FRAME);
 		pAssistData->SetStartTime(start);
 		pAssistData->SetEndTime(end);
 		pAssistData->SetNum(num);
@@ -591,7 +595,7 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 		wsprintf(strPath, wPath.c_str());
 
 		if (!pEffectAnimation->CreateClip("Default", A2D_FRAME, A2DO_LOOP,
-			1, 1, 1, 1, 0, 0, 0, 0.f, "Default",
+			1, 1, 1, 1, 0, 0, 0, 0.f, EffectName + "Default",
 			strPath))
 		{
 			SAFE_RELEASE(pEffectAnimation);
@@ -613,9 +617,87 @@ void CEffect::AddUVAnimation(const float & start, const float & end, const int &
 
 			vecTextures.push_back(strPath);
 		}
+
 		if (!pEffectAnimation->CreateClip("Effect", A2D_FRAME, A2DO_TIME_RETURN,
-			num, 1, num, 1, 0, end - start, 0, 0.f, "Effect",
+			num, 1, num, 1, 0, end - start, 0, 0.f, EffectName + "Effect",
 			&vecTextures))
+		{
+			SAFE_RELEASE(pEffectAnimation);
+			return;
+		}
+		SAFE_RELEASE(pEffectAnimation);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_ANI);
+	m_vecAssist.push_back(pAssistData);
+	/*  */
+}
+
+void CEffect::AddUVAnimation(const float& start, const float& end, const int& max_x, const int& max_y,
+	const int& width, const int& height, const int& repeat)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_UV_ANI)
+		{
+			pAssistData = assist;
+			pAssistData->SetSpriteType(CEffectAssist::SPRITE_ATLAS);
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetWidth(width);
+			pAssistData->SetHeight(height);
+			pAssistData->SetMaxX(max_x);
+			pAssistData->SetMaxY(max_y);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_UV_ANI);
+			pAssistData->SetShareBuffer(&m_tshareBuffer);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetSpriteType(CEffectAssist::SPRITE_ATLAS);
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetWidth(width);
+		pAssistData->SetHeight(height);
+		pAssistData->SetMaxX(max_x);
+		pAssistData->SetMaxY(max_y);
+		pAssistData->SetShareBuffer(&m_tshareBuffer);
+	}
+
+	CAnimation2D*	pEffectAnimation = nullptr;
+
+	pEffectAnimation = m_pGameObject->FindComponentFromTag<CAnimation2D>("EffectAnimation");
+
+	if (!pEffectAnimation)
+	{
+		pEffectAnimation = m_pGameObject->AddComponent<CAnimation2D>("EffectAnimation");
+
+		pEffectAnimation->SetRenderer2DEnable(false);
+
+		wstring wPath;
+		wPath.assign(TexturePath.begin(), TexturePath.end());
+		wPath += L".png";
+
+		wchar_t	strPath[MAX_PATH] = {};
+		wsprintf(strPath, wPath.c_str());
+
+		if (!pEffectAnimation->CreateClip("Default", A2D_FRAME, A2DO_LOOP,
+			1, 1, 1, 1, 0, 0, 0, 0.f, EffectName + "Default",
+			strPath))
+		{
+			SAFE_RELEASE(pEffectAnimation);
+			return;
+		}
+		pEffectAnimation->SetDefaultAnim("Default");
+
+		if (!pEffectAnimation->CreateClipAtlas("Effect", A2DO_TIME_RETURN,
+			max_x, max_y, width, height, 0, end - start, 0, 0.f, EffectName + "Effect",
+			strPath))
 		{
 			SAFE_RELEASE(pEffectAnimation);
 			return;

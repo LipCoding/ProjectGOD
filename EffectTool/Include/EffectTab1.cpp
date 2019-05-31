@@ -34,6 +34,10 @@ CEffectTab1::CEffectTab1(CWnd* pParent /*=nullptr*/)
 	, m_fMoveUVStaticDirX(0)
 	, m_fMoveUVStaticDirY(0)
 	, m_fMoveUVStaticTime(0)
+	, m_iUVSpriteStaticWidth(0)
+	, m_iUVSpriteStaticHeight(0)
+	, m_iUVSpriteStaticMax_X(0)
+	, m_iUVSpriteStaticMax_Y(0)
 {
 
 }
@@ -82,6 +86,16 @@ void CEffectTab1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK_INFINITE_FADE_IN, m_checkInfiniteFadeIn);
 	DDX_Control(pDX, IDC_CHECK_INFINITE_FADE_OUT, m_checkInfiniteFadeOut);
 	DDX_Control(pDX, IDC_CHECK_INFINITE_UV_MOVE, m_checkInfiniteUVMove);
+	DDX_Radio(pDX, IDC_RADIO_SPRITE_TYPE_1, (int&)m_iRadioSpriteType);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_WIDTH, m_iUVSpriteStaticWidth);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_HEIGHT, m_iUVSpriteStaticHeight);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_MAX_X, m_iUVSpriteStaticMax_X);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_MAX_Y, m_iUVSpriteStaticMax_Y);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_WIDTH, m_editUVSpriteWidth);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_HEIGHT, m_editUVSpriteHeight);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_MAX_X, m_editUVSpriteMax_X);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_MAX_Y, m_editUVSpriteMax_Y);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_UV_SPRITE, m_checkInfiniteUVSprite);
 }
 
 
@@ -105,11 +119,13 @@ BEGIN_MESSAGE_MAP(CEffectTab1, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_INFINITE_FADE_IN, &CEffectTab1::OnBnClickedCheckInfiniteFadeIn)
 	ON_BN_CLICKED(IDC_CHECK_INFINITE_FADE_OUT, &CEffectTab1::OnBnClickedCheckInfiniteFadeOut)
 	ON_BN_CLICKED(IDC_CHECK_INFINITE_UV_MOVE, &CEffectTab1::OnBnClickedCheckInfiniteUvMove)
+	ON_BN_CLICKED(IDC_RADIO_SPRITE_TYPE_1, &CEffectTab1::OnBnClickedRadioSpriteType1)
+	ON_BN_CLICKED(IDC_RADIO_SPRITE_TYPE_2, &CEffectTab1::OnBnClickedRadioSpriteType2)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_UV_SPRITE, &CEffectTab1::OnBnClickedCheckInfiniteUvSprite)
 END_MESSAGE_MAP()
 
 
 // CEffectTab1 메시지 처리기
-
 
 void CEffectTab1::OnBnClickedButtonFadeInInput()
 {
@@ -353,6 +369,7 @@ void CEffectTab1::InitFormValue()
 	m_checkInfiniteFadeIn.SetCheck(0);
 	m_checkInfiniteFadeOut.SetCheck(0);
 	m_checkInfiniteUVMove.SetCheck(0);
+	m_checkInfiniteUVSprite.SetCheck(0);
 
 	InitFadeIn();
 	InitFadeOut();
@@ -394,9 +411,19 @@ void CEffectTab1::InitUVSprite()
 
 	m_fUVSpriteTime = -1.f;
 
+	m_iUVSpriteStaticWidth = -1;
+	m_iUVSpriteStaticHeight = -1;
+	m_iUVSpriteStaticMax_X = -1;
+	m_iUVSpriteStaticMax_Y = -1;
+
 	m_editUVSpriteStartTime.SetWindowTextW(L"");
 	m_editUVSpriteEndTime.SetWindowTextW(L"");
 	m_editUVSpriteNum.SetWindowTextW(L"");
+
+	m_editUVSpriteWidth.SetWindowTextW(L"");
+	m_editUVSpriteHeight.SetWindowTextW(L"");
+	m_editUVSpriteMax_X.SetWindowTextW(L"");
+	m_editUVSpriteMax_Y.SetWindowTextW(L"");
 }
 
 void CEffectTab1::InitUVMove()
@@ -440,9 +467,10 @@ void CEffectTab1::UpdateFade()
 			m_checkFadeIn.SetCheck(1);
 
 			if (pAssistFadeIn->GetInifiniteCheck() == true)
-			{
 				m_checkInfiniteFadeIn.SetCheck(1);
-			}
+			else
+				m_checkInfiniteFadeIn.SetCheck(0);
+			
 		}
 		else
 		{
@@ -471,9 +499,9 @@ void CEffectTab1::UpdateFade()
 			m_checkFadeOut.SetCheck(1);
 
 			if (pAssistFadeOut->GetInifiniteCheck() == true)
-			{
 				m_checkInfiniteFadeOut.SetCheck(1);
-			}
+			else
+				m_checkInfiniteFadeOut.SetCheck(0);
 		}
 		else
 		{
@@ -510,11 +538,17 @@ void CEffectTab1::UpdateUV()
 			m_editUVSpriteNum.SetWindowTextW(tempNum);
 
 			m_checkUVSprite.SetCheck(1);
+
+			if (pAssistUVAni->GetInifiniteCheck() == true)
+				m_checkInfiniteUVSprite.SetCheck(1);
+			else
+				m_checkInfiniteUVSprite.SetCheck(0);
 		}
 		else
 		{
 			InitUVSprite();
 			m_checkUVSprite.SetCheck(0);
+			m_checkInfiniteUVSprite.SetCheck(0);
 		}
 
 		/* UV Move */
@@ -540,9 +574,10 @@ void CEffectTab1::UpdateUV()
 			m_checkUVMove.SetCheck(1);
 
 			if (pAssistUVMove->GetInifiniteCheck() == true)
-			{
 				m_checkInfiniteUVMove.SetCheck(1);
-			}
+			else
+				m_checkInfiniteUVMove.SetCheck(0);
+			
 		}
 		else
 		{
@@ -660,11 +695,10 @@ void CEffectTab1::AddFadeOut(CEffect * pEffect)
 
 void CEffectTab1::AddUVSprite(CEffect * pEffect)
 {
-	CString StartTime, EndTime, Num;
+	CString StartTime, EndTime;
 
 	m_editUVSpriteStartTime.GetWindowTextW(StartTime);
 	m_editUVSpriteEndTime.GetWindowTextW(EndTime);
-	m_editUVSpriteNum.GetWindowTextW(Num);
 
 	if (StartTime == L"")
 		m_fUVSpriteStaticStartTime = 0.f;
@@ -676,12 +710,56 @@ void CEffectTab1::AddUVSprite(CEffect * pEffect)
 	else
 		m_fUVSpriteStaticEndTime = (float)_wtof(EndTime);
 
-	if (Num == L"")
-		m_iUVSpriteStaticNum = 0;
-	else
-		m_iUVSpriteStaticNum = (int)_wtoi(Num);
+	switch (m_iRadioSpriteType)
+	{
+	case SPRITE_TYPE_FRAME:
+	{
+		CString Num;
+		m_editUVSpriteNum.GetWindowTextW(Num);
 
-	pEffect->AddUVAnimation(m_fUVSpriteStaticStartTime, m_fUVSpriteStaticEndTime, m_iUVSpriteStaticNum, 1);
+		if (Num == L"")
+			m_iUVSpriteStaticNum = 0;
+		else
+			m_iUVSpriteStaticNum = (int)_wtoi(Num);
+
+		pEffect->AddUVAnimation(m_fUVSpriteStaticStartTime, m_fUVSpriteStaticEndTime, m_iUVSpriteStaticNum, 1);
+		break;
+	}
+	case SPRITE_TYPE_ATLAS:
+	{
+		CString Width, Height, Max_X, Max_Y;
+
+		m_editUVSpriteWidth.GetWindowTextW(Width);
+		m_editUVSpriteHeight.GetWindowTextW(Height);
+		m_editUVSpriteMax_X.GetWindowTextW(Max_X);
+		m_editUVSpriteMax_Y.GetWindowTextW(Max_Y);
+
+		if (Width == L"")
+			m_iUVSpriteStaticWidth = 0;
+		else
+			m_iUVSpriteStaticWidth = (int)_wtoi(Width);
+
+		if (Height == L"")
+			m_iUVSpriteStaticHeight = 0;
+		else
+			m_iUVSpriteStaticHeight = (int)_wtoi(Height);
+
+		if (Max_X == L"")
+			m_iUVSpriteStaticMax_X = 0;
+		else
+			m_iUVSpriteStaticMax_X = (int)_wtoi(Max_X);
+
+		if (Max_Y == L"")
+			m_iUVSpriteStaticMax_Y = 0;
+		else
+			m_iUVSpriteStaticMax_Y = (int)_wtoi(Max_Y);
+
+		pEffect->AddUVAnimation(m_fUVSpriteStaticStartTime, m_fUVSpriteStaticEndTime,
+								m_iUVSpriteStaticMax_X, m_iUVSpriteStaticMax_Y,
+								m_iUVSpriteStaticWidth, m_iUVSpriteStaticHeight, 1);
+		break;
+	}
+	}
 }
 
 void CEffectTab1::AddUVMove(CEffect * pEffect)
@@ -1049,6 +1127,86 @@ void CEffectTab1::OnBnClickedCheckInfiniteUvMove()
 	{
 		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_UV_MOVE, false);
 		m_checkInfiniteUVMove.SetCheck(0);
+	}
+
+	UpdateUV();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab1::OnBnClickedRadioSpriteType1()
+{
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+
+	if (pEffect)
+	{
+		/* UV Sprite */
+		CEffectAssist *pAssistUVAni = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_ANI);
+
+		if (pAssistUVAni && CEffectAssist::SPRITE_ATLAS == pAssistUVAni->GetSpriteType())
+		{
+			return;
+		}
+	}
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_iRadioSpriteType = 0;
+}
+
+
+void CEffectTab1::OnBnClickedRadioSpriteType2()
+{
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+
+	if (pEffect)
+	{
+		/* UV Sprite */
+		CEffectAssist *pAssistUVAni = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_ANI);
+
+		if (pAssistUVAni && CEffectAssist::SPRITE_FRAME == pAssistUVAni->GetSpriteType())
+		{
+			return;
+		}
+	}
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	m_iRadioSpriteType = 1;
+}
+
+
+void CEffectTab1::OnBnClickedCheckInfiniteUvSprite()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkUVSprite.GetCheck();
+
+	/* 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteUVSprite.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteUVSprite.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_UV_ANI, true);
+		m_checkInfiniteUVSprite.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_UV_ANI, false);
+		m_checkInfiniteUVSprite.SetCheck(0);
 	}
 
 	UpdateUV();

@@ -457,9 +457,9 @@ void CEffectTab::UpdatePattern()
 			m_checkScaling.SetCheck(1);
 			
 			if (pAssistScale->GetInifiniteCheck())
-			{
 				m_checkInfiniteScaling.SetCheck(1);
-			}
+			else
+				m_checkInfiniteScaling.SetCheck(0);
 		}
 		else
 		{
@@ -501,15 +501,16 @@ void CEffectTab::UpdatePattern()
 			m_checkRotating.SetCheck(1);
 
 			if (pAssistRot->GetInifiniteCheck())
-			{
 				m_checkInfiniteRotation.SetCheck(1);
-			}
+			else
+				m_checkInfiniteRotation.SetCheck(0);
 		}
 		else
 		{
 			InitFormPatternRot();
 			m_comboEaseSheet_Rot.SetCurSel(0);
 			m_checkRotating.SetCheck(0);
+			m_checkInfiniteRotation.SetCheck(0);
 		}
 
 		SAFE_RELEASE(pEffect);

@@ -326,6 +326,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	pData->pTr = pData->pObject->GetTransform();
 	pData->pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
 	pData->pEffect = pData->pObject->AddComponent<CEffect>("Effect");
+	pData->pEffect->SetEffectName(pData->strName);
 
 	if (!pData->pEffect->LoadEffectMesh( (string)CT2CA(fullPath), (string)CT2CA(name) ))
 	{

@@ -166,6 +166,49 @@ bool CAnimation2D::CreateClip(const string & strKey, ANIMATION2D_TYPE eType,
 	return true;
 }
 
+bool CAnimation2D::CreateClipAtlas(const string & strKey, ANIMATION2D_OPTION eOption, int iFrameMaxX, int iFrameMaxY, int iLengthX, int iLengthY, int iStartY, float fAnimLimitTime, int iCountLimit, float fOptionTimeLimit, const string & strTexKey, TCHAR * pFileName, const string & strPathKey)
+{
+	if (FindClip(strKey))
+		return false;
+
+	PANIMATIONCLIP2D	pClip = new ANIMATIONCLIP2D;
+
+	pClip->eType = A2D_ATLAS;
+	pClip->eOption = eOption;
+	pClip->iFrameMaxX = iFrameMaxX / iLengthX;
+	pClip->iFrameMaxY = iFrameMaxY / iLengthY;
+	pClip->fAnimLimitTime = fAnimLimitTime;
+	pClip->iCountLimit = iCountLimit;
+	pClip->fOptionTimeLimit = fOptionTimeLimit;
+	pClip->iLengthX = iLengthX;
+	pClip->iLengthY = iLengthY;
+	pClip->iStartY = iStartY;
+	pClip->iFrameY = iStartY;
+
+	if (pFileName)
+		pClip->pTexture = GET_SINGLE(CResourcesManager)->LoadTexture(strTexKey, pFileName, strPathKey);
+
+	else
+		pClip->pTexture = GET_SINGLE(CResourcesManager)->FindTexture(strTexKey);
+
+	if (!pClip->pTexture)
+	{
+		SAFE_DELETE(pClip);
+		return false;
+	}
+
+	m_mapClip.insert(make_pair(strKey, pClip));
+
+	if (m_strCurrentAnim.empty())
+	{
+		m_pCurClip = pClip;
+		ChangeAnimation(strKey);
+		m_strDefaultAnim = strKey;
+	}
+
+	return true;
+}
+
 PANIMATIONCLIP2D CAnimation2D::GetClip(const string & strKey)
 {
 	return FindClip(strKey);
@@ -298,51 +341,104 @@ int CAnimation2D::Update(float fTime)
 
 	m_pCurClip->fAnimTime += fTime;
 
-	int	iMaxFrame = m_pCurClip->iLengthX * m_pCurClip->iLengthY;
-	float fLimitTime = m_pCurClip->fAnimLimitTime / iMaxFrame;
-
-	if (m_pCurClip->fAnimTime >= fLimitTime)
+	if (A2D_FRAME == m_pCurClip->eType)
 	{
-		m_pCurClip->fAnimTime -= fLimitTime;
-		++m_pCurClip->iFrameX;
+		int	iMaxFrame = m_pCurClip->iLengthX * m_pCurClip->iLengthY;
+		float fLimitTime = m_pCurClip->fAnimLimitTime / iMaxFrame;
 
-		if (m_pCurClip->iFrameX >= m_pCurClip->iLengthX)
+		if (m_pCurClip->fAnimTime >= fLimitTime)
 		{
-			m_pCurClip->iFrameX = 0;
-			++m_pCurClip->iFrameY;
+			m_pCurClip->fAnimTime -= fLimitTime;
+			++m_pCurClip->iFrameX;
 
-			if (m_pCurClip->iFrameY >= m_pCurClip->iStartY + m_pCurClip->iLengthY)
+			if (m_pCurClip->iFrameX >= m_pCurClip->iLengthX)
 			{
-				m_pCurClip->iFrameY = m_pCurClip->iStartY;
-				m_bClipEnd = true;
+				m_pCurClip->iFrameX = 0;
+				++m_pCurClip->iFrameY;
 
-				switch (m_pCurClip->eOption)
+				if (m_pCurClip->iFrameY >= m_pCurClip->iStartY + m_pCurClip->iLengthY)
 				{
-				case A2DO_ONCE_RETURN:
-					ChangeAnimation(m_strDefaultAnim);
-					break;
-				case A2DO_ONCE_DESTROY:
-					m_pGameObject->Die();
-					break;
-				case A2DO_COUNT_RETURN:
-					break;
-				case A2DO_COUNT_DESTROY:
-					break;
-				case A2DO_TIME_RETURN:
-					break;
-				case A2DO_TIME_DESTROY:
-					break;
+					m_pCurClip->iFrameY = m_pCurClip->iStartY;
+					m_bClipEnd = true;
+
+					switch (m_pCurClip->eOption)
+					{
+					case A2DO_ONCE_RETURN:
+						ChangeAnimation(m_strDefaultAnim);
+						break;
+					case A2DO_ONCE_DESTROY:
+						m_pGameObject->Die();
+						break;
+					case A2DO_COUNT_RETURN:
+						break;
+					case A2DO_COUNT_DESTROY:
+						break;
+					case A2DO_TIME_RETURN:
+						break;
+					case A2DO_TIME_DESTROY:
+						break;
+					}
 				}
 			}
 		}
+
+		// 상수버퍼 갱신
+		m_tCBuffer.iType = m_pCurClip->eType;
+		m_tCBuffer.iFrameX = m_pCurClip->iFrameX;
+		m_tCBuffer.iFrameY = m_pCurClip->iFrameY;
+		m_tCBuffer.iLengthX = m_pCurClip->iFrameMaxX;
+		m_tCBuffer.iLengthY = m_pCurClip->iFrameMaxY;
+	}
+	else if (A2D_ATLAS == m_pCurClip->eType)
+	{
+		int	iMaxFrame = m_pCurClip->iFrameMaxX * m_pCurClip->iFrameMaxY;
+		float fLimitTime = m_pCurClip->fAnimLimitTime / iMaxFrame;
+
+		if (m_pCurClip->fAnimTime >= fLimitTime)
+		{
+			m_pCurClip->fAnimTime -= fLimitTime;
+			++m_pCurClip->iFrameX;
+
+			if (m_pCurClip->iFrameX >= m_pCurClip->iFrameMaxX)
+			{
+				m_pCurClip->iFrameX = 0;
+				++m_pCurClip->iFrameY;
+
+				if (m_pCurClip->iFrameY >= m_pCurClip->iStartY + m_pCurClip->iFrameMaxY)
+				{
+					m_pCurClip->iFrameY = m_pCurClip->iStartY;
+					m_bClipEnd = true;
+
+					switch (m_pCurClip->eOption)
+					{
+					case A2DO_ONCE_RETURN:
+						ChangeAnimation(m_strDefaultAnim);
+						break;
+					case A2DO_ONCE_DESTROY:
+						m_pGameObject->Die();
+						break;
+					case A2DO_COUNT_RETURN:
+						break;
+					case A2DO_COUNT_DESTROY:
+						break;
+					case A2DO_TIME_RETURN:
+						break;
+					case A2DO_TIME_DESTROY:
+						break;
+					}
+				}
+			}
+		}
+
+		// 상수버퍼 갱신
+		m_tCBuffer.iType = m_pCurClip->eType;
+		m_tCBuffer.iFrameX = m_pCurClip->iFrameX;
+		m_tCBuffer.iFrameY = m_pCurClip->iFrameY;
+		m_tCBuffer.iLengthX = m_pCurClip->iFrameMaxX;
+		m_tCBuffer.iLengthY = m_pCurClip->iFrameMaxY;
 	}
 
-	// 상수버퍼 갱신
-	m_tCBuffer.iType = m_pCurClip->eType;
-	m_tCBuffer.iFrameX = m_pCurClip->iFrameX;
-	m_tCBuffer.iFrameY = m_pCurClip->iFrameY;
-	m_tCBuffer.iLengthX = m_pCurClip->iFrameMaxX;
-	m_tCBuffer.iLengthY = m_pCurClip->iFrameMaxY;
+
 
 	if (m_bRenderer2D)
 	{
