@@ -412,6 +412,8 @@ void CEffectTab::UpdateMainTimer()
 
 		if(pEffect->GetInfiniteMainCheck())
 			m_checkInfiniteMain.SetCheck(1);
+		else
+			m_checkInfiniteMain.SetCheck(0);
 
 		SAFE_RELEASE(pEffect);
 	}
@@ -1724,6 +1726,12 @@ void CEffectTab::OnBnClickedButtonMainStop()
 	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
 	if (!pEffect)
 		return;
+
+	/* All */
+	for (auto& effect : *((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffects())
+	{
+		effect->pEffect->SetOperationCheck(false);
+	}
 
 	pEffect->SetOperationCheck(false);
 

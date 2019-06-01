@@ -291,7 +291,7 @@ bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
 	}
 
 	// 菊率 Mesh_Path 力芭
-	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH)) - 1;
+	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH));
 	MeshPath.erase(0, meshPathSize);
 
 	m_pRenderer->SetMeshFromFullPath(fileName, wTag.c_str());
@@ -328,7 +328,7 @@ bool CEffect::LoadEffectLocalInfo(const string & filePath)
 	}
 
 	// 菊率 Mesh_Path 力芭
-	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH)) - 1;
+	size_t meshPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH));
 	LocalPath.erase(0, meshPathSize);
 
 	FILE* pFile = nullptr;
@@ -392,7 +392,7 @@ void CEffect::SetEffectTexture(const string & name, const string & fullPath)
 	}
 
 	// 菊率 Texture_Path 力芭
-	size_t texPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(TEXTURE_PATH)) - 1;
+	size_t texPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(TEXTURE_PATH));
 	TexturePath.erase(0, texPathSize);
 			
 	m_pRenderer->SetRenderState(CULLING_NONE);

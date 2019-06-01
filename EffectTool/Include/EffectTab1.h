@@ -142,8 +142,8 @@ private:
 private:
 	void AddFadeIn(class CEffect *pEffect);
 	void AddFadeOut(class CEffect *pEffect);
-	void AddUVSprite(class CEffect *pEffect);
-	void AddUVMove(class CEffect *pEffect);
+	bool AddUVSprite(class CEffect *pEffect);
+	bool AddUVMove(class CEffect *pEffect);
 
 public:
 	afx_msg void OnBnClickedButtonFadeInInput();

@@ -38,6 +38,7 @@ CEffectTab1::CEffectTab1(CWnd* pParent /*=nullptr*/)
 	, m_iUVSpriteStaticHeight(0)
 	, m_iUVSpriteStaticMax_X(0)
 	, m_iUVSpriteStaticMax_Y(0)
+	, m_iRadioSpriteType(-1)
 {
 
 }
@@ -405,6 +406,8 @@ void CEffectTab1::InitFadeOut()
 
 void CEffectTab1::InitUVSprite()
 {
+	m_iRadioSpriteType = -1;
+
 	m_fUVSpriteStaticStartTime = -1.f;
 	m_fUVSpriteStaticEndTime = -1.f;
 	m_iUVSpriteStaticNum = -1;
@@ -525,17 +528,45 @@ void CEffectTab1::UpdateUV()
 
 		if (pAssistUVAni)
 		{
+			CEffectAssist::SPRITE_TYPE eType;
+
+			eType = pAssistUVAni->GetSpriteType();
+
+			if (CEffectAssist::SPRITE_ATLAS == eType)
+			{
+				m_iRadioSpriteType = 1;
+			}
+			else if(CEffectAssist::SPRITE_FRAME == eType)
+			{
+				m_iRadioSpriteType = 0;
+			}
+
+			CString tempNum;
+
 			m_fUVSpriteStaticStartTime = pAssistUVAni->GetStartTime();
 			m_fUVSpriteStaticEndTime = pAssistUVAni->GetEndTime();
 			m_iUVSpriteStaticNum = pAssistUVAni->GetNum();
 
-			CString tempNum;
 			tempNum.Format(_T("%.2f"), m_fUVSpriteStaticStartTime);
 			m_editUVSpriteStartTime.SetWindowTextW(tempNum);
 			tempNum.Format(_T("%.2f"), m_fUVSpriteStaticEndTime);
 			m_editUVSpriteEndTime.SetWindowTextW(tempNum);
 			tempNum.Format(_T("%d"), m_iUVSpriteStaticNum);
 			m_editUVSpriteNum.SetWindowTextW(tempNum);
+
+			m_iUVSpriteStaticWidth = pAssistUVAni->GetWidth();
+			m_iUVSpriteStaticHeight = pAssistUVAni->GetHeight();
+			m_iUVSpriteStaticMax_X = pAssistUVAni->GetMaxX();
+			m_iUVSpriteStaticMax_Y = pAssistUVAni->GetMaxY();
+
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticWidth);
+			m_editUVSpriteWidth.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticHeight);
+			m_editUVSpriteHeight.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticMax_X);
+			m_editUVSpriteMax_X.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticMax_Y);
+			m_editUVSpriteMax_Y.SetWindowTextW(tempNum);
 
 			m_checkUVSprite.SetCheck(1);
 
@@ -693,8 +724,16 @@ void CEffectTab1::AddFadeOut(CEffect * pEffect)
 	pEffect->AddFadeOut(m_fFadeOutStaticStartTime, m_fFadeOutStaticEndTime, m_fFadeOutStaticDegree);
 }
 
-void CEffectTab1::AddUVSprite(CEffect * pEffect)
+bool CEffectTab1::AddUVSprite(CEffect * pEffect)
 {
+	CEffectAssist* pAssistUVMove = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_MOVE);
+
+	if (pAssistUVMove)
+	{
+		AfxMessageBox(L"You already have UV Move Assist!");
+		return false;
+	}
+
 	CString StartTime, EndTime;
 
 	m_editUVSpriteStartTime.GetWindowTextW(StartTime);
@@ -759,11 +798,26 @@ void CEffectTab1::AddUVSprite(CEffect * pEffect)
 								m_iUVSpriteStaticWidth, m_iUVSpriteStaticHeight, 1);
 		break;
 	}
+	default:
+	{
+		AfxMessageBox(L"Check Sprite type first!");
+		return false;
 	}
+	}
+
+	return true;
 }
 
-void CEffectTab1::AddUVMove(CEffect * pEffect)
+bool CEffectTab1::AddUVMove(CEffect * pEffect)
 {
+	CEffectAssist* pAssistUVAni = pEffect->GetAssistFromType(CEffectAssist::ASSIST_UV_ANI);
+
+	if (pAssistUVAni)
+	{
+		AfxMessageBox(L"You already have UV Ani Assist!");
+		return false;
+	}
+
 	CString StartTime, EndTime, DirX, DirY;
 
 	m_editMoveUVStartTime.GetWindowTextW(StartTime);
@@ -792,6 +846,7 @@ void CEffectTab1::AddUVMove(CEffect * pEffect)
 		m_fMoveUVStaticDirY = (float)_wtof(DirY);
 
 	pEffect->AddUVMovement(m_fMoveUVStaticStartTime, m_fMoveUVStaticEndTime, m_fMoveUVStaticDirX, m_fMoveUVStaticDirY);
+	return true;
 }
 
 
@@ -882,8 +937,10 @@ void CEffectTab1::OnBnClickedCheckUvSprite()
 
 	if (check == 1)
 	{
-		AddUVSprite(pEffect);
-		m_checkUVSprite.SetCheck(1);
+		if(false == AddUVSprite(pEffect))
+			m_checkUVSprite.SetCheck(0);
+		else
+			m_checkUVSprite.SetCheck(1);
 	}
 
 	else
@@ -985,8 +1042,10 @@ void CEffectTab1::OnBnClickedCheckUv()
 
 	if (check == 1)
 	{
-		AddUVMove(pEffect);
-		m_checkUVMove.SetCheck(1);
+		if(false == AddUVMove(pEffect))
+			m_checkUVMove.SetCheck(0);
+		else
+			m_checkUVMove.SetCheck(1);
 	}
 
 	else
