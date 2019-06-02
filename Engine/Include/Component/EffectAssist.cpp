@@ -37,7 +37,7 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 
 	m_Time += deltaTime;
 
-	if (false == m_InfiniteCheck)
+	if (false == m_InfiniteAssistCheck)
 		UpdateForTimeLimit(object, deltaTime);
 	else
 		UpdateForInfinite(object, deltaTime);
@@ -365,7 +365,7 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 		break;
 	}
 
-	if (true == m_InfiniteCheck)
+	if (true == m_InfiniteAssistCheck)
 	{
 		if (m_pShareBuffer)
 		{

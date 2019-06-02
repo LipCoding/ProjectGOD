@@ -126,16 +126,16 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");*/
 
-	/* Effect */
-	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
+	///* Effect */
+	//GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+	////GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
 	return true;
 }
 

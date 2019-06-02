@@ -116,6 +116,18 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 		pData->pEffect->SetMainStartTime(fMainStartTime);
 		pData->pEffect->SetMainEndTime(fMainEndTime);
 
+		int temp = 0;
+		bool mainInfiniteCheck = false;
+		file >> temp;
+
+		if (1 == temp)
+		{
+			mainInfiniteCheck = true;
+		}
+
+		pData->pEffect->SetInfiniteMainCheck(mainInfiniteCheck);
+
+
 		// Effect Assist Á¤º¸
 		// Assist °¹¼ö 
 		int iAssistCount = 0;
@@ -145,12 +157,31 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 			float fDegree = 0.f;
 			file >> fDegree;
 
+			CEffectAssist::SPRITE_TYPE eSpriteType;
+			file >> type;
+			eSpriteType = (CEffectAssist::SPRITE_TYPE)type;
+
 			int iNum = 0;
 			file >> iNum;
+
+			int iWidth, iHeight, iMaxX, iMaxY = 0;
+			file >> iWidth;
+			file >> iHeight;
+			file >> iMaxX;
+			file >> iMaxY;
 
 			float fAniX, fAniY = 0.f;
 			file >> fAniX;
 			file >> fAniY;
+
+			int temp_other = 0;
+			bool assistInfiniteCheck = false;
+			file >> temp_other;
+
+			if (1 == temp_other)
+			{
+				assistInfiniteCheck = true;
+			}
 
 			switch (eType)
 			{
@@ -167,7 +198,10 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 				pData->pEffect->AddFadeOut(fStart, fEnd, fDegree);
 				break;
 			case CEffectAssist::ASSIST_UV_ANI:
-				pData->pEffect->AddUVAnimation(fStart, fEnd, iNum, 1);
+				if (CEffectAssist::SPRITE_FRAME == eSpriteType)
+					pData->pEffect->AddUVAnimation(fStart, fEnd, iNum, 1);
+				else if (CEffectAssist::SPRITE_ATLAS == eSpriteType)
+					pData->pEffect->AddUVAnimation(fStart, fEnd, iMaxX, iMaxY, iWidth, iHeight, 1);
 				break;
 			case CEffectAssist::ASSIST_UV_MOVE:
 				pData->pEffect->AddUVMovement(fStart, fEnd, fAniX, fAniY);
@@ -175,6 +209,8 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 			default:
 				break;
 			}
+
+			pData->pEffect->SetInfiniteCheckAssistEffectFromType(eType, assistInfiniteCheck);
 		}
 
 		int iBillbordCheck = 0;

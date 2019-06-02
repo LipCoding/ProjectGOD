@@ -82,7 +82,7 @@ public:
 	float GetMoveUV_X() { return m_AniX; }
 	float GetMoveUV_Y() { return m_AniY; }
 
-	bool GetInifiniteCheck() { return m_InfiniteCheck; }
+	bool GetInifiniteCheck() { return m_InfiniteAssistCheck; }
 
 	/* Setter */
 	void SetSpriteType(SPRITE_TYPE type) { m_SpriteType = type; }
@@ -107,7 +107,7 @@ public:
 	void SetMoveUV_X(const float& x) { m_AniX = x; }
 	void SetMoveUV_Y(const float& y) { m_AniY = y; }
 
-	void SetInfiniteCheck(bool check) { m_InfiniteCheck = check; }
+	void SetInfiniteCheck(bool check) { m_InfiniteAssistCheck = check; }
 
 public:
 	void Init(class CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE easeType = EASE_END);
@@ -138,7 +138,7 @@ private:
 	float m_LifeTime = 0.f;
 
 	/* Infinite */
-	bool m_InfiniteCheck = false;
+	bool m_InfiniteAssistCheck = false;
 
 	/* For Pattern */
 	float m_StartX = 0.f;

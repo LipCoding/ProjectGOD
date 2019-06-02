@@ -52,10 +52,13 @@ CEffect::CEffect(const CEffect & effect) :
 	m_pRenderer->UpdateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
 		SCT_VERTEX | SCT_PIXEL, &tanimBuffer);
 
+	m_InfiniteCheck = effect.m_InfiniteCheck;
 
 	for(const auto& assist : effect.m_vecAssist)
 	{
-		switch (assist->GetType())
+		CEffectAssist::ASSIST_TYPE eType = assist->GetType();
+
+		switch (eType)
 		{
 		case CEffectAssist::ASSIST_SCALE:
 		{
@@ -85,8 +88,19 @@ CEffect::CEffect(const CEffect & effect) :
 		}
 		case CEffectAssist::ASSIST_UV_ANI:
 		{
-			AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
-				assist->GetNum(), assist->GetRepeat());
+			CEffectAssist::SPRITE_TYPE eSpriteType = assist->GetSpriteType();
+
+			if (CEffectAssist::SPRITE_FRAME == eSpriteType)
+			{
+				AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
+					assist->GetNum(), assist->GetRepeat());
+			}
+			else if (CEffectAssist::SPRITE_ATLAS == eSpriteType)
+			{
+				AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
+					assist->GetMaxX(), assist->GetMaxY(), assist->GetWidth(),
+					assist->GetHeight(), assist->GetRepeat());
+			}
 			break;
 		}
 		case CEffectAssist::ASSIST_UV_MOVE:
@@ -98,6 +112,8 @@ CEffect::CEffect(const CEffect & effect) :
 		default :
 			break;
 		}
+
+		SetInfiniteCheckAssistEffectFromType(eType, assist->GetInifiniteCheck());
 	}
 }
 

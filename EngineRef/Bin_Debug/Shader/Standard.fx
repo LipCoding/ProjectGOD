@@ -343,39 +343,39 @@ PS_OUTPUT StandardEffectTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	vColor.a = vColor.a - g_fAlphaFadeOut + g_fAlphaFadeIn;
 
-	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
-	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
-	float3 vCamDir = normalize(vCamPos - input.vViewPos);
+	//float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
+	//vCamPos = mul(float4(vCamPos, 1.f), g_matView);
+	//float3 vCamDir = normalize(vCamPos - input.vViewPos);
 
-	float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
-	float degree = float(degrees(acos(dotProduct)));
+	//float dotProduct = saturate(dot(normalize(input.vNormal), normalize(vCamDir)));
+	//float degree = float(degrees(acos(dotProduct)));
 
-	output.vColor5.w = (float)input.iDecal;
+	//output.vColor5.w = (float)input.iDecal;
 
-	output.vColor = vColor + g_vColor;
+	output.vColor = vColor /*+ g_vColor*/;
 
-	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
-	output.vColor1.w = 1.f;
-	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
-	output.vColor2.w = input.vProjPos.w;
+	//output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
+	//output.vColor1.w = 1.f;
+	//output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
+	//output.vColor2.w = input.vProjPos.w;
 
-	output.vColor2.y = g_vMtrlDiffuse.x;
-	output.vColor2.z = g_vMtrlAmbient.x;
+	//output.vColor2.y = g_vMtrlDiffuse.x;
+	//output.vColor2.z = g_vMtrlAmbient.x;
 
-	float4	vMtrlSpc;
-	if (g_vMtrlAmbient.w == 1)
-	{
-		vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, input.vUV);
-		vMtrlSpc.w = g_vMtrlSpecular.w;
-		output.vColor4.w = vMtrlSpc.w;
-	}
+	//float4	vMtrlSpc;
+	//if (g_vMtrlAmbient.w == 1)
+	//{
+	//	vMtrlSpc = g_SpecularTex.Sample(g_DifSmp, input.vUV);
+	//	vMtrlSpc.w = g_vMtrlSpecular.w;
+	//	output.vColor4.w = vMtrlSpc.w;
+	//}
 
-	else
-	{
-		vMtrlSpc = g_vMtrlSpecular;
-		output.vColor4.w = g_vMtrlSpecular.w;
-	}
-	output.vColor3 = vMtrlSpc;
+	//else
+	//{
+	//	vMtrlSpc = g_vMtrlSpecular;
+	//	output.vColor4.w = g_vMtrlSpecular.w;
+	//}
+	//output.vColor3 = vMtrlSpc;
 
 	return output;
 }

@@ -39,6 +39,7 @@
 #include "Component/Cell.h"
 #include "../ObjectScript/Player_Test.h"
 #include "../ObjectScript/Sword.h"
+#include "Core/EffectManager.h"
 
 CTestScene::CTestScene()
 {
@@ -198,7 +199,14 @@ bool CTestScene::Init()
 
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
+
+
+#pragma region Effect
+		GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
+		
+#pragma endregion
 	}
+
 
 
 	return true;
@@ -206,6 +214,13 @@ bool CTestScene::Init()
 
 int CTestScene::Update(float fTime)
 {
+	if (m_isFirstCheck)
+	{
+		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
+		
+		m_isFirstCheck = false;
+	}
+	
 	return 0;
 }
 
@@ -243,6 +258,8 @@ void CTestScene::Input(float fTime)
 			SAFE_RELEASE(pLandScape);
 			SAFE_RELEASE(pLandScapeObj);
 		}
+
+		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 	}
 
 	if (KEYDOWN("F2"))
