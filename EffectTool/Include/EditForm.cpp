@@ -806,7 +806,7 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 		bool mainInfiniteCheck = false;
 		mainFile >> temp;
 
-		if (temp)
+		if (0 != temp)
 			mainInfiniteCheck = true;
 
 		pData->pEffect->SetInfiniteMainCheck(mainInfiniteCheck);
@@ -857,10 +857,11 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 			mainFile >> fAniX;
 			mainFile >> fAniY;
 
+			int temp_other = 0;
 			bool assistInfiniteCheck = false;
-			mainFile >> temp;
+			mainFile >> temp_other;
 
-			if (temp)
+			if (0 != temp_other)
 				assistInfiniteCheck = true;
 
 			switch (eType)

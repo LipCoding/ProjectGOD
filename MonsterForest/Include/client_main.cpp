@@ -9,6 +9,7 @@
 #include "UserInterfaceManager.h"
 #include "Chatting.h"
 #include "NetworkManager.h"
+#include "Core/EffectManager.h"
 PG_USING
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,

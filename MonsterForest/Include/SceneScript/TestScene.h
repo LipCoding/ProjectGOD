@@ -18,6 +18,7 @@ private:
 	bool	m_isCheckColliderQuadTree = false;
 	bool	m_isCheckColliderNaviMesh = false;
 
+	bool	m_isFirstCheck = true;
 public:
 	virtual bool Init();
 	virtual int Update(float fTime);

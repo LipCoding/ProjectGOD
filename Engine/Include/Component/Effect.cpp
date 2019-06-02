@@ -37,25 +37,33 @@ CEffect::CEffect(const CEffect & effect) :
 	TextureFullPath = effect.TextureFullPath;
 	TexturePath = effect.TexturePath;
 
-	m_pRenderer = m_pGameObject->FindComponentFromTag<CRenderer>("Renderer");
+	m_tshareBuffer = {};
+	m_tshareBuffer.fAlphaFadeIn = 0.f;
+	m_tshareBuffer.fAlphaFadeOut = 0.f;
+	m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
+
+	/*m_pRenderer = m_pGameObject->FindComponentFromTag<CRenderer>("Renderer");
 	
 	m_tshareBuffer = {};
 	m_tshareBuffer.fAlphaFadeIn = 0.f;
 	m_tshareBuffer.fAlphaFadeOut = 0.f;
 	m_tshareBuffer.vColor = Vector4{ 0.f, 0.f, 0.f, 0.f };
 
-	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);
+	m_pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, &m_tshareBuffer);*/
 
-	ANIMATION2DBUFFER tanimBuffer = {};
+	/*ANIMATION2DBUFFER tanimBuffer = {};
 	tanimBuffer.iType = 0;
 
 	m_pRenderer->UpdateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
-		SCT_VERTEX | SCT_PIXEL, &tanimBuffer);
+		SCT_VERTEX | SCT_PIXEL, &tanimBuffer);*/
 
+	m_InfiniteCheck = effect.m_InfiniteCheck;
 
 	for(const auto& assist : effect.m_vecAssist)
 	{
-		switch (assist->GetType())
+		CEffectAssist::ASSIST_TYPE eType = assist->GetType();
+
+		switch (eType)
 		{
 		case CEffectAssist::ASSIST_SCALE:
 		{
@@ -85,8 +93,19 @@ CEffect::CEffect(const CEffect & effect) :
 		}
 		case CEffectAssist::ASSIST_UV_ANI:
 		{
-			AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
-				assist->GetNum(), assist->GetRepeat());
+			CEffectAssist::SPRITE_TYPE eSpriteType = assist->GetSpriteType();
+
+			if (CEffectAssist::SPRITE_FRAME == eSpriteType)
+			{
+				AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
+					assist->GetNum(), assist->GetRepeat());
+			}
+			else if (CEffectAssist::SPRITE_ATLAS == eSpriteType)
+			{
+				AddUVAnimation(assist->GetStartTime(), assist->GetEndTime(),
+					assist->GetMaxX(), assist->GetMaxY(), assist->GetWidth(),
+					assist->GetHeight(), assist->GetRepeat());
+			}
 			break;
 		}
 		case CEffectAssist::ASSIST_UV_MOVE:
@@ -98,6 +117,8 @@ CEffect::CEffect(const CEffect & effect) :
 		default :
 			break;
 		}
+
+		SetInfiniteCheckAssistEffectFromType(eType, assist->GetInifiniteCheck());
 	}
 }
 
@@ -194,6 +215,8 @@ void CEffect::Input(float fTime)
 
 int CEffect::Update(float fTime)
 {
+	// 렌더러를 멤버변수로 안가지고 있는 경우 ...
+	// 찾아서 초기화 해준다.
 	if (!m_pRenderer)
 	{
 		m_pRenderer = m_pGameObject->FindComponentFromType<CRenderer>(CT_RENDERER);

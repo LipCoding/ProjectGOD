@@ -126,7 +126,7 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");*/
 
-	/* Effect */
+	///* Effect */
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
@@ -184,7 +184,8 @@ void CPlayer_Test::Input(float fTime)
 			{
 				m_pTransform->MoveWorld(AXIS_Z, m_fMoveSpeed * 2.f, fTime);
 				vPos = m_pTransform->GetWorldPos();
-				float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+				//float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
 				vPos.y = fPosY;
 			}
 			else
@@ -233,7 +234,8 @@ void CPlayer_Test::Input(float fTime)
 			{
 				m_pTransform->MoveWorld(AXIS_Z, -m_fMoveSpeed * 2.f, fTime);
 				vPos = m_pTransform->GetWorldPos();
-				float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+				//float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
 				vPos.y = fPosY;
 			}
 			else
