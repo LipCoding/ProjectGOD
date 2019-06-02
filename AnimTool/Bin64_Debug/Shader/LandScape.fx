@@ -507,7 +507,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 	//output.vColor3 = vMtrlSpc;
 
 	_tagLightInfo	tLight = ComputeSplatLight(input.vViewPos, vViewNormal, vUV,
-		input.vUV, g_arrDetailLevelTex, g_iDetailLevel)
+		input.vUV, g_arrDetailLevelTex, g_iDetailLevel);
 
 	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
 	output.vColor.w = vColor.w;

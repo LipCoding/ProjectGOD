@@ -7,11 +7,6 @@
 const unsigned int MAX_BUFF_SIZE = 1024;
 const unsigned int MAX_PACKET_SIZE = 255;
 const unsigned int MAX_STR_SIZE = 100;
-//
-//const unsigned int MAX_USER = 10;
-//
-//const unsigned int MY_SERVER_PORT = 3500;
-//
 
 enum PACKETSTATE : unsigned char
 {
@@ -36,6 +31,7 @@ const unsigned char CS_PACKET_ROTATE_Z = 13;
 const unsigned char CS_PACKET_ROTATE_INV_X = 14;
 const unsigned char CS_PACKET_ROTATE_INV_Y = 15;
 const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
+const unsigned char CS_PACKET_MOVE_STOP = 17;
 
 const unsigned char CS_PACKET_ATTACK = 50;
 const unsigned char CS_PACKET_ATTACK_SKILL1 = 51;
@@ -71,6 +67,7 @@ const unsigned char SC_PACKET_ROTATE_Z = 12;
 const unsigned char SC_PACKET_ROTATE_X_CI = 13;
 const unsigned char SC_PACKET_ROTATE_Y_CI = 14;
 const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
+const unsigned char SC_PACKET_MOVE_STOP = 17;
 
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SKILL1 = 51;
@@ -96,6 +93,7 @@ const unsigned char SC_PACKET_PARTY_CONFIRM = 201;
 const unsigned char SC_PACKET_PARTY_CANCEL = 202;
 const unsigned char SC_PACKET_PARTY_ADD = 203;
 const unsigned char SC_PACKET_PARTY_REMOVE = 204;
+const unsigned char SC_PACKET_PARTY_SYNCRONIZE = 205;
 const unsigned char SC_PACKET_ADD_EXP = 230;
 const unsigned char SC_PACKET_LEVELUP = 231;
 
@@ -145,6 +143,12 @@ struct packet_default
 };
 
 struct cs_packet_connect
+{
+	unsigned short size;
+	unsigned char type;
+};
+
+struct cs_packet_move_stop
 {
 	unsigned short size;
 	unsigned char type;
@@ -237,6 +241,13 @@ struct sc_packet_connect
 	unsigned short size;
 	unsigned char type;
 	unsigned int id;
+};
+
+struct sc_packet_move_stop
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetId;
 };
 
 struct sc_packet_put_player
@@ -397,6 +408,12 @@ struct sc_packet_levelup_player
 	unsigned char type;
 	unsigned int targetID;
 	int level;
+	int exp;
+	int current_hp;
+	int current_mp;
+	int max_hp;
+	int max_mp;
+	int attack_damage;
 };
 
 #pragma pack(pop)

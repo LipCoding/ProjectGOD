@@ -62,7 +62,7 @@
 #include "ObjectScript/BlueLizard.h"
 #include "ObjectScript/Armored_GreenLizard.h"
 #include "ObjectScript/Armored_BlueLizard.h"
-
+#include "PartyStatus.h"
 queue<void*> NetworkManager::clientPacketQueue;
 CGameObject* NetworkManager::pPlayer;
 NetworkManager::NetworkManager() :
@@ -334,6 +334,8 @@ void NetworkManager::processPacket(char * ptr)
 					pPlayer->setCurrentMP(pPacket->current_mp);
 					pPlayer->setLevel(pPacket->level);
 					pPlayer->setMaxHP(200 + pPacket->level * 50);
+					string debugstring = "level : " + to_string(pPacket->level) + " MaxHP : " + to_string(pPlayer->getMaxHP()) + "\n";
+					OutputDebugStringA(debugstring.c_str());
 					pPlayer->setMaxMP(30 + pPacket->level * 10);
 					pPlayer->setMaxEXP(pPacket->level * 100);
 					pPlayer->setAttackDamag(10 + pPacket->level * 5);
@@ -773,6 +775,24 @@ void NetworkManager::processPacket(char * ptr)
 			}
 		}
 		break;
+
+		case SC_PACKET_MOVE_STOP:
+		{
+			sc_packet_animation_player* pPacket = reinterpret_cast<sc_packet_animation_player*>(packet);
+			int id = pPacket->id;
+			char str[128];
+			string appendTag = _itoa(id, str, 10);
+			string objectTag = "Player" + appendTag;
+			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			if (pGameObject != nullptr)
+			{
+				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
+				pAnimation->ChangeClip("Idle1");
+				SAFE_RELEASE(pAnimation);
+			}
+		}
+		break;
+
 		case SC_PACKET_ATTACK_PLAYER:
 		{
 			char str[128];
@@ -795,7 +815,6 @@ void NetworkManager::processPacket(char * ptr)
 
 			if (id == NetworkManager::getInstance()->getMyClientID())
 			{
-				_cprintf("MonsterType : %d", pPacket->objectSetType);
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 				if (nullptr != pGameObject)
 				{
@@ -1343,24 +1362,72 @@ void NetworkManager::processPacket(char * ptr)
 						{
 							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
 							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+
+							//string test = to_string(hp);
+							//test += "\n";
+							//OutputDebugStringA(test.c_str());
 							if (hp < 0)
 							{
 								float ratio = (float)hp / (float)pPlayer->getMaxHP();
 								pPlayer->setCurrentHP(hp);
-								if (myTargetID == pPacket->targetid)
+
+								string test = to_string(hp);
+								test += "\n";
+								OutputDebugStringA(test.c_str());
+
+								/*if (myTargetID == pPacket->targetid)
 								{
 									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
 									pUIHearthBar->setLengthRatio(0.f);
-								}
+								}*/
 							}
 							else
 							{
 								float ratio = (float)hp / (float)pPlayer->getMaxHP();
 								pPlayer->setCurrentHP(hp);
-								if (myTargetID == pPacket->targetid)
+
+								string test = to_string(hp);
+								test += "\n";
+								OutputDebugStringA(test.c_str());
+
+								//if (myTargetID == pPacket->targetid)
+								//{
+								//	CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
+								//	pUIHearthBar->setLengthRatio(ratio);
+								//}
+							}
+						}
+						else if(pPacket->targetid < NPC_START)
+						{
+							CPlayer* pPlayer = pTargetObject->FindComponentFromTag<CPlayer>("Player");
+							int hp = pPlayer->getCurrentHP() - pPacket->damage;
+							if (hp < 0)
+							{
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID != pPacket->targetid)
 								{
-									CUIButton* pUIHearthBar = GET_SINGLE(UserInterfaceManager)->getUIHeartBar();
-									pUIHearthBar->setLengthRatio(ratio);
+									/*PartyStatus* pStatus = GET_SINGLE(UserInterfaceManager)->findPartyState(objectTag);
+									if (pStatus != nullptr)
+									{
+										CUIButton* pUIHearthBar = pStatus->getUIHearthBar();
+										pUIHearthBar->setLengthRatio(0.f);
+									}*/
+								}
+							}
+							else
+							{
+
+								float ratio = (float)hp / (float)pPlayer->getMaxHP();
+								pPlayer->setCurrentHP(hp);
+								if (myTargetID != pPacket->targetid)
+								{
+									/*PartyStatus* pStatus = GET_SINGLE(UserInterfaceManager)->findPartyState(objectTag);
+									if (pStatus != nullptr)
+									{
+										CUIButton* pUIHearthBar = pStatus->getUIHearthBar();
+										pUIHearthBar->setLengthRatio(ratio);
+									}*/
 								}
 							}
 						}
@@ -1990,7 +2057,7 @@ void NetworkManager::processPacket(char * ptr)
 					pAnimation->ChangeClip("Spell2");
 					CTransform* pTr = pGameObject->GetTransform();
 					Vector3 pos = pTr->GetWorldPos();
-					GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
+					//GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
 					SAFE_RELEASE(pTr);
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pGameObject);
@@ -2222,7 +2289,7 @@ void NetworkManager::processPacket(char * ptr)
 					pAnimation->ChangeClip("Spell2");
 					CTransform* pTr = pGameObject->GetTransform();
 					Vector3 pos = pTr->GetWorldPos();
-					GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
+					//GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, pos);
 					SAFE_RELEASE(pTr);
 					SAFE_RELEASE(pAnimation);
 					SAFE_RELEASE(pGameObject);
@@ -3194,6 +3261,61 @@ void NetworkManager::processPacket(char * ptr)
 
 		}
 		break;
+
+		case SC_PACKET_ATTACK_SKILL2_EFFECT:
+		{
+			sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
+			int id = pPacket->playerID;
+
+			int myClientID = NetworkManager::getInstance()->getMyClientID();
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				string appendTag = to_string(myClientID);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				double x = pPlayerTr->GetWorldPos().x;
+				double y = pPlayerTr->GetWorldPos().y;
+				double z = pPlayerTr->GetWorldPos().z;
+
+				//Vector3 vLook = pPlayerTr->GetWorldAxis(AXIS_Z).Normalize();
+				//x += (vLook * 1.75f).x;
+				//y += (vLook * 1.75f).y;
+				//z += (vLook * 1.75f).z;
+				//y += 0.95f;
+				GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, Vector3((float)x, (float)y, (float)z));
+
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			else if (id < NPC_START)
+			{
+				string appendTag = to_string(id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				Vector3 vPos = pPlayerTr->GetWorldPos();
+				//Vector3 vLook = pPlayerTr->GetWorldAxis(AXIS_Z).Normalize();
+				//vPos += vLook * 1.75f;
+				//vPos.y += 0.75f;
+				GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
+
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
+			//	Vector3 vPos = m_pTransform->GetWorldPos();
+			//	Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
+			//	vPos += vLook * 1.75f;
+			//	vPos.y += 0.75f;
+			//	GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
+			//	_cprintf("effect!\n");
+
+
+		}
+		break;
+
 		case SC_PACKET_ATTACK_SKILL4:
 		{
 			sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
@@ -3607,9 +3729,6 @@ void NetworkManager::processPacket(char * ptr)
 			{
 				pDropTableUI->addDropItemSlot(pPacket->itemname1 + (i * 100));
 			}
-			//pDropTableUI->addDropItemSlot(pPacket->itemname1);
-			//pDropTableUI->addDropItemSlot(pPacket->itemname2);
-			//pDropTableUI->addDropItemSlot(pPacket->itemname3);
 
 			pDropTableUI->enableRender(true);
 		}
@@ -3803,6 +3922,7 @@ void NetworkManager::processPacket(char * ptr)
 			}
 		}
 		break;
+		
 		case SC_PACKET_LEVELUP:
 		{
 			sc_packet_levelup_player* pPacket = reinterpret_cast<sc_packet_levelup_player*>(packet);
@@ -3817,8 +3937,23 @@ void NetworkManager::processPacket(char * ptr)
 				if (pPlayerObject != nullptr)
 				{
 					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					/*
+							levelupPacket.exp = 0;
+		levelupPacket.level = this->level;
+		levelupPacket.current_hp = this->currentHP;
+		levelupPacket.current_mp = this->currentMP;
+		levelupPacket.max_hp = this->maxHP;
+		levelupPacket.max_mp = this->maxMP;
+		levelupPacket.attack_damage = this->attackDamage;
+					*/
 					pPlayer->setEXP(0);
-
+					pPlayer->setLevel(pPacket->level);
+					pPlayer->setCurrentHP(pPacket->current_hp);
+					pPlayer->setCurrentMP(pPacket->current_mp);
+					pPlayer->setMaxHP(pPacket->max_hp);
+					pPlayer->setMaxMP(pPacket->max_mp);
+					pPlayer->setAttackDamag(pPacket->attack_damage);
+					pPlayer->setMaxEXP(pPacket->level * 100);
 					Status* pStatus = GET_SINGLE(UserInterfaceManager)->getStatus();
 
 					float ratio = (float)(pPlayer->getEXP()) / (float)(pPlayer->getMaxEXP());
@@ -3842,10 +3977,34 @@ void NetworkManager::processPacket(char * ptr)
 				if (pPlayerObject != nullptr)
 				{
 					CPlayer* pPlayer = pPlayerObject->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->setEXP(0);
+					pPlayer->setLevel(pPacket->level);
+					pPlayer->setCurrentHP(pPacket->current_hp);
+					pPlayer->setCurrentMP(pPacket->current_mp);
+					pPlayer->setMaxHP(pPacket->max_hp);
+					pPlayer->setMaxMP(pPacket->max_mp);
+					pPlayer->setAttackDamag(pPacket->attack_damage);
+					pPlayer->setMaxEXP(pPacket->level * 100);
 					//pPlayer->addExp(pPacket->exp);
 					CTransform* pTr = pPlayerObject->GetTransform();
 					Vector3 pos = pTr->GetWorldPos();
 					GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", nullptr, pos);
+
+					int hp = pPlayer->getCurrentHP();
+					float ratio = (float)hp / (float)pPlayer->getMaxHP();
+					string testdebug = "level : " + to_string(pPlayer->getLevel()) +  " / hp : " + to_string(hp) + " / maxhp : " + to_string(pPlayer->getMaxHP()) + "\n";
+					OutputDebugStringA(testdebug.c_str());
+					pPlayer->setCurrentHP(hp);
+
+					{
+						PartyStatus* pStatus = GET_SINGLE(UserInterfaceManager)->findPartyState(objectTag);
+						if (pStatus != nullptr)
+						{
+							CUIButton* pUIHearthBar = pStatus->getUIHearthBar();
+							pUIHearthBar->setLengthRatio(ratio);
+						}
+					}
+
 					SAFE_RELEASE(pTr);
 					SAFE_RELEASE(pPlayer);
 				}
@@ -3862,6 +4021,76 @@ void NetworkManager::processPacket(char * ptr)
 
 			GET_SINGLE(UserInterfaceManager)->addPartyPlayer(objectID);
 			//SAFE_RELEASE(pPlayerObj);
+
+		}
+		break;
+		case SC_PACKET_PARTY_SYNCRONIZE:
+		{
+			sc_packet_put_player* pPacket = reinterpret_cast<sc_packet_put_player*>(packet);
+			int id = pPacket->id;
+			OBJECT_SET_TYPE ObjectSetType = (OBJECT_SET_TYPE)static_cast<sc_packet_put_player*>(packet)->objectSetType;
+
+			if (id == NetworkManager::getInstance()->getMyClientID())
+			{
+				char str[128];
+				string appendTag = _itoa(id, str, 10);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* pPlayerObj = CGameObject::FindObject(objectTag);
+				if (nullptr != pPlayerObj)
+				{
+					CTransform*	pTr = pPlayerObj->GetTransform();
+
+					float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+					pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+					SAFE_RELEASE(pTr);
+
+					CPlayer*	pPlayer = pPlayerObj->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->setCurrentHP(pPacket->current_hp);
+
+					Status* pStatus = GET_SINGLE(UserInterfaceManager)->getStatus();
+
+					float ratio = (float)(pPlayer->getEXP()) / (float)(pPlayer->getMaxEXP());
+					pStatus->getUIPureBar()->setLengthRatio(ratio);
+					//SAFE_RELEASE(pPlayer);
+				}
+			}
+			else if (id < NPC_START)
+			{
+				char str[128];
+				string appendTag = _itoa(pPacket->id, str, 10);
+				string objectTag = "Player" + appendTag;
+
+				CLayer*	pLayer = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLayer("Default");
+				CGameObject* pPlayerObj = CGameObject::FindObject(objectTag);
+				if (nullptr != pPlayerObj)
+				{
+					CPlayer*	pPlayer = pPlayerObj->FindComponentFromTag<CPlayer>("Player");
+					pPlayer->setCurrentHP(pPacket->current_hp);
+					//
+
+					CTransform*	pTr = pPlayerObj->GetTransform();
+					float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
+					pTr->SetWorldPos(pPacket->x, yPos, pPacket->z);
+					SAFE_RELEASE(pTr);
+
+					int hp = pPlayer->getCurrentHP();
+					float ratio = (float)hp / (float)pPlayer->getMaxHP();
+					pPlayer->setCurrentHP(hp);
+					string debugstring = "hp : " + to_string(hp) + " MaxHP : " + to_string(pPlayer->getMaxHP()) + "\n";
+					OutputDebugStringA(debugstring.c_str());
+					{
+						PartyStatus* pStatus = GET_SINGLE(UserInterfaceManager)->findPartyState(objectTag);
+						if (pStatus != nullptr)
+						{
+							CUIButton* pUIHearthBar = pStatus->getUIHearthBar();
+							pUIHearthBar->setLengthRatio(ratio);
+						}
+					}
+					//SAFE_RELEASE(pPlayer);
+				}
+			}
+
 
 		}
 		break;

@@ -29,6 +29,7 @@ public:
 	CPlayer();
 	CPlayer(const CPlayer& player);
 	~CPlayer();
+private:
 
 private:
 	float	m_fMoveSpeed;
