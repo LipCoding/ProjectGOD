@@ -200,6 +200,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneScript\MainScene.h" />
     <ClInclude Include="SceneScript\LoginScene.h" />
+    <ClInclude Include="SceneScript\SecondScene.h" />
     <ClInclude Include="SceneScript\TestScene.h" />
     <ClInclude Include="SkillWindow.h" />
     <ClInclude Include="Slot.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="QuickSlot.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
     <ClCompile Include="SceneScript\LoginScene.cpp" />
+    <ClCompile Include="SceneScript\SecondScene.cpp" />
     <ClCompile Include="SceneScript\TestScene.cpp" />
     <ClCompile Include="SkillWindow.cpp" />
     <ClCompile Include="Slot.cpp" />

@@ -63,6 +63,7 @@
 #include "ObjectScript/Armored_GreenLizard.h"
 #include "ObjectScript/Armored_BlueLizard.h"
 #include "PartyStatus.h"
+#include "SceneScript/SecondScene.h"
 queue<void*> NetworkManager::clientPacketQueue;
 CGameObject* NetworkManager::pPlayer;
 NetworkManager::NetworkManager() :
@@ -711,6 +712,8 @@ void NetworkManager::processPacket(char * ptr)
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (pGameObject == nullptr)
+					break;
 				CTransform* pTransform = pGameObject->GetTransform();
 
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
@@ -744,6 +747,8 @@ void NetworkManager::processPacket(char * ptr)
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (pGameObject == nullptr)
+					break;
 				CTransform* pTransform = pGameObject->GetTransform();
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 				pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
@@ -773,6 +778,24 @@ void NetworkManager::processPacket(char * ptr)
 					SAFE_RELEASE(pGameObject);
 				}
 			}
+		}
+		break;
+
+		case SC_PACKET_SCENECHANGE_SCENE2:
+		{
+			int id = NetworkManager::getInstance()->myClientID;
+			string appendTag = to_string(id);
+			string objectTag = "Player" + appendTag;
+			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			CTransform* pTr = pGameObject->GetTransform();
+			pTr->SetWorldPos(200, 0, 200);
+			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("SecondScene");
+
+			pScene->CreateSceneScript<SecondScene>("SecondScene", false);
+
+			//SAFE_RELEASE(pMainScene);
+
+			SAFE_RELEASE(pScene);
 		}
 		break;
 
@@ -3472,6 +3495,8 @@ void NetworkManager::processPacket(char * ptr)
 				string objectTag = "Player" + appendTag;
 
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+				if (pGameObject == nullptr)
+					break;
 				CTransform* pTransform = pGameObject->GetTransform();
 
 				if (SC_PACKET_ROTATE_X == packet_type)

@@ -178,6 +178,9 @@
     <Filter Include="04. NetworkManager">
       <UniqueIdentifier>{7857f871-9947-4d9d-ad51-1d7b1331aa51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\05. SecondScene">
+      <UniqueIdentifier>{281d9b65-5d3e-483a-a620-48f3396e2954}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -342,6 +345,9 @@
     <ClInclude Include="NetworkManager.h">
       <Filter>04. NetworkManager</Filter>
     </ClInclude>
+    <ClInclude Include="SceneScript\SecondScene.h">
+      <Filter>01. Scene\05. SecondScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -496,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="NetworkManager.cpp">
       <Filter>04. NetworkManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneScript\SecondScene.cpp">
+      <Filter>01. Scene\05. SecondScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
