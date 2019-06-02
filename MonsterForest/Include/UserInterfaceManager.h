@@ -36,6 +36,10 @@ class UserInterfaceManager
 public:
 	bool initialize();
 	void update(float time);
+
+public:
+	PartyStatus* findPartyState(const string& playerName);
+
 public:
 	CUIButton* getUIHeartBar() { return this->pStatus->getUIHearthBar(); }
 	CUIButton* getEnemyUIHearthBar() { return this->pEnemyStatus->getUIHearthBar(); }
@@ -60,6 +64,7 @@ public:
 	QuickSlot* getQuickSlot() { return this->pQuickSlot; }
 	DropTableUI* getDropTableUI() { return this->pDropTableUI; }
 	PGMessageBox* getPGMessageBox() { return this->pPGMessageBox; }
+	
 
 	DECLARE_SINGLE(UserInterfaceManager);
 };

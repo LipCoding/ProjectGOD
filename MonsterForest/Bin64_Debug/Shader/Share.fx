@@ -231,7 +231,8 @@ float2 ComputeUV(float2 vInputUV)
 
 	vUV.x = (g_iAniFrameX + vInputUV.x) / g_iAniLengthX;
 	vUV.y = (g_iAniFrameY + vInputUV.y) / g_iAniLengthY;
-
+	//vUV.x = vInputUV.x;
+	//vUV.y = vInputUV.y;
 	return vUV;
 }
 

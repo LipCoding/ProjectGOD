@@ -94,12 +94,12 @@ bool PartyStatus::initialize()
 
 		CGameObject*	pMPUIObj = CGameObject::CreateObject("MPUI", pUILayer);
 		pUIManaBar = pMPUIObj->AddComponent<CUIButton>("MPUI");
-		pUIManaBar->setUILength(125.f);
+		pUIManaBar->setUILength(95.f);
 		pUIManaBar->setLengthRatio(1.f);
 
 		CTransform*	pButtonTr = pMPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f*scale, 20.f*scale, 1.f);
+		pButtonTr->SetWorldScale(100.f, 19.f, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 95.f, basePos.y + 30.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
@@ -137,12 +137,12 @@ bool PartyStatus::initialize()
 
 		CGameObject*	pHPUIObj = CGameObject::CreateObject("HPUI", pUILayer);
 		pUIHearthBar = pHPUIObj->AddComponent<CUIButton>("HPUI");
-		pUIHearthBar->setUILength(125.f);
+		pUIHearthBar->setUILength(95.f);
 		pUIHearthBar->setLengthRatio(1.f);
 
 		CTransform*	pButtonTr = pHPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f*scale, 25.f*scale, 1.f);
+		pButtonTr->SetWorldScale(100.f, 19.f, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 95.f, basePos.y + 1.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
@@ -180,12 +180,12 @@ bool PartyStatus::initialize()
 
 		CGameObject*	pHPUIObj = CGameObject::CreateObject("PureUI", pUILayer);
 		pUIPureBar = pHPUIObj->AddComponent<CUIButton>("PureUI");
-		pUIPureBar->setUILength(125.f);
+		pUIPureBar->setUILength(95.f);
 		pUIPureBar->setLengthRatio(1.f);
 
 		CTransform*	pButtonTr = pHPUIObj->GetTransform();
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-		pButtonTr->SetWorldScale(125.f*scale, 25.f*scale, 1.f);
+		pButtonTr->SetWorldScale(100.f, 19.f, 1.f);
 		pButtonTr->SetWorldPos(basePos.x + 95.f, basePos.y + 58.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);

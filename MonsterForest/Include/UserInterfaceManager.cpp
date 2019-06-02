@@ -535,6 +535,21 @@ void UserInterfaceManager::update(float time)
 
 }
 
+PartyStatus * UserInterfaceManager::findPartyState(const string & playerName)
+{
+	PartyStatus* pStatus = nullptr;
+	for (auto& player : partyCont)
+	{
+		if (player->getPlayerName() == playerName)
+		{
+			pStatus = player;
+			break;
+		}
+	}
+
+	return pStatus;
+}
+
 void UserInterfaceManager::addPartyPlayer(const string& playerName)
 {
 	for (auto& player : partyCont)
