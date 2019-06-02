@@ -78,6 +78,7 @@ const unsigned char SC_PACKET_MOVE_STOP = 17;
 
 const unsigned char SC_PACKET_SCENECHANGE_SCENE1 = 40;
 const unsigned char SC_PACKET_SCENECHANGE_SCENE2 = 41;
+const unsigned char SC_PACKET_SCENECHANGE_DEVIL_DUNGEON = 42;
 
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SKILL1 = 51;

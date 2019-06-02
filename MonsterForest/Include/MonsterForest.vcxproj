@@ -198,6 +198,7 @@
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuickSlot.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneScript\DungeonScene.h" />
     <ClInclude Include="SceneScript\MainScene.h" />
     <ClInclude Include="SceneScript\LoginScene.h" />
     <ClInclude Include="SceneScript\SecondScene.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="PGMessageBox.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuickSlot.cpp" />
+    <ClCompile Include="SceneScript\DungeonScene.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />
     <ClCompile Include="SceneScript\LoginScene.cpp" />
     <ClCompile Include="SceneScript\SecondScene.cpp" />

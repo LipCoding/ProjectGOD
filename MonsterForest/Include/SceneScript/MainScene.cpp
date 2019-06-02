@@ -101,7 +101,10 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
-
+#pragma region Effect
+	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
+	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+#pragma endregion
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -883,6 +886,16 @@ void CMainScene::Input(float fTime)
 				{
 					CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
 
+					if (pColl == nullptr)
+						continue;
+
+					CGameObject* pObject = pColl->GetGameObject();
+					string object_tag = "Player" + to_string(NetworkManager::getInstance()->getMyClientID());
+					if (pObject->GetTag() == object_tag)
+					{
+						clickedEnemy = false;
+						break;
+					}
 					if (pRay->CheckCollList(pColl))
 					{
 						clickedEnemy = true;
@@ -892,6 +905,7 @@ void CMainScene::Input(float fTime)
 
 				if (clickedEnemy)
 				{
+
 					GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
 				}
 				else

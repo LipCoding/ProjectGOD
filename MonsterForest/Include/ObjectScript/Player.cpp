@@ -413,6 +413,13 @@ void CPlayer::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 {
 	if (KEYDOWN("MouseRButton"))
 	{
+		CGameObject* pSrcObject = pSrc->GetGameObject();
+		CGameObject* pDestObject = pDest->GetGameObject();
+		string object_tag = "Player" + to_string(NetworkManager::getInstance()->getMyClientID());
+
+		if ((pSrcObject->GetTag() == object_tag) || (pDestObject->GetTag() == object_tag))
+			return;
+
 		if ((pSrc->GetTag() == "MouseRay" || pDest->GetTag() == "MouseRay") && GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 		{
 			// UI¸¦ ¶ç¿î´Ù.
