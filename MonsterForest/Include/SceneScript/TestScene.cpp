@@ -170,7 +170,7 @@ bool CTestScene::Init()
 		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells())[0]->Get_CenterPos();
 
 		pTr->SetWorldPos(vFirstNodeCenterPos);
-		pTr->SetWorldScale(1.f, 1.f, 1.f);
+		pTr->SetWorldScale(1.5f, 1.5f, 1.5f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);	
 
 		/* Cam */
@@ -203,7 +203,8 @@ bool CTestScene::Init()
 
 #pragma region Effect
 		GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
-		
+		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 #pragma endregion
 	}
 
@@ -216,8 +217,8 @@ int CTestScene::Update(float fTime)
 {
 	if (m_isFirstCheck)
 	{
-		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
-		
+		/*GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));*/
 		m_isFirstCheck = false;
 	}
 	
@@ -259,7 +260,7 @@ void CTestScene::Input(float fTime)
 			SAFE_RELEASE(pLandScapeObj);
 		}
 
-		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+		//GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 	}
 
 	if (KEYDOWN("F2"))
