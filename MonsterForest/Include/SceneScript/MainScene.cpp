@@ -90,6 +90,7 @@ void CMainScene::chat_callback(float fTime)
 
 bool CMainScene::Init()
 {
+	const auto& objlist = CGameObject::getObjectList();
 	/* Effect */
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
@@ -100,7 +101,10 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
-
+#pragma region Effect
+	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
+	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+#pragma endregion
 #pragma region Layer Setting
 	{
 		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
@@ -637,6 +641,7 @@ void CMainScene::Input(float fTime)
 					}
 				}
 			}
+
 			if (KEYDOWN("Skill3"))
 			{
 				char str[128];
@@ -747,6 +752,19 @@ void CMainScene::Input(float fTime)
 				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 
 			}
+			else if (KEYUP("MoveRight"))
+			{
+				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_move_stop);
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				DWORD iobyte;
+
+				pPacket->type = CS_PACKET_MOVE_STOP;
+
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+			}
 
 
 			if (KEYPUSH("MoveLeft"))
@@ -762,6 +780,19 @@ void CMainScene::Input(float fTime)
 				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
 				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 
+			}
+			else if (KEYUP("MoveLeft"))
+			{
+				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_move_stop);
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				DWORD iobyte;
+
+				pPacket->type = CS_PACKET_MOVE_STOP;
+
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 
 			if (KEYPUSH("MoveFront"))
@@ -792,11 +823,18 @@ void CMainScene::Input(float fTime)
 				//pAnimation->ChangeClip("MOVE");
 				//SAFE_RELEASE(pAnimation);
 			}
-
-			if (KEYUP("MoveFront"))
+			else if (KEYUP("MoveFront"))
 			{
-				CAnimation* pAnimation = NetworkManager::getInstance()->pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ReturnDefaultClip();
+				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_move_stop);
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				DWORD iobyte;
+
+				pPacket->type = CS_PACKET_MOVE_STOP;
+
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 
 			if (KEYPUSH("MoveBack"))
@@ -825,6 +863,19 @@ void CMainScene::Input(float fTime)
 					char a = 0;
 				}
 			}
+			else if (KEYUP("MoveBack"))
+			{
+				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_move_stop);
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				DWORD iobyte;
+
+				pPacket->type = CS_PACKET_MOVE_STOP;
+
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+			}
 
 			if (KEYDOWN("MouseLButton"))
 			{
@@ -835,6 +886,16 @@ void CMainScene::Input(float fTime)
 				{
 					CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
 
+					if (pColl == nullptr)
+						continue;
+
+					CGameObject* pObject = pColl->GetGameObject();
+					string object_tag = "Player" + to_string(NetworkManager::getInstance()->getMyClientID());
+					if (pObject->GetTag() == object_tag)
+					{
+						clickedEnemy = false;
+						break;
+					}
 					if (pRay->CheckCollList(pColl))
 					{
 						clickedEnemy = true;
@@ -844,6 +905,7 @@ void CMainScene::Input(float fTime)
 
 				if (clickedEnemy)
 				{
+
 					GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
 				}
 				else
