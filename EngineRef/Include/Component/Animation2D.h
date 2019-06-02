@@ -40,6 +40,12 @@ public:
 		float fOptionTimeLimit, const string& strTexKey,
 		const vector<wstring>* vecFileName = NULL,
 		const string& strPathKey = TEXTURE_PATH);
+	bool CreateClipAtlas(const string& strKey,
+		ANIMATION2D_OPTION eOption, int iFrameMaxX, int iFrameMaxY,
+		int iLengthX, int iLengthY, int iStartY, float fAnimLimitTime, int iCountLimit,
+		float fOptionTimeLimit, const string& strTexKey,
+		TCHAR* pFileName = NULL,
+		const string& strPathKey = TEXTURE_PATH);
 	PANIMATIONCLIP2D GetClip(const string& strKey);
 	bool AddClip(const string& strKey, PANIMATIONCLIP2D pClip);
 	bool ChangeAnimation(const string& strKey);

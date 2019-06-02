@@ -326,6 +326,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	pData->pTr = pData->pObject->GetTransform();
 	pData->pTr->SetWorldPos(50.f / 2.f, 0.f, 50.f / 2.f);
 	pData->pEffect = pData->pObject->AddComponent<CEffect>("Effect");
+	pData->pEffect->SetEffectName(pData->strName);
 
 	if (!pData->pEffect->LoadEffectMesh( (string)CT2CA(fullPath), (string)CT2CA(name) ))
 	{
@@ -602,6 +603,8 @@ void CEditForm::OnBnClickedButtonEffectSave()
 		mainFile << m_vecEffect[i]->pEffect->GetMainStartTime() << endl;
 		mainFile << m_vecEffect[i]->pEffect->GetMainEndTime() << endl;
 
+		mainFile << (int)m_vecEffect[i]->pEffect->GetInfiniteMainCheck() << endl;
+
 		// Effect Assist 정보
 
 		// Assist 갯수 저장
@@ -626,11 +629,19 @@ void CEditForm::OnBnClickedButtonEffectSave()
 					 << (*pVecAssist)[j]->GetPowerZ() << endl;
 			//degree
 			mainFile << (*pVecAssist)[j]->GetDegree() << endl;
-			//num
+
+			//num (sprite)
+			mainFile << (int)(*pVecAssist)[j]->GetSpriteType() << endl;
 			mainFile << (*pVecAssist)[j]->GetNum() << endl;
+			mainFile << (*pVecAssist)[j]->GetWidth() << endl;
+			mainFile << (*pVecAssist)[j]->GetHeight() << endl;
+			mainFile << (*pVecAssist)[j]->GetMaxX() << endl;
+			mainFile << (*pVecAssist)[j]->GetMaxY() << endl;
 			//ani
 			mainFile << (*pVecAssist)[j]->GetMoveUV_X() << endl;
 			mainFile << (*pVecAssist)[j]->GetMoveUV_Y() << endl;
+			//infinite
+			mainFile << (int)(*pVecAssist)[j]->GetInifiniteCheck() << endl;
 		}
 
 		int iBillbordCheck = 0;
@@ -791,6 +802,15 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 		pData->pEffect->SetMainStartTime(fMainStartTime);
 		pData->pEffect->SetMainEndTime(fMainEndTime);
 
+		int temp = 0;
+		bool mainInfiniteCheck = false;
+		mainFile >> temp;
+
+		if (temp)
+			mainInfiniteCheck = true;
+
+		pData->pEffect->SetInfiniteMainCheck(mainInfiniteCheck);
+
 		// Effect Assist 정보
 		// Assist 갯수 
 		int iAssistCount = 0;
@@ -820,12 +840,28 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 			float fDegree = 0.f;
 			mainFile >> fDegree;
 
+			CEffectAssist::SPRITE_TYPE eSpriteType;
+			mainFile >> type;
+			eSpriteType = (CEffectAssist::SPRITE_TYPE)type;
+
 			int iNum = 0;
 			mainFile >> iNum;
+			
+			int iWidth, iHeight, iMaxX, iMaxY = 0;
+			mainFile >> iWidth;
+			mainFile >> iHeight;
+			mainFile >> iMaxX;
+			mainFile >> iMaxY;
 
 			float fAniX, fAniY = 0.f;
 			mainFile >> fAniX;
 			mainFile >> fAniY;
+
+			bool assistInfiniteCheck = false;
+			mainFile >> temp;
+
+			if (temp)
+				assistInfiniteCheck = true;
 
 			switch (eType)
 			{
@@ -842,7 +878,10 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 				pData->pEffect->AddFadeOut(fStart, fEnd, fDegree);
 				break;
 			case CEffectAssist::ASSIST_UV_ANI:
-				pData->pEffect->AddUVAnimation(fStart, fEnd, iNum, 1);
+				if(CEffectAssist::SPRITE_FRAME == eSpriteType)
+					pData->pEffect->AddUVAnimation(fStart, fEnd, iNum, 1);
+				else if(CEffectAssist::SPRITE_ATLAS == eSpriteType)
+					pData->pEffect->AddUVAnimation(fStart, fEnd, iMaxX, iMaxY, iWidth, iHeight, 1);
 				break;
 			case CEffectAssist::ASSIST_UV_MOVE:
 				pData->pEffect->AddUVMovement(fStart, fEnd, fAniX, fAniY);
@@ -850,6 +889,8 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 			default:
 				break;
 			}
+
+			pData->pEffect->SetInfiniteCheckAssistEffectFromType(eType, assistInfiniteCheck);
 		}
 
 		int iBillbordCheck = 0;

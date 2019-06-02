@@ -29,6 +29,8 @@ public:
 	const string& GetLocalPath() { return LocalPath; }
 	const string& GetTexturePath() { return TexturePath; }
 
+	bool GetInfiniteMainCheck() { return m_InfiniteCheck; }
+
 	void SetOperationCheck(bool check);
 	void SetErase(bool check);
 	void SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check);
@@ -37,7 +39,9 @@ public:
 	void SetMainEndTime(const float& end) { m_MainEndTime = end; }
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
+	void SetInfiniteMainCheck(bool check) { m_InfiniteCheck = check; }
 
+	void SetEffectName(const string& name) { EffectName = name; }
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -55,6 +59,9 @@ public:
 
 	/* Material */
 	void SetEffectTexture(const string& name, const string& fullPath);
+
+	/* Infinite */
+	void SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_TYPE type, bool check);
 
 	/* Add Assist Effect */
 
@@ -74,6 +81,8 @@ public:
 
 	/* UV */
 	void AddUVAnimation(const float& start, const float& end, const int& num, const int& repeat);
+	void AddUVAnimation(const float& start, const float& end, const int& max_x, const int& max_y,
+						const int& width, const int& height, const int& repeat);
 	void AddUVMovement(const float& start, const float& end, const float& moveX, const float& moveY);
 
 	/* Delete Assist Effect */
@@ -95,6 +104,9 @@ private:
 	/* Repeat */
 	int m_Repeat = 0;
 
+	/* For 중복 피하기 */
+	int m_ComponentTagNum = 0;
+
 	/* Name */
 	string EffectName = "";
 	string FileName = "";
@@ -105,6 +117,8 @@ private:
 	string LocalPath = "";
 	string TexturePath = "";
 
+	/* Infinite */
+	bool m_InfiniteCheck = false;
 
 	/* Class */
 	class CRenderer *m_pRenderer = nullptr;

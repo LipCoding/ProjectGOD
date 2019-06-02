@@ -295,11 +295,16 @@ VS_OUTPUT_TEX_NORMAL StandardEffectTexNormalVS(VS_INPUT_TEX_NORMAL input)
 	output.vNormal = normalize(mul(float4(input.vNormal, 0.f), g_matWV).xyz);
 	output.vViewPos = mul(float4(input.vPos, 1.f), g_matWV).xyz;
 
+	/* ATLAS */
 	if (g_iAniType == 1)
+	{
 		output.vUV = ComputeUV(input.vUV);
+	}
 	else
+	{
 		output.vUV = input.vUV;
-	
+	}
+
 	output.iDecal = 1;
 
 	return output;
@@ -311,7 +316,16 @@ PS_OUTPUT StandardEffectTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 
 	float4 vColor;
 
+	/* ATLAS */
 	if (g_iAniType == 1)
+	{
+		float2 vUV;
+		vUV.x = input.vUV.x + g_iAniFrameX;
+		vUV.y = input.vUV.y + g_iAniFrameY;
+		vColor = g_DifTex.Sample(g_DifSmp, vUV);
+	}
+	/* FRAME */
+	else if (g_iAniType == 2)
 	{
 		float3	vUV;
 		vUV.xy = input.vUV;

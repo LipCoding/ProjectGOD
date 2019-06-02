@@ -9,6 +9,14 @@ PG_USING
 
 class CEffectTab1 : public CDialogEx
 {
+public:
+	enum SpriteType
+	{
+		SPRITE_TYPE_FRAME,
+		SPRITE_TYPE_ATLAS,
+		SPRITE_TYPE_END
+	};
+
 	DECLARE_DYNAMIC(CEffectTab1)
 
 public:
@@ -66,6 +74,16 @@ private:
 	CEdit m_editUVSpriteEndTime;
 	CEdit m_editUVSpriteNum;
 	
+	int m_iUVSpriteStaticWidth;
+	int m_iUVSpriteStaticHeight;
+	int m_iUVSpriteStaticMax_X;
+	int m_iUVSpriteStaticMax_Y;
+
+	CEdit m_editUVSpriteWidth;
+	CEdit m_editUVSpriteHeight;
+	CEdit m_editUVSpriteMax_X;
+	CEdit m_editUVSpriteMax_Y;
+
 	/* UV Move */
 	float m_fMoveUVStaticStartTime;
 	float m_fMoveUVStaticEndTime;
@@ -85,6 +103,13 @@ private:
 	CButton m_checkFadeOut;
 	CButton m_checkUVSprite;
 	CButton m_checkUVMove;
+
+	CButton m_checkInfiniteFadeIn;
+	CButton m_checkInfiniteFadeOut;
+	CButton m_checkInfiniteUVMove;
+	CButton m_checkInfiniteUVSprite;
+
+	int m_iRadioSpriteType;
 
 public:
 	void UpdateForm();
@@ -117,8 +142,8 @@ private:
 private:
 	void AddFadeIn(class CEffect *pEffect);
 	void AddFadeOut(class CEffect *pEffect);
-	void AddUVSprite(class CEffect *pEffect);
-	void AddUVMove(class CEffect *pEffect);
+	bool AddUVSprite(class CEffect *pEffect);
+	bool AddUVMove(class CEffect *pEffect);
 
 public:
 	afx_msg void OnBnClickedButtonFadeInInput();
@@ -129,7 +154,6 @@ public:
 	afx_msg void OnBnClickedButtonFadeOutStop();
 	afx_msg void OnBnClickedCheckFadeIn();
 	afx_msg void OnBnClickedCheckFadeOut();
-
 	afx_msg void OnBnClickedButtonUvSpriteInput();
 	afx_msg void OnBnClickedButtonUvSpritePlay();
 	afx_msg void OnBnClickedButtonUvSpriteStop();
@@ -138,5 +162,13 @@ public:
 	afx_msg void OnBnClickedButtonUvMovePlay();
 	afx_msg void OnBnClickedButtonUvMoveStop();
 	afx_msg void OnBnClickedCheckUv();
+	afx_msg void OnBnClickedCheckInfiniteFadeIn();
+	afx_msg void OnBnClickedCheckInfiniteFadeOut();
+	afx_msg void OnBnClickedCheckInfiniteUvMove();
+
+	afx_msg void OnBnClickedRadioSpriteType1();
+	afx_msg void OnBnClickedRadioSpriteType2();
+
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnBnClickedCheckInfiniteUvSprite();
 };

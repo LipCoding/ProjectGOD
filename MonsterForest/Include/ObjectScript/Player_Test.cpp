@@ -120,11 +120,22 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");*/
 
-	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+	/*GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");*/
+
+	/* Effect */
+	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+	//GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
 	return true;
 }
 
@@ -249,29 +260,31 @@ void CPlayer_Test::Input(float fTime)
 
 	if (KEYDOWN("Attack1"))
 	{
-		//Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vPos = m_pTransform->GetWorldPos();
 		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-		m_pAnimation->ChangeClip("Attack1");
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, vPos);
+		m_pAnimation->ChangeClip("Spell1");
 	}
 
 	if (KEYDOWN("Attack2"))
 	{
-		//Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vPos = m_pTransform->GetWorldPos();
 		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Critical", nullptr, vPos);
-		m_pAnimation->ChangeClip("Attack2");
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
+		m_pAnimation->ChangeClip("Spell2");
 	}
 
 	if (KEYDOWN("Attack3"))
 	{
 		Vector3 vPos = m_pTransform->GetWorldPos();
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
-		m_pAnimation->ChangeClip("Spell4");
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, vPos);
+		m_pAnimation->ChangeClip("Spell");
 	}
 #endif
 }

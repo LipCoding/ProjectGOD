@@ -104,7 +104,7 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_Y, m_editPatternScaleY);
 	DDX_Control(pDX, IDC_EDIT_PATTERN_SCALE_Z, m_editPatternScaleZ);
 	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_SCALE_TIME, m_fPatternStaticScaleTime);
-	DDX_Control(pDX, IDC_CHECK_SCAILING, m_checkSclaling);
+	DDX_Control(pDX, IDC_CHECK_SCAILING, m_checkScaling);
 	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_X, m_fPatternStaticRotX);
 	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_Y, m_fPatternStaticRotY);
 	DDX_Text(pDX, IDC_EDIT_PATTERN_STATIC_ROT_Z, m_fPatternStaticRotZ);
@@ -127,6 +127,9 @@ void CEffectTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MAIN_REPEAT, m_editMainRepeat);
 	DDX_Text(pDX, IDC_EDIT_STATIC_MAIN_TIME, m_fMainStaticTime);
 	DDX_Control(pDX, IDC_CHECK_MAIN_SELECT_ALL, m_checkPartOrAll);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_SCALE, m_checkInfiniteScaling);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_ROTATION, m_checkInfiniteRotation);
+	DDX_Control(pDX, IDC_CHECK_INFINITE_MAIN, m_checkInfiniteMain);
 }
 
 BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
@@ -167,6 +170,9 @@ BEGIN_MESSAGE_MAP(CEffectTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_PLAY, &CEffectTab::OnBnClickedButtonMainPlay)
 	ON_BN_CLICKED(IDC_BUTTON_MAIN_STOP, &CEffectTab::OnBnClickedButtonMainStop)
 	ON_BN_CLICKED(IDC_BUTTON_COPY_CURRENT_EFFECT, &CEffectTab::OnBnClickedButtonCopyCurrentEffect)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_SCALE, &CEffectTab::OnBnClickedCheckInfiniteScale)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_ROTATION, &CEffectTab::OnBnClickedCheckInfiniteRotation)
+	ON_BN_CLICKED(IDC_CHECK_INFINITE_MAIN, &CEffectTab::OnBnClickedCheckInfiniteMain)
 END_MESSAGE_MAP()
 
 // CEffectTab 메시지 처리기
@@ -184,8 +190,12 @@ BOOL CEffectTab::OnInitDialog()
 	InitComboBox();
 
 	/* Check */
-	m_checkSclaling.SetCheck(0);
+	m_checkScaling.SetCheck(0);
 	m_checkRotating.SetCheck(0);
+	m_checkInfiniteScaling.SetCheck(0);
+	m_checkInfiniteRotation.SetCheck(0);
+
+	m_checkInfiniteMain.SetCheck(0);
 
 	UpdateData(FALSE);
 
@@ -214,8 +224,12 @@ void CEffectTab::InitFormValue()
 	m_comboEaseSheet_Rot.SetCurSel(0);
 
 	/* Check */
-	m_checkSclaling.SetCheck(0);
+	m_checkScaling.SetCheck(0);
 	m_checkRotating.SetCheck(0);
+	m_checkInfiniteScaling.SetCheck(0);
+	m_checkInfiniteRotation.SetCheck(0);
+
+	m_checkInfiniteMain.SetCheck(0);
 
 	InitMainTimer();
 	InitFormInfo();
@@ -396,6 +410,11 @@ void CEffectTab::UpdateMainTimer()
 		m_fMainStaticEndTime = pEffect->GetMainEndTime();
 		m_iMainRepeat = pEffect->GetMainRepeat();
 
+		if(pEffect->GetInfiniteMainCheck())
+			m_checkInfiniteMain.SetCheck(1);
+		else
+			m_checkInfiniteMain.SetCheck(0);
+
 		SAFE_RELEASE(pEffect);
 	}
 }
@@ -437,13 +456,19 @@ void CEffectTab::UpdatePattern()
 
 
 			m_comboEaseSheet_Scale.SetCurSel(pAssistScale->GetEaseType());
-			m_checkSclaling.SetCheck(1);
+			m_checkScaling.SetCheck(1);
+			
+			if (pAssistScale->GetInifiniteCheck())
+				m_checkInfiniteScaling.SetCheck(1);
+			else
+				m_checkInfiniteScaling.SetCheck(0);
 		}
 		else
 		{
 			InitFormPatternScale();
 			m_comboEaseSheet_Scale.SetCurSel(0);
-			m_checkSclaling.SetCheck(0);
+			m_checkScaling.SetCheck(0);
+			m_checkInfiniteScaling.SetCheck(0);
 		}
 
 		/* Rotate */
@@ -459,9 +484,6 @@ void CEffectTab::UpdatePattern()
 			m_fPatternStaticRotEndTime = pAssistRot->GetEndTime();
 			m_iPatternStaticRepeat = pAssistRot->GetRepeat();
 
-			m_comboEaseSheet_Rot.SetCurSel(pAssistRot->GetEaseType());
-			m_checkRotating.SetCheck(1);
-
 			CString tempNum;
 			tempNum.Format(_T("%.2f"), m_fPatternStaticRotX);
 			m_editPatternRotX.SetWindowTextW(tempNum);
@@ -476,12 +498,21 @@ void CEffectTab::UpdatePattern()
 			m_editPatternRotEndTime.SetWindowTextW(tempNum);
 			tempNum.Format(_T("%d"), m_iPatternStaticRepeat);
 			m_editPatternRotRepeat.SetWindowTextW(tempNum);
+
+			m_comboEaseSheet_Rot.SetCurSel(pAssistRot->GetEaseType());
+			m_checkRotating.SetCheck(1);
+
+			if (pAssistRot->GetInifiniteCheck())
+				m_checkInfiniteRotation.SetCheck(1);
+			else
+				m_checkInfiniteRotation.SetCheck(0);
 		}
 		else
 		{
 			InitFormPatternRot();
 			m_comboEaseSheet_Rot.SetCurSel(0);
 			m_checkRotating.SetCheck(0);
+			m_checkInfiniteRotation.SetCheck(0);
 		}
 
 		SAFE_RELEASE(pEffect);
@@ -506,7 +537,7 @@ void CEffectTab::UpdateTime()
 	/* Check 되어 있다면 */
 	
 	/* Pattern */
-	if (m_checkSclaling.GetCheck() == 1)
+	if (m_checkScaling.GetCheck() == 1)
 	{
 		pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_SCALE);
 
@@ -1447,19 +1478,19 @@ void CEffectTab::OnBnClickedCheckScailing()
 	if (!pEffect)
 		return;
 
-	int check = m_checkSclaling.GetCheck();
+	int check = m_checkScaling.GetCheck();
 
 	/* Check를 푸는 동작 */
 	if(check == 1)
 	{
 		AddPatternScale(pEffect);
-		m_checkSclaling.SetCheck(1);
+		m_checkScaling.SetCheck(1);
 	}
 	/* Check를 하는 동작 */
 	else
 	{
 		pEffect->DeleteAssistEffectFromType(CEffectAssist::ASSIST_SCALE);
-		m_checkSclaling.SetCheck(0);
+		m_checkScaling.SetCheck(0);
 	}
 
 	/* Pattern */
@@ -1509,7 +1540,7 @@ void CEffectTab::OnBnClickedButtonPatternScaleInput()
 	if (!pEffect)
 		return;
 
-	if (m_checkSclaling.GetCheck() == 0)
+	if (m_checkScaling.GetCheck() == 0)
 	{
 		AfxMessageBox(L"Add scale pattern first!");
 		return;
@@ -1533,7 +1564,7 @@ void CEffectTab::OnBnClickedButtonPatternScalePlay()
 	if (!pEffect)
 		return;
 
-	if (m_checkSclaling.GetCheck() == 0)
+	if (m_checkScaling.GetCheck() == 0)
 	{
 		AfxMessageBox(L"Add scale pattern first!");
 		return;
@@ -1556,7 +1587,7 @@ void CEffectTab::OnBnClickedButtonPatternScaleStop()
 	if (!pEffect)
 		return;
 
-	if (m_checkSclaling.GetCheck() == 0)
+	if (m_checkScaling.GetCheck() == 0)
 	{
 		AfxMessageBox(L"Add scale pattern first!");
 		return;
@@ -1696,6 +1727,12 @@ void CEffectTab::OnBnClickedButtonMainStop()
 	if (!pEffect)
 		return;
 
+	/* All */
+	for (auto& effect : *((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffects())
+	{
+		effect->pEffect->SetOperationCheck(false);
+	}
+
 	pEffect->SetOperationCheck(false);
 
 	SAFE_RELEASE(pEffect);
@@ -1720,4 +1757,125 @@ BOOL CEffectTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CEffectTab::OnBnClickedCheckInfiniteScale()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkScaling.GetCheck();
+
+	/* 스케일링이 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteScaling.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteScaling.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_SCALE, true);
+		m_checkInfiniteScaling.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_SCALE, false);
+		m_checkInfiniteScaling.SetCheck(0);
+	}
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedCheckInfiniteRotation()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+		return;
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	if (!pEffect)
+		return;
+
+	int check = m_checkRotating.GetCheck();
+
+	/* 회전이 설정되어 있지 않았다면 */
+	if (0 == check)
+	{
+		m_checkInfiniteRotation.SetCheck(0);
+		return;
+	}
+
+	check = m_checkInfiniteRotation.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_ROT, true);
+		m_checkInfiniteRotation.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteCheckAssistEffectFromType(CEffectAssist::ASSIST_ROT, false);
+		m_checkInfiniteRotation.SetCheck(0);
+	}
+
+	/* Pattern */
+	UpdatePattern();
+
+	SAFE_RELEASE(pEffect);
+}
+
+
+void CEffectTab::OnBnClickedCheckInfiniteMain()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!m_pTargetObject)
+	{
+		m_checkInfiniteMain.SetCheck(0);
+		return;
+	}
+
+	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
+	
+	if (!pEffect)
+	{
+		m_checkInfiniteMain.SetCheck(0);
+		return;
+	}
+
+	int check = m_checkInfiniteMain.GetCheck();
+
+	/* Check를 하는 동작 */
+	if (check == 1)
+	{
+		pEffect->SetInfiniteMainCheck(true);
+		m_checkInfiniteMain.SetCheck(1);
+	}
+	/* Check를 푸는 동작 */
+	else
+	{
+		pEffect->SetInfiniteMainCheck(false);
+		m_checkInfiniteMain.SetCheck(0);
+	}
+
+	/* Pattern */
+	UpdateMainTimer();
+
+	SAFE_RELEASE(pEffect);
 }
