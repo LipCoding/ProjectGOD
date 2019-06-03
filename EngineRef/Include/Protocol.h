@@ -7,6 +7,11 @@
 const unsigned int MAX_BUFF_SIZE = 1024;
 const unsigned int MAX_PACKET_SIZE = 255;
 const unsigned int MAX_STR_SIZE = 100;
+//
+//const unsigned int MAX_USER = 10;
+//
+//const unsigned int MY_SERVER_PORT = 3500;
+//
 
 enum PACKETSTATE : unsigned char
 {
@@ -32,6 +37,8 @@ const unsigned char CS_PACKET_ROTATE_INV_X = 14;
 const unsigned char CS_PACKET_ROTATE_INV_Y = 15;
 const unsigned char CS_PACKET_ROTATE_INV_Z = 16;
 const unsigned char CS_PACKET_MOVE_STOP = 17;
+const unsigned char CS_PACKET_SCENECHANGE_SCENE1 = 40;
+const unsigned char CS_PACKET_SCENECHANGE_SCENE2 = 41;
 
 const unsigned char CS_PACKET_ATTACK = 50;
 const unsigned char CS_PACKET_ATTACK_SKILL1 = 51;
@@ -68,6 +75,10 @@ const unsigned char SC_PACKET_ROTATE_X_CI = 13;
 const unsigned char SC_PACKET_ROTATE_Y_CI = 14;
 const unsigned char SC_PACKET_ROTATE_Z_CI = 15;
 const unsigned char SC_PACKET_MOVE_STOP = 17;
+
+const unsigned char SC_PACKET_SCENECHANGE_SCENE1 = 40;
+const unsigned char SC_PACKET_SCENECHANGE_SCENE2 = 41;
+const unsigned char SC_PACKET_SCENECHANGE_DEVIL_DUNGEON = 42;
 
 const unsigned char SC_PACKET_ATTACK_PLAYER = 50;
 const unsigned char SC_PACKET_ATTACK_SKILL1 = 51;
@@ -236,6 +247,12 @@ struct cs_packet_party
 	unsigned int toID;
 };
 
+struct cs_packet_scene_change
+{
+	unsigned short size;
+	unsigned char type;
+};
+
 struct sc_packet_connect
 {
 	unsigned short size;
@@ -386,6 +403,7 @@ struct sc_packet_party
 	unsigned int fromID;
 	unsigned int toID;
 };
+
 struct sc_packet_hp_regeneration
 {
 	unsigned short size;
@@ -401,7 +419,15 @@ struct sc_packet_add_exp
 	unsigned int targetID;
 	unsigned int exp;
 };
-
+/*
+		this->EXP = 0;
+		this->level += 1;
+		this->currentHP = 200 + level * 50;
+		this->currentMP = 30 + level * 10;
+		this->maxHP = 200 + level * 50;
+		this->maxMP = 30 + level * 10;
+		this->attackDamage = 10 + level * 5;
+*/
 struct sc_packet_levelup_player
 {
 	unsigned short size;
@@ -415,5 +441,12 @@ struct sc_packet_levelup_player
 	int max_mp;
 	int attack_damage;
 };
+
+struct sc_packet_scene_change
+{
+	unsigned short size;
+	unsigned char type;
+};
+
 
 #pragma pack(pop)
