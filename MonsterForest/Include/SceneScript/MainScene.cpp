@@ -101,7 +101,7 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
-#pragma region Effect
+#pragma region Portal
 	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
 	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 #pragma endregion
