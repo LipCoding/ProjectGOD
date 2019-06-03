@@ -78,9 +78,7 @@ void SecondScene::chat_callback(float fTime)
 
 bool SecondScene::Init()
 {
-#pragma region Portal
-	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
-#pragma endregion
+	
 	const auto& objlist = CGameObject::getObjectList();
 #pragma region Layer Setting
 	{
@@ -132,7 +130,6 @@ bool SecondScene::Init()
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
 
-		
 		for (const auto& iter : *nodes)
 		{
 			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,

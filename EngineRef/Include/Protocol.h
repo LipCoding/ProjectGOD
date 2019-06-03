@@ -291,6 +291,7 @@ struct sc_packet_pos
 	float x;
 	float y;
 	float z;
+	bool back;
 };
 
 struct sc_packet_rotate

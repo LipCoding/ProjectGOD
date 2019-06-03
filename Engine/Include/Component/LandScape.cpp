@@ -53,7 +53,7 @@ CLandScape::~CLandScape()
 		iter->vecVtx.clear();
 		iter->vecIndex.clear();
 		SAFE_RELEASE(iter->pGameObject);
-		
+
 		for (int i = 0; i < 4; ++i)
 		{
 			if (nullptr == iter->pNodes[i])
@@ -93,6 +93,8 @@ CLandScape::~CLandScape()
 		delete m_pParentNode;
 		m_pParentNode = nullptr;
 	}
+
+
 }
 
 void CLandScape::SetDetailLevel(int iDetailLevel)

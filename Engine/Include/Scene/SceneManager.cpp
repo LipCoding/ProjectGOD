@@ -258,6 +258,7 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 		
 		m_pCurScene = m_pNextScene;
 		m_pNextScene = NULL;
+		
 		CGameObject::getObjectList().clear();
 		m_pCurScene->m_vecSceneScript[0]->Init();
 		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
