@@ -236,7 +236,19 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 	if (m_pNextScene)
 	{
 		GET_SINGLE(CNavigationManager)->DeleteLandScapeInfo(m_pCurScene);
+		
+		CLayer* pLayer = m_pCurScene->GetLayer("Defulat");
+		
+		if (pLayer)
+		{
+			for (auto& iter : pLayer->getObjectList())
+			{
+				SAFE_RELEASE(iter);
+			}
+			pLayer->getObjectList().clear();
 
+			SAFE_RELEASE(pLayer);
+		}
 		// 기존 장면을 지운다.
 		SAFE_RELEASE(m_pCurScene);
 

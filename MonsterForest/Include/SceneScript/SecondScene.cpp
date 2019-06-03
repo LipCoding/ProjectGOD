@@ -118,18 +118,21 @@ bool SecondScene::Init()
 
 #pragma region Terrain
 	{
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
+		
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
 
 		// Load Terrain
-		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
+		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage2", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
-		pLandScape->Load_Terrain("Second_Scene");
+		pLandScape->Load_Terrain("Main_Scene_2");
 
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
 
+		
 		for (const auto& iter : *nodes)
 		{
 			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
@@ -149,7 +152,7 @@ bool SecondScene::Init()
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
+	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_2.bin");
 
 	ifstream file;
 	file.open(strPath, ios::in);

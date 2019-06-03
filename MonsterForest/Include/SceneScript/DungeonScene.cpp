@@ -128,11 +128,13 @@ bool DungeonScene::Init()
 
 #pragma region Terrain
 	{
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
+
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
 
 		// Load Terrain
-		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
+		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Dungeon", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
 		pLandScape->Load_Terrain("dungeon_scene");
