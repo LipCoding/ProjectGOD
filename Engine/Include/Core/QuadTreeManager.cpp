@@ -41,6 +41,8 @@ void CQuadTreeManager::DeleteQuadTreeInfo(CScene * scene)
 {
 	map<string, PQUADTREEINFO>::iterator	iter;
 	map<string, PQUADTREEINFO>::iterator  iterEnd = m_mapQuadTreeInfo.end();
+
+	Safe_Delete_Map(m_mapQuadTreeInfo);
 }
 
 PQUADTREEINFO CQuadTreeManager::FindQuadTreeInfo(const string & key)

@@ -672,7 +672,7 @@ void NetworkManager::processPacket(char * ptr)
 			if (pGameObject != nullptr)
 			{
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Idle2");
+				pAnimation->ChangeClip("Idle3");
 				SAFE_RELEASE(pAnimation);
 				/*Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
 				if (nullptr != pMino)
@@ -734,7 +734,12 @@ void NetworkManager::processPacket(char * ptr)
 				Vector3 LightPos = Vector3{ pPacket->x, pPacket->y, pPacket->z } +Vector3{ -15, 15, -15 };
 				pLightTransform->SetWorldPos(LightPos);*/
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Run1");
+				if(pPacket->back == false)
+					pAnimation->ChangeClip("Run1");
+				else
+				{
+					pAnimation->ChangeClip("RunBack1");
+				}
 
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
@@ -754,7 +759,12 @@ void NetworkManager::processPacket(char * ptr)
 				float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(pPacket->x, pPacket->y, pPacket->z));
 				pTransform->SetWorldPos(pPacket->x, yPos, pPacket->z);
 				CAnimation* pAnimation = pGameObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ChangeClip("Run1");
+				if (pPacket->back == false)
+					pAnimation->ChangeClip("Run1");
+				else
+				{
+					pAnimation->ChangeClip("RunBack1");
+				}
 				SAFE_RELEASE(pAnimation);
 				SAFE_RELEASE(pTransform);
 				SAFE_RELEASE(pGameObject);
@@ -788,15 +798,20 @@ void NetworkManager::processPacket(char * ptr)
 			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-			CTransform* pTr = pGameObject->GetTransform();
-			pTr->SetWorldPos(200, 0, 200);
-			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("SecondScene");
+			if (pGameObject != nullptr)
+			{
+				CTransform* pTr = pGameObject->GetTransform();
 
-			pScene->CreateSceneScript<SecondScene>("SecondScene", false);
 
-			//SAFE_RELEASE(pMainScene);
+				pTr->SetWorldPos(23, 0, 253);
+				CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("SecondScene");
 
-			SAFE_RELEASE(pScene);
+				pScene->CreateSceneScript<SecondScene>("SecondScene", false);
+
+				//SAFE_RELEASE(pMainScene);
+
+				SAFE_RELEASE(pScene);
+			}
 		}
 		break;
 
@@ -807,14 +822,17 @@ void NetworkManager::processPacket(char * ptr)
 			string objectTag = "Player" + appendTag;
 			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 			CTransform* pTr = pGameObject->GetTransform();
-			pTr->SetWorldPos(200, 0, 200);
-			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("DungeonScene");
+			if (pGameObject != nullptr)
+			{
+				pTr->SetWorldPos(200, 0, 200);
+				CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("DungeonScene");
 
-			pScene->CreateSceneScript<DungeonScene>("DungeonScene", false);
+				pScene->CreateSceneScript<DungeonScene>("DungeonScene", false);
 
-			//SAFE_RELEASE(pMainScene);
+				//SAFE_RELEASE(pMainScene);
 
-			SAFE_RELEASE(pScene);
+				SAFE_RELEASE(pScene);
+			}
 		}
 		break;
 

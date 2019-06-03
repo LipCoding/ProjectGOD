@@ -48,8 +48,40 @@ CLandScape::CLandScape(const CLandScape & landscape)	:
 
 CLandScape::~CLandScape()
 {
+	for (auto &iter : m_listNode)
+	{
+		iter->vecVtx.clear();
+		iter->vecIndex.clear();
+		SAFE_RELEASE(iter->pGameObject);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			if (nullptr == iter->pNodes[i])
+			{
+				delete iter->pNodes[i];
+				iter->pNodes[i] = nullptr;
+			}
+		}
+	}
 	m_listNode.clear();
+
+	for (auto &iter : m_listAllNodes)
+	{
+		iter->vecVtx.clear();
+		iter->vecIndex.clear();
+		SAFE_RELEASE(iter->pGameObject);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			if (nullptr == iter->pNodes[i])
+			{
+				delete iter->pNodes[i];
+				iter->pNodes[i] = nullptr;
+			}
+		}
+	}
 	m_listAllNodes.clear();
+
 	m_vecSplattingDiffuse.clear();
 	m_vecSplattingNormal.clear();
 	m_vecSplattingSpecular.clear();
@@ -61,6 +93,8 @@ CLandScape::~CLandScape()
 		delete m_pParentNode;
 		m_pParentNode = nullptr;
 	}
+
+
 }
 
 void CLandScape::SetDetailLevel(int iDetailLevel)

@@ -78,9 +78,7 @@ void SecondScene::chat_callback(float fTime)
 
 bool SecondScene::Init()
 {
-#pragma region Portal
-	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
-#pragma endregion
+	
 	const auto& objlist = CGameObject::getObjectList();
 #pragma region Layer Setting
 	{
@@ -122,13 +120,15 @@ bool SecondScene::Init()
 		CLayer* pLayer = pScene->GetLayer("Default");
 
 		// Load Terrain
-		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
+		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage2", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
-		pLandScape->Load_Terrain("Second_Scene");
+		pLandScape->Load_Terrain("Main_Scene_2");
 
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
 
 		for (const auto& iter : *nodes)
 		{
@@ -149,7 +149,7 @@ bool SecondScene::Init()
 	// 경로 지정
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
+	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_2.bin");
 
 	ifstream file;
 	file.open(strPath, ios::in);
