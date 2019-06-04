@@ -56,7 +56,7 @@ CLandScape::~CLandScape()
 
 		for (int i = 0; i < 4; ++i)
 		{
-			if (nullptr == iter->pNodes[i])
+			if (nullptr != iter->pNodes[i])
 			{
 				delete iter->pNodes[i];
 				iter->pNodes[i] = nullptr;
@@ -67,13 +67,16 @@ CLandScape::~CLandScape()
 
 	for (auto &iter : m_listAllNodes)
 	{
+		/* 이미 등록된 메시를 지워준다. */
+		GET_SINGLE(CResourcesManager)->FindAndDeleteMesh(iter->strNodeName);
+
 		iter->vecVtx.clear();
 		iter->vecIndex.clear();
 		SAFE_RELEASE(iter->pGameObject);
 
 		for (int i = 0; i < 4; ++i)
 		{
-			if (nullptr == iter->pNodes[i])
+			if (nullptr != iter->pNodes[i])
 			{
 				delete iter->pNodes[i];
 				iter->pNodes[i] = nullptr;

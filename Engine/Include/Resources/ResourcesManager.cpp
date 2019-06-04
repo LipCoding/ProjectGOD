@@ -379,6 +379,19 @@ CMesh * CResourcesManager::FindMesh(const string & strKey)
 	return iter->second;
 }
 
+void CResourcesManager::FindAndDeleteMesh(const string & strKey)
+{
+	unordered_map<string, class CMesh*>::iterator	iter = m_mapMesh.find(strKey);
+
+	if (iter == m_mapMesh.end())
+		return;
+
+	SAFE_RELEASE(iter->second);
+	m_mapMesh.erase(iter->first);
+
+	return;
+}
+
 CTexture * CResourcesManager::LoadTexture(const string & strKey, 
 	const wchar_t * pFileName, const string & strPathKey)
 {

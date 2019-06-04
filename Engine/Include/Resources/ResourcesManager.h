@@ -38,6 +38,7 @@ public:
 		const char* pFullPath);
 
 	class CMesh* FindMesh(const string& strKey);
+	void FindAndDeleteMesh(const string& strKey);
 
 	class CTexture* LoadTexture(const string& strKey, const wchar_t* pFileName,
 		const string& strPathKey = TEXTURE_PATH);
