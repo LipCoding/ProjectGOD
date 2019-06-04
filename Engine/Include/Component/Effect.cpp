@@ -126,6 +126,19 @@ CEffect::~CEffect()
 {
 	SAFE_RELEASE(m_pRenderer);
 	Safe_Delete_VecList(m_vecAssist);
+
+
+	/* 이펙트 삭제시 스프라이트 기능이 있다면 스프라이트로 사용한 텍스쳐들을 지운다. */
+	/*CAnimation2D*	pEffectAnimation = nullptr;
+
+	pEffectAnimation = m_pGameObject->FindComponentFromTag<CAnimation2D>("EffectAnimation");
+
+	if (pEffectAnimation)
+	{
+		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture(EffectName + "Default");
+		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture(EffectName + "Effect");
+	}*/
+
 }
 
 CEffectAssist * CEffect::GetAssistFromType(CEffectAssist::ASSIST_TYPE type)
@@ -137,7 +150,6 @@ CEffectAssist * CEffect::GetAssistFromType(CEffectAssist::ASSIST_TYPE type)
 			return assist;
 		}
 	}
-
 	return nullptr;
 }
 
@@ -710,7 +722,7 @@ void CEffect::AddUVAnimation(const float& start, const float& end, const int& ma
 		wsprintf(strPath, wPath.c_str());
 
 		if (!pEffectAnimation->CreateClip("Default", A2D_FRAME, A2DO_LOOP,
-			1, 1, 1, 1, 0, 0, 0, 0.f, EffectName + "Default",
+			1, 1, 1, 1, 0, 0, 0, 0.f, TextureFullPath + "_Default",
 			strPath))
 		{
 			SAFE_RELEASE(pEffectAnimation);
@@ -719,7 +731,7 @@ void CEffect::AddUVAnimation(const float& start, const float& end, const int& ma
 		pEffectAnimation->SetDefaultAnim("Default");
 
 		if (!pEffectAnimation->CreateClipAtlas("Effect", A2DO_TIME_RETURN,
-			max_x, max_y, width, height, 0, end - start, 0, 0.f, EffectName + "Effect",
+			max_x, max_y, width, height, 0, end - start, 0, 0.f, EffectName + "_Effect",
 			strPath))
 		{
 			SAFE_RELEASE(pEffectAnimation);

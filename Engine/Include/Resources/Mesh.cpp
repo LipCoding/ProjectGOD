@@ -533,12 +533,12 @@ void CMesh::Subdivide(vector<XMFLOAT3>& vecPos, vector<UINT>& vecIndex)
 	//       v1
 	//       *
 	//      / \
-		//     /   \
+	//     /   \
 	//  m0*-----*m1
-//   / \   / \
+	//   / \   / \
 	//  /   \ /   \
 	// *-----*-----*
-// v0    m2     v2
+	// v0    m2     v2
 
 	UINT numTris = vecCopyIndex.size() / 3;
 	for (UINT i = 0; i < numTris; ++i)
