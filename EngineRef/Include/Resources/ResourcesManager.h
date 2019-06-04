@@ -11,7 +11,9 @@ private:
 	unordered_map<string, class CMesh*>	m_mapMesh;
 	unordered_map<string, class CTexture*>	m_mapTexture;
 	unordered_map<string, class CSampler*>	m_mapSampler;
-
+public:
+	unordered_map<string, class CMesh*>	getMapMesh(){ return m_mapMesh; }
+	unordered_map<string, class CTexture*>	getMapTexture() {return m_mapTexture;};
 public:
 	bool Init();
 	class CMesh* CreateMesh(const string& strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,

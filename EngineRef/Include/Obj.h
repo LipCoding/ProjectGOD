@@ -11,7 +11,7 @@ protected:
 	virtual ~CObj();
 
 protected:
-	int					m_iRefCount;
+	
 	string				m_strTag;
 	string				m_strTypeName;
 	const type_info*	m_pTypeID;
@@ -19,6 +19,7 @@ protected:
 	bool				m_bAlive;
 
 public:
+	int					m_iRefCount;
 	string GetTag()	const;
 	string GetTypeName()	const;
 	const type_info* GetTypeID()	const;
