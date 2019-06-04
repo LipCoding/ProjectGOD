@@ -6,6 +6,7 @@
 #include "../Component/Transform.h"
 #include "../Core/NavigationManager.h"
 #include "SceneScript.h"
+#include "../Resources/ResourcesManager.h"
 PG_USING
 
 DEFINITION_SINGLE(CSceneManager)
@@ -238,6 +239,7 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 		/*CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
 		pLandScapeObj->FindComponentFromTag<class CLandScape>("LandScape");*/
 
+
 		CGameObject::EraseObj("LandScape_Stage1");
 		GET_SINGLE(CNavigationManager)->DeleteLandScapeInfo(m_pCurScene);
 
@@ -248,11 +250,11 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 
 		AddDontDestroyPrototype();
 		
-		m_pCurScene = m_pNextScene;
-		m_pNextScene = NULL;
-	
+		CGameObject::EraseObj();
 
 		CGameObject::getObjectList().clear();
+		m_pCurScene = m_pNextScene;
+		m_pNextScene = NULL;
 		m_pCurScene->m_vecSceneScript[0]->Init();
 		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
 

@@ -245,6 +245,7 @@ void CGameObject::EraseObj(const string & strTag)
 	{
 		if ((*iter)->GetTag() == strTag)
 		{
+			(*iter)->m_iRefCount = 1;
 			SAFE_RELEASE((*iter));
 			m_ObjList.erase(iter);
 			return;
