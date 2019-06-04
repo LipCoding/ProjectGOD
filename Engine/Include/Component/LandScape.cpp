@@ -1018,6 +1018,9 @@ void CLandScape::CreateTreeNodeToObject()
 	{
 		//if (node->strNodeName == "Node0")
 		{
+			/* 이미 등록된 메시를 지워준다. */
+			GET_SINGLE(CResourcesManager)->FindAndDeleteMesh(node->strNodeName);
+
 			node->pGameObject = CGameObject::CreateObject(node->strNodeName, m_pLayer);
 
 			// Mesh

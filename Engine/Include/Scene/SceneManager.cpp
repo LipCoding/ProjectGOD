@@ -235,6 +235,10 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 {
 	if (m_pNextScene)
 	{
+		/*CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
+		pLandScapeObj->FindComponentFromTag<class CLandScape>("LandScape");*/
+
+		CGameObject::EraseObj("LandScape_Stage1");
 		GET_SINGLE(CNavigationManager)->DeleteLandScapeInfo(m_pCurScene);
 
 		// 기존 장면을 지운다.
@@ -246,7 +250,8 @@ SCENE_CHANGE CSceneManager::ChangeScene()
 		
 		m_pCurScene = m_pNextScene;
 		m_pNextScene = NULL;
-		
+	
+
 		CGameObject::getObjectList().clear();
 		m_pCurScene->m_vecSceneScript[0]->Init();
 		CGameObject*	pMouseObj = GET_SINGLE(CInput)->GetMouseObj();
