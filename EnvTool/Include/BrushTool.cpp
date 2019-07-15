@@ -509,7 +509,7 @@ void CBrushTool::SmoothOutLine(QUADTREENODE *& neigborNode, QUADTREENODE *& node
 		return;
 
 	float fGap = 0.f;
-	float fAverValue = 0.1f;
+	float fAverValue = 0.2f;
 	float GAP = 4.f;
 
 	//if (iterPos == limitPos)
@@ -551,12 +551,14 @@ void CBrushTool::SmoothOutLine(QUADTREENODE *& neigborNode, QUADTREENODE *& node
 				else
 				{
 					node->vecVtx[currentIndex].vPos.y += fGap * deltaTime* 3.f;		
-				}
-				if (pos_otherNode_samePos)
-					(*pos_otherNode_samePos).y = node->vecVtx[currentIndex].vPos.y;
+				}			
 			}
+
+			
 		}
 
+		if (pos_otherNode_samePos)
+			(*pos_otherNode_samePos).y = node->vecVtx[currentIndex].vPos.y;
 	}
 }
 
