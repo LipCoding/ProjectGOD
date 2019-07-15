@@ -798,10 +798,12 @@ void NetworkManager::processPacket(char * ptr)
 			string appendTag = to_string(id);
 			string objectTag = "Player" + appendTag;
 			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+			
 			if (pGameObject != nullptr)
 			{
-				CTransform* pTr = pGameObject->GetTransform();
+				//GET_SINGLE(CResourcesManager)->FindAndDeleteMesh(iter->strNodeName);
 
+				CTransform* pTr = pGameObject->GetTransform();
 
 				pTr->SetWorldPos(23, 0, 253);
 				CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("SecondScene");

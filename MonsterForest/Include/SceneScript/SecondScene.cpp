@@ -116,8 +116,6 @@ bool SecondScene::Init()
 
 #pragma region Terrain
 	{
-		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
-		
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
 
@@ -129,6 +127,8 @@ bool SecondScene::Init()
 
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
 
 		for (const auto& iter : *nodes)
 		{

@@ -11,7 +11,9 @@ private:
 	unordered_map<string, class CMesh*>	m_mapMesh;
 	unordered_map<string, class CTexture*>	m_mapTexture;
 	unordered_map<string, class CSampler*>	m_mapSampler;
-
+public:
+	unordered_map<string, class CMesh*>	getMapMesh(){ return m_mapMesh; }
+	unordered_map<string, class CTexture*>	getMapTexture() {return m_mapTexture;};
 public:
 	bool Init();
 	class CMesh* CreateMesh(const string& strKey, UINT iVtxCount, UINT iVtxSize, D3D11_USAGE eVtxUsage,
@@ -38,6 +40,7 @@ public:
 		const char* pFullPath);
 
 	class CMesh* FindMesh(const string& strKey);
+	void FindAndDeleteMesh(const string& strKey);
 
 	class CTexture* LoadTexture(const string& strKey, const wchar_t* pFileName,
 		const string& strPathKey = TEXTURE_PATH);
