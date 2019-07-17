@@ -30,6 +30,9 @@ public:
 public:
 	template<typename ActorType>
 	ActorType* CreateActor(const string& layer_name, const string& object_name, const string& prefab_name, bool my_player = false);
+private:
+	void protoTypeSetting();
+	void staticObjectSetting();
 };
 
 template<typename ActorType>

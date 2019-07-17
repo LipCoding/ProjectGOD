@@ -789,6 +789,18 @@ void NetworkManager::readPacket(SOCKET sock)
 	}
 }
 
+void NetworkManager::connectMainServer()
+{
+	/// < mainserver로의 접속요청을 한다. >
+	cs_packet_connect* pPacket = reinterpret_cast<cs_packet_connect*>(getSendBuffer());
+	pPacket->size = sizeof(cs_packet_connect);
+	pPacket->type = CS_PACKET_MAINSERVER_CONNECT;
+
+	getSendWsaBuf().len = sizeof(cs_packet_connect);
+	DWORD iobyte;
+	int ret = WSASend(getSocket(), &getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+}
+
 #pragma region Getter&Setter
 const SOCKET & NetworkManager::getSocket() { return sock; }
 char * NetworkManager::getSendBuffer() { return sendBuffer; }

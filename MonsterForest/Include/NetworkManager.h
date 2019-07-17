@@ -37,7 +37,7 @@ public:
 	static void  popData() { clientPacketQueue.pop(); }
 	void enableConnected(bool connected);
 	void setMyClientID(size_t id);
-
+	void connectMainServer();
 public:
 	NetworkManager();
 	NetworkManager(const NetworkManager&) = delete;
