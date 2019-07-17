@@ -12,6 +12,7 @@
 #include "TerrainTab.h"
 #include "ObjTab.h"
 #include "NaviTab.h"
+#include "LightTab.h"
 
 // EditForm
 
@@ -26,6 +27,7 @@ CEditForm::CEditForm()
 	, m_pTerrainDlg(nullptr)
 	, m_pObjDlg(nullptr)
 	, m_pNaviDlg(nullptr)
+	, m_pLightDlg(nullptr)
 	, m_pView(nullptr)
 	, m_eTabType(TAB_END)
 {
@@ -40,6 +42,8 @@ CEditForm::~CEditForm()
 	m_pObjDlg = nullptr;
 	delete m_pNaviDlg;
 	m_pNaviDlg = nullptr;
+	delete m_pLightDlg;
+	m_pLightDlg = nullptr;
 	m_pView = nullptr;
 	
 }
@@ -107,6 +111,9 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pNaviDlg->Process_ChangeTab();
 		m_pNaviDlg->ShowWindow(SW_HIDE);
 
+		m_pLightDlg->Process_ChangeTab();
+		m_pLightDlg->ShowWindow(SW_HIDE);
+
 		m_pTerrainDlg->Process_ShowTab();
 		m_pTerrainDlg->ShowWindow(SW_SHOW);
 		break;
@@ -118,6 +125,9 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 		m_pNaviDlg->Process_ChangeTab();
 		m_pNaviDlg->ShowWindow(SW_HIDE);
+
+		m_pLightDlg->Process_ChangeTab();
+		m_pLightDlg->ShowWindow(SW_HIDE);
 
 		m_pObjDlg->Process_ShowTab();
 		m_pObjDlg->ShowWindow(SW_SHOW);
@@ -131,8 +141,26 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pObjDlg->Process_ChangeTab();
 		m_pObjDlg->ShowWindow(SW_HIDE);
 
+		m_pLightDlg->Process_ChangeTab();
+		m_pLightDlg->ShowWindow(SW_HIDE);
+
 		m_pNaviDlg->Process_ShowTab();
 		m_pNaviDlg->ShowWindow(SW_SHOW);
+		break;
+	case 3:
+		m_eTabType = TAB_LIGHT;
+
+		m_pTerrainDlg->Process_ChangeTab();
+		m_pTerrainDlg->ShowWindow(SW_HIDE);
+
+		m_pObjDlg->Process_ChangeTab();
+		m_pObjDlg->ShowWindow(SW_HIDE);
+
+		m_pNaviDlg->Process_ChangeTab();
+		m_pNaviDlg->ShowWindow(SW_HIDE);
+
+		m_pLightDlg->Process_ShowTab();
+		m_pLightDlg->ShowWindow(SW_SHOW);
 		break;
 	}
 
@@ -174,6 +202,11 @@ void CEditForm::OnInitialUpdate()
 	m_pNaviDlg->Create(IDD_DIALOG3, &m_Tab);
 	m_pNaviDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_pNaviDlg->ShowWindow(SW_HIDE);
+
+	m_pLightDlg = new CLightTab;
+	m_pLightDlg->Create(IDD_DIALOG4, &m_Tab);
+	m_pLightDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
+	m_pLightDlg->ShowWindow(SW_HIDE);
 
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();

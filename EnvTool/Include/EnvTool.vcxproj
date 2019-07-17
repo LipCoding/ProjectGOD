@@ -196,6 +196,7 @@
     <ClInclude Include="EnvTool.h" />
     <ClInclude Include="EnvToolDoc.h" />
     <ClInclude Include="EnvToolView.h" />
+    <ClInclude Include="LightTab.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="NaviTab.h" />
     <ClInclude Include="ObjTab.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="EnvTool.cpp" />
     <ClCompile Include="EnvToolDoc.cpp" />
     <ClCompile Include="EnvToolView.cpp" />
+    <ClCompile Include="LightTab.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NaviTab.cpp" />
     <ClCompile Include="ObjTab.cpp" />

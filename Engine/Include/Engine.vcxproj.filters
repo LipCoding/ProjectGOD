@@ -259,6 +259,9 @@
     <Filter Include="00. Core\09. EffectManager">
       <UniqueIdentifier>{20681522-2a3b-4056-9da8-e8ea8e7a0a0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Component\17. Description\Line">
+      <UniqueIdentifier>{7d413dec-6214-4219-89d0-03cb20bb1560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PGMatrix.cpp">
@@ -518,6 +521,9 @@
     </ClCompile>
     <ClCompile Include="Core\EffectManager.cpp">
       <Filter>00. Core\09. EffectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Sphere.cpp">
+      <Filter>06. Component\17. Description\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -796,6 +802,9 @@
     </ClInclude>
     <ClInclude Include="Core\EffectManager.h">
       <Filter>00. Core\09. EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Sphere.h">
+      <Filter>06. Component\17. Description\Sphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

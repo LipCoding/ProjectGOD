@@ -57,6 +57,7 @@
     <ClCompile Include="Component\Renderer.cpp" />
     <ClCompile Include="Component\Renderer2D.cpp" />
     <ClCompile Include="Component\Script.cpp" />
+    <ClCompile Include="Component\Sphere.cpp" />
     <ClCompile Include="Component\Terrain2D.cpp" />
     <ClCompile Include="Component\ThirdCamera.cpp" />
     <ClCompile Include="Component\Tile.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Component\Renderer.h" />
     <ClInclude Include="Component\Renderer2D.h" />
     <ClInclude Include="Component\Script.h" />
+    <ClInclude Include="Component\Sphere.h" />
     <ClInclude Include="Component\Terrain2D.h" />
     <ClInclude Include="Component\ThirdCamera.h" />
     <ClInclude Include="Component\Tile.h" />

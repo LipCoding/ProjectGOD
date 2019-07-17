@@ -33,12 +33,14 @@ public:
 	class CTerrainTab* GetTerrainTab() { return m_pTerrainDlg; }
 	class CObjTab* GetObjectTab() { return m_pObjDlg; }
 	class CNaviTab* GetNaviTab() { return m_pNaviDlg; }
+	class CLightTab* GetLightTab() { return m_pLightDlg; }
 
 private:
 	CTabCtrl m_Tab;
 	class CTerrainTab	*m_pTerrainDlg = nullptr;
 	class CObjTab		*m_pObjDlg = nullptr;
 	class CNaviTab		*m_pNaviDlg = nullptr;
+	class CLightTab		*m_pLightDlg = nullptr;
 	class CEnvToolView  *m_pView = nullptr;
 	
 
