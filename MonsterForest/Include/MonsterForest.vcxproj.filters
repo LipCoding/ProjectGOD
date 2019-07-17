@@ -109,9 +109,6 @@
     <Filter Include="02. Object\01. Actor\02. NPC\02. Villager">
       <UniqueIdentifier>{9d8332a9-9b83-4c63-866c-8e8055f97826}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1">
-      <UniqueIdentifier>{1e89d35c-13d0-496f-8754-10d070134c6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\02 Villager2">
       <UniqueIdentifier>{1299c3c8-c108-4f6d-9baa-b0e5f30f8aa3}</UniqueIdentifier>
     </Filter>
@@ -183,6 +180,12 @@
     </Filter>
     <Filter Include="01. Scene\06. DungeonScene">
       <UniqueIdentifier>{094d9f3b-533c-4513-b5e5-f3f4c68a9786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Objectmanager">
+      <UniqueIdentifier>{e19cc702-ad1e-4840-a0ff-32011730763e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1">
+      <UniqueIdentifier>{1e89d35c-13d0-496f-8754-10d070134c6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +357,9 @@
     <ClInclude Include="SceneScript\DungeonScene.h">
       <Filter>01. Scene\06. DungeonScene</Filter>
     </ClInclude>
+    <ClInclude Include="MFObjectManager.h">
+      <Filter>05. Objectmanager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -514,6 +520,9 @@
     </ClCompile>
     <ClCompile Include="SceneScript\DungeonScene.cpp">
       <Filter>01. Scene\06. DungeonScene</Filter>
+    </ClCompile>
+    <ClCompile Include="MFObjectManager.cpp">
+      <Filter>05. Objectmanager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

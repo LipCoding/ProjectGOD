@@ -163,6 +163,7 @@
     <ClInclude Include="InviteToParty.h" />
     <ClInclude Include="MiniMap.h" />
     <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="MFObjectManager.h" />
     <ClInclude Include="ObjectScript\Actor.h" />
     <ClInclude Include="ObjectScript\Armored_BlueLizard.h" />
     <ClInclude Include="ObjectScript\Armored_GreenLizard.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="InviteToParty.cpp" />
     <ClCompile Include="MiniMap.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="MFObjectManager.cpp" />
     <ClCompile Include="ObjectScript\Actor.cpp" />
     <ClCompile Include="ObjectScript\Armored_BlueLizard.cpp" />
     <ClCompile Include="ObjectScript\Armored_GreenLizard.cpp" />

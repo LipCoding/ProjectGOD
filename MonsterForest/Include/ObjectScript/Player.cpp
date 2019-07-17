@@ -21,7 +21,7 @@
 CPlayer::CPlayer()
 {
 	SetTag("Player");
-	SetTypeName("CPlayer");
+	//SetTypeName("CPlayer");
 	SetTypeID<CPlayer>();
 	m_bOnShield = false;
 	m_bOnShieldRange = false;
@@ -30,7 +30,7 @@ CPlayer::CPlayer()
 }
 
 CPlayer::CPlayer(const CPlayer & player) :
-	CScript(player)
+	Actor(player)
 {
 	m_fMoveSpeed = player.m_fMoveSpeed;
 	m_fRotSpeed = player.m_fRotSpeed;
@@ -62,6 +62,7 @@ bool CPlayer::Init()
 
 	m_pAnimation->Load("99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.anm");
 	m_pAnimation->SetDefaultClip("Idle1");
+
 #ifdef _BOEM_
 	GET_SINGLE(CInput)->CreateKey("RotInvY", 'Q');
 	GET_SINGLE(CInput)->CreateKey("RotY", 'E');
@@ -320,29 +321,11 @@ void CPlayer::Input(float fTime)
 
 int CPlayer::Update(float fTime)
 {
-
-	//_cprintf("x :  %f     z :  %f     angle :  %f\n", m_pTransform->GetWorldPos().x, m_pTransform->GetWorldPos().z, m_fRecentRot);
 	int id = NetworkManager::getInstance()->getMyClientID();
 	string playerTag = "Player" + to_string(id);
 
 	if (this->m_pGameObject->GetTag() == playerTag)
 	{
-		//ANIMATION3DCLIP clipInfo = m_pAnimation->GetCurrentClip()->GetClipInfo();
-
-		//if ("Attack1" == clipInfo.strName)
-		//{
-		//	int iCurrentFrame = m_pAnimation->GetClipFrame();
-
-		//	if (18 == iCurrentFrame)
-		//	{
-		//		Vector3 vPos = m_pTransform->GetWorldPos();
-		//		Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
-		//		vPos += vLook * 1.75f;
-		//		vPos.y += 0.75f;
-		//		GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
-		//		_cprintf("effect!\n");
-		//	}
-		//}
 		
 		ANIMATION3DCLIP clipInfo = m_pAnimation->GetCurrentClip()->GetClipInfo();
 
@@ -403,6 +386,122 @@ void CPlayer::addExp(int exp)
 	// 인터페이스에 보여준다.
 
 }
+void CPlayer::damaged(int damage)
+{
+	this->currentHP -= damage;
+}
+void CPlayer::attack(const string& target_tag)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Attack1");
+	SAFE_RELEASE(pAnimation);
+
+	CGameObject* target_object = CGameObject::FindObject(target_tag);
+	if (nullptr == target_object)
+		return;
+	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
+	target_actor_component->damaged(attackDamage);
+}
+void CPlayer::skill1_Attack(const string& target_tag)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Spell1");
+	CTransform* pTr = GetTransform();
+	Vector3 pos = pTr->GetWorldPos();
+	GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, pos);
+	SAFE_RELEASE(pTr);
+	SAFE_RELEASE(pAnimation);
+	CGameObject* target_object = CGameObject::FindObject(target_tag);
+	if (nullptr == target_object)
+		return;
+	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
+	target_actor_component->damaged(attackDamage);
+}
+void CPlayer::skill2_Attack(const string& target_tag)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Spell2");
+	CTransform* pTr = GetTransform();
+	Vector3 pos = pTr->GetWorldPos();
+
+	SAFE_RELEASE(pTr);
+	SAFE_RELEASE(pAnimation);
+
+	CGameObject* target_object = CGameObject::FindObject(target_tag);
+	if (nullptr == target_object)
+		return;
+	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
+	target_actor_component->damaged(attackDamage);
+}
+void CPlayer::skill3_Attack(const string& target_tag)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Spell3");
+	CTransform* pTr = GetTransform();
+	Vector3 pos = pTr->GetWorldPos();
+	GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, pos);
+	SAFE_RELEASE(pTr);
+	SAFE_RELEASE(pAnimation);
+
+	CGameObject* target_object = CGameObject::FindObject(target_tag);
+	if (nullptr == target_object)
+		return;
+	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
+	target_actor_component->damaged(attackDamage);
+}
+void CPlayer::skill4_Buff()
+{
+}
+
+void CPlayer::settingStatus(int current_hp, int current_mp, int level, int exp)
+{
+	currentHP = current_hp;
+	currentMP = current_mp;
+	this->EXP = exp;
+	this->level = level;
+	this->maxHP = 200 + level * 50;
+	this->maxMP = 30 + level * 10;
+	this->maxEXP = level * 100;
+	this->attackDamage = 10 + level * 5;
+}
+
+void CPlayer::worldscale(float x, float y, float z)
+{
+}
+
+void CPlayer::rotate(float x, float y, float z)
+{
+	CTransform* transform_component = GetTransform();
+	transform_component->SetWorldRotY(XMConvertToRadians(y));
+	SAFE_RELEASE(transform_component);
+}
+
+void CPlayer::move(float x, float y, float z, bool isBackMove)
+{
+	
+	CTransform* pTransform = this->GetTransform();
+
+	float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(x, y, z));
+	pTransform->SetWorldPos(x, yPos, z);
+
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	if (nullptr == pAnimation)
+		return;
+	if (isBackMove == false)
+		pAnimation->ChangeClip("Run1");
+	else
+	{
+		pAnimation->ChangeClip("RunBack1");
+	}
+	
+}
+
+void CPlayer::changeAnimation(const string& clip_name)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->ChangeClip("Idle3");
+	SAFE_RELEASE(pAnimation);
+}
 
 void CPlayer::OnCollisionEnter(CCollider * pSrc, CCollider * pDest, float fTime)
 {
@@ -431,7 +530,9 @@ void CPlayer::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 
 			string tag = m_pGameObject->GetTag();
 			tag.erase(0, 6);
+
 			int id = atoi(tag.c_str());
+
 			pTargetPlayerUI->setPlayerNumber(id);
 			SAFE_RELEASE(pTargetPlayerUITransform);
 		}

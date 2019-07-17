@@ -10,6 +10,8 @@
 #include "Chatting.h"
 #include "NetworkManager.h"
 #include "Core/EffectManager.h"
+#include "MFObjectManager.h"
+
 PG_USING
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -23,6 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		DESTROY_SINGLE(CCore);
 		return 0;
 	}
+	//MFObjectManager::getInstance()->initialize();
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 

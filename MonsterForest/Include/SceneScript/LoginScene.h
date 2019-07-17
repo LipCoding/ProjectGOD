@@ -18,9 +18,6 @@ public:
 	wstring pEditIDString;
 	//CGameObject* pEditIDObject;
 	vector<WORD> ID_inputCont;
-
-
-	//// pw edit
 	CFont* pUIEditText_PW = nullptr;
 	wstring pEditPWString;
 	//CGameObject* pEditPWObject;

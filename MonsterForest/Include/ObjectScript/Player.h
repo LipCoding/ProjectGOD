@@ -7,24 +7,14 @@
 #include "Component/Animation.h"
 #include "Component/Navigation3D.h"
 #include "Component/Arm.h"
+#include "Actor.h"
 
 PG_USING
 
 class CPlayer :
-	public CScript
+	public Actor
 {
-	wstring characterName;
-	int Level = 1;
 
-	int currentHP = 100;
-	int currentMP = 100;
-
-	int maxHP = 100;
-	int maxMP = 100;
-
-	int attackDamage = 30;
-	int EXP = 0;
-	int maxEXP = 100;
 public:
 	CPlayer();
 	CPlayer(const CPlayer& player);
@@ -54,25 +44,20 @@ public:
 	virtual int LateUpdate(float fTime);
 	virtual CPlayer* Clone();
 	void addExp(int exp);
+
+
 public:
-	int getLevel() { return Level; }
-	int getCurrentHP() { return currentHP; }
-	int getCurrentMP() { return currentMP; }
-	int getMaxHP() { return maxHP; }
-	int getMaxMP() { return maxMP; }
-	int getAttackDamage() { return attackDamage; }
-	int getEXP() { return EXP; }
-	int getMaxEXP() { return maxEXP; }
-public:
-	void setEXP(int exp) { this->EXP = exp; }
-	void setMaxEXP(int maxEXP) { this->maxEXP = maxEXP; }
-	void setLevel(int level) { this->Level = level; }
-	void setCharacterName(const wstring& characterName) { this->characterName = characterName; }
-	void setCurrentHP(int currentHP) { this->currentHP = currentHP; }
-	void setCurrentMP(int currentMP) { this->currentMP = currentMP; }
-	void setMaxHP(int maxHP) { this->maxHP = maxHP; }
-	void setMaxMP(int maxMP) { this->maxMP = maxMP; }
-	void setAttackDamag(int attackDamage) { this->attackDamage = attackDamage; }
+	virtual void damaged(int damage);
+	virtual void attack(const string& target_tag);
+	void skill1_Attack(const string& target_tag);
+	void skill2_Attack(const string& target_tag);
+	void skill3_Attack(const string& target_tag);
+	void skill4_Buff();
+	virtual void settingStatus(int current_hp, int current_mp, int level, int exp);
+	virtual void worldscale(float x, float y, float z) ;
+	virtual void rotate(float x, float y, float z);
+	virtual void move(float x, float y, float z, bool isBackMove = false);
+	virtual void changeAnimation(const string& clip_name);
 
 	virtual void OnCollisionEnter(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);

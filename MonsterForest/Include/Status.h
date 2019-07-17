@@ -5,11 +5,15 @@
 #include "Component/UIButton.h"
 PG_USING
 
+class CPlayer;
+class Actor;
+
 class Status :
 	public CUIButton
 {
 	// 현재 캐릭터를 렌더링
 	// 캐릭터 능력치를 수치로 보여줌.
+	Actor* target_component{nullptr};
 	CUIButton*  pUIHearthBarBackground;
 	CUIButton*	pUIHearthBar;
 
@@ -26,7 +30,9 @@ public:
 	~Status();
 public:
 	bool initialize();
+	void update(float deltaTime);
 public:
+	void setTarget(Actor* target_component) { this->target_component = target_component; }
 	void setScale(float ratio) { this->scale = ratio; }
 	float getScale() { return this->scale; }
 	CUIButton* getUIHearthBar() { return pUIHearthBar; }

@@ -102,3 +102,18 @@ bool Chatting::initialize()
 	}
 	return true;
 }
+
+void Chatting::update(float deltaTime)
+{
+	wstring edit_view = L"";
+	for (auto input : getChatCont())
+	{
+		//wchar_t temp[64];
+		wchar_t temp2 = input;
+		wstring appendString = L"";
+		appendString = appendString + temp2;
+		edit_view = edit_view + appendString;
+	}
+	setChatString(edit_view);
+	getUIChatText()->SetText(edit_view);
+}

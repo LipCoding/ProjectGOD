@@ -595,7 +595,7 @@ void CMainScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -622,7 +622,7 @@ void CMainScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -649,7 +649,7 @@ void CMainScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -675,7 +675,7 @@ void CMainScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 
 				cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
 				pPacket->size = sizeof(cs_packet_attack_player);
@@ -721,10 +721,6 @@ void CMainScene::Input(float fTime)
 						chat_message = chat_message + appendString;
 					}
 
-					//while (chat_message.length() < 20)
-					//{
-					//	chat_message += L" ";
-					//}
 					packet->id = NetworkManager::getInstance()->getMyClientID();
 					packet->size = sizeof(cs_packet_chat);
 					wcscpy_s(packet->message, chat_message.c_str());
@@ -957,7 +953,7 @@ void CMainScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());

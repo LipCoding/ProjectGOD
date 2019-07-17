@@ -352,28 +352,6 @@ LRESULT CCore::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//isFocus = false;
 		break;
 
-	case WM_SOCKET:
-	{
-		//if (WSAGETSELECTERROR(lParam)) {
-		//	NetworkManager::getInstance()->shutDownServer();
-		//	//closesocket((SOCKET)wParam);
-		//	//clienterror();
-		//	break;
-		//}
-		//switch (WSAGETSELECTEVENT(lParam)) {
-		//case FD_READ:
-		//	NetworkManager::getInstance()->readPacket((SOCKET)wParam);
-		//	//ReadPacket((SOCKET)wParam);
-		//	break;
-		//case FD_CLOSE:
-		//	NetworkManager::getInstance()->shutDownServer();
-		//	//closesocket((SOCKET)wParam);
-		//	//clienterror();
-		//	break;
-		//}
-	}
-	break;
-
 	case WM_MOUSEWHEEL:
 		if(isFocus)
 			GET_SINGLE(CInput)->SetWheel(HIWORD(wParam));

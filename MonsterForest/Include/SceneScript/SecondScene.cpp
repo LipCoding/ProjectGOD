@@ -101,18 +101,7 @@ bool SecondScene::Init()
 		SAFE_RELEASE(pParticleLayer);
 	}
 
-
-//#pragma endregion
 	GET_SINGLE(UserInterfaceManager)->initialize();
-
-//#pragma region KeySetting
-//	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
-//	GET_SINGLE(CInput)->CreateKey("Skill1", 'Q');
-//	GET_SINGLE(CInput)->CreateKey("Skill2", 'E');
-//	GET_SINGLE(CInput)->CreateKey("Skill3", 'R');
-//	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
-//	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
-//#pragma endregion
 
 #pragma region Terrain
 	{

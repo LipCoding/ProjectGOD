@@ -16,10 +16,7 @@ class SecondScene :
 public:
 	SecondScene();
 	~SecondScene();
-	//chrono::steady_clock::time_point inputTime;
-	//Vector3 prevPos;
 
-	//CGameObject* pPlayer;
 	bool isInitComplete = false;
 public:
 public:

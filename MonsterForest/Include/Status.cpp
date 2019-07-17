@@ -9,6 +9,7 @@
 #include "Component/Material.h"
 #include "Component/Transform.h"
 #include "Component/Font.h"
+#include "ObjectScript/Player.h"
 
 Status::Status()
 {
@@ -218,6 +219,29 @@ bool Status::initialize()
 	}
 
 	return true;
+}
+
+void Status::update(float deltaTime)
+{
+
+	if (target_component != nullptr)
+	{
+		float ratio = (float)target_component->getCurrentHP() / (float)target_component->getMaxHP();
+		getUIHearthBar()->setLengthRatio(ratio);
+
+		wstring HPText = to_wstring(target_component->getCurrentHP());
+		HPText += L" / ";
+		HPText += to_wstring(target_component->getMaxHP());
+		CGameObject* pHearthBarObj = pUIHearthBar->GetGameObject();
+		CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
+		pFont->SetText(HPText);
+		SAFE_RELEASE(pFont);
+		SAFE_RELEASE(pHearthBarObj);
+
+		float exp_ratio = (float)(target_component->getEXP()) / (float)(target_component->getMaxEXP());
+
+		getUIPureBar()->setLengthRatio(exp_ratio);
+	}
 }
 
 void Status::enableRender(bool show)

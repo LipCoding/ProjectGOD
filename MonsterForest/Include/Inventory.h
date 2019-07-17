@@ -8,8 +8,7 @@ PG_USING
 #define SLOT_COL 5
 #define SLOT_ROW 5
 
-enum EQUIP { EQUIP_HELMET=0, EQUIP_ARMOR, EQUIP_WEAPON, EQUIP_SHOOSE, EQUIP_RING,
-	EQUIP_END};
+enum EQUIP { EQUIP_HELMET=0, EQUIP_ARMOR, EQUIP_WEAPON, EQUIP_SHOOSE, EQUIP_RING, EQUIP_END};
 
 class Inventory
 {
@@ -19,6 +18,7 @@ class Inventory
 	int currentIndex = 0;
 	CGameObject* pTempItem = nullptr;
 	bool show = true;
+
 public:
 	Inventory();
 	~Inventory();

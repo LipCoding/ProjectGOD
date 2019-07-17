@@ -19,6 +19,8 @@
 #include "PGTypes.h"
 #include "Protocol.h"
 #include "fmod/fmod.hpp"
+#include "Singleton.h"
+#include "Singleton.cpp"
 
 #include <d2d1.h> // 글자 출력
 #include <dwrite.h> // 글자 출력

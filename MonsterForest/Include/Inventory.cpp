@@ -57,28 +57,7 @@ bool Inventory::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
-	
-	/*
-		{
-			char str[128];
-			string appendTag = _itoa(index, str, 10);
-			string slotTag = "Slot" + appendTag;
 
-
-			this->pSlot = CGameObject::CreateObject(slotTag, pLayer);
-
-			//CUIButton*	pButton = pSlot->AddComponent<CUIButton>("ChatEdit");
-			//SAFE_RELEASE(pButton);
-
-			CTransform*	pSlotTr = pSlot->GetTransform();
-
-			//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
-			pSlotTr->SetWorldScale(32.f, 32.f, 1.f);
-			pSlotTr->SetWorldPos(400.f + ((index / 5)*32), 100.f + ((index%5)*32), 0.f);
-
-			SAFE_RELEASE(pSlotTr);
-		}
-	*/
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer*	pLayer = pScene->GetLayer("UI+2");
 	for (int i = 0; i < SLOT_ROW; ++i)

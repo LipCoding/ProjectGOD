@@ -27,7 +27,7 @@ public:
 
 public:
 	bool initialize();
-
+	void update(float deltaTime);
 public:
 	vector<wstring>& getUserChatLogCont() { return this->UserChatLog; }
 	CFont* getUIChatLogText() { return this->pUIChatLogText; }

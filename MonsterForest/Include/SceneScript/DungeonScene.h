@@ -7,6 +7,7 @@
 #include <chrono>
 #include "Component/UIButton.h"
 using namespace chrono;
+
 PG_USING
 
 class DungeonScene :
@@ -16,10 +17,7 @@ class DungeonScene :
 public:
 	DungeonScene();
 	~DungeonScene();
-	//chrono::steady_clock::time_point inputTime;
-	//Vector3 prevPos;
 
-	//CGameObject* pPlayer;
 	bool isInitComplete = false;
 public:
 public:

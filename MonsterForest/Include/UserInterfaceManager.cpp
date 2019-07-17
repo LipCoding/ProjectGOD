@@ -28,6 +28,10 @@
 #include "ObjectScript/BlueLizard.h"
 #include "ObjectScript/GreenLizard.h"
 #include "ObjectScript/DemonLord.h"
+#include "Component/ThirdCamera.h"
+#include "Component/Arm.h"
+#include "Core/QuadTreeManager.h"
+
 DEFINITION_SINGLE(UserInterfaceManager);
 
 
@@ -48,10 +52,6 @@ bool UserInterfaceManager::initialize()
 	this->pInventory->initialize();
 	for (auto& player : partyCont)
 		player = nullptr;
-	//this->pStatus = new Status;
-	//this->pStatus->initialize();
-	//this->pEnemyStatus = new Status;
-	//this->pEnemyStatus->initialize();
 
 #pragma region PlayerStatus
 	{
@@ -85,7 +85,9 @@ bool UserInterfaceManager::initialize()
 		CTransform* pStatusTr = pEnemyStatusObj->GetTransform();
 		pStatusTr->SetWorldScale(100.f, 100.f, 1.f);
 		pStatusTr->SetWorldPos(400.f, 0.f, 1.f);
+
 		this->pEnemyStatus = pEnemyStatusObj->AddComponent<Status>("Status");
+
 		pEnemyStatus->initialize();
 		CRenderer2D* pRenderer = pEnemyStatusObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
@@ -139,30 +141,30 @@ bool UserInterfaceManager::initialize()
 	}
 #pragma endregion
 
-//#pragma region MiniMap
-//	{
-//		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-//		CLayer*	pLayer = pScene->GetLayer("UI+1");
-//		CGameObject* pMinimapObj = CGameObject::CreateObject("Minimap", pLayer);
-//		this->pMiniMap = pMinimapObj->AddComponent<MiniMap>("Minimap");
-//		this->pMiniMap->initialize();
-//
-//		CTransform* pStatusTr = pMinimapObj->GetTransform();
-//		pStatusTr->SetWorldScale(150.f, 150.f, 1.f);
-//		pStatusTr->SetWorldPos(1100.f, 0.f, 0.f);
-//		CRenderer2D* pRenderer = pMinimapObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-//		CMaterial* pMaterial = pRenderer->GetMaterial();
-//
-//		pMaterial->SetDiffuseTexInfo("Linear", "UIMINIMAP",
-//			0, 0, L"UserInterface/UI_MINIMAP_CIRCLE.png");
-//		SAFE_RELEASE(pStatusTr);
-//		SAFE_RELEASE(pMaterial);
-//		SAFE_RELEASE(pRenderer);
-//		SAFE_RELEASE(pMinimapObj);
-//		SAFE_RELEASE(pLayer);
-//		SAFE_RELEASE(pScene);
-//	}
-//#pragma endregion
+#pragma region MiniMap
+	{
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
+		CGameObject* pMinimapObj = CGameObject::CreateObject("Minimap", pLayer);
+		this->pMiniMap = pMinimapObj->AddComponent<MiniMap>("Minimap");
+		this->pMiniMap->initialize();
+
+		CTransform* pStatusTr = pMinimapObj->GetTransform();
+		pStatusTr->SetWorldScale(150.f, 150.f, 1.f);
+		pStatusTr->SetWorldPos(1100.f, 0.f, 0.f);
+		CRenderer2D* pRenderer = pMinimapObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "UIMINIMAP",
+			0, 0, L"UserInterface/UI_MINIMAP_CIRCLE.png");
+		SAFE_RELEASE(pStatusTr);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pMinimapObj);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+	}
+#pragma endregion
 
 #pragma region frameRender
 	{
@@ -378,161 +380,24 @@ bool UserInterfaceManager::initialize()
 void UserInterfaceManager::update(float time)
 {
 	pInventory->update(time);
+	pStatus->update(time);
+	pEnemyStatus->update(time);
+	pChatting->update(time);
+
 	if (pDropTableUI->isEmpty())
 		pDropTableUI->enableRender(false);
+
+	if (KEYDOWN("INVENTORY"))
+		this->pInventory->enableShowInventory();
+
+
+	/// < 프레임 출력 >
 	CTimer*	pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
 	pTimer->Update();
 	float fTime = pTimer->GetFPS();
 	frameString = to_wstring((int)fTime);
 	SAFE_RELEASE(pTimer);
 	this->pFrameText->SetText(frameString);
-	/*
-			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
-		wstring edit_view = L"";
-		for (auto input : pChatting->getChatCont())
-		{
-			//wchar_t temp[64];
-			wchar_t temp2 = input;
-			wstring appendString = L"";
-			appendString = appendString + temp2;
-			edit_view = edit_view + appendString;
-		}
-		pChatting->setChatString(edit_view);
-		pChatting->getUIChatText()->SetText(edit_view);
-	*/
-	{
-		wstring edit_view = L"";
-		for (auto input : pChatting->getChatCont())
-		{
-			//wchar_t temp[64];
-			wchar_t temp2 = input;
-			wstring appendString = L"";
-			appendString = appendString + temp2;
-			edit_view = edit_view + appendString;
-		}
-		pChatting->setChatString(edit_view);
-		pChatting->getUIChatText()->SetText(edit_view);
-	}
-
-
-
-	if (KEYDOWN("INVENTORY"))
-	{
-		this->pInventory->enableShowInventory();
-	}
-
-	if (pPlayer != nullptr)
-	{
-		wstring HPText = to_wstring(pPlayer->getCurrentHP());
-		HPText += L" / ";
-		HPText += to_wstring(pPlayer->getMaxHP());
-		CGameObject* pHearthBarObj = pStatus->getUIHearthBar()->GetGameObject();
-		CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-		pFont->SetText(HPText);
-		SAFE_RELEASE(pFont);
-		SAFE_RELEASE(pHearthBarObj);
-	}
-
-	string appendTag = to_string(NetworkManager::getInstance()->getMyClientID());
-	string objectTag = "Player" + appendTag;
-	CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-	if (pGameObject != nullptr)
-	{
-		{
-			Mino* pMino = pGameObject->FindComponentFromTag<Mino>("Mino");
-			if (nullptr != pMino)
-			{
-				wstring HPText = to_wstring(pMino->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pMino->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pMino);
-			}
-			Golem* pGolem = pGameObject->FindComponentFromTag<Golem>("Golem");
-			if (nullptr != pGolem)
-			{
-				wstring HPText = to_wstring(pGolem->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pGolem->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pGolem);
-			}
-			GreenLizard* pGreenLizard = pGameObject->FindComponentFromTag<GreenLizard>("GreenLizard");
-			if (nullptr != pGreenLizard)
-			{
-				wstring HPText = to_wstring(pGreenLizard->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pGreenLizard->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pGreenLizard);
-			}
-			BlueLizard* pBlueLizard = pGameObject->FindComponentFromTag<BlueLizard>("BlueLizard");
-			if (nullptr != pBlueLizard)
-			{
-				wstring HPText = to_wstring(pBlueLizard->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pBlueLizard->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pBlueLizard);
-			}
-			Armored_GreenLizard* pArmoredGreenLizard = pGameObject->FindComponentFromTag<Armored_GreenLizard>("Armored_GreenLizard");
-			if (nullptr != pArmoredGreenLizard)
-			{
-				wstring HPText = to_wstring(pArmoredGreenLizard->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pArmoredGreenLizard->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pArmoredGreenLizard);
-			}
-			Armored_BlueLizard* pArmoredBlueLizard = pGameObject->FindComponentFromTag<Armored_BlueLizard>("Armored_BlueLizard");
-			if (nullptr != pArmoredBlueLizard)
-			{
-				wstring HPText = to_wstring(pArmoredBlueLizard->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pArmoredBlueLizard->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pArmoredBlueLizard);
-			}
-			DemonLord* pDemonLord = pGameObject->FindComponentFromTag<DemonLord>("DemonLord");
-			if (nullptr != pDemonLord)
-			{
-				wstring HPText = to_wstring(pDemonLord->getCurrentHP());
-				HPText += L" / ";
-				HPText += to_wstring(pDemonLord->getMaxHP());
-				CGameObject* pHearthBarObj = pEnemyStatus->getUIHearthBar()->GetGameObject();
-				CFont* pFont = pHearthBarObj->FindComponentFromTag<CFont>("HPFont");
-				pFont->SetText(HPText);
-				SAFE_RELEASE(pFont);
-				SAFE_RELEASE(pHearthBarObj);
-				SAFE_RELEASE(pMino);
-			}
-		}
-	}
-
 }
 
 PartyStatus * UserInterfaceManager::findPartyState(const string & playerName)
@@ -548,6 +413,87 @@ PartyStatus * UserInterfaceManager::findPartyState(const string & playerName)
 	}
 
 	return pStatus;
+}
+
+void UserInterfaceManager::pushChatMessage(const wstring & chat_message)
+{
+	pChatting->getUserChatLogCont().push_back(chat_message);
+
+	wstring allChatLog;
+
+	const vector<wstring>& ChatLogCont = pChatting->getUserChatLogCont();
+	int index = 0;
+	int offset = 0;
+	if (ChatLogCont.size() < 8)
+	{
+		for (int i = 0; i < ChatLogCont.size(); ++i)
+		{
+			allChatLog += ChatLogCont[i];
+			index++;
+		}
+	}
+	else
+	{
+		offset = ChatLogCont.size() - 7;
+		for (int i = offset; i < offset + 7; ++i)
+		{
+			allChatLog += ChatLogCont[i];
+			index++;
+		}
+	}
+	pChatting->getUIChatLogText()->SetText(allChatLog);
+}
+
+void UserInterfaceManager::partySyncronize(const string& object_tag, int x, int y, int z, int current_hp, int current_mp, int level, int exp)
+{
+	CLayer*	pLayer = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetLayer("Default");
+	CGameObject* pPlayerObj = CGameObject::FindObject(object_tag);
+	if (nullptr != pPlayerObj)
+	{
+		CPlayer*	pPlayer = pPlayerObj->FindComponentFromTypeName<CPlayer>("Actor");
+		pPlayer->setCurrentHP(current_hp);
+
+		CTransform*	pTr = pPlayerObj->GetTransform();
+		float yPos = GET_SINGLE(CQuadTreeManager)->GetY(Vector3(x, y, z));
+		pTr->SetWorldPos(x, yPos, z);
+		SAFE_RELEASE(pTr);
+
+		int hp = pPlayer->getCurrentHP();
+		float ratio = (float)hp / (float)pPlayer->getMaxHP();
+		pPlayer->setCurrentHP(hp);
+
+		PartyStatus* pStatus = GET_SINGLE(UserInterfaceManager)->findPartyState(object_tag);
+		if (pStatus != nullptr)
+		{
+			CUIButton* pUIHearthBar = pStatus->getUIHearthBar();
+			pUIHearthBar->setLengthRatio(ratio);
+		}
+	}
+}
+
+void UserInterfaceManager::setPlayer(CPlayer * pPlayer)
+{
+	this->pPlayer = pPlayer;
+	pStatus->setTarget(pPlayer);
+}
+
+void UserInterfaceManager::setTarget(Actor * pTarget)
+{
+	this->pTarget = pTarget;
+	pEnemyStatus->setTarget(pTarget);
+}
+
+void UserInterfaceManager::setCameraTarget(CGameObject * target_object)
+{
+	CGameObject*	pCameraObj = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
+	CTransform* pTransform = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraTr();
+
+	CThirdCamera*	pThirdCam = pCameraObj->AddComponent<CThirdCamera>("ThirdCamera");
+	SAFE_RELEASE(pThirdCam);
+
+	CArm*	pArm = pCameraObj->AddComponent<CArm>("Arm");
+	pArm->SetTarget(target_object);
+	pArm->SetLookAtDist(Vector3(0.f, 1.f, 0.f));
 }
 
 void UserInterfaceManager::addPartyPlayer(const string& playerName)

@@ -262,6 +262,36 @@ public:
 
 		return (T*)AddComponent(pCom);
 	}
+
+	template <typename Super, typename Sub>
+	Sub* AddComponent(const string& strTag)
+	{
+		Super*	pCom = NULL;
+
+		if (m_bDontDestroy)
+		{
+			pCom = FindComponentFromTag<Super>(strTag);
+
+			if (pCom)
+				return pCom;
+		}
+
+		pCom = new Sub;
+
+		pCom->SetTag(strTag);
+		pCom->SetScene(m_pScene);
+		pCom->SetLayer(m_pLayer);
+		pCom->SetGameObject(this);
+		pCom->SetTransform(m_pTransform);
+
+		if (!pCom->Init())
+		{
+			SAFE_RELEASE(pCom);
+			return NULL;
+		}
+
+		return (Sub*)AddComponent(pCom);
+	}
 };
 
 PG_END
