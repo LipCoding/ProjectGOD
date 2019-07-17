@@ -49,16 +49,21 @@
 #define IDC_RADIO3                      1019
 #define IDC_RADIO_UPTYPE_HEIGHT_3       1019
 #define IDC_EDIT9_POSZ                  1019
+#define IDC_EDIT_POSZ                   1019
 #define IDC_SLIDER1                     1020
 #define IDC_SLIDER_HEIGHTPOWER          1020
 #define IDC_EDIT10                      1020
+#define IDC_EDIT_DIR_POSX               1020
 #define IDC_SLIDER2                     1021
 #define IDC_SLIDER_RANGE                1021
+#define IDC_SLIDER_DIR_POSX             1021
 #define IDC_SLIDER3                     1022
 #define IDC_SLIDER_DETAIL_DEFAULT       1022
+#define IDC_SLIDER_DIR_POSY             1022
 #define IDC_RADIO4                      1023
 #define IDC_RADIO_HEIGHT_DIR_1          1023
 #define IDC_SLIDER4                     1023
+#define IDC_SLIDER_DIR_POSZ             1023
 #define IDC_RADIO5                      1024
 #define IDC_RADIO_HEIGHT_DIR_2          1024
 #define IDC_SLIDER_POSX                 1024
@@ -75,9 +80,11 @@
 #define IDC_CHECK_NAVI                  1027
 #define IDC_CHECK_HEIGHT_INIT           1027
 #define IDC_EDIT11                      1027
+#define IDC_EDIT_DIR_POSY               1027
 #define IDC_CHECK_HEIGHT                1028
 #define IDC_BUTTON_NAVI_UNDO            1028
 #define IDC_EDIT12                      1028
+#define IDC_EDIT_DIR_POSZ               1028
 #define IDC_RADIO_MODE_1                1029
 #define IDC_RADIO_MODE_2                1030
 #define IDC_RADIO_DETAIL_1              1031
@@ -92,22 +99,32 @@
 #define IDC_EDIT7                       1040
 #define IDC_BUTTON_TEX_LOAD             1041
 #define IDC_EDIT13                      1041
+#define IDC_EDIT_GLOBLIGHT_B            1041
 #define IDC_BUTTON4                     1042
 #define IDC_BUTTON_SPLAT_LOAD           1042
+#define IDC_BUTTON_GLOBLIGHT_COLOR_ADJ  1042
 #define IDC_BUTTON5                     1043
 #define IDC_BUTTON_TERRAIN_SAVE         1043
+#define IDC_BUTTON_GLOBLIGHT_RESET      1043
 #define IDC_BUTTON6                     1044
 #define IDC_BUTTON_TERRAIN_LOAD         1044
 #define IDC_SLIDER_SPLAT_POWER          1045
 #define IDC_BUTTON8                     1045
+#define IDC_BUTTON_POINT_SAVE           1045
 #define IDC_EDIT_SPLAT_POWER            1046
 #define IDC_BUTTON14                    1046
+#define IDC_EDIT_POINT_COLOR_ADJ        1046
 #define IDC_LIST_OBJECTS                1047
 #define IDC_EDIT16                      1047
+#define IDC_EDIT_POINT_R                1047
 #define IDC_LIST_OBJECT_TYPE            1048
 #define IDC_EDIT17                      1048
+#define IDC_EDIT_POINT_G                1048
 #define IDC_EDIT18                      1049
+#define IDC_EDIT_POINT_B                1049
 #define IDC_BUTTON_OBJECT_SAVE          1050
+#define IDC_BUTTON15                    1050
+#define IDC_BUTTON_GLOBLIGHT_SAVE       1050
 #define IDC_BUTTON_OBJECT_LOAD          1051
 #define IDC_BUTTON_NAVI_SAVE            1052
 #define IDC_BUTTON_NAVI_LOAD            1053
@@ -117,12 +134,23 @@
 #define IDC_BUTTON3                     1057
 #define IDC_BUTTON_RESET_SELECTED       1057
 #define IDC_BUTTON7                     1058
+#define IDC_BUTTON_GLOBLIGHT_LOAD       1058
 #define IDC_BUTTON9                     1059
+#define IDC_BUTTON_POINT_LOAD           1059
 #define IDC_LIST1                       1060
+#define IDC_LIST_POINTLIGHT             1060
 #define IDC_BUTTON10                    1061
+#define IDC_BUTTON_POINT_LIST_SELDELETE 1061
 #define IDC_BUTTON11                    1062
+#define IDC_BUTTON_POINT_LIST_CLEARALL  1062
 #define IDC_EDIT14                      1063
+#define IDC_EDIT_POINT_RANGE            1063
+#define IDC_EDIT_GLOBLIGHT_RANGE        1064
 #define IDC_BUTTON12                    1065
+#define IDC_BUTTON_POINT_RANGE_ADJ      1065
+#define IDC_BUTTON_GLOBLIGHT_RANGE_ADJ  1066
+#define IDC_EDIT_GLOBLIGHT_R            1068
+#define IDC_EDIT_GLOBLIGHT_G            1069
 
 // Next default values for new objects
 // 
@@ -130,7 +158,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        334
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1068
+#define _APS_NEXT_CONTROL_VALUE         1070
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
