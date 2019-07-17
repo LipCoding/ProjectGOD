@@ -11,6 +11,16 @@ class CBrushTool :
 	public CScript
 {
 public:
+	//엡실론 (나중에 Math에 추가예정)
+	bool sameFloat(const float& a, const float& b)
+	{
+		if (fabsf(a - b) < FLT_EPSILON)
+			return true;
+		else
+			return false;
+	}
+
+public:
 	CBrushTool();
 	CBrushTool(const CBrushTool& brushtool);
 	~CBrushTool();
@@ -46,6 +56,12 @@ public:
 
 	void Save_AlphaSplat_Bitmap(string fileName, int idx);
 	void HBITMAP2BMP(HBITMAP hBitmap, string fileName);
+private:
+	void FindNeighborNodes(QUADTREENODE* &up, QUADTREENODE* &down, QUADTREENODE* &left, QUADTREENODE* &right,
+		QUADTREENODE* &node, POINT landScapeSize, Vector3 &myNodePos, list<QUADTREENODE*>* &list);
+	void SmoothOutLine(QUADTREENODE* &neigborNode, QUADTREENODE* &node, int currentIndex, float iterPos,
+		float limitPos, float iterLimitPosX, float iterLimitPosZ, float deltaTime, char typeCheck);
+	void SmoothInLine(QUADTREENODE* &node, int srcIndex, int index, float deltaTime);
 private:
 	void UpdateVtxBuffer(MESHCONTAINER* info, vector<VERTEXBUMP>& vtx);
 	void UpdateTextureBuffer(int texType, CTexture* pTexture, Vector3 mousePos, float power, bool erase);

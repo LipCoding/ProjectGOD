@@ -112,6 +112,7 @@ public:
 	Matrix GetParentMatrix()	const;
 	Matrix GetWorldMatrix()	const;
 
+	PMatrix GetWorldMatrixPointer() const;
 public:
 	void SetOriginAxis(AXIS eAxis);
 	void SetWorldScale(float x, float y, float z);

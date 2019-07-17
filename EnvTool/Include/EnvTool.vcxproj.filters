@@ -31,6 +31,9 @@
     <Filter Include="00.Tab\Obj">
       <UniqueIdentifier>{f28e3eb3-9903-4c3e-9cf8-95a0d5cd294f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.Tab\Light">
+      <UniqueIdentifier>{0865274c-5ca8-4cf5-91f9-77608012678b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnvTool.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="NaviTab.h">
       <Filter>00.Tab\Navi</Filter>
     </ClInclude>
+    <ClInclude Include="LightTab.h">
+      <Filter>00.Tab\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnvTool.cpp">
@@ -100,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="NaviTab.cpp">
       <Filter>00.Tab\Navi</Filter>
+    </ClCompile>
+    <ClCompile Include="LightTab.cpp">
+      <Filter>00.Tab\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

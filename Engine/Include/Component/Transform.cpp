@@ -436,6 +436,11 @@ Matrix CTransform::GetWorldMatrix() const
 	return *m_matWorld;
 }
 
+PMatrix CTransform::GetWorldMatrixPointer() const
+{
+	return m_matWorld;
+}
+
 void CTransform::SetOriginAxis(AXIS eAxis)
 {
 	m_eOriginAxis = eAxis;

@@ -188,6 +188,7 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 					iter.vPos.y += (m_fUpSpeed * (1.f - fDistance / m_fRange)) * fTime;
 					break;
 				case UP_TYPE_SMOOTH:
+				{
 					float fGap = 0.f;
 					int iScrIndex = 0;
 					float fAverValue = 0.2f;
@@ -197,341 +198,65 @@ void CBrushTool::MoveHeight(list<QUADTREENODE*>* list, Vector3 mousePos, const f
 					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
 					POINT LandScapeSize = pLandScape->GetTerrainSize();
 					{
-						float minDistance = 1000000.f;
 						Vector3 myNodePos = { node->fCenterX, 0.f, node->fCenterZ };
 						//주변 노드 찾기
-						// 상
 						QUADTREENODE* pUpNode = nullptr;
-						if (node->vMax.z < (float)LandScapeSize.y)
-						{
-							for (const auto searchNode : *list)
-							{
-								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
-
-								float fDistance = myNodePos.Distance(otherNodePos);
-
-								if (otherNodePos.z > myNodePos.z &&
-									fDistance < minDistance)
-								{
-									minDistance = fDistance;
-									pUpNode = searchNode;
-								}
-							}
-						}
-						// 하
 						QUADTREENODE* pDownNode = nullptr;
-						minDistance = 1000000.f;
-						if (node->vMin.z > 0.f)
-						{
-							for (const auto searchNode : *list)
-							{
-								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
-
-								float fDistance = myNodePos.Distance(otherNodePos);
-
-								if (otherNodePos.z < myNodePos.z &&
-									fDistance < minDistance)
-								{
-									minDistance = fDistance;
-									pDownNode = searchNode;
-								}
-							}
-						}
-						// 좌
 						QUADTREENODE* pLeftNode = nullptr;
-						minDistance = 1000000.f;
-						if (node->vMin.x > 0.f)
-						{
-							for (const auto searchNode : *list)
-							{
-								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
-
-								float fDistance = myNodePos.Distance(otherNodePos);
-
-								if (otherNodePos.x < myNodePos.x &&
-									fDistance < minDistance)
-								{
-									minDistance = fDistance;
-									pLeftNode = searchNode;
-								}
-							}
-						}
-						// 우
 						QUADTREENODE* pRightNode = nullptr;
-						minDistance = 1000000.f;
-						if (node->vMax.x < LandScapeSize.x)
-						{
-							for (const auto searchNode : *list)
-							{
-								Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
 
-								float fDistance = myNodePos.Distance(otherNodePos);
-
-								if (otherNodePos.x > myNodePos.x &&
-									fDistance < minDistance)
-								{
-									minDistance = fDistance;
-									pRightNode = searchNode;
-								}
-							}
-						}
+						FindNeighborNodes(pUpNode, pDownNode, pLeftNode, pRightNode,
+							node, LandScapeSize, myNodePos, list);
 
 						int iNumSizeX = int(node->vMax.x - node->vMin.x) + 1;
 
-						// 노드 외곽
-						// 상 -> 하 좌 우
-						if (iter.vPos.z == node->vMax.z)
-						{ 
-							if (pUpNode)
-							{
-								Vector3* upPos_otherNode;
-								for (auto& iter_otherNode : pUpNode->vecVtx)
-								{
-									if (iter_otherNode.vPos.z == iter.vPos.z + 1 &&
-										iter_otherNode.vPos.x == iter.vPos.x)
-									{
-										upPos_otherNode = &iter_otherNode.vPos;
-										break;
-									}
-								}
-								/*Up*/
-								fGap = abs(node->vecVtx[iIndex].vPos.y - (*upPos_otherNode).y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > (*upPos_otherNode).y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										(*upPos_otherNode).y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										(*upPos_otherNode).y -= fGap * fTime* 3.f;
-									}
-								}
-							}
-						}
-						// 하 -> 상 좌 우
-						if (iter.vPos.z == node->vMin.z)
-						{ 
-							if (pDownNode)
-							{
-								Vector3* downPos_otherNode;
-								for (auto& iter_otherNode : pDownNode->vecVtx)
-								{
-									if (iter_otherNode.vPos.z == iter.vPos.z - 1 &&
-										iter_otherNode.vPos.x == iter.vPos.x)
-									{
-										downPos_otherNode = &iter_otherNode.vPos;
-										break;
-									}
-								}
-								/*Down*/
-								fGap = abs(node->vecVtx[iIndex].vPos.y - (*downPos_otherNode).y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > (*downPos_otherNode).y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										(*downPos_otherNode).y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										(*downPos_otherNode).y -= fGap * fTime* 3.f;
-									}
-								}
-							}
-						}
-						// 좌 -> 상 하 우
-						if (iter.vPos.x == node->vMin.x)
-						{ 
-							if (pLeftNode)
-							{
-								Vector3* leftPos_otherNode;
-								for (auto& iter_otherNode : pLeftNode->vecVtx)
-								{
-									if (iter_otherNode.vPos.x == iter.vPos.x - 1 &&
-										iter_otherNode.vPos.z == iter.vPos.z)
-									{
-										leftPos_otherNode = &iter_otherNode.vPos;
-										break;
-									}
-								}
-
-								/*Left*/
-								fGap = abs(node->vecVtx[iIndex].vPos.y - (*leftPos_otherNode).y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > (*leftPos_otherNode).y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
-										(*leftPos_otherNode).y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										(*leftPos_otherNode).y -= fGap * fTime* 3.f;
-									}
-								}
-							}
-						}
-						// 우 -> 상 하 좌
-						if (iter.vPos.x == node->vMax.x)
-						{ 
-							if (pRightNode)
-							{
-								Vector3* rightPos_otherNode;
-								for (auto& iter_otherNode : pRightNode->vecVtx)
-								{
-									if (iter_otherNode.vPos.x == iter.vPos.x + 1 &&
-										iter_otherNode.vPos.z == iter.vPos.z)
-									{
-										rightPos_otherNode = &iter_otherNode.vPos;
-										break;
-									}
-								}
-
-								/*Right*/
-								fGap = abs(node->vecVtx[iIndex].vPos.y - (*rightPos_otherNode).y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > (*rightPos_otherNode).y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										(*rightPos_otherNode).y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										(*rightPos_otherNode).y -= fGap * fTime* 3.f;
-									}
-								}
-							}	
-						}
-						
-
 						// 노드 내부 정점 변화
+						//X
 						if (iter.vPos.x < node->vMax.x &&
 							iter.vPos.x > node->vMin.x)
 						{
 							/*Left*/
-							if (0 < (iIndex - 1) &&
-								node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
-							{
-								iScrIndex = iIndex - 1;
-								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime * 3.f;
-										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-									}
-								}
-							}
+							if (0 < (iIndex - 1) && node->vecVtx[iIndex - 1].vPos.x >= node->vMin.x)
+								SmoothInLine(node, iIndex - 1, iIndex, fTime);
+							
 
 							/*Right*/
-							if (node->vecVtx.size() > (iIndex + 1) &&
-								node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
-							{
-								iScrIndex = iIndex + 1;
-								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-									}
-								}
-							}
+							if (node->vecVtx.size() > (iIndex + 1) && node->vecVtx[iIndex + 1].vPos.x <= node->vMax.x)
+								SmoothInLine(node, iIndex + 1, iIndex, fTime);
 						}
-
+						//Z
 						if (iter.vPos.z < node->vMax.z &&
 							iter.vPos.z > node->vMin.z)
 						{
 							/*Up*/
-							if (node->vecVtx.size() > (iIndex + iNumSizeX) &&
-								node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
-							{
-								iScrIndex = iIndex + iNumSizeX;
-								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-									}
-								}
-							}
+							if (node->vecVtx.size() > (iIndex + iNumSizeX) && node->vecVtx[iIndex + iNumSizeX].vPos.z <= node->vMax.z)
+								SmoothInLine(node, iIndex + iNumSizeX, iIndex, fTime);
 
 							/*Down*/
-							if (0 < (iIndex - iNumSizeX) &&
-								node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
-							{
-								iScrIndex = iIndex - iNumSizeX;
-								fGap = abs(node->vecVtx[iIndex].vPos.y - node->vecVtx[iScrIndex].vPos.y);
-
-								if (fGap > fAverValue)
-								{
-									fGap /= GAP;
-
-									if (node->vecVtx[iIndex].vPos.y > node->vecVtx[iScrIndex].vPos.y)
-									{
-										node->vecVtx[iIndex].vPos.y -= fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y += fGap * fTime* 3.f;
-									}
-									else
-									{
-										node->vecVtx[iIndex].vPos.y += fGap * fTime* 3.f;
-										node->vecVtx[iScrIndex].vPos.y -= fGap * fTime* 3.f;
-									}
-								}
-							}
+							if (0 < (iIndex - iNumSizeX) && node->vecVtx[iIndex - iNumSizeX].vPos.z >= node->vMin.z)
+								SmoothInLine(node, iIndex - iNumSizeX, iIndex, fTime);
 						}
 
+						// 노드 외곽  정점 변화
+						// 상 - 하 좌 우
+						SmoothOutLine(pUpNode, node, iIndex, iter.vPos.z, node->vMax.z,
+							iter.vPos.x, iter.vPos.z, fTime, 'Z');
+						// 우 - 상 하 좌
+						SmoothOutLine(pRightNode, node, iIndex, iter.vPos.x, node->vMax.x,
+							iter.vPos.x, iter.vPos.z, fTime, 'X');
+
+						// 좌 - 상 하 우
+						SmoothOutLine(pLeftNode, node, iIndex, iter.vPos.x, node->vMin.x,
+							iter.vPos.x - 1, iter.vPos.z, fTime, 'X');
+						// 하 - 상 좌 우
+						SmoothOutLine(pDownNode, node, iIndex, iter.vPos.z, node->vMin.z,
+							iter.vPos.x, iter.vPos.z - 1, fTime, 'Z');
 					}
 					SAFE_RELEASE(pLandScape);
 					SAFE_RELEASE(pLandScapeObj);
 					break;
+				}
+				//
 				}
 
 				UpdateVtxBuffer(&node->MeshInfo, node->vecVtx);
@@ -682,6 +407,186 @@ void CBrushTool::HBITMAP2BMP(HBITMAP hBitmap, string fileName)
 	if (hdc) ReleaseDC(NULL, hdc);
 	if (pBuf) free(pBuf);
 	if (fp) fclose(fp);
+}
+
+void CBrushTool::FindNeighborNodes(QUADTREENODE *& up, QUADTREENODE *& down, QUADTREENODE *& left, QUADTREENODE *& right, QUADTREENODE *& node, POINT landScapeSize, Vector3 & myNodePos, list<QUADTREENODE*>*& list)
+{
+	// 상
+	float minDistance = 1000000.f;
+	// 노드의 Max가 맨 위쪽인 경우는 상 노드가 없음
+	if (node->vMax.z < (float)landScapeSize.y)
+	{
+		for (const auto searchNode : *list)
+		{
+			Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+			float fDistance = myNodePos.Distance(otherNodePos);
+
+			if (otherNodePos.z > myNodePos.z &&
+				fDistance < minDistance)
+			{
+				minDistance = fDistance;
+				up = searchNode;
+			}
+		}
+	}
+	// 하
+	minDistance = 1000000.f;
+	// 노드의 Min이 맨 밑인 경우는 하 노드가 없음
+	if (node->vMin.z > 0.f)
+	{
+		for (const auto searchNode : *list)
+		{
+			Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+			float fDistance = myNodePos.Distance(otherNodePos);
+
+			if (otherNodePos.z < myNodePos.z &&
+				fDistance < minDistance)
+			{
+				minDistance = fDistance;
+				down = searchNode;
+			}
+		}
+	}
+	// 좌
+	minDistance = 1000000.f;
+	// 노드의 Min이 맨 왼쪽인 경우는 좌 노드가 없음
+	if (node->vMin.x > 0.f)
+	{
+		for (const auto searchNode : *list)
+		{
+			Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+			float fDistance = myNodePos.Distance(otherNodePos);
+
+			if (otherNodePos.x < myNodePos.x &&
+				fDistance < minDistance)
+			{
+				minDistance = fDistance;
+				left = searchNode;
+			}
+		}
+	}
+	// 우
+	minDistance = 1000000.f;
+	// 노드의 Max가 맨 오른쪽인 같은 경우는 좌 노드가 없음
+	if (node->vMax.x < landScapeSize.x)
+	{
+		for (const auto searchNode : *list)
+		{
+			Vector3 otherNodePos = { searchNode->fCenterX, 0.f, searchNode->fCenterZ };
+
+			float fDistance = myNodePos.Distance(otherNodePos);
+
+			if (otherNodePos.x > myNodePos.x &&
+				fDistance < minDistance)
+			{
+				minDistance = fDistance;
+				right = searchNode;
+			}
+		}
+	}
+}
+
+void CBrushTool::SmoothOutLine(QUADTREENODE *& neigborNode, QUADTREENODE *& node, int currentIndex, float iterPos, float limitPos, float iterLimitPosX, float iterLimitPosZ, float deltaTime, char typeCheck)
+{
+	if (!neigborNode)
+		return;
+
+	float iterLimitPosX_Other = iterLimitPosX;
+	float iterLimitPosZ_Other = iterLimitPosZ;
+
+	if (typeCheck == 'X')
+	{
+		iterLimitPosX_Other += 1.f;
+	}
+	else if (typeCheck == 'Z')
+	{
+		iterLimitPosZ_Other += 1.f;
+	}
+	else
+		return;
+
+	float fGap = 0.f;
+	float fAverValue = 0.2f;
+	float GAP = 4.f;
+
+	//if (iterPos == limitPos)
+	if (sameFloat(iterPos, limitPos))
+	{
+
+		Vector3* pos_otherNode = nullptr;
+		Vector3* pos_otherNode_samePos = nullptr;
+		for (auto& iter_otherNode : neigborNode->vecVtx)
+		{
+			/*if (iter_otherNode.vPos.z == iterLimitPosZ &&
+				iter_otherNode.vPos.x == iterLimitPosX)*/
+			if(sameFloat(iter_otherNode.vPos.z, iterLimitPosZ) &&
+				sameFloat(iter_otherNode.vPos.x, iterLimitPosX))
+			{
+				pos_otherNode_samePos = &iter_otherNode.vPos;
+			}
+
+			if (sameFloat(iter_otherNode.vPos.z, iterLimitPosZ_Other) &&
+				sameFloat(iter_otherNode.vPos.x, iterLimitPosX_Other))
+			{
+				pos_otherNode = &iter_otherNode.vPos;
+				break;
+			}
+		}
+
+		if (pos_otherNode)
+		{
+			fGap = abs(node->vecVtx[currentIndex].vPos.y - (*pos_otherNode).y);
+
+			if (fGap > fAverValue)
+			{
+				fGap /= GAP;
+
+				if (node->vecVtx[currentIndex].vPos.y > (*pos_otherNode).y)
+				{
+					node->vecVtx[currentIndex].vPos.y -= fGap * deltaTime* 3.f;
+				}
+				else
+				{
+					node->vecVtx[currentIndex].vPos.y += fGap * deltaTime* 3.f;		
+				}			
+			}
+
+			
+		}
+
+		if (pos_otherNode_samePos)
+			(*pos_otherNode_samePos).y = node->vecVtx[currentIndex].vPos.y;
+	}
+}
+
+void CBrushTool::SmoothInLine(QUADTREENODE *& node, int srcIndex, int index, float deltaTime)
+{
+	float fGap = 0.f;
+	int iScrIndex = 0;
+	float fAverValue = 0.2f;
+	float GAP = 4.f;
+
+	iScrIndex = srcIndex;
+	fGap = abs(node->vecVtx[index].vPos.y - node->vecVtx[iScrIndex].vPos.y);
+
+	if (fGap > fAverValue)
+	{
+		fGap /= GAP;
+
+		if (node->vecVtx[index].vPos.y > node->vecVtx[iScrIndex].vPos.y)
+		{
+			node->vecVtx[index].vPos.y -= fGap * deltaTime * 3.f;
+			node->vecVtx[iScrIndex].vPos.y += fGap * deltaTime* 3.f;
+		}
+		else
+		{
+			node->vecVtx[index].vPos.y += fGap * deltaTime* 3.f;
+			node->vecVtx[iScrIndex].vPos.y -= fGap * deltaTime* 3.f;
+		}
+	}
 }
 
 void CBrushTool::UpdateVtxBuffer(MESHCONTAINER * info, vector<VERTEXBUMP>& vtx)

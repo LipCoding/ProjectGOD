@@ -152,7 +152,9 @@ XMMATRIX CCamera::GetLightProj()
 	XMFLOAT3 sphereCenterLS;
 	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, m_xmatLightView));
 
-	float radius = 325.0f;
+	//old
+	//float radius = 325.0f;
+	float radius = 425.f;
 
 	float l = sphereCenterLS.x - radius;
 	float r = sphereCenterLS.x + radius;

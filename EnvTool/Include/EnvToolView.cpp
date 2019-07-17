@@ -167,6 +167,9 @@ void CEnvToolView::OnInitialUpdate()
 	m_pBrushObj = CGameObject::CreateObject("Brush", pLayer);
 	CBrushTool* pBrushTool = m_pBrushObj->AddComponent<CBrushTool>("BrushTool");
 
+	// Global Light
+	
+
 	m_vPickPos = Vector3{ 0.f, 0.f, 0.f };
 
 	SAFE_RELEASE(pBrushTool);
