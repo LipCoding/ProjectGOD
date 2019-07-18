@@ -27,12 +27,16 @@ public:
 	virtual CLight* Clone() = 0;
 
 public:
-	void SetLightColor(const Vector4& vDif, const Vector4& vAmb, const Vector4& vSpc);
+	void SetLightColor(const Vector4& vDif,
+		const Vector4& vAmb = Vector4{ 1.f, 1.f, 1.f, 1.f }
+		, const Vector4& vSpc = Vector4::White);
 	void SetLightRange(float fRange);
 	void SetLightInAngle(float fInAngle);
 	void SetLightOutAngle(float fOutAngle);
 	void SetLightIntensityPercent(float fPercent);
 	void SetShader();
+
+	const Vector4& GetLightColorDiffuse();
 };
 
 PG_END

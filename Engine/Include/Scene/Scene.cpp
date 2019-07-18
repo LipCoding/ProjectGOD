@@ -340,6 +340,8 @@ bool CScene::Init()
 
 	pGlobalLight->SetLightRange(100000.f);
 
+	//pGlobalLight->SetLightColor()
+
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
 
 	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
