@@ -47,6 +47,10 @@ private:
 	CListBox m_listObjType;
 	CListBox m_listObjList;	
 	CString  m_currentTypePath;
+
+	CEdit m_editMousePosX;
+	CEdit m_editMousePosY;
+	CEdit m_editMousePosZ;
 public:
 	afx_msg void OnBnClickedButtonDeleteAllobj();
 	afx_msg void OnBnClickedButtonDeleteObj();
@@ -55,7 +59,5 @@ public:
 	afx_msg void OnBnClickedButtonObjectLoad();
 	afx_msg void OnBnClickedButtonResetSelected();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	CEdit m_editMousePosX;
-	CEdit m_editMousePosY;
-	CEdit m_editMousePosZ;
+
 };

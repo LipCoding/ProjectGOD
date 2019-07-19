@@ -20,9 +20,12 @@ private:
 	TRANSFORMCBUFFER	m_tTransform;
 	bool			m_bRenderCheck;
 
+	Vector3			m_vSize;
+
 public:
 	void SetObjMatrix(Matrix *matrix);
 	void SetRenderCheck(bool check);
+	void SetSize(const Vector3& size);
 
 public:
 	virtual bool Init();

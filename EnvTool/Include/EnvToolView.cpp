@@ -31,6 +31,7 @@
 #include "TerrainTab.h"
 #include "ObjTab.h"
 #include "NaviTab.h"
+#include "LightTab.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -355,6 +356,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Add_Point(m_vPickPos);
 				break;
 			}
+			case TAB_LIGHT:
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->AddPointLight();
+				break;
+			}
 			default:
 				break;
 			}
@@ -661,6 +667,23 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Set_Brush_Size(-0.25f);
 		}
 	}
+
+	if (type == TAB_LIGHT)
+	{
+		if (KEYPUSH("LShift"))
+		{
+			short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+			if (wheelStatus > 0)
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(0.1f);
+			}
+			else if (wheelStatus < 0)
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(-0.1f);
+			}
+		}
+	}
 }
 
 void CEnvToolView::UpdateObject(const float & fTime)
@@ -753,6 +776,11 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 						pBrushTool->SetBrushInformation(m_vPickPos);
 						SAFE_RELEASE(pBrushTool);
 						bFirstCheck = true;
+						break;
+					}
+					case TAB_LIGHT:
+					{
+						((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightPosXZ(m_vPickPos);
 						break;
 					}
 					default:

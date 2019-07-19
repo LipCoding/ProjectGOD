@@ -185,8 +185,8 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 		clip(-1);
 
 
-	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld);
-	vCamPos = mul(float4(vCamPos, 1.f), g_matView);
+	float3 vCamPos = mul(float4(0.f, 0.f, 0.f, 1.f), g_matCameraWorld).xyz;
+	vCamPos = mul(float4(vCamPos, 1.f), g_matView).xyz;
 	// View World를 기준으로 픽셀점에서  카메라를 바라보는 방향을 구한다.
 	float3 vCamDir = normalize(vCamPos - input.vViewPos);
 
@@ -279,6 +279,12 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 		output.vColor4.w = g_vMtrlSpecular.w;
 	}
 	output.vColor3 = vMtrlSpc;
+
+	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
+		input.vUV);
+
+	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz / 2.f + tLight.vAmb.xyz / 1.5f) + tLight.vSpc.xyz / 2.f;
+	output.vColor.w = vColor.w;
 
 	return output;
 }

@@ -33,17 +33,79 @@ CLightTab::~CLightTab()
 	SAFE_RELEASE(m_pGlobalLight);
 	SAFE_RELEASE(m_pLightCam);
 	SAFE_RELEASE(m_pLight);
+	SAFE_RELEASE(m_pLight_point);
+	SAFE_RELEASE(m_pPointLight);
 }
 
 void CLightTab::Process_ChangeTab()
 {
+	CSphere* pSphere = m_pGlobalLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetRenderCheck(false);
+	SAFE_RELEASE(pSphere);
 
+	pSphere = m_pPointLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetRenderCheck(false);
+	SAFE_RELEASE(pSphere);
+
+	m_pLight_point->SetLightRange(0.f);
 }
 
 void CLightTab::Process_ShowTab()
 {
+	CSphere* pSphere = m_pGlobalLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetRenderCheck(true);
+	SAFE_RELEASE(pSphere);
 
+	pSphere = m_pPointLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetRenderCheck(true);
+	SAFE_RELEASE(pSphere);
+
+	m_pLight_point->SetLightRange(m_fPointRange);
+}
+
+void CLightTab::AddPointLight()
+{
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer *pLayer = pScene->GetLayer("Default");
+
+	CString lightName;
+	lightName.Format(_T("%d"), m_iPointNum);
+
+	lightName = L"Light_" + lightName;
+	m_listPointLightList.AddString(lightName);
+
+	CLight *pPointLight = pScene->CreateLight(string(CT2CA(lightName)), LT_POINT);
+	pPointLight->SetLightRange(m_fPointRange);
+	pPointLight->SetLightColor(m_vPointLightColor);
+	CTransform *pTempPointLightTr = m_pLight_point->GetTransform();
+	CTransform *pPointLightTr = pPointLight->GetTransform();
+	pPointLightTr->SetWorldPos(pTempPointLightTr->GetWorldPos());
+
+	CGameObject *pLightObj = CGameObject::CreateObject(string(CT2CA(lightName)), pLayer);
+	//? 필요 없는데...
+	CRenderer* pRenderer = pLightObj->AddComponent<CRenderer>("Renderer");
+	pRenderer->SetMesh("Sphere");
+	pRenderer->SetShader(STANDARD_COLOR_SHADER);
+	pRenderer->SetInputLayout("VertexColor");
+
+	CSphere *pSphere = pLightObj->AddComponent<CSphere>("Sphere");
+	pSphere->SetRenderCheck(true);
+	pSphere->SetSize(Vector3(0.5f, 0.5f, 0.5f));
+	pSphere->SetObjMatrix(pPointLightTr->GetWorldMatrixPointer());
+
+	SAFE_RELEASE(pTempPointLightTr);
+	SAFE_RELEASE(pPointLightTr);
+	SAFE_RELEASE(pPointLight);
+	SAFE_RELEASE(pLightObj);
+	SAFE_RELEASE(pSphere);
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 	
+	++m_iPointNum;
+}
+
+void CLightTab::UndoPointLight()
+{
 }
 
 void CLightTab::DoDataExchange(CDataExchange* pDX)
@@ -65,6 +127,11 @@ void CLightTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_GLOBLIGHT_R, m_editGlobLightR);
 	DDX_Control(pDX, IDC_EDIT_GLOBLIGHT_G, m_editGlobLightG);
 	DDX_Control(pDX, IDC_EDIT_GLOBLIGHT_B, m_editGlobLightB);
+	DDX_Control(pDX, IDC_LIST_POINTLIGHT, m_listPointLightList);
+	DDX_Control(pDX, IDC_EDIT_POINT_RANGE, m_editPointLightRange);
+	DDX_Control(pDX, IDC_EDIT_POINT_R, m_editPointLightR);
+	DDX_Control(pDX, IDC_EDIT_POINT_G, m_editPointLightG);
+	DDX_Control(pDX, IDC_EDIT_POINT_B, m_editPointLightB);
 }
 
 
@@ -75,6 +142,8 @@ BEGIN_MESSAGE_MAP(CLightTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GLOBLIGHT_RESET, &CLightTab::OnBnClickedButtonGloblightReset)
 	ON_BN_CLICKED(IDC_BUTTON_GLOBLIGHT_SAVE, &CLightTab::OnBnClickedButtonGloblightSave)
 	ON_BN_CLICKED(IDC_BUTTON_GLOBLIGHT_LOAD, &CLightTab::OnBnClickedButtonGloblightLoad)
+	ON_BN_CLICKED(IDC_BUTTON_POINT_RANGE_ADJ, &CLightTab::OnBnClickedButtonPointRangeAdj)
+	ON_BN_CLICKED(IDC_EDIT_POINT_COLOR_ADJ, &CLightTab::OnBnClickedEditPointColorAdj)
 END_MESSAGE_MAP()
 
 
@@ -88,22 +157,23 @@ BOOL CLightTab::OnInitDialog()
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer*	pLayer = pScene->GetLayer("Default");
 
+	// GlobLight
 	m_pGlobalLight = CGameObject::CreateObject("GlobalLightObject", pLayer);
 
-	//?
+	//? 필요 없는데...
 	CRenderer* pRenderer = m_pGlobalLight->AddComponent<CRenderer>("Renderer");
 	pRenderer->SetMesh("Sphere");
 	pRenderer->SetShader(STANDARD_COLOR_SHADER);
 	pRenderer->SetInputLayout("VertexColor");
 
 	CSphere* pSphere = m_pGlobalLight->AddComponent<CSphere>("Sphere");
+	pSphere->SetSize(Vector3(100.f, 100.f, 100.f));
 	m_pLightCam = pScene->GetLightCamera();
 	CTransform *pLightCamTr = pScene->GetLightCameraTr();
 	pSphere->SetObjMatrix(pLightCamTr->GetWorldMatrixPointer());
 
 	SAFE_RELEASE(pSphere);
 	SAFE_RELEASE(pRenderer);
-	SAFE_RELEASE(pLayer);
 	
 	CString num;
 
@@ -178,6 +248,42 @@ BOOL CLightTab::OnInitDialog()
 	m_editGlobLightLookPosZ.SetWindowTextW(num);
 	m_ctrSliderGlobLightLookPosZ.SetPos(int(m_vCamLookPos.z * 10.f));
 
+	SAFE_RELEASE(pLightCamTr);
+
+	// PointLight
+	m_pLight_point = pScene->CreateLight("TempPointLight", LT_POINT);
+	m_pLight_point->SetLightRange(10.f);
+	
+	CTransform* pLightTr = m_pLight_point->GetTransform();
+
+	m_pPointLight = CGameObject::CreateObject("TempPointLight", pLayer);
+
+	pRenderer = m_pPointLight->AddComponent<CRenderer>("Renderer");
+	pRenderer->SetMesh("Sphere");
+	pRenderer->SetShader(STANDARD_COLOR_SHADER);
+	pRenderer->SetInputLayout("VertexColor");
+	SAFE_RELEASE(pRenderer);
+
+	pSphere = m_pPointLight->AddComponent<CSphere>("Sphere");
+	pSphere->SetSize(Vector3(0.5f, 0.5f, 0.5f));
+	pSphere->SetObjMatrix(pLightTr->GetWorldMatrixPointer());
+
+	SAFE_RELEASE(pLightTr);
+
+
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
+
+	num.Format(_T("%.2f"), m_fPointRange);
+	m_editPointLightRange.SetWindowTextW(num);
+
+	m_vPointLightColor = m_pLight_point->GetLightColorDiffuse();
+	num.Format(_T("%d"), int(m_vPointLightColor.x * 255));
+	m_editPointLightR.SetWindowTextW(num);
+	num.Format(_T("%d"), int(m_vPointLightColor.y * 255));
+	m_editPointLightG.SetWindowTextW(num);
+	num.Format(_T("%d"), int(m_vPointLightColor.z * 255));
+	m_editPointLightB.SetWindowTextW(num);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -284,6 +390,24 @@ void CLightTab::SetAllByMemberValue()
 	m_editGlobLightLookPosZ.SetWindowTextW(num);
 	m_ctrSliderGlobLightLookPosZ.SetPos(int(m_vCamLookPos.z * 10.f));
 	m_pLightCam->SetLightCenterPos(m_vCamLookPos);
+}
+
+void CLightTab::SetPointLightPosXZ(const Vector3 & pos)
+{
+	CTransform* pLightTr = m_pLight_point->GetTransform();
+	pLightTr->SetWorldPos(pos.x, m_fHeight, pos.z);
+	SAFE_RELEASE(pLightTr);
+}
+
+void CLightTab::SetPointLightHeight(const float & height)
+{
+	m_fHeight += height;
+
+	CTransform* pLightTr = m_pLight_point->GetTransform();
+	Vector3 vLightPos = pLightTr->GetWorldPos();
+
+	pLightTr->SetWorldPos(vLightPos.x, m_fHeight, vLightPos.z);
+	SAFE_RELEASE(pLightTr);
 }
 
 
@@ -402,4 +526,30 @@ void CLightTab::OnBnClickedButtonGloblightLoad()
 	SetAllByMemberValue();
 
 	mainFile.close();
+}
+
+
+void CLightTab::OnBnClickedButtonPointRangeAdj()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CString range;
+
+	m_editPointLightRange.GetWindowTextW(range);
+	m_fPointRange = (float)_wtof(range);
+	m_pLight_point->SetLightRange(m_fPointRange);
+}
+
+
+void CLightTab::OnBnClickedEditPointColorAdj()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CString R, G, B;
+
+	m_editPointLightR.GetWindowTextW(R);
+	m_editPointLightG.GetWindowTextW(G);
+	m_editPointLightB.GetWindowTextW(B);
+	m_vPointLightColor.x = (float)_wtof(R) / 255.f;
+	m_vPointLightColor.y = (float)_wtof(G) / 255.f;
+	m_vPointLightColor.z = (float)_wtof(B) / 255.f;
+	m_pLight_point->SetLightColor(m_vPointLightColor);
 }

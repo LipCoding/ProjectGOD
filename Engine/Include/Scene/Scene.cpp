@@ -312,7 +312,7 @@ bool CScene::Init()
 	m_pLightCamera = m_pLightCameraObj->FindComponentFromTypeID<CCamera>();
 	m_pLightCameraTr = m_pLightCameraObj->GetTransform();*/
 
-	m_pLightCameraTr->SetWorldRotX(PG_PI / 2.f);
+	//m_pLightCameraTr->SetWorldRotX(PG_PI / 2.f);
 	//m_pLightCameraTr->SetWorldRotY(PG_PI / 2.f);
 
 	//// UI 朝五虞 持失

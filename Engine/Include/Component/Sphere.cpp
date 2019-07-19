@@ -20,7 +20,8 @@ CSphere::CSphere()
 	//m_eType = CT_SPHERE;
 	m_pMeshSphere = nullptr;
 	m_pLayout = nullptr;
-	m_bRenderCheck = true;
+	m_bRenderCheck = false;
+	m_vSize = Vector3(1.f, 1.f, 1.f);
 }
 
 CSphere::CSphere(const CSphere & sphere)
@@ -41,7 +42,12 @@ void CSphere::SetObjMatrix(Matrix *matrix)
 
 void CSphere::SetRenderCheck(bool check)
 {
-	m_bEnable = check;
+	m_bRenderCheck = check;
+}
+
+void CSphere::SetSize(const Vector3 & size)
+{
+	m_vSize = size;
 }
 
 bool CSphere::Init()
@@ -74,14 +80,14 @@ void CSphere::Render(float fTime)
 
 void CSphere::SphereRender(float fTime)
 {
-	/*if (!m_bRenderCheck)
-		return;*/
+	if (!m_bRenderCheck)
+		return;
 
 	CCamera*	pCamera = m_pScene->GetMainCamera();
 
 	Matrix matScale;
 
-	matScale.mat = XMMatrixScaling(100.f, 100.f, 100.f);
+	matScale.mat = XMMatrixScaling(m_vSize.x, m_vSize.x, m_vSize.x);
 	m_tTransform.matWorld = matScale * *m_matObjWorld;
 
 	m_tTransform.matView = pCamera->GetViewMatrix();
@@ -103,14 +109,6 @@ void CSphere::SphereRender(float fTime)
 
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
-	
-	Vector4 m_vColor = Vector4::Green;
-
-	/*SHARECBUFFER tShare;
-	tShare.vColor = m_vColor;
-
-	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
-		&tShare, SCT_PIXEL);*/
 	
 	m_pShaderSphere->SetShader();
 
