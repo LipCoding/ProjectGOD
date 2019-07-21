@@ -9,6 +9,14 @@
 
 PG_USING
 
+typedef struct _tPointLightInfo
+{
+	string strLightName;
+	Vector3 vPos;
+	float   fRange;
+	Vector4 vColor;
+}PLINFO;
+
 class CLightTab : public CDialogEx
 {
 	DECLARE_DYNAMIC(CLightTab)
@@ -35,7 +43,7 @@ public:
 	void UndoPointLight();
 
 private:
-	vector<CGameObject*> m_vecObjects;
+	list<PLINFO> m_PointLightInfos;
 
 	CGameObject *m_pGlobalLight = nullptr;
 	CGameObject *m_pPointLight = nullptr;
@@ -99,4 +107,7 @@ public:
 	afx_msg void OnBnClickedButtonGloblightLoad();
 	afx_msg void OnBnClickedButtonPointRangeAdj();
 	afx_msg void OnBnClickedEditPointColorAdj();
+	afx_msg void OnBnClickedButtonPointListClearall();
+	afx_msg void OnBnClickedButtonPointSave();
+	afx_msg void OnBnClickedButtonPointLoad();
 };

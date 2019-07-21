@@ -270,6 +270,22 @@ const list<class CGameObject*>* CScene::GetLightList()
 	return &m_LightList;
 }
 
+void CScene::DeleteLight(const string & strTag)
+{
+	list<CGameObject*>::iterator	iter;
+	list<CGameObject*>::iterator	iterEnd = m_LightList.end();
+
+	for (iter = m_LightList.begin(); iter != iterEnd; ++iter)
+	{
+		if ((*iter)->GetTag() == strTag)
+		{
+			(*iter)->Die();
+			SAFE_RELEASE((*iter));
+			iter = m_LightList.erase(iter);
+		}
+	}
+}
+
 bool CScene::Init()
 {
 	CLayer*	pLayer = CreateLayer("Default");

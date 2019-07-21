@@ -24,6 +24,7 @@
 #define IDD_DIALOG2                     328
 #define IDD_DIALOG3                     330
 #define IDD_DIALOG4                     332
+#define IDD_DIALOG5                     334
 #define IDC_TAB1                        1006
 #define IDC_EDIT_TERRAIN_SIZEX          1009
 #define IDC_EDIT_TERRIAN_SIZEY          1010
@@ -72,9 +73,11 @@
 #define IDC_BUTTON_DELETE_OBJ           1025
 #define IDC_BUTTON_NAVI_DELETE          1025
 #define IDC_SLIDER_POSY                 1025
+#define IDC_BUTTON_SKY_SAVE             1025
 #define IDC_BUTTON2                     1026
 #define IDC_BUTTON_DELETE_ALLOBJ        1026
 #define IDC_SLIDER_POSZ                 1026
+#define IDC_BUTTON_SKY_LOAD             1026
 #define IDC_CHECK1                      1027
 #define IDC_CHECK_COLLIDER              1027
 #define IDC_CHECK_NAVI                  1027
@@ -151,14 +154,15 @@
 #define IDC_BUTTON_GLOBLIGHT_RANGE_ADJ  1066
 #define IDC_EDIT_GLOBLIGHT_R            1068
 #define IDC_EDIT_GLOBLIGHT_G            1069
+#define IDC_COMBO_SKYTYPE               1070
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        334
+#define _APS_NEXT_RESOURCE_VALUE        336
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1070
+#define _APS_NEXT_CONTROL_VALUE         1071
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

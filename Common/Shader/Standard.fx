@@ -283,8 +283,8 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
 		input.vUV);
 
-	output.vColor.xyz = vColor.xyz * (tLight.vDif.xyz / 2.f + tLight.vAmb.xyz / 1.5f) + tLight.vSpc.xyz / 2.f;
-	output.vColor.w = vColor.w;
+	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
+	output.vColor.w = output.vColor.w;
 
 	return output;
 }

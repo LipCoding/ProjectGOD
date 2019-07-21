@@ -13,6 +13,7 @@
 #include "ObjTab.h"
 #include "NaviTab.h"
 #include "LightTab.h"
+#include "SkyTab.h"
 
 // EditForm
 
@@ -28,6 +29,7 @@ CEditForm::CEditForm()
 	, m_pObjDlg(nullptr)
 	, m_pNaviDlg(nullptr)
 	, m_pLightDlg(nullptr)
+	, m_pSkyDlg(nullptr)
 	, m_pView(nullptr)
 	, m_eTabType(TAB_END)
 {
@@ -44,6 +46,8 @@ CEditForm::~CEditForm()
 	m_pNaviDlg = nullptr;
 	delete m_pLightDlg;
 	m_pLightDlg = nullptr;
+	delete m_pSkyDlg;
+	m_pSkyDlg = nullptr;
 	m_pView = nullptr;
 	
 }
@@ -51,8 +55,6 @@ CEditForm::~CEditForm()
 BEGIN_MESSAGE_MAP(CEditForm, CView)
 //	ON_WM_CREATE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CEditForm::OnTcnSelchangeTab1)
-	ON_BN_CLICKED(IDC_BUTTON_CAM_MAIN, &CEditForm::OnBnClickedButtonCamMain)
-	ON_BN_CLICKED(IDC_BUTTON_CAM_LIGHT, &CEditForm::OnBnClickedButtonCamLight)
 	ON_BN_CLICKED(IDC_CHECK_COLLIDER, &CEditForm::OnBnClickedCheckCollider)
 END_MESSAGE_MAP()
 
@@ -114,6 +116,8 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pLightDlg->Process_ChangeTab();
 		m_pLightDlg->ShowWindow(SW_HIDE);
 
+		m_pSkyDlg->ShowWindow(SW_HIDE);
+
 		m_pTerrainDlg->Process_ShowTab();
 		m_pTerrainDlg->ShowWindow(SW_SHOW);
 		break;
@@ -128,6 +132,8 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 
 		m_pLightDlg->Process_ChangeTab();
 		m_pLightDlg->ShowWindow(SW_HIDE);
+
+		m_pSkyDlg->ShowWindow(SW_HIDE);
 
 		m_pObjDlg->Process_ShowTab();
 		m_pObjDlg->ShowWindow(SW_SHOW);
@@ -144,6 +150,8 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pLightDlg->Process_ChangeTab();
 		m_pLightDlg->ShowWindow(SW_HIDE);
 
+		m_pSkyDlg->ShowWindow(SW_HIDE);
+
 		m_pNaviDlg->Process_ShowTab();
 		m_pNaviDlg->ShowWindow(SW_SHOW);
 		break;
@@ -159,8 +167,27 @@ void CEditForm::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 		m_pNaviDlg->Process_ChangeTab();
 		m_pNaviDlg->ShowWindow(SW_HIDE);
 
+		m_pSkyDlg->ShowWindow(SW_HIDE);
+
 		m_pLightDlg->Process_ShowTab();
 		m_pLightDlg->ShowWindow(SW_SHOW);
+		break;
+	case 4:
+		m_eTabType = TAB_SKY;
+
+		m_pTerrainDlg->Process_ChangeTab();
+		m_pTerrainDlg->ShowWindow(SW_HIDE);
+
+		m_pObjDlg->Process_ChangeTab();
+		m_pObjDlg->ShowWindow(SW_HIDE);
+
+		m_pNaviDlg->Process_ChangeTab();
+		m_pNaviDlg->ShowWindow(SW_HIDE);
+
+		m_pLightDlg->Process_ChangeTab();
+		m_pLightDlg->ShowWindow(SW_HIDE);
+
+		m_pSkyDlg->ShowWindow(SW_SHOW);
 		break;
 	}
 
@@ -208,6 +235,11 @@ void CEditForm::OnInitialUpdate()
 	m_pLightDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
 	m_pLightDlg->ShowWindow(SW_HIDE);
 
+	m_pSkyDlg = new CSkyTab;
+	m_pSkyDlg->Create(IDD_DIALOG5, &m_Tab);
+	m_pSkyDlg->MoveWindow(0, 25, rect.Width(), rect.Height());
+	m_pSkyDlg->ShowWindow(SW_HIDE);
+
 	// 메인 프레임을 받아온다.
 	CMainFrame* pMain = (CMainFrame*)AfxGetMainWnd();
 	m_pView = (CEnvToolView*)pMain->GetActiveView();
@@ -215,20 +247,6 @@ void CEditForm::OnInitialUpdate()
 	m_eTabType = (TOOLTAB_TYPE)m_Tab.GetCurSel();
 
 	m_checkCollider.SetCheck(0);
-}
-
-
-void CEditForm::OnBnClickedButtonCamMain()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_pView->SetMainCamera();
-}
-
-
-void CEditForm::OnBnClickedButtonCamLight()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_pView->SetLightCamera();
 }
 
 void CEditForm::OnBnClickedCheckCollider()

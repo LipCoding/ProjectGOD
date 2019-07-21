@@ -57,7 +57,7 @@ public:
 	class CLight* GetGlobalLight(const string& strTag = "GlobalLight");
 	CTransform* GetGlobalLightTransform(const string & strTag = "GlobalLight");
 	const list<class CGameObject*>* GetLightList();
-
+	void DeleteLight(const string& strTag);
 public:
 	bool Init();
 	void Input(float fTime);

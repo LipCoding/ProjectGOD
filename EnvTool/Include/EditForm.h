@@ -34,6 +34,7 @@ public:
 	class CObjTab* GetObjectTab() { return m_pObjDlg; }
 	class CNaviTab* GetNaviTab() { return m_pNaviDlg; }
 	class CLightTab* GetLightTab() { return m_pLightDlg; }
+	class CSkyTab* GetSkyTab() { return m_pSkyDlg; }
 
 private:
 	CTabCtrl m_Tab;
@@ -41,9 +42,9 @@ private:
 	class CObjTab		*m_pObjDlg = nullptr;
 	class CNaviTab		*m_pNaviDlg = nullptr;
 	class CLightTab		*m_pLightDlg = nullptr;
+	class CSkyTab		*m_pSkyDlg = nullptr;
 	class CEnvToolView  *m_pView = nullptr;
 	
-
 	TOOLTAB_TYPE m_eTabType = TAB_END;
 
 	CButton m_checkCollider;
@@ -51,8 +52,6 @@ public:
 //	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual void OnInitialUpdate();
-	afx_msg void OnBnClickedButtonCamMain();
-	afx_msg void OnBnClickedButtonCamLight();
 	CEdit m_editCamSpeed;
 	afx_msg void OnBnClickedCheckCollider();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);

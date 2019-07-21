@@ -90,8 +90,16 @@ void CLightTab::AddPointLight()
 
 	CSphere *pSphere = pLightObj->AddComponent<CSphere>("Sphere");
 	pSphere->SetRenderCheck(true);
-	pSphere->SetSize(Vector3(0.5f, 0.5f, 0.5f));
+	pSphere->SetSize(Vector3(1.5f, 1.5f, 1.5f));
 	pSphere->SetObjMatrix(pPointLightTr->GetWorldMatrixPointer());
+
+	PLINFO PointLightInfo;
+	PointLightInfo.strLightName = string(CT2CA(lightName));
+	PointLightInfo.vPos = pTempPointLightTr->GetWorldPos();
+	PointLightInfo.fRange = m_fPointRange;
+	PointLightInfo.vColor = m_vPointLightColor;
+
+	m_PointLightInfos.push_back(PointLightInfo);
 
 	SAFE_RELEASE(pTempPointLightTr);
 	SAFE_RELEASE(pPointLightTr);
@@ -144,6 +152,9 @@ BEGIN_MESSAGE_MAP(CLightTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GLOBLIGHT_LOAD, &CLightTab::OnBnClickedButtonGloblightLoad)
 	ON_BN_CLICKED(IDC_BUTTON_POINT_RANGE_ADJ, &CLightTab::OnBnClickedButtonPointRangeAdj)
 	ON_BN_CLICKED(IDC_EDIT_POINT_COLOR_ADJ, &CLightTab::OnBnClickedEditPointColorAdj)
+	ON_BN_CLICKED(IDC_BUTTON_POINT_LIST_CLEARALL, &CLightTab::OnBnClickedButtonPointListClearall)
+	ON_BN_CLICKED(IDC_BUTTON_POINT_SAVE, &CLightTab::OnBnClickedButtonPointSave)
+	ON_BN_CLICKED(IDC_BUTTON_POINT_LOAD, &CLightTab::OnBnClickedButtonPointLoad)
 END_MESSAGE_MAP()
 
 
@@ -552,4 +563,186 @@ void CLightTab::OnBnClickedEditPointColorAdj()
 	m_vPointLightColor.y = (float)_wtof(G) / 255.f;
 	m_vPointLightColor.z = (float)_wtof(B) / 255.f;
 	m_pLight_point->SetLightColor(m_vPointLightColor);
+}
+
+
+void CLightTab::OnBnClickedButtonPointListClearall()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int count = m_listPointLightList.GetCount();
+
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+
+	for (int i = 0; i < count; ++i)
+	{
+		CString lightName;
+		m_listPointLightList.GetText(i, lightName);
+		pScene->DeleteLight((string)CT2CA(lightName.GetString()));
+
+		CGameObject *pLightObj = CGameObject::FindObject((string)CT2CA(lightName.GetString()));
+		pLightObj->Die();
+		CGameObject::EraseObj(pLightObj);
+	}
+
+	m_listPointLightList.ResetContent();
+	m_PointLightInfos.clear();
+	m_iPointNum = 0;
+
+	SAFE_RELEASE(pScene);
+}
+
+
+void CLightTab::OnBnClickedButtonPointSave()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(FALSE, NULL, NULL, OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wchar_t strDir[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscpy_s(strDir, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Light\\Point\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString fileName = dlg.GetFileName();
+	CString flexiblePath = L"Light\\Point\\";
+
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	// 확장자명 제거(만약 확장자명이 세이브 이름으로 들어갈시)
+	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
+	{
+		if (fileName[i] == '.')
+		{
+			fileName.Delete(i, lstrlen(fileName) - 1);
+			break;
+		}
+	}
+
+	CT2CA pszConvertAnsiStringPathName(path);
+	string strFilePath(pszConvertAnsiStringPathName);
+	CT2CA pszConvertAnsiStringFileName(fileName);
+	string strFileName(pszConvertAnsiStringFileName);
+
+	ofstream mainFile;
+	mainFile.open(strFilePath + strFileName + ".bin", ios::out | ios::trunc);
+
+	// 라이트 갯수
+	int count = m_PointLightInfos.size();
+	mainFile << count << endl;
+
+	for (auto& iter : m_PointLightInfos)
+	{
+		// 라이트 이름
+		mainFile << iter.strLightName << endl;
+		// 라이트 위치
+		mainFile << iter.vPos.x << ' ' << iter.vPos.y << ' ' << iter.vPos.z << endl;
+		// 라이트 레인지
+		mainFile << iter.fRange << endl;
+		// 라이트 색깔
+		mainFile << iter.vColor.x << ' ' << iter.vColor.y << ' ' << iter.vColor.z << ' ' << iter.vColor.w << endl;
+	}
+}
+
+
+void CLightTab::OnBnClickedButtonPointLoad()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Light\\Point\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString filePath = dlg.GetPathName();
+
+	ifstream mainFile;
+	mainFile.open(filePath, ios::in);
+
+	if (!mainFile.is_open())
+		return;
+
+	// 라이트 갯수
+	int count = 0;
+	mainFile >> count;
+
+	// 다 지우고
+	OnBnClickedButtonPointListClearall();
+
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer *pLayer = pScene->GetLayer("Default");
+
+	for (int i = 0; i < count; ++i)
+	{
+		PLINFO PointLightInfo;
+		mainFile >> PointLightInfo.strLightName;
+		mainFile >> PointLightInfo.vPos.x >> PointLightInfo.vPos.y >> PointLightInfo.vPos.z;
+		mainFile >> PointLightInfo.fRange;
+		mainFile >> PointLightInfo.vColor.x >> PointLightInfo.vColor.y >> PointLightInfo.vColor.z >> PointLightInfo.vColor.w;
+
+		CString lightName;
+		lightName = PointLightInfo.strLightName.c_str();
+		m_listPointLightList.AddString(lightName);
+
+		CLight *pPointLight = pScene->CreateLight(string(CT2CA(lightName)), LT_POINT);
+		pPointLight->SetLightRange(PointLightInfo.fRange);
+		pPointLight->SetLightColor(PointLightInfo.vColor);
+		CTransform *pPointLightTr = pPointLight->GetTransform();
+		pPointLightTr->SetWorldPos(PointLightInfo.vPos);
+
+		CGameObject *pLightObj = CGameObject::CreateObject(string(CT2CA(lightName)), pLayer);
+		//? 필요 없는데...
+		CRenderer* pRenderer = pLightObj->AddComponent<CRenderer>("Renderer");
+		pRenderer->SetMesh("Sphere");
+		pRenderer->SetShader(STANDARD_COLOR_SHADER);
+		pRenderer->SetInputLayout("VertexColor");
+
+		CSphere *pSphere = pLightObj->AddComponent<CSphere>("Sphere");
+		pSphere->SetRenderCheck(true);
+		pSphere->SetSize(Vector3(1.5f, 1.5f, 1.5f));
+		pSphere->SetObjMatrix(pPointLightTr->GetWorldMatrixPointer());
+
+		m_PointLightInfos.push_back(PointLightInfo);
+
+		SAFE_RELEASE(pPointLightTr);
+		SAFE_RELEASE(pPointLight);
+		SAFE_RELEASE(pLightObj);
+		SAFE_RELEASE(pSphere);
+
+		++m_iPointNum;
+	}
+
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
+	
 }

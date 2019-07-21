@@ -676,11 +676,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 			if (wheelStatus > 0)
 			{
-				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(0.1f);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(0.5f);
 			}
 			else if (wheelStatus < 0)
 			{
-				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(-0.1f);
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(-0.5f);
 			}
 		}
 	}
