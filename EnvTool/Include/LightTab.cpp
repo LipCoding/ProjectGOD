@@ -82,7 +82,8 @@ void CLightTab::AddPointLight()
 	pPointLightTr->SetWorldPos(pTempPointLightTr->GetWorldPos());
 
 	CGameObject *pLightObj = CGameObject::CreateObject(string(CT2CA(lightName)), pLayer);
-	//? 필요 없는데...
+	
+	//?
 	CRenderer* pRenderer = pLightObj->AddComponent<CRenderer>("Renderer");
 	pRenderer->SetMesh("Sphere");
 	pRenderer->SetShader(STANDARD_COLOR_SHADER);
@@ -90,8 +91,9 @@ void CLightTab::AddPointLight()
 
 	CSphere *pSphere = pLightObj->AddComponent<CSphere>("Sphere");
 	pSphere->SetRenderCheck(true);
-	pSphere->SetSize(Vector3(1.5f, 1.5f, 1.5f));
+	pSphere->SetSize(Vector3(1.f, 1.f, 1.f));
 	pSphere->SetObjMatrix(pPointLightTr->GetWorldMatrixPointer());
+	pSphere->SetColor(m_vPointLightColor);
 
 	PLINFO PointLightInfo;
 	PointLightInfo.strLightName = string(CT2CA(lightName));
@@ -360,6 +362,10 @@ void CLightTab::OnBnClickedButtonGloblightColorAdj()
 	m_vLightColor.z = _wtoi(num) / 255.f;
 
 	m_pLight->SetLightColor(m_vLightColor);
+
+	CSphere *pSphere = m_pGlobalLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetColor(m_vLightColor);
+	SAFE_RELEASE(pSphere);
 }
 
 void CLightTab::SetAllByMemberValue()
@@ -401,6 +407,10 @@ void CLightTab::SetAllByMemberValue()
 	m_editGlobLightLookPosZ.SetWindowTextW(num);
 	m_ctrSliderGlobLightLookPosZ.SetPos(int(m_vCamLookPos.z * 10.f));
 	m_pLightCam->SetLightCenterPos(m_vCamLookPos);
+
+	CSphere *pSphere = m_pGlobalLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetColor(m_vLightColor);
+	SAFE_RELEASE(pSphere);
 }
 
 void CLightTab::SetPointLightPosXZ(const Vector3 & pos)
@@ -563,6 +573,10 @@ void CLightTab::OnBnClickedEditPointColorAdj()
 	m_vPointLightColor.y = (float)_wtof(G) / 255.f;
 	m_vPointLightColor.z = (float)_wtof(B) / 255.f;
 	m_pLight_point->SetLightColor(m_vPointLightColor);
+
+	CSphere *pSphere = m_pPointLight->FindComponentFromTag<CSphere>("Sphere");
+	pSphere->SetColor(m_vLightColor);
+	SAFE_RELEASE(pSphere);
 }
 
 
@@ -731,6 +745,7 @@ void CLightTab::OnBnClickedButtonPointLoad()
 		pSphere->SetRenderCheck(true);
 		pSphere->SetSize(Vector3(1.5f, 1.5f, 1.5f));
 		pSphere->SetObjMatrix(pPointLightTr->GetWorldMatrixPointer());
+		pSphere->SetColor(PointLightInfo.vColor);
 
 		m_PointLightInfos.push_back(PointLightInfo);
 

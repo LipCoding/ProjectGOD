@@ -5,6 +5,12 @@
 PG_USING
 // CObjTab 대화 상자
 
+typedef struct _tTransformInfo
+{
+	Vector3 vScale;
+	Vector3 vRotation;
+	Vector3 vTempPosition;
+}TRINFO;
 
 class CObjTab : public CDialogEx
 {
@@ -32,6 +38,9 @@ private:
 	vector<CGameObject*> m_vecObjects;
 	vector<string>       m_vecStringObjTypePath;
 	CGameObject*		 m_pTempObject = nullptr;
+
+	TRINFO*				 m_ArrTransformInfo;
+	int					 m_iCurrentPos;
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnLbnSelchangeListObjectType();
@@ -60,4 +69,8 @@ public:
 	afx_msg void OnBnClickedButtonResetSelected();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
+	afx_msg void OnBnClickedButtonResetScale();
+	afx_msg void OnBnClickedButtonResetRotation();
+	afx_msg void OnBnClickedButtonResetPosition();
+	afx_msg void OnBnClickedButtonResetAll();
 };

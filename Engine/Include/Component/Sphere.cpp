@@ -22,6 +22,7 @@ CSphere::CSphere()
 	m_pLayout = nullptr;
 	m_bRenderCheck = false;
 	m_vSize = Vector3(1.f, 1.f, 1.f);
+	m_vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 }
 
 CSphere::CSphere(const CSphere & sphere)
@@ -50,11 +51,16 @@ void CSphere::SetSize(const Vector3 & size)
 	m_vSize = size;
 }
 
+void CSphere::SetColor(const Vector4 & color)
+{
+	m_vColor = color;
+}
+
 bool CSphere::Init()
 {
 	m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
-	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
-	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
+	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_NORMAL_SHADER);
+	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColorNormal");
 
 	return true;
 }
@@ -106,15 +112,28 @@ void CSphere::SphereRender(float fTime)
 	m_tTransform.matWVP = XMMatrixTranspose(m_tTransform.matWVP.mat);
 	m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
 	
+	SHARECBUFFER tBuffer;
+	ZeroMemory(&tBuffer, sizeof(SHARECBUFFER));
+	tBuffer.vColor = m_vColor;
+
+	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
+		&tBuffer, SCT_PIXEL);
 
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
 	
 	m_pShaderSphere->SetShader();
 
-	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
+	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColorNormal");
 
 	m_pMeshSphere->Render(fTime);
+
+
+	ZeroMemory(&tBuffer, sizeof(SHARECBUFFER));
+	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
+		&tBuffer, SCT_PIXEL);
+
+	m_pShaderSphere->SetShader();
 
 	SAFE_RELEASE(pCamera);
 }

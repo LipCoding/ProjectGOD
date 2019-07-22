@@ -451,6 +451,9 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	{
 		m_pEditForm->GetObjectTab()->UpdateMousePos(m_vPickPos);
 
+		float scalePower = 0.2f;
+		float movePower = 5.f;
+
 		if (KEYPUSH("Z"))
 		{
 			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
@@ -465,12 +468,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (GET_SINGLE(CInput)->GetWheel() == 1)
 				{
-					vScale.x += 0.1f;
+					vScale.x += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (GET_SINGLE(CInput)->GetWheel() == -1)
 				{
-					vScale.x -= 0.1f;
+					vScale.x -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -498,7 +501,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.x != 0)
 					{
-						vPos.z -= ptMouseMove.x / 250.f;
+						vPos.z -= (ptMouseMove.x / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -522,12 +525,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.y += 0.1f;
+					vScale.y += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.y -= 0.1f;
+					vScale.y -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -555,7 +558,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.y != 0)
 					{
-						vPos.y += ptMouseMove.y / 250.f;
+						vPos.y += (ptMouseMove.y / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -579,12 +582,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.z += 0.1f;
+					vScale.z += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.z -= 0.1f;
+					vScale.z -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -612,7 +615,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.y != 0)
 					{
-						vPos.z -= ptMouseMove.y / 250.f;
+						vPos.z -= (ptMouseMove.y / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -636,16 +639,16 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.x += 0.1f;
-					vScale.y += 0.1f;
-					vScale.z += 0.1f;
+					vScale.x += scalePower;
+					vScale.y += scalePower;
+					vScale.z += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.x -= 0.1f;
-					vScale.y -= 0.1f;
-					vScale.z -= 0.1f;
+					vScale.x -= scalePower;
+					vScale.y -= scalePower;
+					vScale.z -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -692,7 +695,7 @@ void CEnvToolView::UpdateObject(const float & fTime)
 
 void CEnvToolView::UpdateForm(const float & fTime)
 {
-	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
 	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->UpdateForm();
 }
 
