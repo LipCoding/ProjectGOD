@@ -11,6 +11,10 @@
 #include "../Component/Renderer.h"
 #include "../Component/Material.h"
 #include "../Core/Input.h"
+#include "../Core/PathManager.h"
+#include "../Resources/ResourcesManager.h"
+#include "../Component/Material.h"
+#include "../Core/QuadTreeManager.h"
 
 PG_USING
 
@@ -592,6 +596,7 @@ int CScene::Update(float fTime)
 	m_pMainCameraObj->Update(fTime);
 	if (m_pLightCameraObj)
 		m_pLightCameraObj->Update(fTime);
+	
 	// 조명 업데이트
 	list<CGameObject*>::iterator	iterL;
 	list<CGameObject*>::iterator	iterLEnd = m_LightList.end();
@@ -824,6 +829,112 @@ void CScene::Load(FILE * pFile)
 
 void CScene::LoadFromFullPath(const char * pFullPath)
 {
+}
+
+void CScene::LoadSky(const wstring & strPath)
+{
+	// SkyBox
+	CGameObject* pSky = CGameObject::FindObject("Sky");
+	if (pSky)
+	{
+		CRenderer*   pRenderer = pSky->FindComponentFromTag<CRenderer>("SkyRenderer");
+		CMaterial*   pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->ResetTextureInfo();
+		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
+		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, (L"Skybox\\" + strPath).c_str());
+
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pSky);
+	}
+}
+
+void CScene::LoadGlobLight(const string & strPath)
+{
+	string path = "Light\\Glob\\" + strPath;
+	
+	ifstream mainFile;	
+
+	mainFile.open(GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH)
+		 + path, ios::in);
+
+	if (!mainFile.is_open())
+		return;
+
+	float fRange = 0.f;
+	Vector4 vLightColor = Vector4(1.f, 1.f, 1.f, 1.f);
+	Vector3 vCamPos = Vector3(0.f, 0.f, 0.f);
+	Vector3 vCamLookPos = Vector3(0.f, 0.f, 0.f);
+
+	mainFile >> fRange;
+	mainFile >> vLightColor.x >> vLightColor.y >> vLightColor.z;
+	mainFile >> vCamPos.x >> vCamPos.y >> vCamPos.z;
+	mainFile >> vCamLookPos.x >> vCamLookPos.y >> vCamLookPos.z;
+
+	mainFile.close();
+
+	CLight*	pGlobalLight = GetGlobalLight("GlobalLight");
+
+	pGlobalLight->SetLightColor(vLightColor);
+	
+	m_pLightCamera->SetLightRange(fRange);
+	m_pLightCameraTr->SetWorldPos(vCamPos);
+	m_pLightCamera->SetLightCenterPos(vCamLookPos);
+
+	SAFE_RELEASE(pGlobalLight);
+}
+
+void CScene::LoadPointLight(const string & strPath)
+{
+	string path = "Light\\Point\\" + strPath;
+
+	ifstream mainFile;
+
+	mainFile.open(GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH)
+		+ path, ios::in);
+
+	if (!mainFile.is_open())
+		return;
+
+	// 라이트 갯수
+	int count = 0;
+	mainFile >> count;
+
+	string strLightName = "";
+	Vector3 vPos = Vector3(0.f, 0.f, 0.f);
+	float   fRange = 0.f;
+	Vector4 vColor = Vector4(1.f, 1.f, 1.f, 1.f);
+
+	CLight *pPointLight = nullptr;
+	CTransform *pTr = nullptr;
+
+	for (int i = 0; i < count; ++i)
+	{
+		mainFile >>strLightName;
+		mainFile >>vPos.x >> vPos.y >> vPos.z;
+		mainFile >>fRange;
+		mainFile >>vColor.x >> vColor.y >> vColor.z >> vColor.w;
+
+		pPointLight = CreateLight(strLightName, LT_POINT);
+		pTr = pPointLight->GetTransform();
+		pPointLight->SetLightRange(fRange);
+		pPointLight->SetLightColor(vColor);
+		pTr->SetWorldPos(vPos);
+
+		if (fRange <= 100.f)
+		{
+			CGameObject *pLightGameObject = pPointLight->GetGameObject();
+			GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pLightGameObject);
+			SAFE_RELEASE(pLightGameObject);
+		}
+			
+
+		SAFE_RELEASE(pTr);
+		SAFE_RELEASE(pPointLight);
+	}
+
+	mainFile.close();
 }
 
 CLayer * CScene::CreateLayer(const string & strTag, int iZOrder)

@@ -41,6 +41,7 @@
 #include "../ObjectScript/Sword.h"
 #include "Core/EffectManager.h"
 
+
 CTestScene::CTestScene()
 {
 
@@ -56,6 +57,11 @@ bool CTestScene::Init()
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
+
+		// SkyBox
+		pScene->LoadSky(L"Skybox_2.dds");
+		pScene->LoadGlobLight("Night_Test.bin");
+		
 
 #pragma region Terrain
 		// Load Terrain
@@ -81,6 +87,8 @@ bool CTestScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
 
+		pScene->LoadPointLight("Night_Test.bin");
+
 #pragma region Object
 		wchar_t strPath[MAX_PATH] = {};
 		wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
@@ -99,8 +107,8 @@ bool CTestScene::Init()
 		{
 			string objName = "ObjName_" + to_string(i);
 
-			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-			CLayer* pLayer = pScene->GetLayer("Default");
+			/*CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			CLayer* pLayer = pScene->GetLayer("Default");*/
 			CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
 
 			string objTag;
@@ -149,7 +157,11 @@ bool CTestScene::Init()
 			pTr->SetWorldRot(vRotation);
 			pTr->SetWorldPos(vPos);
 
+			// QuadTree Child (for culling)
+			GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pObj);
+
 			SAFE_RELEASE(pTr);
+			SAFE_RELEASE(pObj);
 		}
 #pragma endregion
 

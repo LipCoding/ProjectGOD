@@ -294,6 +294,9 @@ void CObjTab::UpdateForm()
 // 마우스 우클릭하면 오브젝트 생성.
 void CObjTab::AddObject()
 {
+	if (!m_pTempObject)
+		return;
+
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer *pLayer = pScene->GetLayer("Default");
 

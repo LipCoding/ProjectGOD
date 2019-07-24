@@ -759,5 +759,6 @@ void CLightTab::OnBnClickedButtonPointLoad()
 
 	SAFE_RELEASE(pLayer);
 	SAFE_RELEASE(pScene);
-	
+
+	mainFile.close();
 }
