@@ -117,7 +117,7 @@ bool SecondScene::Init()
 		// QuadManager에 정보를 넘김
 		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
 
-		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo(nullptr);
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo();
 
 		for (const auto& iter : *nodes)
 		{

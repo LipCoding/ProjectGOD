@@ -106,6 +106,8 @@ public:
 		float fTime);
 	void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
+	
+	static void LoadEnvObjects(const wstring& strFileName, class CLayer* pLayer = NULL);
 
 public:
 	void UpdateTransformHierarchy();
@@ -273,7 +275,7 @@ public:
 			pCom = FindComponentFromTag<Super>(strTag);
 
 			if (pCom)
-				return pCom;
+				return (Sub*)pCom;
 		}
 
 		pCom = new Sub;

@@ -831,9 +831,11 @@ void CScene::LoadFromFullPath(const char * pFullPath)
 {
 }
 
-void CScene::LoadSky(const wstring & strPath)
+void CScene::LoadSky(const wstring & strFileName)
 {
 	// SkyBox
+	wstring FileName = strFileName + L".dds";
+
 	CGameObject* pSky = CGameObject::FindObject("Sky");
 	if (pSky)
 	{
@@ -842,7 +844,7 @@ void CScene::LoadSky(const wstring & strPath)
 
 		pMaterial->ResetTextureInfo();
 		GET_SINGLE(CResourcesManager)->FindAndDeleteTexture("Sky");
-		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, (L"Skybox\\" + strPath).c_str());
+		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, (L"Skybox\\" + FileName).c_str());
 
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
@@ -850,9 +852,9 @@ void CScene::LoadSky(const wstring & strPath)
 	}
 }
 
-void CScene::LoadGlobLight(const string & strPath)
+void CScene::LoadGlobLight(const string & strFileName)
 {
-	string path = "Light\\Glob\\" + strPath;
+	string path = "Light\\Glob\\" + strFileName + ".bin";
 	
 	ifstream mainFile;	
 
@@ -885,9 +887,9 @@ void CScene::LoadGlobLight(const string & strPath)
 	SAFE_RELEASE(pGlobalLight);
 }
 
-void CScene::LoadPointLight(const string & strPath)
+void CScene::LoadPointLight(const string & strFileName)
 {
-	string path = "Light\\Point\\" + strPath;
+	string path = "Light\\Point\\" + strFileName + ".bin";
 
 	ifstream mainFile;
 

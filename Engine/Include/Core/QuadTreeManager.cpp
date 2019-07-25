@@ -50,13 +50,14 @@ void CQuadTreeManager::AddQuadTreeInfo(const string & key, int numX, int numY, V
 	m_mapQuadTreeInfo.insert(make_pair(key, pInfo));
 }
 
-void CQuadTreeManager::DeleteQuadTreeInfo(CScene * scene)
+void CQuadTreeManager::DeleteQuadTreeInfo()
 {
 	map<string, PQUADTREEINFO>::iterator	iter;
 	map<string, PQUADTREEINFO>::iterator  iterEnd = m_mapQuadTreeInfo.end();
 
 	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
 	{
+		iter->second->pGameObject = nullptr;
 		iter->second->pChildObjects.clear();
 	}
 

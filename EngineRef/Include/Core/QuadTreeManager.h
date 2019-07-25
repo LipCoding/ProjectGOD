@@ -32,11 +32,9 @@ public:
 	void AddQuadTreeInfo(const string& key, int numX, int numY,
 		Vector3 min, Vector3 max,
 		class CGameObject* object);
-	void DeleteQuadTreeInfo(class CScene* scene);
+	void DeleteQuadTreeInfo();
 	PQUADTREEINFO FindQuadTreeInfo(const string& key);
 	PQUADTREEINFO FindQuadTreeInfo(const Vector3& pos);
-	
-
 
 	DECLARE_SINGLE(CQuadTreeManager)
 };
