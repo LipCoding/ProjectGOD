@@ -9,3 +9,4 @@ Skybox\Skybox_6.dds
 Skybox\Skybox_7.dds
 Skybox\Skybox_8.dds
 Skybox\Skybox_9.dds
+Skybox\Skybox_10.dds
