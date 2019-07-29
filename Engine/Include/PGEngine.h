@@ -117,13 +117,13 @@ using namespace FMOD;
 
 #define UI_LAYER 1000
 
-
+#define _QUEST_TOOL_
 
 template <typename T>
 void Safe_Release_VecList(T& p)
 {
-	T::iterator	iter = p.begin();
-	T::iterator	iterEnd = p.end();
+	typename T::iterator	iter = p.begin();
+	typename T::iterator	iterEnd = p.end();
 
 	while (iter != iterEnd)
 	{
@@ -137,8 +137,8 @@ void Safe_Release_VecList(T& p)
 template <typename T>
 void Safe_Release_Map(T& p)
 {
-	T::iterator	iter = p.begin();
-	T::iterator	iterEnd = p.end();
+	typename T::iterator	iter = p.begin();
+	typename T::iterator	iterEnd = p.end();
 
 	while (iter != iterEnd)
 	{
@@ -152,8 +152,8 @@ void Safe_Release_Map(T& p)
 template <typename T>
 void Safe_Delete_VecList(T& p)
 {
-	T::iterator	iter = p.begin();
-	T::iterator	iterEnd = p.end();
+	typename T::iterator	iter = p.begin();
+	typename T::iterator	iterEnd = p.end();
 
 	while (iter != iterEnd)
 	{
@@ -167,8 +167,8 @@ void Safe_Delete_VecList(T& p)
 template <typename T>
 void Safe_Delete_Map(T& p)
 {
-	T::iterator	iter = p.begin();
-	T::iterator	iterEnd = p.end();
+	typename T::iterator	iter = p.begin();
+	typename T::iterator	iterEnd = p.end();
 
 	while (iter != iterEnd)
 	{

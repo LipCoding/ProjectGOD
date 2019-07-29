@@ -1,9 +1,7 @@
 #pragma once
 #include "../Obj.h"
-
+#include "../Component/Component.h"
 PG_BEGIN
-
-
 
 class PG_DLL CGameObject :
 	public CObj

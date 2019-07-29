@@ -47,8 +47,8 @@ void CSphere::SetRenderCheck(bool check)
 bool CSphere::Init()
 {
 	m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
-	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_SHADER);
-	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout("VertexColor");
+	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_NORMAL_SHADER);
+	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout(STANDARD_COLOR_NORMAL_SHADER);
 
 	return true;
 }

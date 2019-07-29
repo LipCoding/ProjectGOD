@@ -71,13 +71,13 @@ BOOL CLightTab::OnInitDialog()
 	CLayer*	pLayer = pScene->GetLayer("Default");
 
 	m_pGlobalLight = CGameObject::CreateObject("GlobalLightObject", pLayer);
-
+	CTransform* transform = m_pGlobalLight->GetTransform();
 	//?
-	CRenderer* pRenderer = m_pGlobalLight->AddComponent<CRenderer>("Renderer");
+	CRenderer* pRenderer = m_pGlobalLight->AddComponent<CRenderer>("NewLightRenderer");
 	pRenderer->SetMesh("Sphere");
-	pRenderer->SetShader(STANDARD_COLOR_SHADER);
-	pRenderer->SetInputLayout("VertexColor");
-
+	pRenderer->SetShader(STANDARD_COLOR_NORMAL_SHADER);
+	pRenderer->SetInputLayout("VertexColorNormal");
+	
 	CSphere *pSphere = m_pGlobalLight->AddComponent<CSphere>("Sphere");
 	m_pLightCam = pScene->GetLightCamera();
 	CTransform *pLightCamTr = pScene->GetLightCameraTr();

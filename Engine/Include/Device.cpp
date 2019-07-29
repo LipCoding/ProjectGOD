@@ -1,5 +1,5 @@
 #include "Device.h"
-
+#include "Core.h"
 PG_USING
 
 DEFINITION_SINGLE(CDevice)
@@ -83,9 +83,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 		D3D11_SDK_VERSION,&m_pDevice, &eLevel1, &m_pContext)))
 		return false;
 
-
 	DXGI_SWAP_CHAIN_DESC	tDesc = {};
-	
 	tDesc.BufferDesc.Width = iWidth;
 	tDesc.BufferDesc.Height = iHeight;
 	tDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -95,16 +93,18 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	tDesc.BufferCount = 1;
 	tDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	
+#ifdef _QUEST_TOOL_
+	tDesc.OutputWindow = GET_SINGLE(CCore)->getQuestToolWindowHandle();
+#else
 	tDesc.OutputWindow = hWnd;
+#endif
 
 	UINT quality = 0;
 	HRESULT hr;
 	hr = m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &quality);
 	m_pDevice->Release();
 	m_pContext->Release();
-
-	/*tDesc.SampleDesc.Quality = quality - 1;
-	tDesc.SampleDesc.Count = 4;*/
 
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SampleDesc.Count = 1;
@@ -140,9 +140,6 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDepthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 4, &quality);
-
-	/*tDepthDesc.SampleDesc.Quality = quality - 1;
-	tDepthDesc.SampleDesc.Count = 4;*/
 
 	tDepthDesc.SampleDesc.Quality = 0;
 	tDepthDesc.SampleDesc.Count = 1;

@@ -652,7 +652,7 @@ void NetworkManager::processPacket(void * packet)
 		sc_packet_put_player* pPacket = reinterpret_cast<sc_packet_put_player*>(packet);
 		string appendTag = to_string(pPacket->id);
 		string objectTag = "Player" + appendTag;
-		GET_SINGLE(UserInterfaceManager)->partySyncronize(objectTag, pPacket->x, pPacket->y, pPacket->z, pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
+		//GET_SINGLE(UserInterfaceManager)->partySyncronize(objectTag, pPacket->x, pPacket->y, pPacket->z, pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 	}
 	break;
 
@@ -694,6 +694,7 @@ void NetworkManager::processPacket(void * packet)
 			CSword	*pSword = pSwordObj->AddComponent<CSword>("Sword");
 			pSword->setTargetPlayerID(pPacket->playerID);
 			pSword->initialize();
+
 			SAFE_RELEASE(pSword);
 			SAFE_RELEASE(pSwordObj);
 			SAFE_RELEASE(pLayer);
