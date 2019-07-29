@@ -16,6 +16,18 @@ CQuadTreeManager::CQuadTreeManager()
 
 CQuadTreeManager::~CQuadTreeManager()
 {
+	map<string, PQUADTREEINFO>::iterator	iter;
+	map<string, PQUADTREEINFO>::iterator  iterEnd = m_mapQuadTreeInfo.end();
+
+	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
+	{
+		for (auto& object : iter->second->pChildObjects)
+		{
+			SAFE_RELEASE(object);
+		}
+		iter->second->pChildObjects.clear();
+	}
+
 	Safe_Delete_Map(m_mapQuadTreeInfo);
 }
 
@@ -33,14 +45,21 @@ void CQuadTreeManager::AddQuadTreeInfo(const string & key, int numX, int numY, V
 	pInfo->vMin = min;
 	pInfo->vMax = max;
 	pInfo->pGameObject = object;
+	pInfo->bCullingCheck = false;
 
 	m_mapQuadTreeInfo.insert(make_pair(key, pInfo));
 }
 
-void CQuadTreeManager::DeleteQuadTreeInfo(CScene * scene)
+void CQuadTreeManager::DeleteQuadTreeInfo()
 {
 	map<string, PQUADTREEINFO>::iterator	iter;
 	map<string, PQUADTREEINFO>::iterator  iterEnd = m_mapQuadTreeInfo.end();
+
+	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
+	{
+		iter->second->pGameObject = nullptr;
+		iter->second->pChildObjects.clear();
+	}
 
 	Safe_Delete_Map(m_mapQuadTreeInfo);
 }
@@ -155,5 +174,59 @@ float CQuadTreeManager::GetY(const Vector3 & vPos)
 
 	// ÁÂ»ó´Ü
 	return fLandScapeY[0] + (fLandScapeY[3] - fLandScapeY[2]) * fX + (fLandScapeY[2] - fLandScapeY[0]) * fY;
+}
+
+void CQuadTreeManager::CheckAndAddChild(CGameObject * pGameObject)
+{
+	map<string, PQUADTREEINFO>::iterator iter;
+	map<string, PQUADTREEINFO>::iterator iterEnd = m_mapQuadTreeInfo.end();
+
+	Vector3 vMin, vMax;
+
+	CTransform *pTr = pGameObject->GetTransform();
+	Vector3 vPos = pTr->GetWorldPos();
+
+	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
+	{
+		vMin = iter->second->vMin;
+		vMax = iter->second->vMax;
+
+		if ((vPos.x >= vMin.x && vPos.z >= vMin.z) &&
+			(vPos.x <= vMax.x && vPos.z <= vMax.z))
+		{
+			iter->second->pChildObjects.push_back(pGameObject);
+			break;
+		}		
+	}
+
+	SAFE_RELEASE(pTr);
+}
+
+void CQuadTreeManager::CheckRenderingChild()
+{
+	map<string, PQUADTREEINFO>::iterator iter;
+	map<string, PQUADTREEINFO>::iterator iterEnd = m_mapQuadTreeInfo.end();
+
+	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
+	{
+		if (!iter->second->bCullingCheck &&
+			iter->second->pGameObject->GetCulling()) 
+		{
+			for (auto& object : iter->second->pChildObjects)
+			{
+				object->SetCulling(true);
+			}
+			iter->second->bCullingCheck = true;
+		}
+		else if (iter->second->bCullingCheck &&
+			!iter->second->pGameObject->GetCulling())
+		{
+			for (auto& object : iter->second->pChildObjects)
+			{
+				object->SetCulling(false);
+			}
+			iter->second->bCullingCheck = false;
+		}
+	}
 }
  

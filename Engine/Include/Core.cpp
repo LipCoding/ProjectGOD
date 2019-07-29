@@ -229,6 +229,7 @@ int CCore::Update(float fTime)
 		pMouseObj->Update(fTime);
 		SAFE_RELEASE(pMouseObj);
 	}
+	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
 	return GET_SINGLE(CSceneManager)->Update(fTime);
 }
 

@@ -306,7 +306,7 @@ int CPlayer_Test::Update(float fTime)
 			vPos += vLook * 1.75f;
 			vPos.y += 0.75f;
 			GET_SINGLE(CEffectManager)->OperateEffect("Attack3", nullptr, vPos);
-			_cprintf("effect!\n");
+			//_cprintf("effect!\n");
 		}
 	}
 

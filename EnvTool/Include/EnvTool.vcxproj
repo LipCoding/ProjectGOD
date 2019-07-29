@@ -201,6 +201,7 @@
     <ClInclude Include="NaviTab.h" />
     <ClInclude Include="ObjTab.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SkyTab.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TerrainTab.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NaviTab.cpp" />
     <ClCompile Include="ObjTab.cpp" />
+    <ClCompile Include="SkyTab.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

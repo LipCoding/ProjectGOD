@@ -62,7 +62,6 @@ bool CSword::initialize()
 	fread(&boneSize, sizeof(size_t), 1, pFile);
 	fread(&strBoneName, sizeof(char), boneSize, pFile);
 
-
 	string appendTag = to_string(this->targetPlayerID);
 	string objectTag = "Player" + appendTag;
 

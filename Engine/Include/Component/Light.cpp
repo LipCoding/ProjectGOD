@@ -74,3 +74,9 @@ void CLight::SetShader()
 {
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Light", &m_tInfo, SCT_PIXEL);
 }
+
+const Vector4 & CLight::GetLightColorDiffuse()
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return m_tInfo.vDif;
+}

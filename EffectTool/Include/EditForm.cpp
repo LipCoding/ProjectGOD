@@ -165,7 +165,7 @@ void CEditForm::CloneTarget()
 	EFFECTDATA *cloneEffect = new EFFECTDATA;
 
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer *pLayer = pScene->GetLayer("Default");
+	CLayer *pLayer = pScene->GetLayer("Effect");
 
 	cloneEffect->strName = "EffectObj_" + to_string(m_iEffectNumber);
 
@@ -314,7 +314,7 @@ void CEditForm::OnBnClickedButtonLoadMesh()
 	CString fullPath = path + name;
 
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer *pLayer = pScene->GetLayer("Default");
+	CLayer *pLayer = pScene->GetLayer("Effect");
 
 	EFFECTDATA *pData = new EFFECTDATA;
 
@@ -716,7 +716,7 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 	mainFile >> iCount;
 
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer* pLayer = pScene->GetLayer("Default");
+	CLayer* pLayer = pScene->GetLayer("Effect");
 
 	for (int i = 0; i < iCount; ++i)
 	{

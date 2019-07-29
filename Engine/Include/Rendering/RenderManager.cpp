@@ -116,7 +116,7 @@ bool CRenderManager::Init()
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4::Black, DXGI_FORMAT_D24_UNORM_S8_UINT);
 	//DXGI_FORMAT_R8G8B8A8_UNORM
 	//pTarget->SetDebugEnable(true);
-	pTarget->SetDebugInfo(Vector3(0.f, 600.f, 0.f), Vector3(300.f, 300.f, 1.f));
+	pTarget->SetDebugInfo(Vector3(0.f, 300.f, 0.f), Vector3(300.f, 300.f, 1.f));
 
 	SAFE_RELEASE(pTarget);
 
@@ -742,12 +742,12 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+
 	pDepthTarget->SetShader(13);
 	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
 	{
 		m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->Render(fTime);
 	}
-
 
 	for (int i = 0; i < m_tRenderGroup[RGT_PARTICLE].iSize; ++i)
 	{
@@ -1225,8 +1225,8 @@ void CRenderManager::RenderLightAcc(float fTime)
 	m_pLightAccShader->SetShader();
 
 	for (iter = pLightList->begin(); iter != iterEnd; ++iter)
-	{
-		if (!(*iter)->GetEnable())
+	{	
+		if (!(*iter)->GetEnable() || (*iter)->GetCulling())
 			continue;
 
 		CLight*	pLight = (*iter)->FindComponentFromType<CLight>(CT_LIGHT);
@@ -1371,7 +1371,7 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z > vDestPos.z;
+	return vSrcPos.z >= vDestPos.z;
 }
 
 bool CRenderManager::SortUI(CGameObject * pSrc, CGameObject * pDest)

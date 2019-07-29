@@ -46,11 +46,24 @@ public:
 	Matrix GetShadowProjMatrix()	const;
 
 public:
-	XMMATRIX m_xmatLightView;
-	XMMATRIX m_xmatLightProj;
-	
 	XMMATRIX GetLightView();
 	XMMATRIX GetLightProj();
+
+private:
+	XMMATRIX m_xmatLightView;
+	XMMATRIX m_xmatLightProj;
+
+public:
+	void SetLightCenterPos(const Vector3& center);
+	void SetLightRange(const float& range);
+
+	Vector3 GetLightCenterPos();
+	float	GetLightRange();
+private:
+	Vector3 m_vCenter;
+	float	m_fRange;
+
+private:
 
 
 public:

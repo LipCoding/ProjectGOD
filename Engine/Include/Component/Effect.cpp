@@ -429,7 +429,7 @@ void CEffect::SetEffectTexture(const string & name, const string & fullPath)
 	// 앞쪽 Texture_Path 제거
 	size_t texPathSize = strlen(GET_SINGLE(CPathManager)->FindPathToMultiByte(TEXTURE_PATH));
 	TexturePath.erase(0, texPathSize);
-			
+	
 	m_pRenderer->SetRenderState(CULLING_NONE);
 	m_pRenderer->SetRenderState(ALPHA_BLEND);
 	m_pRenderer->AlphaEnable(true);

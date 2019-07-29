@@ -12,6 +12,8 @@ typedef struct _tagQuadTreeInfo
 	int iSizeX;
 	int iSizeY;
 	class CGameObject* pGameObject;
+	vector<class CGameObject*> pChildObjects;
+	bool bCullingCheck;
 	//vector<VERTEXBUMP>* vecVtx;
 }QUADTREEINFO, *PQUADTREEINFO;
 
@@ -21,14 +23,18 @@ private:
 	map<string, PQUADTREEINFO> m_mapQuadTreeInfo;
 	
 public:
+	float GetY(const Vector3& vPos);
+
+public:
+	void CheckAndAddChild(class CGameObject *pGameObject);
+	void CheckRenderingChild();
+public:
 	void AddQuadTreeInfo(const string& key, int numX, int numY,
 		Vector3 min, Vector3 max,
 		class CGameObject* object);
-	void DeleteQuadTreeInfo(class CScene* scene);
+	void DeleteQuadTreeInfo();
 	PQUADTREEINFO FindQuadTreeInfo(const string& key);
 	PQUADTREEINFO FindQuadTreeInfo(const Vector3& pos);
-	float GetY(const Vector3& vPos);
-
 
 	DECLARE_SINGLE(CQuadTreeManager)
 };

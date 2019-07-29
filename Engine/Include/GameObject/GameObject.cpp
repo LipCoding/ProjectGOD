@@ -13,6 +13,8 @@
 #include "../Scene/Scene.h"
 #include "../Scene/SceneManager.h"
 #include "../Component/Renderer.h"
+#include "../Core/QuadTreeManager.h"
+#include "../Component/Renderer.h"
 
 PG_USING
 
@@ -1122,6 +1124,73 @@ void CGameObject::OnCollisionLeave(CCollider * pSrc,
 	{
 		(*iter)->OnCollisionLeave(pSrc, pDest, fTime);
 	}
+}
+
+void CGameObject::LoadEnvObjects(const wstring & strFileName, class CLayer* pLayer)
+{
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Object\\");
+	wcscat_s(strPath, MAX_PATH, strFileName.c_str());
+	wcscat_s(strPath, MAX_PATH, L".bin");
+	
+	ifstream file;
+	file.open(strPath, ios::in);
+
+	if (!file.is_open())
+		return;
+
+	int iObjSize = 0;
+	file >> iObjSize;
+
+	for (int i = 0; i < iObjSize; i++)
+	{
+		string objName = "ObjName_" + to_string(i);
+		CGameObject *pObj = CreateObject(objName, pLayer);
+
+		string objTag;
+		file >> objTag;
+
+		// Mesh
+		string meshPath, meshRestPath;
+		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+		meshRestPath = objTag;
+		string meshDataPath;
+		meshDataPath = meshPath + meshRestPath + ".msh";
+		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
+		wstring wMeshDataPath;
+		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
+		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
+		SAFE_RELEASE(pRenderer);
+
+		// Transform
+		// Local Transform Data
+		string localDataPath;
+		localDataPath = meshPath + meshRestPath + ".dat";
+		FILE* pFile = nullptr;
+		fopen_s(&pFile, localDataPath.c_str(), "rb");
+		if (!pFile)
+			return;
+		CTransform* pTr = pObj->GetTransform();
+		pTr->Load_Local(pFile);
+		fclose(pFile);
+
+		// World Transform Data
+		Vector3 vScale, vRotation, vPos;
+		file >> vScale.x >> vScale.y >> vScale.z;
+		file >> vRotation.x >> vRotation.y >> vRotation.z;
+		file >> vPos.x >> vPos.y >> vPos.z;
+		pTr->SetWorldScale(vScale);
+		pTr->SetWorldRot(vRotation);
+		pTr->SetWorldPos(vPos);
+		SAFE_RELEASE(pTr);
+
+		// QuadTree Child (for culling)
+		GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pObj);
+		SAFE_RELEASE(pObj);
+	}
+
+	file.close();
 }
 
 void CGameObject::UpdateTransformHierarchy()

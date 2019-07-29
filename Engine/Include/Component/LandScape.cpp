@@ -13,6 +13,7 @@
 #include "../Component/ColliderRay.h"
 #include "../Component/ColliderSphere.h"
 #include "../Resources/Texture.h"
+#include "../Core/QuadTreeManager.h"
 
 PG_USING
 
@@ -1649,6 +1650,17 @@ void CLandScape::Load_Terrain(string fileName)
 
 	mainFile.close();
 
+	// QuadManager
+	GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo();
+	for (const auto& iter : m_listAllNodes)
+	{
+		GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
+			iter->iSizeX,
+			iter->iSizeZ,
+			iter->vMin,
+			iter->vMax,
+			iter->pGameObject);
+	}
 }
 
 void CLandScape::Save_QuadTree(string fileName)

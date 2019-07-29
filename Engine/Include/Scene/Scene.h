@@ -57,7 +57,7 @@ public:
 	class CLight* GetGlobalLight(const string& strTag = "GlobalLight");
 	CTransform* GetGlobalLightTransform(const string & strTag = "GlobalLight");
 	const list<class CGameObject*>* GetLightList();
-
+	void DeleteLight(const string& strTag);
 public:
 	bool Init();
 	void Input(float fTime);
@@ -71,7 +71,10 @@ public:
 	void Load(char* pFileName, const string& strPathKey = DATA_PATH);
 	void Load(FILE* pFile);
 	void LoadFromFullPath(const char* pFullPath);
-
+	
+	void LoadSky(const wstring& strFileName);
+	void LoadGlobLight(const string& strFileName);
+	void LoadPointLight(const string& strFileName);
 public:
 	class CLayer* CreateLayer(const string& strTag = "", int iZOrder = 0);
 	class CLayer* GetLayer(const string& strTag);

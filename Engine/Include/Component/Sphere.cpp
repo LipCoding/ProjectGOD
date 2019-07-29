@@ -20,7 +20,9 @@ CSphere::CSphere()
 	//m_eType = CT_SPHERE;
 	m_pMeshSphere = nullptr;
 	m_pLayout = nullptr;
-	m_bRenderCheck = true;
+	m_bRenderCheck = false;
+	m_vSize = Vector3(1.f, 1.f, 1.f);
+	m_vColor = Vector4(1.f, 0.f, 0.f, 1.f);
 }
 
 CSphere::CSphere(const CSphere & sphere)
@@ -41,14 +43,26 @@ void CSphere::SetObjMatrix(Matrix *matrix)
 
 void CSphere::SetRenderCheck(bool check)
 {
-	m_bEnable = check;
+	m_bRenderCheck = check;
+}
+
+void CSphere::SetSize(const Vector3 & size)
+{
+	m_vSize = size;
+}
+
+void CSphere::SetColor(const Vector4 & color)
+{
+	m_vColor = color;
 }
 
 bool CSphere::Init()
 {
 	m_pMeshSphere = GET_SINGLE(CResourcesManager)->FindMesh("Sphere");
 	m_pShaderSphere = GET_SINGLE(CShaderManager)->FindShader(STANDARD_COLOR_NORMAL_SHADER);
+
 	m_pLayout = GET_SINGLE(CShaderManager)->FindInputLayout(STANDARD_COLOR_NORMAL_SHADER);
+
 
 	return true;
 }
@@ -74,14 +88,14 @@ void CSphere::Render(float fTime)
 
 void CSphere::SphereRender(float fTime)
 {
-	/*if (!m_bRenderCheck)
-		return;*/
+	if (!m_bRenderCheck)
+		return;
 
 	CCamera*	pCamera = m_pScene->GetMainCamera();
 
 	Matrix matScale;
 
-	matScale.mat = XMMatrixScaling(100.f, 100.f, 100.f);
+	matScale.mat = XMMatrixScaling(m_vSize.x, m_vSize.x, m_vSize.x);
 	m_tTransform.matWorld = matScale * *m_matObjWorld;
 
 	m_tTransform.matView = pCamera->GetViewMatrix();
@@ -100,23 +114,28 @@ void CSphere::SphereRender(float fTime)
 	m_tTransform.matWVP = XMMatrixTranspose(m_tTransform.matWVP.mat);
 	m_tTransform.matWP = XMMatrixTranspose(m_tTransform.matWP.mat);
 	
+	SHARECBUFFER tBuffer;
+	ZeroMemory(&tBuffer, sizeof(SHARECBUFFER));
+	tBuffer.vColor = m_vColor;
+
+	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
+		&tBuffer, SCT_PIXEL);
 
 	GET_SINGLE(CShaderManager)->UpdateCBuffer("Transform",
 		&m_tTransform, SCT_VERTEX | SCT_PIXEL);
 	
-	Vector4 m_vColor = Vector4::Green;
-
-	/*SHARECBUFFER tShare;
-	tShare.vColor = m_vColor;
-
-	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
-		&tShare, SCT_PIXEL);*/
-	
 	m_pShaderSphere->SetShader();
 
-	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColor");
+	GET_SINGLE(CShaderManager)->SetInputLayout("VertexColorNormal");
 
 	m_pMeshSphere->Render(fTime);
+
+
+	ZeroMemory(&tBuffer, sizeof(SHARECBUFFER));
+	GET_SINGLE(CShaderManager)->UpdateCBuffer("Share",
+		&tBuffer, SCT_PIXEL);
+
+	m_pShaderSphere->SetShader();
 
 	SAFE_RELEASE(pCamera);
 }

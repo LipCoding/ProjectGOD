@@ -34,6 +34,12 @@ CObjTab::~CObjTab()
 		SAFE_RELEASE(iter);
 	}
 	m_vecObjects.clear();
+
+	if (m_ArrTransformInfo)
+	{
+		delete[] m_ArrTransformInfo;
+		m_ArrTransformInfo = nullptr;
+	}
 }
 
 void CObjTab::DoDataExchange(CDataExchange* pDX)
@@ -55,6 +61,10 @@ BEGIN_MESSAGE_MAP(CObjTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_OBJECT_SAVE, &CObjTab::OnBnClickedButtonObjectSave)
 	ON_BN_CLICKED(IDC_BUTTON_OBJECT_LOAD, &CObjTab::OnBnClickedButtonObjectLoad)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_SELECTED, &CObjTab::OnBnClickedButtonResetSelected)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_SCALE, &CObjTab::OnBnClickedButtonResetScale)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_ROTATION, &CObjTab::OnBnClickedButtonResetRotation)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_POSITION, &CObjTab::OnBnClickedButtonResetPosition)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_ALL, &CObjTab::OnBnClickedButtonResetAll)
 END_MESSAGE_MAP()
 
 
@@ -89,6 +99,17 @@ BOOL CObjTab::OnInitDialog()
 		m_listObjType.AddString((CString)filePath.c_str());
 	}
 
+	int count = m_listObjType.GetCount();
+	m_ArrTransformInfo = new TRINFO[count];
+
+	for (int i = 0; i < count; ++i)
+	{
+		m_ArrTransformInfo[i].vTempPosition = Vector3(0.f, 0.f, 0.f);
+		m_ArrTransformInfo[i].vRotation = Vector3(0.f, 0.f, 0.f);
+		m_ArrTransformInfo[i].vScale = Vector3(1.f, 1.f, 1.f);
+	}
+
+	m_iCurrentPos = 0;
 
 	UpdateData(FALSE);
 	// Mesh를 Load
@@ -103,12 +124,9 @@ BOOL CObjTab::OnInitDialog()
 void CObjTab::OnLbnSelchangeListObjectType()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	Vector3 vOldPos = { 0.f, 0.f, 0.f };
-
 	if (m_pTempObject)
 	{
 		CTransform* pTr = m_pTempObject->GetTransform();
-		vOldPos = pTr->GetWorldPos();
 		m_pTempObject->Die();
 		CGameObject::EraseObj(m_pTempObject);
 		SAFE_RELEASE(pTr);
@@ -119,6 +137,8 @@ void CObjTab::OnLbnSelchangeListObjectType()
 	meshPath = GET_SINGLE(CPathManager)->FindPath(MESH_PATH);
 
 	int iPos = m_listObjType.GetCurSel();
+	// 현재 고른것으로 set하고
+	m_iCurrentPos = iPos;
 
 	m_listObjType.GetText(iPos, meshRestPath);
 
@@ -146,7 +166,9 @@ void CObjTab::OnLbnSelchangeListObjectType()
 	if (pFile)
 	{
 		pTr->Load_Local(pFile);
-		pTr->SetWorldPos(vOldPos);
+		pTr->SetWorldScale(m_ArrTransformInfo[m_iCurrentPos].vScale);
+		pTr->SetWorldRot(m_ArrTransformInfo[m_iCurrentPos].vRotation);
+		pTr->SetWorldTempPos(m_ArrTransformInfo[m_iCurrentPos].vTempPosition);
 		//SAFE_RELEASE(pTr);
 
 		fclose(pFile);
@@ -246,6 +268,15 @@ void CObjTab::Process_ShowTab()
 
 void CObjTab::UpdateForm()
 {
+	if (m_pTempObject)
+	{
+		CTransform* pTr = m_pTempObject->GetTransform();
+		m_ArrTransformInfo[m_iCurrentPos].vScale = pTr->GetWorldScale();
+		m_ArrTransformInfo[m_iCurrentPos].vRotation = pTr->GetWorldRot();
+		m_ArrTransformInfo[m_iCurrentPos].vTempPosition = pTr->GetWorldTempPos();
+		SAFE_RELEASE(pTr);
+	}
+
 	/*for (auto& iter : m_vecObjects)
 	{
 		CRenderer* pRenderer = iter->FindComponentFromType<CRenderer>(CT_RENDERER);
@@ -263,6 +294,9 @@ void CObjTab::UpdateForm()
 // 마우스 우클릭하면 오브젝트 생성.
 void CObjTab::AddObject()
 {
+	if (!m_pTempObject)
+		return;
+
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer *pLayer = pScene->GetLayer("Default");
 
@@ -287,9 +321,9 @@ void CObjTab::AddObject()
 	pTr->SetLocalPos(pOriginTr->GetLocalPos());
 
 	// World
-	pTr->SetWorldScale(pOriginTr->GetWorldScale());
-	pTr->SetWorldRot(pOriginTr->GetWorldRot());
-	pTr->SetWorldPos(pOriginTr->GetWorldPos() + pOriginTr->GetWorldTempPos());
+	pTr->SetWorldScale(m_ArrTransformInfo[m_iCurrentPos].vScale);
+	pTr->SetWorldRot(m_ArrTransformInfo[m_iCurrentPos].vRotation);
+	pTr->SetWorldPos(pOriginTr->GetWorldPos() + m_ArrTransformInfo[m_iCurrentPos].vTempPosition);
 
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pOriginTr);
@@ -713,4 +747,60 @@ BOOL CObjTab::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CObjTab::OnBnClickedButtonResetScale()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pTempObject)
+	{
+		CTransform *pTr = m_pTempObject->GetTransform();
+		pTr->SetWorldScale(Vector3(1.f, 1.f, 1.f));
+		m_ArrTransformInfo[m_iCurrentPos].vScale = Vector3(1.f, 1.f, 1.f);
+		SAFE_RELEASE(pTr);
+	}
+}
+
+
+void CObjTab::OnBnClickedButtonResetRotation()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pTempObject)
+	{
+		CTransform *pTr = m_pTempObject->GetTransform();
+		pTr->SetWorldRot(Vector3(0.f, 0.f, 0.f));
+		m_ArrTransformInfo[m_iCurrentPos].vRotation = Vector3(0.f, 0.f, 0.f);
+		SAFE_RELEASE(pTr);
+	}
+}
+
+
+void CObjTab::OnBnClickedButtonResetPosition()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pTempObject)
+	{
+		CTransform *pTr = m_pTempObject->GetTransform();
+		pTr->SetWorldTempPos(Vector3(0.f, 0.f, 0.f));
+		m_ArrTransformInfo[m_iCurrentPos].vTempPosition = Vector3(0.f, 0.f, 0.f);
+		SAFE_RELEASE(pTr);
+	}
+}
+
+
+void CObjTab::OnBnClickedButtonResetAll()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_pTempObject)
+	{
+		CTransform *pTr = m_pTempObject->GetTransform();
+		pTr->SetWorldScale(Vector3(1.f, 1.f, 1.f));
+		m_ArrTransformInfo[m_iCurrentPos].vScale = Vector3(1.f, 1.f, 1.f);
+		pTr->SetWorldRot(Vector3(0.f, 0.f, 0.f));
+		m_ArrTransformInfo[m_iCurrentPos].vRotation = Vector3(0.f, 0.f, 0.f);
+		pTr->SetWorldTempPos(Vector3(0.f, 0.f, 0.f));
+		m_ArrTransformInfo[m_iCurrentPos].vTempPosition = Vector3(0.f, 0.f, 0.f);
+		SAFE_RELEASE(pTr);
+	}
 }

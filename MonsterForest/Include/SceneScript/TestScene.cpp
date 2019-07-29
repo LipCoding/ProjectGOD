@@ -41,6 +41,7 @@
 #include "../ObjectScript/Sword.h"
 #include "Core/EffectManager.h"
 
+
 CTestScene::CTestScene()
 {
 
@@ -61,97 +62,19 @@ bool CTestScene::Init()
 		// Load Terrain
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
-
 		pLandScape->Load_Terrain("Main_Scene_1");
-
-		// QuadManager에 정보를 넘김
-		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
-
-		for (const auto& iter : *nodes)
-		{
-			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
-				iter->iSizeX,
-				iter->iSizeZ,
-				iter->vMin,
-				iter->vMax,
-				iter->pGameObject);
-		}
-
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
 
-#pragma region Object
-		wchar_t strPath[MAX_PATH] = {};
-		wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-		wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
-
-		ifstream file;
-		file.open(strPath, ios::in);
-
-		if (!file.is_open())
-			return false;
-
-		int iObjSize = 0;
-		file >> iObjSize;
-
-		for (int i = 0; i < iObjSize; i++)
-		{
-			string objName = "ObjName_" + to_string(i);
-
-			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-			CLayer* pLayer = pScene->GetLayer("Default");
-			CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
-
-			string objTag;
-			file >> objTag;
-
-			// Mesh
-			string meshPath, meshRestPath;
-			meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-			meshRestPath = objTag;
-
-			string meshDataPath;
-			meshDataPath = meshPath + meshRestPath + ".msh";
-
-			CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
-
-			wstring wMeshDataPath;
-			wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-			pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
-
-			SAFE_RELEASE(pRenderer);
-
-			// Transform
-			// Local Transform Data
-			string localDataPath;
-
-			localDataPath = meshPath + meshRestPath + ".dat";
-
-			FILE* pFile = nullptr;
-
-			fopen_s(&pFile, localDataPath.c_str(), "rb");
-
-			if (!pFile)
-				return false;
-
-			CTransform* pTr = pObj->GetTransform();
-			pTr->Load_Local(pFile);
-			fclose(pFile);
-
-			// World Transform Data
-			Vector3 vScale, vRotation, vPos;
-			file >> vScale.x >> vScale.y >> vScale.z;
-			file >> vRotation.x >> vRotation.y >> vRotation.z;
-			file >> vPos.x >> vPos.y >> vPos.z;
-
-			pTr->SetWorldScale(vScale);
-			pTr->SetWorldRot(vRotation);
-			pTr->SetWorldPos(vPos);
-
-			SAFE_RELEASE(pTr);
-		}
+#pragma region SkyAndLight
+		// SkyBox, Light
+		pScene->LoadSky(L"Skybox_2");
+		pScene->LoadGlobLight("Night_Test");
+		pScene->LoadPointLight("Night_Test");
 #pragma endregion
+
+		CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
 
 #pragma region Navigation
 		GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
@@ -194,7 +117,6 @@ bool CTestScene::Init()
 		pSword->initialize();
 		SAFE_RELEASE(pSword);
 		SAFE_RELEASE(pSwordObj);
-
 #pragma endregion
 
 		SAFE_RELEASE(pLayer);

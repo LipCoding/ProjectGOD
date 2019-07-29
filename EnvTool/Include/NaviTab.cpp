@@ -241,6 +241,9 @@ void CNaviTab::Check_Direction()
 
 void CNaviTab::Pick_NaviMeshCell(const Vector3 & vPos)
 {
+	if (!GET_SINGLE(CNaviManager)->GetNaviCells())
+		return;
+
 	m_pSelectCell = nullptr;
 
 	for (const auto& cell : *GET_SINGLE(CNaviManager)->GetNaviCells())

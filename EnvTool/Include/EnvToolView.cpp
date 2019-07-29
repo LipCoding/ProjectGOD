@@ -31,6 +31,7 @@
 #include "TerrainTab.h"
 #include "ObjTab.h"
 #include "NaviTab.h"
+#include "LightTab.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -355,6 +356,11 @@ void CEnvToolView::UpdateInput(const float& fTime)
 				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Add_Point(m_vPickPos);
 				break;
 			}
+			case TAB_LIGHT:
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->AddPointLight();
+				break;
+			}
 			default:
 				break;
 			}
@@ -445,6 +451,9 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	{
 		m_pEditForm->GetObjectTab()->UpdateMousePos(m_vPickPos);
 
+		float scalePower = 0.2f;
+		float movePower = 5.f;
+
 		if (KEYPUSH("Z"))
 		{
 			CGameObject* pTempObject = CGameObject::FindObject("TempObj");
@@ -459,12 +468,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (GET_SINGLE(CInput)->GetWheel() == 1)
 				{
-					vScale.x += 0.1f;
+					vScale.x += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (GET_SINGLE(CInput)->GetWheel() == -1)
 				{
-					vScale.x -= 0.1f;
+					vScale.x -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -492,7 +501,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.x != 0)
 					{
-						vPos.z -= ptMouseMove.x / 250.f;
+						vPos.z -= (ptMouseMove.x / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -516,12 +525,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.y += 0.1f;
+					vScale.y += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.y -= 0.1f;
+					vScale.y -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -549,7 +558,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.y != 0)
 					{
-						vPos.y += ptMouseMove.y / 250.f;
+						vPos.y += (ptMouseMove.y / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -573,12 +582,12 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.z += 0.1f;
+					vScale.z += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.z -= 0.1f;
+					vScale.z -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -606,7 +615,7 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 					if (ptMouseMove.y != 0)
 					{
-						vPos.z -= ptMouseMove.y / 250.f;
+						vPos.z -= (ptMouseMove.y / 250.f) * movePower;
 
 						pTr->SetWorldTempPos(vPos);
 					}
@@ -630,16 +639,16 @@ void CEnvToolView::UpdateInput(const float& fTime)
 
 				if (wheelStatus > 0)
 				{
-					vScale.x += 0.1f;
-					vScale.y += 0.1f;
-					vScale.z += 0.1f;
+					vScale.x += scalePower;
+					vScale.y += scalePower;
+					vScale.z += scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 				else if (wheelStatus < 0)
 				{
-					vScale.x -= 0.1f;
-					vScale.y -= 0.1f;
-					vScale.z -= 0.1f;
+					vScale.x -= scalePower;
+					vScale.y -= scalePower;
+					vScale.z -= scalePower;
 					pTr->SetWorldScale(vScale);
 				}
 
@@ -661,6 +670,23 @@ void CEnvToolView::UpdateInput(const float& fTime)
 			((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->Set_Brush_Size(-0.25f);
 		}
 	}
+
+	if (type == TAB_LIGHT)
+	{
+		if (KEYPUSH("LShift"))
+		{
+			short wheelStatus = GET_SINGLE(CInput)->GetWheel();
+
+			if (wheelStatus > 0)
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(0.5f);
+			}
+			else if (wheelStatus < 0)
+			{
+				((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightHeight(-0.5f);
+			}
+		}
+	}
 }
 
 void CEnvToolView::UpdateObject(const float & fTime)
@@ -669,7 +695,7 @@ void CEnvToolView::UpdateObject(const float & fTime)
 
 void CEnvToolView::UpdateForm(const float & fTime)
 {
-	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
+	((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetObjectTab()->UpdateForm();
 	//((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetNaviTab()->UpdateForm();
 }
 
@@ -753,6 +779,11 @@ void CEnvToolView::PickingProcess(TOOLTAB_TYPE type)
 						pBrushTool->SetBrushInformation(m_vPickPos);
 						SAFE_RELEASE(pBrushTool);
 						bFirstCheck = true;
+						break;
+					}
+					case TAB_LIGHT:
+					{
+						((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetLightTab()->SetPointLightPosXZ(m_vPickPos);
 						break;
 					}
 					default:

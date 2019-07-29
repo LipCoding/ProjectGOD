@@ -23,6 +23,9 @@ CCamera::CCamera() :
 	m_tWorldRS.iHeight = UINT_MAX;
 	m_vPivot.x = 0.5f;
 	m_vPivot.y = 0.5f;
+
+	m_vCenter = Vector3{ 512.f / 2.f, 0.f, 512.f / 2.f };
+	m_fRange = 425.f;
 }
 
 CCamera::CCamera(const CCamera & camera)	:
@@ -133,7 +136,7 @@ Matrix CCamera::GetShadowProjMatrix() const
 
 XMMATRIX CCamera::GetLightView()
 {
-	Vector3 center{ 512.f / 2.f, 0.f, 512.f / 2.f };
+	Vector3 center = m_vCenter;
 	Vector3 lightCamPos = m_pTransform->GetWorldPos();
 	XMVECTOR lightPos = XMLoadFloat3(&lightCamPos);
 	XMVECTOR targetPos = XMLoadFloat3(&center);
@@ -146,7 +149,7 @@ XMMATRIX CCamera::GetLightView()
 
 XMMATRIX CCamera::GetLightProj()
 {
-	Vector3 center{ 512.f / 2.f, 0.f, 512.f / 2.f };
+	Vector3 center = m_vCenter;
 	XMVECTOR targetPos = XMLoadFloat3(&center);
 
 	XMFLOAT3 sphereCenterLS;
@@ -154,7 +157,7 @@ XMMATRIX CCamera::GetLightProj()
 
 	//old
 	//float radius = 325.0f;
-	float radius = 425.f;
+	float radius = m_fRange;
 
 	float l = sphereCenterLS.x - radius;
 	float r = sphereCenterLS.x + radius;
@@ -166,6 +169,26 @@ XMMATRIX CCamera::GetLightProj()
 	m_xmatLightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
 
 	return m_xmatLightProj;
+}
+
+void CCamera::SetLightCenterPos(const Vector3 & center)
+{
+	m_vCenter = center;
+}
+
+void CCamera::SetLightRange(const float & range)
+{
+	m_fRange = range;
+}
+
+Vector3 CCamera::GetLightCenterPos()
+{
+	return m_vCenter;
+}
+
+float CCamera::GetLightRange()
+{
+	return m_fRange;
 }
 
 void CCamera::SetOrthoProj(const RESOLUTION & tRS, 

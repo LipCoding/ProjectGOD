@@ -157,7 +157,7 @@ void CEffectToolView::OnInitialUpdate()
 
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	pScene->CreateLayer("ParticleLayer", 2000);
-	CLayer* pLayer = pScene->GetLayer("Default");
+	CLayer* pLayer = pScene->GetLayer("Effect");
 
 	//Camera
 	m_pCamera = GET_SINGLE(CSceneManager)->GetCurrentScene()->GetMainCameraObj();
