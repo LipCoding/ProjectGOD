@@ -12,6 +12,9 @@ private:
 private:
 	HINSTANCE		m_hInst;
 	HWND			m_hWnd;
+#ifdef _QUEST_TOOL_
+	HWND            quest_tool_hwnd;
+#endif
 	RESOLUTION		m_tResolution;
 	WNDPROC	 oldProc;
 	static bool isFocus;
@@ -40,6 +43,10 @@ private:
 	BOOL InitWindow(TCHAR* pClass, TCHAR* pTitle, UINT iWidth, UINT iHeight);
 
 public:
+#ifdef _QUEST_TOOL_
+	HWND getQuestToolWindowHandle();
+#endif
+	HINSTANCE getWindowInstance();
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 	DECLARE_SINGLE(CCore)

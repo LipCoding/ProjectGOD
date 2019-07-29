@@ -1,6 +1,6 @@
 #pragma once
 #include "../Obj.h"
-
+#include "../GameObject/GameObject.h"
 PG_BEGIN
 
 class PG_DLL CComponent :
@@ -21,8 +21,6 @@ protected:
 	class CTransform*	m_pTransform;
 	COMPONENT_TYPE		m_eType;
 
-public:
-	COMPONENT_TYPE GetComponentType()	const;
 
 public:
 	void SetScene(class CScene* pScene);
@@ -35,7 +33,7 @@ public:
 	class CLayer* GetLayer()	const;
 	class CGameObject* GetGameObject()	const;
 	class CTransform* GetTransform()	const;
-
+	COMPONENT_TYPE GetComponentType();
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -75,7 +73,8 @@ public:
 	template <typename T>
 	T* FindComponentFromTypeID()
 	{
-		return m_pGameObject->FindComponentFromTypeID<T>();
+		T* component = m_pGameObject->FindComponentFromType<T>("");
+		return component;
 	}
 
 public:
@@ -87,7 +86,8 @@ public:
 	template <typename T>
 	const list<CComponent*>* FindComponentsFromTypeID()
 	{
-		return m_pGameObject->FindComponentsFromTypeID<T>();
+		list<CComponent*>* components = m_pGameObject->FindComponentsFromType<T>("");
+		return components;
 	}
 };
 

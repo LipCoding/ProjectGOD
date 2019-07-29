@@ -102,7 +102,6 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 		return false;
 
 	// Direct Input으로 수정
-
 	if (bDirectInput)
 	{
 		if (!GET_SINGLE(CDirectInput)->Init(m_hInst, m_hWnd, iWidth, iHeight))
@@ -132,6 +131,7 @@ bool CCore::Init(HINSTANCE hInst, HWND hWnd, UINT iWidth,
 		pMouseObj->SetScene(GET_SINGLE(CSceneManager)->GetCurrentScene());
 		SAFE_RELEASE(pMouseObj);
 	}
+
 	ShowCursor(FALSE);
 
 	return true;
@@ -282,6 +282,17 @@ void CCore::Render(float fTime)
 		GET_SINGLE(CInput)->ClearWheel();
 	}
 }
+#ifdef _QUEST_TOOL_
+HWND CCore::getQuestToolWindowHandle()
+{
+	return quest_tool_hwnd;
+}
+#endif
+
+HINSTANCE CCore::getWindowInstance()
+{
+	return m_hInst;
+}
 
 ATOM CCore::WindowRegisterClass(TCHAR * pClass, int iIconID)
 {
@@ -308,7 +319,11 @@ BOOL CCore::InitWindow(TCHAR * pClass, TCHAR * pTitle, UINT iWidth, UINT iHeight
 {
 	HWND hWnd = CreateWindowW(pClass, pTitle, WS_OVERLAPPEDWINDOW,
 		300, 0, iWidth, iHeight, nullptr, nullptr, m_hInst, nullptr);
-
+#ifdef _QUEST_TOOL_
+	quest_tool_hwnd = CreateWindowW(pClass, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
+		WS_CLIPCHILDREN,
+		10, 10, 610, 610, hWnd, (HMENU)NULL, m_hInst, nullptr);
+#endif
 	if (!hWnd)
 	{
 		return FALSE;

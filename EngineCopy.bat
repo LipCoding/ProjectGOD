@@ -45,3 +45,8 @@ xcopy /s /y /d .\Engine\Bin_Debug\*.* .\EffectTool\Bin_Debug\
 xcopy /s /y /d .\Engine\Bin\*.* .\EffectTool\Bin\
 xcopy /s /y /d .\Engine\Bin64\*.* .\EffectTool\Bin64\
 xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\EffectTool\Bin64_Debug\
+
+xcopy /s /y /d .\Engine\Bin_Debug\*.* .\QuestTool\Bin_Debug\
+xcopy /s /y /d .\Engine\Bin\*.* .\QuestTool\Bin\
+xcopy /s /y /d .\Engine\Bin64\*.* .\QuestTool\Bin64\
+xcopy /s /y /d .\Engine\Bin64_Debug\*.* .\QuestTool\Bin64_Debug\

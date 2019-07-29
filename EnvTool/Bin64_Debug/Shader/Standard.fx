@@ -62,8 +62,11 @@ PS_OUTPUT StandardColorNormalPS(VS_OUTPUT_COLOR_NORMAL input)
 
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal, float2(0.f, 0.f));
 
-	output.vColor = (input.vColor ) * (tLight.vDif + tLight.vAmb) + tLight.vSpc;
-	output.vColor = output.vColor + g_vColor;
+
+	//output.vColor = input.vColor * (tLight.vDif + tLight.vAmb) + tLight.vSpc;
+	output.vColor = input.vColor + g_vColor;
+	output.vColor = float4(1.f, 0.f, 0.f, 1.f);
+
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.xyz = (float3)(input.vProjPos.z / input.vProjPos.w);

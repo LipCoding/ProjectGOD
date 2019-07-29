@@ -158,7 +158,7 @@ bool CMainScene::Init()
 
 #pragma region sound
 	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
-	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+	//GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");

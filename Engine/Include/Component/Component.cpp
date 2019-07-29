@@ -23,12 +23,6 @@ CComponent::CComponent(const CComponent & com)
 CComponent::~CComponent()
 {
 }
-
-COMPONENT_TYPE CComponent::GetComponentType() const
-{
-	return m_eType;
-}
-
 void CComponent::SetScene(CScene * pScene)
 {
 	m_pScene = pScene;
@@ -74,6 +68,11 @@ CTransform * CComponent::GetTransform() const
 {
 	m_pTransform->AddRef();
 	return m_pTransform;
+}
+
+COMPONENT_TYPE CComponent::GetComponentType()
+{
+	return m_eType;
 }
 
 bool CComponent::Init()
