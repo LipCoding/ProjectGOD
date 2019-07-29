@@ -447,11 +447,11 @@ void CObjTab::OnBnClickedButtonDeleteObj()
 		m_vecStringObjTypePath.erase(m_vecStringObjTypePath.begin() + iPos);
 
 		m_listObjList.DeleteString(iPos);
-		m_listObjList.SetCurSel(iPos + 1);
+		m_listObjList.SetCurSel(iPos);
 
 		if (!m_vecObjects.empty())
 		{
-			CRenderer* pRenderer = m_vecObjects[iPos + 1]->FindComponentFromType<CRenderer>(CT_RENDERER);
+			CRenderer* pRenderer = m_vecObjects[iPos]->FindComponentFromType<CRenderer>(CT_RENDERER);
 
 			SHARECBUFFER tShareBuffer = {};
 			tShareBuffer.vColor = Vector4{ 1.f, 0.f, 0.f, 1.f };

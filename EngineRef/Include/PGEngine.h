@@ -117,7 +117,7 @@ using namespace FMOD;
 
 #define UI_LAYER 1000
 
-#define _QUEST_TOOL_
+//#define _QUEST_TOOL_
 
 template <typename T>
 void Safe_Release_VecList(T& p)
