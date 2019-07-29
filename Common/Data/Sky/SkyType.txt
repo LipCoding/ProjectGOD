@@ -21,3 +21,4 @@ Skybox\Skybox_18.dds
 Skybox\Skybox_19.dds
 Skybox\Skybox_20.dds
 Skybox\Skybox_21.dds
+Skybox\Skybox_22.dds
