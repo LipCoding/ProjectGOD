@@ -742,12 +742,12 @@ void CRenderManager::Render(float fTime)
 			m_pDepthDisable->ResetState();
 		}
 	}
+
 	pDepthTarget->SetShader(13);
 	for (int i = 0; i < m_tRenderGroup[RGT_ALPHA].iSize; ++i)
 	{
 		m_tRenderGroup[RGT_ALPHA].pRenderObj[i]->Render(fTime);
 	}
-
 
 	for (int i = 0; i < m_tRenderGroup[RGT_PARTICLE].iSize; ++i)
 	{
@@ -1371,7 +1371,7 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z > vDestPos.z;
+	return vSrcPos.z >= vDestPos.z;
 }
 
 bool CRenderManager::SortUI(CGameObject * pSrc, CGameObject * pDest)

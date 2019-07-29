@@ -576,7 +576,7 @@ bool CEffectTab::LoadTargetMesh(const CString & filePath, const CString& fileNam
 	}
 
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CLayer *pLayer = pScene->GetLayer("Default");
+	CLayer *pLayer = pScene->GetLayer("Effect");
 
 	m_pObjectMesh = CGameObject::CreateObject("TargetObj", pLayer);
 	CTransform *pTr = m_pObjectMesh->GetTransform();
