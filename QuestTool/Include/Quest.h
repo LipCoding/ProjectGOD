@@ -35,7 +35,7 @@ public:
 	void setQuestContents(const string& quest_contents) { this->quest_contents = quest_contents; }
 
 public:
-	bool save(const ofstream& save_file);
-	bool load(const ifstream& load_file);
+	bool save(ofstream& save_file);
+	bool load(ifstream& load_file);
 };
 

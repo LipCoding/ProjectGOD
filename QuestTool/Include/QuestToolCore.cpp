@@ -7,6 +7,8 @@
 #include "UserInterfaceManager.h"
 #include "Quest.h"
 #include "Core/PathManager.h"
+#include "Resources/ResourcesManager.h"
+
 /*
 bool CCore::Init(HINSTANCE hInst, TCHAR * pTitle, TCHAR * pClass, int iIconID,
 	UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer, bool bDirectInput)
@@ -97,36 +99,39 @@ bool QuestToolCore::initialize(HINSTANCE instance)
 
 
 	CreateWindow(L"static", L"보상 목록", WS_CHILD | WS_VISIBLE,
-		910, 170, 150, 25, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)-1, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 110, 150, 25, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)-1, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	listbox_reward_items_handle = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL |
 		WS_BORDER | LBS_NOTIFY | WS_CLIPCHILDREN,
-		910, 200, 250, 150, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REWARD_LIST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 140, 250, 150, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REWARD_LIST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_reward_items_add_handle = CreateWindow(L"button", L"추가", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		910, 350, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)ADD_REWARD, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 290, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)ADD_REWARD, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_reward_items_remove_handle = CreateWindow(L"button", L"삭제", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		1040, 350, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REMOVE_REWARD, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		1040, 290, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REMOVE_REWARD, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	CreateWindow(L"static", L"퀘스트 목록", WS_CHILD | WS_VISIBLE,
-		910, 395, 150, 25, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)-1, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 335, 150, 25, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)-1, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	listbox_quest_lists = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL |
 		WS_BORDER | LBS_NOTIFY | WS_CLIPCHILDREN,
-		910, 420, 250, 170, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)QUEST_LIST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 360, 250, 170, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)QUEST_LIST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_quest_add_handle = CreateWindow(L"button", L"추가", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		910, 585, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)ADD_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 525, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)ADD_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_quest_remove_handle = CreateWindow(L"button", L"삭제", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		1040, 585, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REMOVE_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		1040, 525, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)REMOVE_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_quest_save_handle = CreateWindow(L"button", L"저장", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		910, 700, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)SAVE_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		910, 580, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)SAVE_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	button_quest_load_handle = CreateWindow(L"button", L"불러오기", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_CLIPCHILDREN,
-		1040, 700, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)LOAD_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+		1040, 580, 120, 35, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)LOAD_QUEST, GET_SINGLE(CCore)->getWindowInstance(), NULL);
+
+	CreateWindow(L"static", L"퀘스트 목록", WS_CHILD | WS_VISIBLE,
+		910, 335, 150, 25, GET_SINGLE(CCore)->GetWindowHandle(), (HMENU)-1, GET_SINGLE(CCore)->getWindowInstance(), NULL);
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	SAFE_RELEASE(pScene);
@@ -175,24 +180,41 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				if (GetOpenFileNameA(&OFN) != 0) {
 					
 				}
-				MessageBox(NULL, L"추가 완료", L"보상 아이템목록", MB_OK);
+
+				char file_name[_MAX_FNAME];
+				char file_ext[_MAX_EXT];
+				_splitpath(lpstrFile, NULL, NULL, file_name, file_ext);
+
+				string middle_path = "\\ItemIcon";
+				string load_file_name = string{ file_name } + string{ file_ext };
+				GET_SINGLE(CResourcesManager)->LoadTexture(file_name, load_file_name.c_str(), TEXTURE_PATH);
+
+				auto finder = find(quest_tool_core->getRewardItems().begin(), quest_tool_core->getRewardItems().end(), string{ file_name });
+				if (finder == quest_tool_core->getRewardItems().end())
+				{
+					quest_tool_core->getRewardItems().push_back(string{ file_name });
+					SendMessageA(QuestToolCore::getInstance()->getListBoxRewardItemsHandle(), LB_ADDSTRING, 0, (LPARAM)file_name);
+				}
 			}
 			break;
 
 			case REMOVE_REWARD :
 			{
-				//switch (HIWORD(wParam)) {
-				//	case LBN_SELCHANGE:
-				//	{
-				//		char tagName[128];
-				//		int i = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCURSEL, 0, 0);
-				//		SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_DELETESTRING, i, 0);
+				switch (HIWORD(wParam)) {
+					case LBN_SELCHANGE:
+					{
+						char reward_item_name[128];
+						int i = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCURSEL, 0, 0);
+						SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETTEXT, i, (LPARAM)reward_item_name);
+						SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_DELETESTRING, i, 0);
+						
+						
 
-				//		// 리스트에서 보상목록 삭제.
-				//		MessageBox(NULL, L"삭제 완료", L"보상 아이템목록", MB_OK);
-				//	}
-				//	break;
-				//}
+						// 리스트에서 보상목록 삭제.
+						MessageBox(NULL, L"삭제 완료", L"보상 아이템목록", MB_OK);
+					}
+					break;
+				}
 			}
 				break;
 

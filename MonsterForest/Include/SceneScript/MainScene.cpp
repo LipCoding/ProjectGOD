@@ -91,7 +91,10 @@ void CMainScene::chat_callback(float fTime)
 
 bool CMainScene::Init()
 {
-	MFObjectManager::getInstance()->initialize();
+
+	//m_pScene->LoadSky(L"Skybox_2");
+	//m_pScene->LoadGlobLight("Night_Test");
+	//m_pScene->LoadPointLight("Night_Test");
 
 #pragma region Effect Setting
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
@@ -152,6 +155,8 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 	}
 #pragma endregion
+	MFObjectManager::getInstance()->initialize();
+	m_pScene->LoadSky(L"Skybox_2");
 
 	NetworkManager::getInstance()->connectMainServer();
 	NetworkManager::getInstance()->inputTime = high_resolution_clock::now();

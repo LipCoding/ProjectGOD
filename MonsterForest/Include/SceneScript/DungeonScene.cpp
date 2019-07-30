@@ -885,7 +885,7 @@ void DungeonScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Player");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());

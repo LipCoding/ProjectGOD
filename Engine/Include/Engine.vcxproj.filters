@@ -420,9 +420,6 @@
     <ClCompile Include="Component\Mouse.cpp">
       <Filter>06. Component\08. Mouse</Filter>
     </ClCompile>
-    <ClCompile Include="Component\UI.cpp">
-      <Filter>06. Component\09. UI</Filter>
-    </ClCompile>
     <ClCompile Include="Component\UIButton.cpp">
       <Filter>06. Component\09. UI\Button</Filter>
     </ClCompile>
@@ -524,6 +521,9 @@
     </ClCompile>
     <ClCompile Include="Component\Sphere.cpp">
       <Filter>06. Component\17. Description\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\UI.cpp">
+      <Filter>06. Component\09. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -689,9 +689,6 @@
     <ClInclude Include="Component\Mouse.h">
       <Filter>06. Component\08. Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="Component\UI.h">
-      <Filter>06. Component\09. UI</Filter>
-    </ClInclude>
     <ClInclude Include="Component\UIButton.h">
       <Filter>06. Component\09. UI\Button</Filter>
     </ClInclude>
@@ -805,6 +802,9 @@
     </ClInclude>
     <ClInclude Include="Component\Sphere.h">
       <Filter>06. Component\17. Description\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI.h">
+      <Filter>06. Component\09. UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

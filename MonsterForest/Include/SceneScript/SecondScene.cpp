@@ -108,136 +108,136 @@ bool SecondScene::Init()
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
 
-		// Load Terrain
-		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage2", pLayer);
-		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
-
-		pLandScape->Load_Terrain("Main_Scene_2");
-
-		// QuadManager에 정보를 넘김
-		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
-
-		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo();
-
-		for (const auto& iter : *nodes)
-		{
-			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
-				iter->iSizeX,
-				iter->iSizeZ,
-				iter->vMin,
-				iter->vMax,
-				iter->pGameObject);
-		}
-
-		SAFE_RELEASE(pLandScape);
-		SAFE_RELEASE(pLandScapeObj);
-	}
-#pragma endregion
-
-#pragma region StaticObject
-	// 경로 지정
-	wchar_t strPath[MAX_PATH] = {};
-	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_2.bin");
-
-	ifstream file;
-	file.open(strPath, ios::in);
-
-	if (!file.is_open())
-		return false;
-
-	int iObjSize = 0;
-	file >> iObjSize;
-
-	for (int i = 0; i < iObjSize; i++)
-	{
-		string objName = "ObjName_" + to_string(i);
-
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer* pLayer = pScene->GetLayer("Default");
-		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
-
-		string objTag;
-		file >> objTag;
-
-		// Mesh
-		string meshPath, meshRestPath;
-		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-		meshRestPath = objTag;
-
-		string meshDataPath;
-		meshDataPath = meshPath + meshRestPath + ".msh";
-
-		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
-
-		wstring wMeshDataPath;
-		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
-
-		SAFE_RELEASE(pRenderer);
-
-		// Transform
-		// Local Transform Data
-		string localDataPath;
-
-		localDataPath = meshPath + meshRestPath + ".dat";
-
-		FILE* pFile = nullptr;
-
-		fopen_s(&pFile, localDataPath.c_str(), "rb");
-
-		if (!pFile)
-			return false;
-
-		CTransform* pTr = pObj->GetTransform();
-		pTr->Load_Local(pFile);
-		fclose(pFile);
-
-		// World Transform Data
-		Vector3 vScale, vRotation, vPos;
-		file >> vScale.x >> vScale.y >> vScale.z;
-		file >> vRotation.x >> vRotation.y >> vRotation.z;
-		file >> vPos.x >> vPos.y >> vPos.z;
-
-		pTr->SetWorldScale(vScale);
-		pTr->SetWorldRot(vRotation);
-		pTr->SetWorldPos(vPos);
-
-		SAFE_RELEASE(pTr);
-	}
-#pragma endregion
-
-	{
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer* pLayer = pScene->GetLayer("Default");
-
-#pragma region PlayerPrototype
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pPlayerObj = CGameObject::CreatePrototypeDontDestroy("PlayerCharacter", m_pScene);
-			CTransform*	pTr = pPlayerObj->GetTransform();
-
-			pTr->SetWorldPos(250.f, 0.f, 250.f);
-			pTr->SetWorldScale(1.f, 1.f, 1.f);
-			pTr->SetWorldRot(0.f, 0.0f, 0.f);
-
-			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-		}
-#pragma endreigon
+//		// Load Terrain
+//		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage2", pLayer);
+//		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
+//
+//		pLandScape->Load_Terrain("Main_Scene_2_DY");
+//
+//		// QuadManager에 정보를 넘김
+//		list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+//
+//		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo();
+//
+//		for (const auto& iter : *nodes)
+//		{
+//			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
+//				iter->iSizeX,
+//				iter->iSizeZ,
+//				iter->vMin,
+//				iter->vMax,
+//				iter->pGameObject);
+//		}
+//
+//		SAFE_RELEASE(pLandScape);
+//		SAFE_RELEASE(pLandScapeObj);
+//	}
+//#pragma endregion
+//
+//#pragma region StaticObject
+//	// 경로 지정
+//	wchar_t strPath[MAX_PATH] = {};
+//	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+//	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_2_DY.bin");
+//
+//	ifstream file;
+//	file.open(strPath, ios::in);
+//
+//	if (!file.is_open())
+//		return false;
+//
+//	int iObjSize = 0;
+//	file >> iObjSize;
+//
+//	for (int i = 0; i < iObjSize; i++)
+//	{
+//		string objName = "ObjName_" + to_string(i);
+//
+//		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+//		CLayer* pLayer = pScene->GetLayer("Default");
+//		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
+//
+//		string objTag;
+//		file >> objTag;
+//
+//		// Mesh
+//		string meshPath, meshRestPath;
+//		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+//		meshRestPath = objTag;
+//
+//		string meshDataPath;
+//		meshDataPath = meshPath + meshRestPath + ".msh";
+//
+//		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
+//
+//		wstring wMeshDataPath;
+//		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
+//		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
+//
+//		SAFE_RELEASE(pRenderer);
+//
+//		// Transform
+//		// Local Transform Data
+//		string localDataPath;
+//
+//		localDataPath = meshPath + meshRestPath + ".dat";
+//
+//		FILE* pFile = nullptr;
+//
+//		fopen_s(&pFile, localDataPath.c_str(), "rb");
+//
+//		if (!pFile)
+//			return false;
+//
+//		CTransform* pTr = pObj->GetTransform();
+//		pTr->Load_Local(pFile);
+//		fclose(pFile);
+//
+//		// World Transform Data
+//		Vector3 vScale, vRotation, vPos;
+//		file >> vScale.x >> vScale.y >> vScale.z;
+//		file >> vRotation.x >> vRotation.y >> vRotation.z;
+//		file >> vPos.x >> vPos.y >> vPos.z;
+//
+//		pTr->SetWorldScale(vScale);
+//		pTr->SetWorldRot(vRotation);
+//		pTr->SetWorldPos(vPos);
+//
+//		SAFE_RELEASE(pTr);
+//	}
+//#pragma endregion
+//
+//	{
+//		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+//		CLayer* pLayer = pScene->GetLayer("Default");
+//
+//#pragma region PlayerPrototype
+//		{
+//			CLayer*	pLayer = m_pScene->GetLayer("Default");
+//			CGameObject*	pPlayerObj = CGameObject::CreatePrototypeDontDestroy("PlayerCharacter", m_pScene);
+//			CTransform*	pTr = pPlayerObj->GetTransform();
+//
+//			pTr->SetWorldPos(250.f, 0.f, 250.f);
+//			pTr->SetWorldScale(1.f, 1.f, 1.f);
+//			pTr->SetWorldRot(0.f, 0.0f, 0.f);
+//
+//			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
+//			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.msh");
+//
+//			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+//			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
+//			FILE* pFile_Player = nullptr;
+//
+//			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+//
+//			if (!pFile_Player)
+//				return false;
+//
+//			pTr->Load_Local(pFile_Player);
+//
+//			fclose(pFile_Player);
+//		}
+//#pragma endreigon
 
 #pragma region GOLEM_MONSTER_PROTOTYPE
 		{
@@ -516,8 +516,28 @@ bool SecondScene::Init()
 		}
 		SAFE_RELEASE(pParticleLayer);
 	}
+	{
+#pragma endregion
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer* pLayer = pScene->GetLayer("Default");
+
+#pragma region Terrain
+		// Load Terrain
+		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
+		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
+		pLandScape->Load_Terrain("Main_Scene_2_DY");
+		SAFE_RELEASE(pLandScape);
+		SAFE_RELEASE(pLandScapeObj);
+#pragma endregion
+		CGameObject::LoadEnvObjects(L"Main_Scene_2_DY", pLayer);
+#pragma region SkyAndLight
+		// SkyBox, Light
+		pScene->LoadSky(L"Skybox_18");
+		pScene->LoadGlobLight("Main_Scene_2_DY");
+		pScene->LoadPointLight("Main_Scene_2_DY_Lights");
 #pragma endregion
 
+	}
 	// mainserver로의 접속요청을 한다.
 	{
 		cs_packet_connect* pPacket = reinterpret_cast<cs_packet_connect*>(NetworkManager::getInstance()->getSendBuffer());

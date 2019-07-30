@@ -1,5 +1,5 @@
 #include "Quest.h"
-
+#include <string>
 
 
 Quest::Quest()
@@ -29,12 +29,31 @@ void Quest::update(float deltaTime)
 
 }
 
-bool Quest::save(const ofstream& save_file)
+bool Quest::save(ofstream& save_file)
 {
+	save_file << quest_subject << " ";
+	save_file << quest_summary << " ";
+	save_file << quest_contents << " ";
+	save_file << minimum_level << " ";
+	save_file << maximum_level << " ";
+	save_file << reward_experience << " ";
+	save_file << reward_gold << " ";
+
+	save_file << reward_items.size() << " ";
+	for (auto& reward_item : reward_items)
+		save_file << reward_item << " ";
+
 	return true;
 }
 
-bool Quest::load(const ifstream& load_file)
+bool Quest::load(ifstream& load_file)
 {
+	load_file >> quest_subject;
+	load_file >> quest_summary;
+	load_file >> quest_contents;
+	load_file >> minimum_level;
+	load_file >> maximum_level;
+	load_file >> reward_experience;
+	load_file >> reward_gold;
 	return true;
 }

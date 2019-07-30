@@ -39,6 +39,7 @@ bool CPathManager::Init()
 	AddPath(DATA_PATH, L"Data\\");
 	AddPath(SOUND_PATH, L"Sound\\");
 	AddPath(MESH_PATH, L"Mesh\\");
+	AddPath(SHADER_PATH, L"Quest\\");
 
 	return true;
 }

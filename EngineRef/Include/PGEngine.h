@@ -21,7 +21,8 @@
 #include "fmod/fmod.hpp"
 #include "Singleton.h"
 #include "Singleton.cpp"
-
+#include <atlconv.h>
+#include <atlimage.h>
 #include <d2d1.h> // 글자 출력
 #include <dwrite.h> // 글자 출력
 #include <fstream>
@@ -50,6 +51,7 @@ using namespace FMOD;
 #define	DATA_PATH		"DataPath"
 #define	SOUND_PATH		"SoundPath"
 #define	MESH_PATH		"MeshPath"
+#define	QUEST_PATH		"QuestPath"
 
 
 // Sampler Key
@@ -116,8 +118,7 @@ using namespace FMOD;
 #define	CULLING_NONE	"CullNone"
 
 #define UI_LAYER 1000
-
-#define _QUEST_TOOL_
+//#define _QUEST_TOOL_
 
 template <typename T>
 void Safe_Release_VecList(T& p)

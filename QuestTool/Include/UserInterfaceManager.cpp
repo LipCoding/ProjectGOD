@@ -123,6 +123,21 @@ bool UserInterfaceManager::addQuest(const string & quest_subject, const string &
 	return true;
 }
 
+bool UserInterfaceManager::removeQuest(const string & quest_subject)
+{
+	auto finder = remove_if(quests.begin(), quests.end(),
+		[quest_subject](Quest* quest)
+		{
+			return quest->getQuestSubject() == quest_subject;
+		}
+	);
+
+	if (quests.end() != finder)
+		quests.erase(quests.end(), finder);
+
+	return true;
+}
+
 Quest* UserInterfaceManager::findQuest(const string & quest_subject)
 {
 	auto finder = find_if(quests.begin(), quests.end(), 
