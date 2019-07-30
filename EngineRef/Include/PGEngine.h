@@ -118,6 +118,7 @@ using namespace FMOD;
 #define	CULLING_NONE	"CullNone"
 
 #define UI_LAYER 1000
+
 //#define _QUEST_TOOL_
 
 template <typename T>
