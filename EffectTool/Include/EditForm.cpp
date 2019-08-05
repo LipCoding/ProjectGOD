@@ -616,7 +616,16 @@ void CEditForm::OnBnClickedButtonEffectSave()
 		for (int j = 0; j < iAssistCount; ++j)
 		{
 			//type
+			/*if ((int)(*pVecAssist)[j]->GetType() >= 2)
+			{
+				if ((int)(*pVecAssist)[j]->GetType() == CEffectAssist::ASSIST_POS)
+					mainFile << 6 << endl;
+				else
+					mainFile << (int)(*pVecAssist)[j]->GetType() - 1 << endl;
+			}	
+			else*/
 			mainFile << (int)(*pVecAssist)[j]->GetType() << endl;
+
 			//easetype
 			mainFile << (int)(*pVecAssist)[j]->GetEaseType() << endl;
 			//start
@@ -767,16 +776,6 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 
 		pData->pEffect->SetEffectTexture(texName, texFilePath);
 
-		// Collider
-		if (!pData->pEffect->CreateEffectCollider())
-		{
-			AfxMessageBox(L"Collider Create Fail!");
-			FreeEffectData(pData);
-			SAFE_RELEASE(pLayer);
-			SAFE_RELEASE(pScene);
-			return;
-		}
-
 		// scale, rot , (pos는 더해줘야 할듯)
 		Vector3 worldPos, worldScale, worldRot;
 
@@ -793,6 +792,16 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 		pData->pTr->SetWorldPos(50.f / 2.f + worldPos.x, 0.f + worldPos.y, 50.f / 2.f + worldPos.z);
 		pData->pTr->SetWorldScale(worldScale.x, worldScale.y, worldScale.z);
 		pData->pTr->SetWorldRot(worldRot.x, worldRot.y, worldRot.z);
+
+		// Collider
+		if (!pData->pEffect->CreateEffectCollider())
+		{
+			AfxMessageBox(L"Collider Create Fail!");
+			FreeEffectData(pData);
+			SAFE_RELEASE(pLayer);
+			SAFE_RELEASE(pScene);
+			return;
+		}
 
 		// Effect 정보
 		float fMainStartTime, fMainEndTime = 0.f;
@@ -886,6 +895,9 @@ void CEditForm::OnBnClickedButtonEffectLoad()
 				break;
 			case CEffectAssist::ASSIST_UV_MOVE:
 				pData->pEffect->AddUVMovement(fStart, fEnd, fAniX, fAniY);
+				break;
+			case CEffectAssist::ASSIST_POS:
+				pData->pEffect->AddPatternPosition(eEaseType, fStart, fEnd, fPowX, fPowY, fPowZ, 1);
 				break;
 			default:
 				break;

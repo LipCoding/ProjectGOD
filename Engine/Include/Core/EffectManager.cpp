@@ -191,6 +191,9 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 			case CEffectAssist::ASSIST_ROT:
 				pData->pEffect->AddPatternRotation(eEaseType, fStart, fEnd, fPowX, fPowY, fPowZ, 1);
 				break;
+			case CEffectAssist::ASSIST_POS:
+				pData->pEffect->AddPatternPosition(eEaseType, fStart, fEnd, fPowX, fPowY, fPowZ, 1);
+				break;
 			case CEffectAssist::ASSIST_FADE_IN:
 				pData->pEffect->AddFadeIn(fStart, fEnd, fDegree);
 				break;

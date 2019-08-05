@@ -65,7 +65,6 @@ PS_OUTPUT StandardColorNormalPS(VS_OUTPUT_COLOR_NORMAL input)
 	//output.vColor = input.vColor * (tLight.vDif + tLight.vAmb) + tLight.vSpc;
 	output.vColor = input.vColor + g_vColor;
 	output.vColor = float4(1.f, 0.f, 0.f, 1.f);
-
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.xyz = (float3)(input.vProjPos.z / input.vProjPos.w);
@@ -282,11 +281,11 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	}
 	output.vColor3 = vMtrlSpc;
 
-	/*_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
+	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
 		input.vUV);
 
-	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz * 1.5f + tLight.vAmb.xyz * 1.5f) + tLight.vSpc.xyz / 2.f;
-	output.vColor.w = output.vColor.w;*/
+	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
+	output.vColor.w = output.vColor.w;
 
 	return output;
 }

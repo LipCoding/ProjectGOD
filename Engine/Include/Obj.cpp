@@ -2,10 +2,11 @@
 
 PG_USING
 
-CObj::CObj()	:
+CObj::CObj() :
 	m_iRefCount(1),
 	m_bEnable(true),
-	m_bAlive(true)
+	m_bAlive(true),
+	m_bRenderEnable(true)
 {
 }
 
@@ -38,6 +39,11 @@ bool CObj::GetAlive() const
 	return m_bAlive;
 }
 
+bool CObj::GetRenderEnable() const
+{
+	return m_bRenderEnable;
+}
+
 void CObj::SetTag(const string & strTag)
 {
 	m_strTag = strTag;
@@ -51,6 +57,11 @@ void CObj::SetTypeName(const string & strTypeName)
 void CObj::Enable(bool bEnable)
 {
 	m_bEnable = bEnable;
+}
+
+void CObj::SetRenderEnable(bool bRenderEnable)
+{
+	m_bRenderEnable = bRenderEnable;
 }
 
 void CObj::Die()

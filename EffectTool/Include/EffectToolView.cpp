@@ -245,22 +245,37 @@ void CEffectToolView::UpdateInput(const float & fTime)
 	{
 	}
 
-	if (KEYPUSH("MouseRButton"))
+	if (KEYPUSH("LShift"))
 	{
-		PickingProcess();
-
-		if (m_pCollideObject)
+		if (KEYPUSH("MouseRButton"))
 		{
-			CTransform *pTr = m_pCollideObject->GetTransform();
-			
-			Vector3 vWorldPos = pTr->GetWorldPos();
-			
-			vWorldPos.x = m_vPickPos.x;
-			vWorldPos.z = m_vPickPos.z;
+			PickingProcess();
 
-			pTr->SetWorldPos(vWorldPos);
+			if (m_pCollideObject)
+			{
+				CTransform *pTr = m_pCollideObject->GetTransform();
 
-			SAFE_RELEASE(pTr);
+				Vector3 vWorldPos = pTr->GetWorldPos();
+
+				vWorldPos.x = m_vPickPos.x;
+				vWorldPos.z = m_vPickPos.z;
+
+				pTr->SetWorldPos(vWorldPos);
+
+				CEffect *pEffect = m_pCollideObject->FindComponentFromTag<CEffect>("Effect");
+
+				if (pEffect)
+				{
+					CEffectAssist* pAssist = pEffect->GetAssistFromType(CEffectAssist::ASSIST_POS);
+					if (pAssist)
+					{
+						pAssist->FirstStatusSet(m_pCollideObject);
+					}
+					SAFE_RELEASE(pEffect);
+				}
+
+				SAFE_RELEASE(pTr);
+			}
 		}
 	}
 

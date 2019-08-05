@@ -180,6 +180,12 @@ void CLayer::Render(float fTime)
 			continue;
 		}
 
+		else if (!(*iter)->GetRenderEnable())
+		{
+			++iter;
+			continue;
+		}
+
 		GET_SINGLE(CRenderManager)->AddRenderObject(*iter);
 		//(*iter)->Render(fTime);
 		++iter;

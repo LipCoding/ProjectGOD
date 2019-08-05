@@ -74,6 +74,10 @@ public:
 						 const float& start, const float& end,
 						 const float& powX, const float& powY, const float& powZ,
 						 const int& repeat);
+	void AddPatternPosition(const int& easeType,
+							const float& start, const float& end,
+							const float& powX, const float& powY, const float& powZ,
+							const int& repeat);
 
 	/* Fade In Out */
 	void AddFadeIn(const float& start, const float& end, const float& degree);

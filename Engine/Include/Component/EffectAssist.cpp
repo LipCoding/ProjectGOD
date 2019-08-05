@@ -21,7 +21,6 @@ void CEffectAssist::Init(CGameObject *object, ASSIST_TYPE AssistType, EASE_TYPE 
 	m_EaseType = easeType;
 
 	FirstStatusSet(object);
-
 	//CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
 	//pRenderer->CreateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL);
 	//SAFE_RELEASE(pRenderer);
@@ -45,6 +44,26 @@ void CEffectAssist::Update(CGameObject * object, const float& deltaTime)
 
 void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & deltaTime)
 {
+	// 페이드 인 시작하기 전에는 보이면 안되므로 렌더 비활성화
+	if (m_AssistType == ASSIST_FADE_IN)
+	{
+		if (m_Time < m_StartTime)
+		{
+			object->SetRenderEnable(false);
+		}
+		else
+		{
+			object->SetRenderEnable(true);
+		}
+	}
+
+	// 페이드 아웃 알파값이 1.f이상이면 바로 렌더 비활성화
+	else if (m_AssistType == ASSIST_FADE_OUT &&
+		m_FadeEndCheck)
+	{
+		object->SetRenderEnable(false);
+	}
+
 	if (m_Time >= m_StartTime)
 	{
 		switch (m_AssistType)
@@ -73,10 +92,14 @@ void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & delta
 		}
 		case ASSIST_FADE_IN:
 		{
+			object->SetRenderEnable(true);
 			float fAlpha = Calc_Ease(m_EaseType, m_StartFadeIn, m_Degree, m_LifeTime);
 
 			if (fAlpha > 1.f)
+			{
+				m_FadeEndCheck = true;
 				fAlpha = 1.f;
+			}
 
 			m_pShareBuffer->fAlphaFadeOut = 1.f;
 			m_pShareBuffer->fAlphaFadeIn = fAlpha;
@@ -93,7 +116,10 @@ void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & delta
 			float fAlpha = Calc_Ease(m_EaseType, m_StartFadeOut, m_Degree, m_LifeTime);
 
 			if (fAlpha > 1.f)
+			{
+				m_FadeEndCheck = true;
 				fAlpha = 1.f;
+			}
 
 			m_pShareBuffer->fAlphaFadeIn = 0.f;
 			m_pShareBuffer->fAlphaFadeOut = fAlpha;
@@ -125,6 +151,17 @@ void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & delta
 
 			break;
 		}
+		case ASSIST_POS:
+		{
+			CTransform *pTr = object->GetTransform();
+			Vector3 vPos;
+			vPos.x = Calc_Ease(m_EaseType, m_StartX, m_PowerX, m_LifeTime);
+			vPos.y = Calc_Ease(m_EaseType, m_StartY, m_PowerY, m_LifeTime);
+			vPos.z = Calc_Ease(m_EaseType, m_StartZ, m_PowerZ, m_LifeTime);
+			pTr->SetWorldPos(vPos);
+			SAFE_RELEASE(pTr);
+			break;
+		}
 		default:
 			break;
 		}
@@ -132,6 +169,12 @@ void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & delta
 
 	if (m_Time >= m_EndTime)
 	{
+		if (m_StartFromMain &&
+			(m_AssistType == ASSIST_SCALE ||
+			m_AssistType == ASSIST_ROT ||
+			m_AssistType == ASSIST_POS) )
+			return;
+
 		ReturnToFirstSet(object);
 
 		if (m_pShareBuffer)
@@ -146,6 +189,12 @@ void CEffectAssist::UpdateForTimeLimit(CGameObject * object, const float & delta
 			CRenderer* pRenderer = object->FindComponentFromType<CRenderer>(CT_RENDERER);
 			pRenderer->UpdateCBuffer("Share", 8, sizeof(SHARECBUFFER), SCT_PIXEL, m_pShareBuffer);
 			SAFE_RELEASE(pRenderer);
+		}
+
+		// 페이드 아웃 끝나면 바로 렌더 비활성화
+		if (m_AssistType == ASSIST_FADE_OUT)
+		{
+			object->SetRenderEnable(false);
 		}
 
 		m_StartCheck = false;
@@ -235,6 +284,17 @@ void CEffectAssist::UpdateForInfinite(CGameObject * object, const float & deltaT
 
 		break;
 	}
+	case ASSIST_POS:
+	{
+		CTransform *pTr = object->GetTransform();
+		Vector3 vPos;
+		vPos.x = Calc_Ease(m_EaseType, m_StartX, m_PowerX, m_LifeTime);
+		vPos.y = Calc_Ease(m_EaseType, m_StartY, m_PowerY, m_LifeTime);
+		vPos.z = Calc_Ease(m_EaseType, m_StartZ, m_PowerZ, m_LifeTime);
+		pTr->SetWorldPos(vPos);
+		SAFE_RELEASE(pTr);
+		break;
+	}
 	default:
 		break;
 	}
@@ -283,6 +343,16 @@ void CEffectAssist::FirstStatusSet(CGameObject *object)
 	{
 		break;
 	}
+	case ASSIST_POS:
+	{
+		CTransform *pTr = object->GetTransform();
+		Vector3 vPos = pTr->GetWorldPos();
+		m_StartX = vPos.x;
+		m_StartY = vPos.y;
+		m_StartZ = vPos.z;
+		SAFE_RELEASE(pTr);
+		break;
+	}
 	default:
 		break;
 	}
@@ -323,10 +393,12 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	}
 	case ASSIST_FADE_IN:
 	{
+		m_FadeEndCheck = false;
 		break;
 	}
 	case ASSIST_FADE_OUT:
 	{
+		m_FadeEndCheck = false;
 		break;
 	}
 	case ASSIST_UV_ANI:
@@ -359,6 +431,16 @@ void CEffectAssist::ReturnToFirstSet(CGameObject * object)
 	}
 	case ASSIST_UV_MOVE:
 	{
+		break;
+	}
+	case ASSIST_POS:
+	{
+		CTransform *pTr = object->GetTransform();
+
+		if (pTr->GetWorldPos() != Vector3(m_StartX, m_StartY, m_StartZ))
+			pTr->SetWorldPos(m_StartX, m_StartY, m_StartZ);
+
+		SAFE_RELEASE(pTr);
 		break;
 	}
 	default:
