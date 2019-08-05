@@ -19,6 +19,9 @@
     <Filter Include="02. Core\UserInterfaceManager\Quest">
       <UniqueIdentifier>{bdb51a86-f345-418e-b1bc-338064b09ade}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. Core\ResourcesManager">
+      <UniqueIdentifier>{e2ab0f3e-9606-4ee6-a703-f4ac55ae505f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h">
@@ -39,6 +42,9 @@
     <ClInclude Include="Quest.h">
       <Filter>02. Core\UserInterfaceManager\Quest</Filter>
     </ClInclude>
+    <ClInclude Include="QuestResourcesManager.h">
+      <Filter>02. Core\ResourcesManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="qeust_tool_main.cpp">
@@ -55,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="Quest.cpp">
       <Filter>02. Core\UserInterfaceManager\Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestResourcesManager.cpp">
+      <Filter>02. Core\ResourcesManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

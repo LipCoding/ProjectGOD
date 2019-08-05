@@ -30,6 +30,7 @@ public:
 	bool initialize();
 	bool addQuest(const string& quest_subject, const string& quest_summary, const string& quest_contents, int minimum_level, int maximum_level,
 		int reward_experience, int reward_gold, const vector<string>& reward_items);
+	bool removeQuest(const string& quest_subject);
 	Quest* findQuest(const string& quest_subject);
 
 public:

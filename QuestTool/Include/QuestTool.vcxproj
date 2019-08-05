@@ -154,6 +154,7 @@
     <ClInclude Include="..\resource.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Quest.h" />
+    <ClInclude Include="QuestResourcesManager.h" />
     <ClInclude Include="QuestScene.h" />
     <ClInclude Include="QuestToolCore.h" />
     <ClInclude Include="UserInterfaceManager.h" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="qeust_tool_main.cpp" />
     <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuestResourcesManager.cpp" />
     <ClCompile Include="QuestScene.cpp" />
     <ClCompile Include="QuestToolCore.cpp" />
     <ClCompile Include="UserInterfaceManager.cpp" />

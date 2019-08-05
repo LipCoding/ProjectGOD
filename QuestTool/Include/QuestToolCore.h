@@ -80,7 +80,7 @@ public:
 	int getEditRewardExperience() { return  edit_reward_experience; }
 	int getEditRewardGold() { return edit_reward_gold; }
 	CGameObject* getQuestUIObject() { return quest_ui_object; }
-	const vector<string>& getRewardItems() { return listbox_reward_items; }
+	vector<string>& getRewardItems() { return listbox_reward_items; }
 
 	void setEditQuestSubject(const string& edit_quest_subject) { this->edit_quest_subject = edit_quest_subject; }
 	void setEditQuestSummary(const string& edit_quest_summary) { this->edit_quest_summary = edit_quest_summary; }
