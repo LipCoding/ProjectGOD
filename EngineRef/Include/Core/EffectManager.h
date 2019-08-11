@@ -30,7 +30,7 @@ public:
 	void ClearAll();
 	
 	// ½ÇÇà
-	void OperateEffect(const string& effectTag, CGameObject *pOperator, Vector3 vPos);
+	void OperateEffect(const string& effectTag, CGameObject *pOperator, Vector3 vPos, bool followCheck = false);
 
 private:
 	void FreeEffectData(EFFECTDATA* effect);

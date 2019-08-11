@@ -40,8 +40,10 @@ public:
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
 	void SetInfiniteMainCheck(bool check) { m_InfiniteCheck = check; }
-
 	void SetEffectName(const string& name) { EffectName = name; }
+
+	void SetOperatorObject(CGameObject* pOperatorObject) { m_pOperatorObject = pOperatorObject; }
+	void SetFollowOperatorCheck(bool check);
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -128,6 +130,10 @@ private:
 	class CRenderer *m_pRenderer = nullptr;
 
 	SHARECBUFFER     m_tshareBuffer = {};
+
+	/* Target Object */
+	CGameObject *m_pOperatorObject = nullptr;
+	bool	m_FollowOperator = false;
 };
 
 PG_END

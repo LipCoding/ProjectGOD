@@ -1371,7 +1371,7 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z >= vDestPos.z;
+	return vSrcPos.z > vDestPos.z;
 }
 
 bool CRenderManager::SortUI(CGameObject * pSrc, CGameObject * pDest)

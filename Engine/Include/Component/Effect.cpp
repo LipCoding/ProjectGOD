@@ -201,6 +201,22 @@ void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
 	}
 }
 
+void CEffect::SetFollowOperatorCheck(bool check)
+{
+	m_FollowOperator = check;
+
+	if (m_FollowOperator == false && m_pOperatorObject)
+	{
+		CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
+		CTransform *pEffectTr = m_pGameObject->GetTransform();
+
+		pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+
+		SAFE_RELEASE(pEffectTr);
+		SAFE_RELEASE(pOperatorTr);
+	}
+}
+
 bool CEffect::Init()
 {
 	m_pRenderer = m_pGameObject->AddComponent<CRenderer>("Renderer");
@@ -252,6 +268,18 @@ int CEffect::Update(float fTime)
 	else
 	{
 		m_Timer += fTime;
+
+		// 이펙트가 시전자를 따라간다.
+		if (m_pOperatorObject && m_FollowOperator)
+		{
+			CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
+			CTransform *pEffectTr = m_pGameObject->GetTransform();
+
+			pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+
+			SAFE_RELEASE(pEffectTr);
+			SAFE_RELEASE(pOperatorTr);
+		}
 
 		if (m_InfiniteCheck == false)
 		{

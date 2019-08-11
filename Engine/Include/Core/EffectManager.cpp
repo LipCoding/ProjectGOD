@@ -285,7 +285,7 @@ void CEffectManager::ClearAll()
 	m_mapEffects.clear();
 }
 
-void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos)
+void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos, bool followCheck)
 {
 	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
 
@@ -306,17 +306,23 @@ void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOper
 		}
 
 		CTransform *pEffectTr = pEffectObj->GetTransform();
-		//CTransform *pOperatorTr = pOperator->GetTransform();
-
 		Vector3 vOriginPos = pEffectTr->GetWorldPos();
-
-		pEffectTr->SetWorldPos(vPos + vOriginPos);
 		
-		SAFE_RELEASE(pEffectTr);
-
 		CEffect *pEffect = pEffectObj->FindComponentFromType<CEffect>(CT_EFFECT);
 		pEffect->SetErase(true);
 		pEffect->SetOperationCheck(true);
+
+		// Operator가 있으면 그 Oprator의 Look방향을 바라보면서 이펙트가 생성된다.
+		if(pOperator)
+		{
+			pEffect->SetOperatorObject(pOperator);
+			pEffect->SetFollowOperatorCheck(followCheck);
+		}
+		else
+		{
+			pEffectTr->SetWorldPos(vPos + vOriginPos);
+		}
+		SAFE_RELEASE(pEffectTr);
 
 		SAFE_RELEASE(pEffect);
 	}
