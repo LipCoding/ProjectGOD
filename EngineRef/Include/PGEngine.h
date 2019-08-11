@@ -161,6 +161,7 @@ void Safe_Delete_VecList(T& p)
 	{
 		SAFE_DELETE((*iter));
 		++iter;
+
 	}
 
 	p.clear();

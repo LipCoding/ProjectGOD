@@ -36,7 +36,9 @@
 #define QUEST_LIST					1010
 #define ADD_QUEST					1011
 #define REMOVE_QUEST				1012
-
+#define ITEM_RENDER_OFFEST_SCROLL	1013
+#define QUEST_CONTENTS_SCROLL		1014
+#define QUEST_TYPE					1015
 #define SAVE_QUEST					1100
 #define LOAD_QUEST					1101
 

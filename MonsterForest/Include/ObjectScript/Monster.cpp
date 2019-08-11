@@ -74,7 +74,7 @@ void Monster::move(float x, float y, float z, bool isBackMove)
 void Monster::changeAnimation(const string& clip_name)
 {
 	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
-	pAnimation->ChangeClip("Idle3");
+	pAnimation->ChangeClip(clip_name);
 	SAFE_RELEASE(pAnimation);
 }
 

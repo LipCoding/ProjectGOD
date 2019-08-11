@@ -9,7 +9,8 @@ class PG_DLL CFont :
 {
 private:
 	friend class CGameObject;
-
+	size_t offset{0};
+	size_t max_offset{0};
 private:
 	CFont();
 	CFont(const CFont& text);
@@ -27,7 +28,12 @@ public:
 	void SetBrush(const string& strBrush);
 	void SetText(const wstring& strText);
 	void AddText(const wstring& strText);
-
+	void addOffset();
+	void subOffset();
+	void setOffset(size_t offset) { this->offset = offset; }
+	void setMaxOffset(size_t max_offset) { this->max_offset = max_offset; }
+	size_t getMaxOffset() { return max_offset; }
+	size_t getOffset() { return offset; }
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

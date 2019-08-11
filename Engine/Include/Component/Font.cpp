@@ -76,22 +76,33 @@ void CFont::Collision(float fTime)
 
 void CFont::Render(float fTime)
 {
-	RECTINFO tArea;
+	D2D_RECT_F tArea;
 
-	tArea.l = m_tArea.l + m_pTransform->GetWorldPos().x;
-	tArea.r = m_tArea.r + m_pTransform->GetWorldPos().x;
-	tArea.t = m_tArea.t + m_pTransform->GetWorldPos().y;
-	tArea.b = m_tArea.b + m_pTransform->GetWorldPos().y;
+	tArea.left = m_tArea.l + m_pTransform->GetWorldPos().x;
+	tArea.right = m_tArea.r + m_pTransform->GetWorldPos().x;
+	tArea.top = m_tArea.t + m_pTransform->GetWorldPos().y + (offset*50);
+	tArea.bottom = m_tArea.b + m_pTransform->GetWorldPos().y + (offset*50);
 
 	GET_SINGLE(CDevice)->Get2DRenderTarget()->BeginDraw();
-
+	int length = m_strText.length();
 	GET_SINGLE(CDevice)->Get2DRenderTarget()->DrawTextW(m_strText.c_str(), m_strText.length(),
-		m_pFont, D2D1::RectF(tArea.l, tArea.t, tArea.r, tArea.b), m_pBrush);
-
+		m_pFont, tArea, m_pBrush);
 	GET_SINGLE(CDevice)->Get2DRenderTarget()->EndDraw();
 }
 
 CFont * CFont::Clone()
 {
 	return new CFont(*this);
+}
+
+void CFont::addOffset()
+{
+	if (offset < max_offset)
+		this->offset++;
+}
+
+void CFont::subOffset()
+{
+	if (offset > 0)
+		this->offset--;
 }

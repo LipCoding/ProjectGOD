@@ -156,14 +156,18 @@ bool CMainScene::Init()
 	}
 #pragma endregion
 	MFObjectManager::getInstance()->initialize();
-	m_pScene->LoadSky(L"Skybox_2");
+	
 
 	NetworkManager::getInstance()->connectMainServer();
 	NetworkManager::getInstance()->inputTime = high_resolution_clock::now();
 
 #pragma region sound
 	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
-	//GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack3", false, "SwordAttack3.wav");
+	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
@@ -625,7 +629,6 @@ void CMainScene::Input(float fTime)
 
 int CMainScene::Update(float fTime)
 {
-
 	#pragma region Chatting
 		{
 			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();

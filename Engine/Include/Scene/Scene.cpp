@@ -363,102 +363,11 @@ bool CScene::Init()
 	//pGlobalLight->SetLightColor()
 
 	CTransform*	pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 	pLightTr->SetWorldPos(512.f / 2.f, 950.f, 512.f / 2.f);
-	//pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
 
 	SAFE_RELEASE(pLightTr);
 
 	SAFE_RELEASE(pGlobalLight);
-
-	//pGlobalLight = CreateLight("Light1", LT_POINT);
-
-	//pGlobalLight->SetLightRange(10.f);
-	//pGlobalLight->SetLightColor(Vector4::Red, Vector4::Red,
-	//	Vector4::Red);
-
-	//pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, 4.f, 0.f);
-	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	//SAFE_RELEASE(pLightTr);
-
-	//SAFE_RELEASE(pGlobalLight);
-
-	//pGlobalLight = CreateLight("Light2", LT_POINT);
-
-	//pGlobalLight->SetLightRange(10.f);
-	//pGlobalLight->SetLightColor(Vector4::Blue, Vector4::Blue,
-	//	Vector4::Blue);
-
-	//pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, 4.f, 10.f);
-	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	//SAFE_RELEASE(pLightTr);
-
-	//SAFE_RELEASE(pGlobalLight);
-
-	//pGlobalLight = CreateLight("Light3", LT_POINT);
-
-	//pGlobalLight->SetLightRange(10.f);
-	//pGlobalLight->SetLightColor(Vector4::Green, Vector4::Green,
-	//	Vector4::Green);
-
-	//pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, 4.f, 20.f);
-	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	//SAFE_RELEASE(pLightTr);
-
-	//SAFE_RELEASE(pGlobalLight);
-
-	//pGlobalLight = CreateLight("Light4", LT_POINT);
-
-	//pGlobalLight->SetLightRange(10.f);
-	//pGlobalLight->SetLightColor(Vector4::Yellow, Vector4::Yellow,
-	//	Vector4::Yellow);
-
-	//pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, 4.f, 30.f);
-	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	//SAFE_RELEASE(pLightTr);
-
-	//SAFE_RELEASE(pGlobalLight);
-
-	//pGlobalLight = CreateLight("Light5", LT_POINT);
-
-	//pGlobalLight->SetLightRange(10.f);
-	//pGlobalLight->SetLightColor(Vector4::Magenta, Vector4::Magenta,
-	//	Vector4::Magenta);
-
-	//pLightTr = pGlobalLight->GetTransform();
-
-	//pLightTr->SetWorldPos(0.f, 4.f, 40.f);
-	////pLightTr->SetWorldRot(PG_PI / 4.f, PG_PI / 2.f, 0.f);
-
-	//SAFE_RELEASE(pLightTr);
-
-	//SAFE_RELEASE(pGlobalLight);
-
-	////CLight*	pGlobalLight = CreateLight("GlobalLight", LT_SPOT);
-
-	//////pGlobalLight->SetLightRange(5.f);
-
-	////CTransform*	pLightTr = pGlobalLight->GetTransform();
-
-	////pLightTr->SetWorldPos(0.f, -1.f, 0.f);
-	////pLightTr->SetWorldRot(PG_PI / 2.f, 0.f, 0.f);
-
-	////SAFE_RELEASE(pLightTr);
-
-	////SAFE_RELEASE(pGlobalLight);
 
 	// 스카이박스
 	m_pSkyObject = CGameObject::CreateObject("Sky");
@@ -849,6 +758,34 @@ void CScene::LoadSky(const wstring & strFileName)
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pSky);
+	}
+	else {
+		m_pSkyObject = CGameObject::CreateObject("Sky");
+
+		m_pSkyObject->SetScene(this);
+
+		CTransform*	pSkyTr = m_pSkyObject->GetTransform();
+
+		pSkyTr->SetWorldScale(50000.f, 50000.f, 50000.f);
+
+		SAFE_RELEASE(pSkyTr);
+
+		CRenderer*	pRenderer = m_pSkyObject->AddComponent<CRenderer>("SkyRenderer");
+
+		pRenderer->SetMesh("Sphere");
+		pRenderer->SetShader(SKY_SHADER);
+		pRenderer->SetInputLayout("VertexPos");
+
+		CMaterial*	pMaterial = pRenderer->CreateMaterial();
+		wstring FileName = strFileName + L".dds";
+		pMaterial->SetDiffuseTexInfo(SAMPLER_LINEAR, "Sky", 0, 0, (L"Skybox\\" + FileName).c_str());
+
+		SAFE_RELEASE(pMaterial);
+
+		pRenderer->SetRenderState(CULLING_NONE);
+		pRenderer->SetRenderState(DEPTH_LESS_EQUAL);
+
+		SAFE_RELEASE(pRenderer);
 	}
 }
 

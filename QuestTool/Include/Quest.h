@@ -24,6 +24,7 @@ public:
 	const string& getQuestSubject() { return quest_subject; }
 	const string& getQuestSummary() { return quest_summary; }
 	const string& getQuestContents() { return quest_contents; }
+	const vector<string>& getRewardItems() { return this->reward_items; }
 
 	int getMinimumLevel() { return minimum_level; }
 	int getMaximumLevel() { return maximum_level; }

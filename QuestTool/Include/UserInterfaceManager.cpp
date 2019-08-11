@@ -4,7 +4,6 @@
 #include <ShlObj.h>
 #include <Shlwapi.h>
 #include "Scene/Layer.h"
-#include "GameObject/GameObject.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
 #include "Component/Renderer2D.h"
@@ -13,6 +12,7 @@
 #include "Component/Material.h"
 #include "Component/Transform.h"
 #include "Component/UIPanel.h"
+#include "Component/UIButton.h"
 //#include "Core/TimerManager.h"
 //#include "Core\Timer.h"
 //#include "Core/Input.h"
@@ -30,11 +30,14 @@ UserInterfaceManager::~UserInterfaceManager()
 
 bool UserInterfaceManager::initialize()
 {
+	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	{
+		pScene->CreateLayer("UI+1", UI_LAYER + 1);
+	}
 #pragma region Contents
 	{
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI");
-
+		
 		CGameObject* ui_quest_object = CGameObject::CreateObject("DropTableUI", pLayer);
 		ui_quest_object->AddComponent<CUIPanel>("Quest");
 
@@ -44,17 +47,16 @@ bool UserInterfaceManager::initialize()
 		pMaterial->SetDiffuseTexInfo("Linear", "UI_DropTable",
 			0, 0, L"UserInterface/UI_BASIC_BOX_BIG.png");
 		CFont* contents_text_subject = ui_quest_object->AddComponent<CFont>("quest_ui_text_subject");
-		contents_text_subject->SetFont("¸¼Àº°íµñ35");
-		contents_text_subject->SetArea(50, 0, 750, 100.f);
-
+		contents_text_subject->SetFont("¸¼Àº°íµñ35N");
+		contents_text_subject->SetArea(50, 50, 750, 100.f);
 
 		CFont* contents_text_summary = ui_quest_object->AddComponent<CFont>("quest_ui_text_summary");
-		contents_text_summary->SetFont("¸¼Àº°íµñ35");
-		contents_text_summary->SetArea(50, 0, 750, 200.f);
+		contents_text_summary->SetFont("¸¼Àº°íµñ35N");
+		contents_text_summary->SetArea(50, 150, 750, 300.f);
 
 		CFont* contents_text_contents = ui_quest_object->AddComponent<CFont>("quest_ui_text_contents");
-		contents_text_contents->SetFont("¸¼Àº°íµñ35");
-		contents_text_contents->SetArea(50, 0, 750, 600.f);
+		contents_text_contents->SetFont("¸¼Àº°íµñN");
+		contents_text_contents->SetArea(50, 350, 680, 400.f);
 
 		CTransform* pDropTableTr = ui_quest_object->GetTransform();
 		pDropTableTr->SetWorldScale(800.f, 800.f, 1.f);
@@ -64,50 +66,82 @@ bool UserInterfaceManager::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
-		SAFE_RELEASE(pScene);
+
 
 		QuestToolCore::getInstance()->setQuestUIObject(ui_quest_object);
 	}
-#pragma endregion
+	{
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
 
+		scroll_object = CGameObject::CreateObject("QuestScroll", pLayer);
+		scroll_object->AddComponent<CUIButton>("ContentsScroll");
 
-	//char* pszFolderPath = new char[_MAX_PATH];
-	//LPITEMIDLIST pidl;
-	//BROWSEINFO bi;
+		CRenderer2D* pRenderer = scroll_object->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+		
+		CTransform* pDropTableTr = scroll_object->GetTransform();
+		pDropTableTr->SetWorldScale(50.f, 400.f, 1.f);
+		pDropTableTr->SetWorldPos(900.f, 450.f, 1.f);
 
-	//bi.hwndOwner = GET_SINGLE(CCore)->GetWindowHandle();
-	//bi.pidlRoot = NULL;
-	//bi.pszDisplayName = NULL;
-	//bi.lpszTitle = L"Æú´õ¸¦ ¼±ÅÃÇØ ÁÖ¼¼¿ä";
-	//bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_EDITBOX | BIF_RETURNONLYFSDIRS;
-	//bi.lpfn = NULL;
-	//bi.lParam = 0;
+		pMaterial->SetDiffuseTexInfo("Linear", "scroll",
+			0, 0, L"UserInterface/UI_BASIC_SCROLLBAR.png");
+	}
 
-	//pidl = SHBrowseForFolder(&bi);
-	//if (pidl == NULL)
-	//	return false;
+	{
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
 
-	//SHGetPathFromIDListA(pidl, pszFolderPath);
-	////SetWindowTextA(folderNameEdit, (LPCSTR)pszFolderPath);
+		quest_gold_object = CGameObject::CreateObject("GoldIcon", pLayer);
+		quest_gold_object->AddComponent<CUIButton>("GoldIcon");
 
-	//vector<string> fileList;
-	//GetFindFileList(pszFolderPath, "*.*", &fileList, -1);
+		CRenderer2D* pRenderer = quest_gold_object->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
 
+		CTransform* pDropTableTr = quest_gold_object->GetTransform();
+		pDropTableTr->SetWorldScale(64.f, 64.f, 1.f);
+		pDropTableTr->SetWorldPos(300.f, 780.f, 1.f);
+
+		pMaterial->SetDiffuseTexInfo("Linear", "Gold",
+			0, 0, L"UserInterface/Gold.png");
+		
+		CFont* contents_text_summary = quest_gold_object->AddComponent<CFont>("GOLD");
+		contents_text_summary->SetFont("¸¼Àº°íµñ25N");
+		contents_text_summary->SetArea(100, 0, 250, 50.f);
+		contents_text_summary->SetText(L"X 0");
+
+	}
+
+	{
+		CLayer*	pLayer = pScene->GetLayer("UI+1");
+
+		quest_exp_object = CGameObject::CreateObject("Quest_EXP", pLayer);
+		quest_exp_object->AddComponent<CUIButton>("GoldIcon");
+
+		CTransform* pDropTableTr = quest_exp_object->GetTransform();
+		pDropTableTr->SetWorldScale(64.f, 64.f, 1.f);
+		pDropTableTr->SetWorldPos(550.f, 780.f, 1.f);
+
+		CFont* contents_text_summary = quest_exp_object->AddComponent<CFont>("EXP");
+		contents_text_summary->SetFont("¸¼Àº°íµñ25N");
+		contents_text_summary->SetArea(100, 0, 450, 50.f);
+		contents_text_summary->SetText(L"°æÇèÄ¡ 0");
+
+	}
+	/*
+						char reward_item_name[128];
+					int i = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCURSEL, 0, 0);
+					SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETTEXT, i, (LPARAM)reward_item_name);
+	*/
+	//char reward_item_name[256];
+	//int count = SendMessage(QuestToolCore::getInstance()->getListBoxRewardItemsHandle(), LB_GETCOUNT, 0, 0);
+	//vector<string> listbox_item_names;
+	//for (int i = 0; i < count; ++i)
 	//{
-	//	// ¸®¼Ò½º ¸Å´ÏÀú¿¡ µî·ÏÇÑ´Ù.
-	//	for (const auto& fileName : fileList)
-	//	{
-	//		string path = fileName;
-	//		char fileNameKey[128];
-	//		strcpy(fileNameKey, path.c_str());
-	//		fileNameKey[path.length()] = '\0';
-	//		PathStripPathA(fileNameKey);
-	//		//tileNameCont.push_back(move(string{ fileNameKey }));
-	//		//ResourcesManager::getInstance()->loadTexture(path, fileNameKey, 1, 1);
-
-	//	}
+	//	SendMessageA(QuestToolCore::getInstance()->getListBoxRewardItemsHandle(), LB_GETTEXT, i, (LPARAM)reward_item_name);
+	//	listbox_item_names.push_back(string{ reward_item_name });
 	//}
 
+#pragma endregion
+	SAFE_RELEASE(pScene);
 	return true;
 }
 
@@ -155,6 +189,7 @@ Quest* UserInterfaceManager::findQuest(const string & quest_subject)
 bool UserInterfaceManager::save(const string & save_file_name)
 {
 	ofstream save_file(save_file_name);
+	save_file << quests.size() << " ";
 	for (Quest* quest : quests)
 	{
 		quest->save(save_file);
@@ -164,12 +199,22 @@ bool UserInterfaceManager::save(const string & save_file_name)
 
 bool UserInterfaceManager::load(const string & load_file_name)
 {
-	ifstream load_file(load_file_name);
-	// »õ Äù½ºÆ® ÇÒ´ç.
-	Quest* load_quest;
+	quests.clear();
 
-	// ·ÎµåÇÑ Äù½ºÆ® Ãß°¡.
-	load_quest->load(load_file);
+	ifstream load_file(load_file_name);
+
+	int count;
+	load_file >> count;
+
+	for (int i = 0; i < count; ++i)
+	{
+		// »õ Äù½ºÆ® ÇÒ´ç.
+		Quest* load_quest = new Quest;
+
+		// ·ÎµåÇÑ Äù½ºÆ® Ãß°¡.
+		load_quest->load(load_file);
+		quests.push_back(load_quest);
+	}
 
 	return true;
 }

@@ -199,8 +199,19 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	CreateTextFormat("³ª´®°íµñ", L"³ª´®°íµñ Light", DWRITE_FONT_WEIGHT_NORMAL,
 		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko");
 
-	CreateTextFormat("¸¼Àº°íµñ", L"¸¼Àº °íµñ", DWRITE_FONT_WEIGHT_DEMI_BOLD,
-		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko");
+	CreateTextFormat("¸¼Àº°íµñN", L"¸¼Àº °íµñN", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko", DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT::DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+
+	CreateTextFormat("¸¼Àº°íµñ20N", L"¸¼Àº °íµñ20N", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 20.F, L"ko", DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT::DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+
+	CreateTextFormat("¸¼Àº°íµñ25N", L"¸¼Àº °íµñ25N", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 18.F, L"ko", DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT::DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+
+	CreateTextFormat("¸¼Àº°íµñ35N", L"¸¼Àº °íµñ35N", DWRITE_FONT_WEIGHT_DEMI_BOLD,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 35.F, L"ko", DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT::DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+
+
 
 	CreateTextFormat("¸¼Àº°íµñ35", L"¸¼Àº °íµñ", DWRITE_FONT_WEIGHT_DEMI_BOLD,
 		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, 30.F, L"ko");
@@ -264,7 +275,6 @@ bool CDevice::CreateTextFormat(const string & strKey, const wchar_t * pFontName,
 
 	//´Ü¶ô ¸ÂÃã
 	pFormat->SetParagraphAlignment((DWRITE_PARAGRAPH_ALIGNMENT)iVAlign);
-
 	m_mapText.insert(make_pair(strKey, pFormat));
 
 	return true;
@@ -311,7 +321,7 @@ void CDevice::RenderText(const string & strTextKey, const string & strBrushKey, 
 
 	IDWriteTextFormat* pFormat = FindTextFormat(strTextKey);
 	ID2D1SolidColorBrush* pBrush = FindTextBrush(strBrushKey);
-
+	
 	m_p2DTarget->DrawTextW(pText, lstrlen(pText), pFormat, D2D1::RectF(vStart.x, vStart.y, vEnd.x, vEnd.y), pBrush);
 
 	m_p2DTarget->EndDraw();

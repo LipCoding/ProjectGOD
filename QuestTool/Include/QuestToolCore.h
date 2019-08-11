@@ -48,7 +48,9 @@ private:
 public:
 	HWND button_quest_save_handle;
 	HWND button_quest_load_handle;
-
+	HWND scroll_item_render_offset_handle;
+	HWND scroll_quest_contents_offset_handle;
+	HWND combo_quest_type;
 public:
 	bool save(const string& save_file_name);
 	bool load(const string& load_file_name);

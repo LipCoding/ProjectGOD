@@ -403,6 +403,15 @@ void NetworkManager::processPacket(void * packet)
 			SAFE_RELEASE(pPlayerTr);
 			SAFE_RELEASE(pPlayerObject);
 		}
+		int sound_index = rand() % 4;
+		if (0 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
+		else if (1 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack1", SC_EFFECT);
+		else if (2 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack2", SC_EFFECT);
+		else if (2 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);
 
 	}
 	break;
@@ -478,6 +487,9 @@ void NetworkManager::processPacket(void * packet)
 
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
 		pActor->changeAnimation("Idle3");
+
+		if (pPacket->id < NPC_START)
+			pActor->changeAnimation("Idle1");
 	}
 	break;
 
@@ -489,10 +501,19 @@ void NetworkManager::processPacket(void * packet)
 		string appendTag = _itoa(id, str, 10);
 		string objectTag = "Player" + appendTag;
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+
 		if (pGameObject != nullptr)
 		{
-			Monster* monster_component = pGameObject->FindComponentFromTag<Monster>("Actor");
-			monster_component->setDieState(true);
+			if (id < NPC_START)
+			{
+				Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
+				pActor->changeAnimation("Die1");
+			}
+			else
+			{
+				Monster* monster_component = pGameObject->FindComponentFromTag<Monster>("Actor");
+				monster_component->setDieState(true);
+			}
 		}
 	}
 	break;

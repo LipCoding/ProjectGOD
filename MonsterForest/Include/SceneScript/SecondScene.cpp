@@ -520,7 +520,7 @@ bool SecondScene::Init()
 #pragma endregion
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
-
+		//pScene->LoadSky(L"Skybox_18");
 #pragma region Terrain
 		// Load Terrain
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
@@ -532,7 +532,7 @@ bool SecondScene::Init()
 		CGameObject::LoadEnvObjects(L"Main_Scene_2_DY", pLayer);
 #pragma region SkyAndLight
 		// SkyBox, Light
-		pScene->LoadSky(L"Skybox_18");
+
 		pScene->LoadGlobLight("Main_Scene_2_DY");
 		pScene->LoadPointLight("Main_Scene_2_DY_Lights");
 #pragma endregion
@@ -580,7 +580,7 @@ void SecondScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -607,7 +607,7 @@ void SecondScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -626,6 +626,7 @@ void SecondScene::Input(float fTime)
 					}
 				}
 			}
+
 			if (KEYDOWN("Skill3"))
 			{
 				char str[128];
@@ -633,7 +634,7 @@ void SecondScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -659,7 +660,7 @@ void SecondScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 
 				cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
 				pPacket->size = sizeof(cs_packet_attack_player);
@@ -884,7 +885,7 @@ void SecondScene::Input(float fTime)
 				string appendTag = _itoa(id, str, 10);
 				string objectTag = "Player" + appendTag;
 				CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTag<CPlayer>("Player");
+				CPlayer* pPlayerComponent = pGameObject->FindComponentFromTypeName<CPlayer>("Actor");
 				if (pPlayerComponent->clickedID != -1)
 				{
 					cs_packet_attack_player* pPacket = reinterpret_cast<cs_packet_attack_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -955,12 +956,16 @@ void SecondScene::Input(float fTime)
 			}
 		}
 	}
+	isInitComplete = true;
 }
 
 
 int SecondScene::Update(float fTime)
 {
-
+	if (this->isInitComplete)
+	{
+		m_pScene->LoadSky(L"Skybox_18");
+	}
 #pragma region Chatting
 	{
 		Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();

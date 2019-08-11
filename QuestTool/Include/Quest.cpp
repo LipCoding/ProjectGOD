@@ -21,6 +21,9 @@ bool Quest::initialize(const string & quest_subject, const string & quest_summar
 	this->reward_experience = reward_experience;
 	this->reward_gold = reward_gold;
 	copy(reward_items.begin(), reward_items.end(), back_inserter(this->reward_items));
+
+
+
 	return true;
 }
 
@@ -55,5 +58,14 @@ bool Quest::load(ifstream& load_file)
 	load_file >> maximum_level;
 	load_file >> reward_experience;
 	load_file >> reward_gold;
+
+	int count;
+	load_file >> count;
+	for (int i = 0; i < count; ++i)
+	{
+		string item_name;
+		load_file >> item_name;
+		reward_items.push_back(item_name);
+	}
 	return true;
 }

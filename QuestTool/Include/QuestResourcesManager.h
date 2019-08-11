@@ -3,13 +3,26 @@
 #include "global.h"
 
 PG_USING
-
+using TEXTURE = pair<string, CImage*>;
 class QuestResourcesManager :
-	Singleton<QuestResourcesManager>
+	public Singleton<QuestResourcesManager>
 {
-	vector<CImage> reward_items_icon;
+public:
+	vector<TEXTURE> reward_items_texture;
 public:
 	QuestResourcesManager();
+	QuestResourcesManager(const QuestResourcesManager&) = delete;
+	QuestResourcesManager(QuestResourcesManager&&) = delete;
+	void operator=(const QuestResourcesManager&) = delete;
+	void operator=(QuestResourcesManager&&) = delete;
 	~QuestResourcesManager();
+public:
+	bool initialize();
+
+public:
+	CImage* findTexture(const string& texture_key);
+
+
 };
+
 

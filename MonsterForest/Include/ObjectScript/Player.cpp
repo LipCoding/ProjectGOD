@@ -18,6 +18,8 @@
 #include "Component/AnimationClip.h"
 #include "Core/EffectManager.h"
 #include "../NetworkManager.h"
+#include "Core/SoundManager.h"
+
 CPlayer::CPlayer()
 {
 	SetTag("Player");
@@ -401,6 +403,8 @@ void CPlayer::attack(const string& target_tag)
 		return;
 	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 	target_actor_component->damaged(attackDamage);
+
+
 }
 void CPlayer::skill1_Attack(const string& target_tag)
 {
@@ -499,7 +503,7 @@ void CPlayer::move(float x, float y, float z, bool isBackMove)
 void CPlayer::changeAnimation(const string& clip_name)
 {
 	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
-	pAnimation->ChangeClip("Idle3");
+	pAnimation->ChangeClip(clip_name);
 	SAFE_RELEASE(pAnimation);
 }
 
