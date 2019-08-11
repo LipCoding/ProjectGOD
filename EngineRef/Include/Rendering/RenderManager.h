@@ -120,6 +120,7 @@ private:
 public:
 	static bool SortZ(class CGameObject* pSrc, class CGameObject* pDest);
 	static bool SortAlpha(class CGameObject* pSrc, class CGameObject* pDest);
+	static bool SortAlphaRenderEnable(class CGameObject* pSrc, class CGameObject* pDest);
 	static bool SortUI(class CGameObject* pSrc, class CGameObject* pDest);
 
 	DECLARE_SINGLE(CRenderManager)

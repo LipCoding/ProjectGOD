@@ -15,6 +15,7 @@ public:
 		ASSIST_FADE_OUT,
 		ASSIST_UV_ANI,
 		ASSIST_UV_MOVE,
+		ASSIST_POS,
 		ASSIST_END
 	};
 
@@ -87,6 +88,7 @@ public:
 	/* Setter */
 	void SetSpriteType(SPRITE_TYPE type) { m_SpriteType = type; }
 	void SetStartCheck(bool check) { m_StartCheck = check; }
+	void SetStartFromMain(bool check) { m_StartFromMain = check; }
 
 	void SetStartTime(const float& start) { m_StartTime = start; }
 	void SetEndTime(const float& end) { m_EndTime = end; }
@@ -135,6 +137,7 @@ private:
 
 	/* Life Time */
 	bool  m_StartCheck = false;
+	bool  m_StartFromMain = false;
 	float m_LifeTime = 0.f;
 
 	/* Infinite */
@@ -154,6 +157,7 @@ private:
 	float m_StartFadeOut = 0.f;
 
 	float m_Degree = 0.f;
+	bool m_FadeEndCheck = false;
 
 	/* For UV */
 	class CAnimation2D *m_pAnimation = nullptr;

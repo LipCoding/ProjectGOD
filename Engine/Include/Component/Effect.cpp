@@ -81,6 +81,14 @@ CEffect::CEffect(const CEffect & effect) :
 				assist->GetRepeat());
 			break;
 		}
+		case CEffectAssist::ASSIST_POS:
+		{
+			AddPatternPosition(assist->GetEaseType(),
+				assist->GetStartTime(), assist->GetEndTime(),
+				assist->GetPowerX(), assist->GetPowerY(), assist->GetPowerZ(),
+				1);
+			break;
+		}
 		case CEffectAssist::ASSIST_FADE_IN:
 		{
 			AddFadeIn(assist->GetStartTime(), assist->GetEndTime(), assist->GetDegree());
@@ -162,6 +170,7 @@ void CEffect::SetOperationCheck(bool check)
 		for (auto& assist : m_vecAssist)
 		{
 			assist->SetStartCheck(false);
+			assist->SetStartFromMain(false);
 			assist->Update(m_pGameObject, 0.f);
 		}
 	}
@@ -170,6 +179,7 @@ void CEffect::SetOperationCheck(bool check)
 		for (auto& assist : m_vecAssist)
 		{
 			assist->SetStartCheck(true);
+			assist->SetStartFromMain(true);
 		}
 	}
 }
@@ -188,6 +198,27 @@ void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
 			assist->SetStartCheck(check);
 			break;
 		}
+	}
+}
+
+void CEffect::SetFollowOperatorCheck(bool check, Vector3 effectPos)
+{
+	m_FollowOperator = check;
+	m_vEffectOriginPos = effectPos;
+}
+
+void CEffect::SetOperatorParentCheck(bool check)
+{
+	m_OperatorAsParent = check;
+
+	// 최초로 한번만 초기화
+	if (m_pOperatorObject && !m_FollowOperator)
+	{
+		CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
+		CTransform *pEffectTr = m_pGameObject->GetTransform();
+		pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+		SAFE_RELEASE(pEffectTr);
+		SAFE_RELEASE(pOperatorTr);
 	}
 }
 
@@ -243,8 +274,37 @@ int CEffect::Update(float fTime)
 	{
 		m_Timer += fTime;
 
+		// 이펙트가 시전자를 따라간다.
+		if (m_pOperatorObject)
+		{
+			CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
+			CTransform *pEffectTr = m_pGameObject->GetTransform();
+
+			if (m_FollowOperator)
+			{
+				pEffectTr->SetWorldPos(m_vEffectOriginPos + pOperatorTr->GetWorldPos());
+			}
+
+			if (m_OperatorAsParent)
+			{
+				pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+			}
+
+			SAFE_RELEASE(pEffectTr);
+			SAFE_RELEASE(pOperatorTr);
+		}
+
 		if (m_InfiniteCheck == false)
 		{
+			if (m_Timer < m_MainStartTime)
+			{
+				m_pGameObject->SetRenderEnable(false);
+			}
+			else 
+			{
+				m_pGameObject->SetRenderEnable(true);
+			}
+			
 			if (m_Timer >= m_MainEndTime)
 			{
 				if (m_EraseCheck)
@@ -257,8 +317,11 @@ int CEffect::Update(float fTime)
 				}
 				else
 				{
+					m_pGameObject->Enable(false);
+
 					for (auto& assist : m_vecAssist)
 					{
+						assist->SetStartFromMain(false);
 						assist->SetStartCheck(false);
 					}
 
@@ -335,6 +398,7 @@ bool CEffect::LoadEffectMesh(const string & filePath, const string & fileName)
 
 	/* Effect용 쉐이더로 변경 */
 	m_pRenderer->SetShader(STANDARD_EFFECT_TEX_NORMAL_SHADER);
+	m_pRenderer->SetRenderState(CULLING_NONE);
 
 	if (!pMesh)
 		return false;
@@ -395,10 +459,15 @@ bool CEffect::CreateEffectCollider()
 	Vector3 vMin, vMax, vCenter;
 	vMin = (pMesh->GetMin()).TransformCoord(pTr->GetLocalMatrix().mat);
 	vMax = (pMesh->GetMax()).TransformCoord(pTr->GetLocalMatrix().mat);
-	vCenter = (pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat);
+	vCenter = (pMesh->GetCenter()).TransformCoord(pTr->GetLocalMatrix().mat * pTr->GetWorldScaleMatrix().mat);
 
 	float fRadius;
-	fRadius = pMesh->GetRadius() * pTr->GetLocalScale().x;
+	float fMaxScaleFromXYZ;
+
+	Vector3 vTargetWorldScale = pTr->GetWorldScale();
+	fMaxScaleFromXYZ = (vTargetWorldScale.x > vTargetWorldScale.y) ? vTargetWorldScale.x : vTargetWorldScale.y;
+	fMaxScaleFromXYZ = (fMaxScaleFromXYZ > vTargetWorldScale.z) ? fMaxScaleFromXYZ : vTargetWorldScale.z;
+	fRadius = pMesh->GetRadius() * pTr->GetLocalScale().x * fMaxScaleFromXYZ;
 
 	CColliderSphere* pCollider = m_pGameObject->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
@@ -518,6 +587,41 @@ void CEffect::AddPatternRotation(const int& easeType, const float & start, const
 	}
 
 	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_ROT, (CEffectAssist::EASE_TYPE)easeType);
+	m_vecAssist.push_back(pAssistData);
+}
+
+void CEffect::AddPatternPosition(const int & easeType, const float & start, const float & end, const float & powX, const float & powY, const float & powZ, const int & repeat)
+{
+	CEffectAssist *pAssistData = nullptr;
+
+	for (auto& assist : m_vecAssist)
+	{
+		if (assist->GetType() == CEffectAssist::ASSIST_POS)
+		{
+			pAssistData = assist;
+			pAssistData->SetStartTime(start);
+			pAssistData->SetEndTime(end);
+			pAssistData->SetPowerX(powX);
+			pAssistData->SetPowerY(powY);
+			pAssistData->SetPowerZ(powZ);
+			pAssistData->SetRepeat(repeat);
+			pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_POS, (CEffectAssist::EASE_TYPE)easeType);
+			return;
+		}
+	}
+
+	if (pAssistData == nullptr)
+	{
+		pAssistData = new CEffectAssist;
+		pAssistData->SetStartTime(start);
+		pAssistData->SetEndTime(end);
+		pAssistData->SetPowerX(powX);
+		pAssistData->SetPowerY(powY);
+		pAssistData->SetPowerZ(powZ);
+		pAssistData->SetRepeat(repeat);
+	}
+
+	pAssistData->Init(m_pGameObject, CEffectAssist::ASSIST_POS, (CEffectAssist::EASE_TYPE)easeType);
 	m_vecAssist.push_back(pAssistData);
 }
 

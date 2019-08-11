@@ -40,8 +40,11 @@ public:
 	void SetRepeat(const int& repeat) { m_Repeat = repeat; }
 
 	void SetInfiniteMainCheck(bool check) { m_InfiniteCheck = check; }
-
 	void SetEffectName(const string& name) { EffectName = name; }
+
+	void SetOperatorObject(CGameObject* pOperatorObject) { m_pOperatorObject = pOperatorObject; }
+	void SetFollowOperatorCheck(bool check, Vector3 effectPos);
+	void SetOperatorParentCheck(bool check);
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -74,6 +77,10 @@ public:
 						 const float& start, const float& end,
 						 const float& powX, const float& powY, const float& powZ,
 						 const int& repeat);
+	void AddPatternPosition(const int& easeType,
+							const float& start, const float& end,
+							const float& powX, const float& powY, const float& powZ,
+							const int& repeat);
 
 	/* Fade In Out */
 	void AddFadeIn(const float& start, const float& end, const float& degree);
@@ -124,6 +131,13 @@ private:
 	class CRenderer *m_pRenderer = nullptr;
 
 	SHARECBUFFER     m_tshareBuffer = {};
+
+	/* Target Object */
+	CGameObject *m_pOperatorObject = nullptr;
+	bool	m_OperatorAsParent = false;
+	bool	m_FollowOperator = false;
+	
+	Vector3 m_vEffectOriginPos = Vector3(0.f, 0.f, 0.f);
 };
 
 PG_END

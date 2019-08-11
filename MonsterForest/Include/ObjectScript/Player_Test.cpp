@@ -116,26 +116,19 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CInput)->CreateKey("Attack3", '3');
 
 	/* Effect */
-	/*GET_SINGLE(CEffectManager)->AddEffect("Hit", "Effect\\hit_test.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Critical", "Effect\\critical_test.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Rune", "Effect\\rune_test.bin");*/
+	// Common
+	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Player\\Level_Up.bin");
+	
+	// Spell
+	GET_SINGLE(CEffectManager)->AddEffect("Spell_Attack_ManySwings", 
+		"Effect\\Player\\Tanker\\Spell_Attack_ManySwings.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell_Attack_RollingBlade",
+		"Effect\\Player\\Tanker\\Spell_Attack_RollingBlade.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell_Buff_FireCircle",
+		"Effect\\Player\\Tanker\\Spell_Buff_FireCircle.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
+		"Effect\\Common\\Holy_Light.bin");
 
-	/*GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");*/
-
-	///* Effect */
-	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
 	return true;
 }
 
@@ -262,30 +255,32 @@ void CPlayer_Test::Input(float fTime)
 
 	if (KEYDOWN("Attack1"))
 	{
-		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vPos = Vector3(0.f, 0.f, 0.f);
 		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, vPos);
+		GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", m_pGameObject, vPos);
 		m_pAnimation->ChangeClip("Spell1");
 	}
 
 	if (KEYDOWN("Attack2"))
 	{
-		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vPos = Vector3(0.f, 0.f, 0.f);
 		//Vector3 vLook = m_pTransform->GetWorldAxis(AXIS_Z).Normalize();
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Critical", nullptr, vPos);
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Attack_ManySwings", m_pGameObject, vPos);
 		m_pAnimation->ChangeClip("Spell2");
 	}
 
 	if (KEYDOWN("Attack3"))
 	{
 		Vector3 vPos = m_pTransform->GetWorldPos();
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, vPos);
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Buff_FireCircle", m_pGameObject, Vector3(0.f, 0.f, 0.f), 
+													false, true);
+		GET_SINGLE(CEffectManager)->OperateEffect("Holy_Light", m_pGameObject, vPos, true, false);
 		m_pAnimation->ChangeClip("Spell");
 	}
 #endif

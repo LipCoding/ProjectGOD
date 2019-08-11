@@ -16,6 +16,7 @@ protected:
 	string				m_strTypeName;
 	const type_info*	m_pTypeID;
 	bool				m_bEnable;
+	bool				m_bRenderEnable;
 	bool				m_bAlive;
 
 public:
@@ -25,6 +26,7 @@ public:
 	const type_info* GetTypeID()	const;
 	bool GetEnable()	const;
 	bool GetAlive()	const;
+	bool GetRenderEnable() const;
 	
 public:
 	void SetTag(const string& strTag);
@@ -36,6 +38,7 @@ public:
 	}
 
 	void Enable(bool bEnable);
+	void SetRenderEnable(bool bRenderEnable);
 	void Die();
 
 public:

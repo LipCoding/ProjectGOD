@@ -75,6 +75,7 @@ private:
 	/* Pattern */
 	void InitFormPatternScale();
 	void InitFormPatternRot();
+	void InitFormPatternPos();
 	/* Sheet */
 	void InitComboBox();
 
@@ -90,6 +91,7 @@ private:
 
 	void AddPatternScale(class CEffect *pEffect);
 	void AddPatternRot(class CEffect *pEffect);
+	void AddPatternPosition(class CEffect *pEffect);
 
 	void SetMainTimer(class CEffect *pEffect);
 private:
@@ -175,6 +177,24 @@ private:
 	CEdit m_editPatternRotEndTime;
 	CEdit m_editPatternRotRepeat;
 
+	/* Pos */
+	/* Static */
+	float m_fPatternStaticPosX;
+	float m_fPatternStaticPosY;
+	float m_fPatternStaticPosZ;
+
+	float m_fPatternStaticPosStartTime;
+	float m_fPatternStaticPosEndTime;
+
+	float m_fPatternStaticPosTime;
+
+	/* Input */
+	CEdit m_editPatternPosStartTime;
+	CEdit m_editPatternPosEndTime;
+	CEdit m_editPatternPosX;
+	CEdit m_editPatternPosY;
+	CEdit m_editPatternPosZ;
+
 private:
 	class CEaseSheetDlg *m_pEaseSheetDlg = nullptr;
 
@@ -189,13 +209,16 @@ private:
 	CComboBox m_comboBoxAnimInfo;
 	CComboBox m_comboEaseSheet_Scale;
 	CComboBox m_comboEaseSheet_Rot;
+	CComboBox m_comboEaseSheet_Pos;
 
 	CButton m_checkScaling;
 	CButton m_checkRotating;
+	CButton m_checkPosition;
 	CButton m_checkPartOrAll;
 
 	CButton m_checkInfiniteScaling;
 	CButton m_checkInfiniteRotation;
+	CButton m_checkInfinitePosition;
 
 	CButton m_checkInfiniteMain;
 
@@ -239,4 +262,11 @@ public:
 	afx_msg void OnBnClickedCheckInfiniteScale();
 	afx_msg void OnBnClickedCheckInfiniteRotation();
 	afx_msg void OnBnClickedCheckInfiniteMain();
+
+	afx_msg void OnBnClickedButtonViewsheet3();
+	afx_msg void OnBnClickedButtonPatternPosInput();
+	afx_msg void OnBnClickedButtonPatternPosPlay();
+	afx_msg void OnBnClickedButtonPatternPosStop();
+	afx_msg void OnBnClickedCheckInfinitePosition();
+	afx_msg void OnBnClickedCheckPosition();
 };

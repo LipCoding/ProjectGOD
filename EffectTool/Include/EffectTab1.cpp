@@ -34,8 +34,8 @@ CEffectTab1::CEffectTab1(CWnd* pParent /*=nullptr*/)
 	, m_fMoveUVStaticDirX(0)
 	, m_fMoveUVStaticDirY(0)
 	, m_fMoveUVStaticTime(0)
-	, m_iUVSpriteStaticWidth(0)
-	, m_iUVSpriteStaticHeight(0)
+	, m_iUVSpriteStaticCountX(0)
+	, m_iUVSpriteStaticCountY(0)
 	, m_iUVSpriteStaticMax_X(0)
 	, m_iUVSpriteStaticMax_Y(0)
 	, m_iRadioSpriteType(-1)
@@ -88,12 +88,12 @@ void CEffectTab1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK_INFINITE_FADE_OUT, m_checkInfiniteFadeOut);
 	DDX_Control(pDX, IDC_CHECK_INFINITE_UV_MOVE, m_checkInfiniteUVMove);
 	DDX_Radio(pDX, IDC_RADIO_SPRITE_TYPE_1, (int&)m_iRadioSpriteType);
-	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_WIDTH, m_iUVSpriteStaticWidth);
-	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_HEIGHT, m_iUVSpriteStaticHeight);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_WIDTH, m_iUVSpriteStaticCountX);
+	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_HEIGHT, m_iUVSpriteStaticCountY);
 	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_MAX_X, m_iUVSpriteStaticMax_X);
 	DDX_Text(pDX, IDC_EDIT_UV_SPRITE_STATIC_MAX_Y, m_iUVSpriteStaticMax_Y);
-	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_WIDTH, m_editUVSpriteWidth);
-	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_HEIGHT, m_editUVSpriteHeight);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_WIDTH, m_editUVSpriteCountX);
+	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_HEIGHT, m_editUVSpriteCountY);
 	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_MAX_X, m_editUVSpriteMax_X);
 	DDX_Control(pDX, IDC_EDIT_UV_SPRITE_MAX_Y, m_editUVSpriteMax_Y);
 	DDX_Control(pDX, IDC_CHECK_INFINITE_UV_SPRITE, m_checkInfiniteUVSprite);
@@ -193,6 +193,7 @@ void CEffectTab1::OnBnClickedButtonFadeInStop()
 	}
 
 	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_FADE_IN, false);
+	m_pTargetObject->SetRenderEnable(true);
 
 	UpdateFade();
 
@@ -265,6 +266,7 @@ void CEffectTab1::OnBnClickedButtonFadeOutStop()
 	}
 
 	pEffect->SetOperationCheckPart(CEffectAssist::ASSIST_FADE_OUT, false);
+	m_pTargetObject->SetRenderEnable(true);
 
 	UpdateFade();
 
@@ -414,8 +416,8 @@ void CEffectTab1::InitUVSprite()
 
 	m_fUVSpriteTime = -1.f;
 
-	m_iUVSpriteStaticWidth = -1;
-	m_iUVSpriteStaticHeight = -1;
+	m_iUVSpriteStaticCountX = -1;
+	m_iUVSpriteStaticCountY = -1;
 	m_iUVSpriteStaticMax_X = -1;
 	m_iUVSpriteStaticMax_Y = -1;
 
@@ -423,8 +425,8 @@ void CEffectTab1::InitUVSprite()
 	m_editUVSpriteEndTime.SetWindowTextW(L"");
 	m_editUVSpriteNum.SetWindowTextW(L"");
 
-	m_editUVSpriteWidth.SetWindowTextW(L"");
-	m_editUVSpriteHeight.SetWindowTextW(L"");
+	m_editUVSpriteCountX.SetWindowTextW(L"");
+	m_editUVSpriteCountY.SetWindowTextW(L"");
 	m_editUVSpriteMax_X.SetWindowTextW(L"");
 	m_editUVSpriteMax_Y.SetWindowTextW(L"");
 }
@@ -554,15 +556,15 @@ void CEffectTab1::UpdateUV()
 			tempNum.Format(_T("%d"), m_iUVSpriteStaticNum);
 			m_editUVSpriteNum.SetWindowTextW(tempNum);
 
-			m_iUVSpriteStaticWidth = pAssistUVAni->GetWidth();
-			m_iUVSpriteStaticHeight = pAssistUVAni->GetHeight();
+			m_iUVSpriteStaticCountX = pAssistUVAni->GetMaxX() / pAssistUVAni->GetWidth();
+			m_iUVSpriteStaticCountY = pAssistUVAni->GetMaxY() / pAssistUVAni->GetHeight();
 			m_iUVSpriteStaticMax_X = pAssistUVAni->GetMaxX();
 			m_iUVSpriteStaticMax_Y = pAssistUVAni->GetMaxY();
 
-			tempNum.Format(_T("%d"), m_iUVSpriteStaticWidth);
-			m_editUVSpriteWidth.SetWindowTextW(tempNum);
-			tempNum.Format(_T("%d"), m_iUVSpriteStaticHeight);
-			m_editUVSpriteHeight.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticCountX);
+			m_editUVSpriteCountX.SetWindowTextW(tempNum);
+			tempNum.Format(_T("%d"), m_iUVSpriteStaticCountY);
+			m_editUVSpriteCountY.SetWindowTextW(tempNum);
 			tempNum.Format(_T("%d"), m_iUVSpriteStaticMax_X);
 			m_editUVSpriteMax_X.SetWindowTextW(tempNum);
 			tempNum.Format(_T("%d"), m_iUVSpriteStaticMax_Y);
@@ -766,22 +768,22 @@ bool CEffectTab1::AddUVSprite(CEffect * pEffect)
 	}
 	case SPRITE_TYPE_ATLAS:
 	{
-		CString Width, Height, Max_X, Max_Y;
+		CString Count_X, Count_Y, Max_X, Max_Y;
 
-		m_editUVSpriteWidth.GetWindowTextW(Width);
-		m_editUVSpriteHeight.GetWindowTextW(Height);
+		m_editUVSpriteCountX.GetWindowTextW(Count_X);
+		m_editUVSpriteCountY.GetWindowTextW(Count_Y);
 		m_editUVSpriteMax_X.GetWindowTextW(Max_X);
 		m_editUVSpriteMax_Y.GetWindowTextW(Max_Y);
 
-		if (Width == L"")
-			m_iUVSpriteStaticWidth = 0;
+		if (Count_X == L"")
+			m_iUVSpriteStaticCountX = 0;
 		else
-			m_iUVSpriteStaticWidth = (int)_wtoi(Width);
+			m_iUVSpriteStaticCountX = (int)_wtoi(Count_X);
 
-		if (Height == L"")
-			m_iUVSpriteStaticHeight = 0;
+		if (Count_Y == L"")
+			m_iUVSpriteStaticCountY = 0;
 		else
-			m_iUVSpriteStaticHeight = (int)_wtoi(Height);
+			m_iUVSpriteStaticCountY = (int)_wtoi(Count_Y);
 
 		if (Max_X == L"")
 			m_iUVSpriteStaticMax_X = 0;
@@ -793,9 +795,12 @@ bool CEffectTab1::AddUVSprite(CEffect * pEffect)
 		else
 			m_iUVSpriteStaticMax_Y = (int)_wtoi(Max_Y);
 
+		int iEachSpriteSizeWidth = m_iUVSpriteStaticMax_X / m_iUVSpriteStaticCountX;
+		int iEachSpriteSizeHeight = m_iUVSpriteStaticMax_Y / m_iUVSpriteStaticCountY;
+
 		pEffect->AddUVAnimation(m_fUVSpriteStaticStartTime, m_fUVSpriteStaticEndTime,
 								m_iUVSpriteStaticMax_X, m_iUVSpriteStaticMax_Y,
-								m_iUVSpriteStaticWidth, m_iUVSpriteStaticHeight, 1);
+								iEachSpriteSizeWidth, iEachSpriteSizeHeight, 1);
 		break;
 	}
 	default:

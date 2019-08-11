@@ -191,6 +191,9 @@ void CEffectManager::AddEffect(const string & effectTag, const string & filePath
 			case CEffectAssist::ASSIST_ROT:
 				pData->pEffect->AddPatternRotation(eEaseType, fStart, fEnd, fPowX, fPowY, fPowZ, 1);
 				break;
+			case CEffectAssist::ASSIST_POS:
+				pData->pEffect->AddPatternPosition(eEaseType, fStart, fEnd, fPowX, fPowY, fPowZ, 1);
+				break;
 			case CEffectAssist::ASSIST_FADE_IN:
 				pData->pEffect->AddFadeIn(fStart, fEnd, fDegree);
 				break;
@@ -282,7 +285,7 @@ void CEffectManager::ClearAll()
 	m_mapEffects.clear();
 }
 
-void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos)
+void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos, bool followCheck, bool parentCheck)
 {
 	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
 
@@ -303,17 +306,22 @@ void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOper
 		}
 
 		CTransform *pEffectTr = pEffectObj->GetTransform();
-		//CTransform *pOperatorTr = pOperator->GetTransform();
-
 		Vector3 vOriginPos = pEffectTr->GetWorldPos();
-
-		pEffectTr->SetWorldPos(vPos + vOriginPos);
 		
-		SAFE_RELEASE(pEffectTr);
-
 		CEffect *pEffect = pEffectObj->FindComponentFromType<CEffect>(CT_EFFECT);
 		pEffect->SetErase(true);
 		pEffect->SetOperationCheck(true);
+
+		// Operator가 있으면 그 Oprator의 Look방향을 바라보면서 이펙트가 생성된다.
+		if(pOperator)
+		{
+			pEffect->SetOperatorObject(pOperator);
+			pEffect->SetFollowOperatorCheck(followCheck, vOriginPos);
+			pEffect->SetOperatorParentCheck(parentCheck);
+		}
+
+		pEffectTr->SetWorldPos(vPos + vOriginPos);	
+		SAFE_RELEASE(pEffectTr);
 
 		SAFE_RELEASE(pEffect);
 	}

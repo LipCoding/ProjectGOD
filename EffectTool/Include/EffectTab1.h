@@ -74,13 +74,13 @@ private:
 	CEdit m_editUVSpriteEndTime;
 	CEdit m_editUVSpriteNum;
 	
-	int m_iUVSpriteStaticWidth;
-	int m_iUVSpriteStaticHeight;
+	int m_iUVSpriteStaticCountX;
+	int m_iUVSpriteStaticCountY;
 	int m_iUVSpriteStaticMax_X;
 	int m_iUVSpriteStaticMax_Y;
 
-	CEdit m_editUVSpriteWidth;
-	CEdit m_editUVSpriteHeight;
+	CEdit m_editUVSpriteCountX;
+	CEdit m_editUVSpriteCountY;
 	CEdit m_editUVSpriteMax_X;
 	CEdit m_editUVSpriteMax_Y;
 
