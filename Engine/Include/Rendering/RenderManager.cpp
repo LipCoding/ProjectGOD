@@ -644,6 +644,9 @@ void CRenderManager::Render(float fTime)
 		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
 			CRenderManager::SortAlpha);
+		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
+			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
+			CRenderManager::SortAlphaRenderEnable);
 	}
 
 	if (m_tRenderGroup[RGT_UI].iSize >= 2)
@@ -1371,7 +1374,12 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z > vDestPos.z;
+	return vSrcPos.z >= vDestPos.z;
+}
+
+bool CRenderManager::SortAlphaRenderEnable(CGameObject * pSrc, CGameObject * pDest)
+{
+	return (pSrc->GetRenderEnable() == false) && (pDest->GetRenderEnable() == true);
 }
 
 bool CRenderManager::SortUI(CGameObject * pSrc, CGameObject * pDest)

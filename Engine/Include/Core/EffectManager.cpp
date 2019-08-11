@@ -285,7 +285,7 @@ void CEffectManager::ClearAll()
 	m_mapEffects.clear();
 }
 
-void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos, bool followCheck)
+void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOperator, Vector3 vPos, bool followCheck, bool parentCheck)
 {
 	map<string, vector<PEFFECTDATA>>::iterator iter = m_mapEffects.find(effectTag);
 
@@ -316,12 +316,11 @@ void CEffectManager::OperateEffect(const string & effectTag, CGameObject * pOper
 		if(pOperator)
 		{
 			pEffect->SetOperatorObject(pOperator);
-			pEffect->SetFollowOperatorCheck(followCheck);
+			pEffect->SetFollowOperatorCheck(followCheck, vOriginPos);
+			pEffect->SetOperatorParentCheck(parentCheck);
 		}
-		else
-		{
-			pEffectTr->SetWorldPos(vPos + vOriginPos);
-		}
+
+		pEffectTr->SetWorldPos(vPos + vOriginPos);	
 		SAFE_RELEASE(pEffectTr);
 
 		SAFE_RELEASE(pEffect);

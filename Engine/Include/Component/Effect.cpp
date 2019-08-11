@@ -201,17 +201,22 @@ void CEffect::SetOperationCheckPart(CEffectAssist::ASSIST_TYPE type, bool check)
 	}
 }
 
-void CEffect::SetFollowOperatorCheck(bool check)
+void CEffect::SetFollowOperatorCheck(bool check, Vector3 effectPos)
 {
 	m_FollowOperator = check;
+	m_vEffectOriginPos = effectPos;
+}
 
-	if (m_FollowOperator == false && m_pOperatorObject)
+void CEffect::SetOperatorParentCheck(bool check)
+{
+	m_OperatorAsParent = check;
+
+	// 최초로 한번만 초기화
+	if (m_pOperatorObject && !m_FollowOperator)
 	{
 		CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
 		CTransform *pEffectTr = m_pGameObject->GetTransform();
-
 		pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
-
 		SAFE_RELEASE(pEffectTr);
 		SAFE_RELEASE(pOperatorTr);
 	}
@@ -270,12 +275,20 @@ int CEffect::Update(float fTime)
 		m_Timer += fTime;
 
 		// 이펙트가 시전자를 따라간다.
-		if (m_pOperatorObject && m_FollowOperator)
+		if (m_pOperatorObject)
 		{
 			CTransform *pOperatorTr = m_pOperatorObject->GetTransform();
 			CTransform *pEffectTr = m_pGameObject->GetTransform();
 
-			pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+			if (m_FollowOperator)
+			{
+				pEffectTr->SetWorldPos(m_vEffectOriginPos + pOperatorTr->GetWorldPos());
+			}
+
+			if (m_OperatorAsParent)
+			{
+				pEffectTr->SetParentMatrix(pOperatorTr->GetWorldMatrix());
+			}
 
 			SAFE_RELEASE(pEffectTr);
 			SAFE_RELEASE(pOperatorTr);

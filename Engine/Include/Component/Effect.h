@@ -43,7 +43,8 @@ public:
 	void SetEffectName(const string& name) { EffectName = name; }
 
 	void SetOperatorObject(CGameObject* pOperatorObject) { m_pOperatorObject = pOperatorObject; }
-	void SetFollowOperatorCheck(bool check);
+	void SetFollowOperatorCheck(bool check, Vector3 effectPos);
+	void SetOperatorParentCheck(bool check);
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);
@@ -133,7 +134,10 @@ private:
 
 	/* Target Object */
 	CGameObject *m_pOperatorObject = nullptr;
+	bool	m_OperatorAsParent = false;
 	bool	m_FollowOperator = false;
+	
+	Vector3 m_vEffectOriginPos = Vector3(0.f, 0.f, 0.f);
 };
 
 PG_END

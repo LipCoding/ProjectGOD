@@ -594,6 +594,12 @@ int CScene::Update(float fTime)
 	}
 
 	m_pMainCameraObj->Update(fTime);
+
+	Vector3 vMainCamPos = m_pMainCameraTr->GetWorldPos();
+	float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(vMainCamPos);
+	if (vMainCamPos.y < fTerrainHeight + 1.5f)
+		m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);	
+
 	if (m_pLightCameraObj)
 		m_pLightCameraObj->Update(fTime);
 	
