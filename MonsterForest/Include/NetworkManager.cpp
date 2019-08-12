@@ -316,6 +316,8 @@ void NetworkManager::processPacket(void * packet)
 		CPlayer* attacksubject_player_component = attacksubject_object->FindComponentFromTypeName<CPlayer>("Actor");
 		Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 		attacksubject_player_component->skill1_Attack(target_objectTag);
+
+		GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
 	}
 	break;
 
@@ -356,6 +358,8 @@ void NetworkManager::processPacket(void * packet)
 
 		CPlayer* attacksubject_player_component = attacksubject_object->FindComponentFromTypeName<CPlayer>("Actor");
 		attacksubject_player_component->skill3_Attack(target_objectTag);
+
+		GET_SINGLE(SoundManager)->Play("firecircle_first", SC_EFFECT);
 	}
 	break;
 
@@ -451,6 +455,15 @@ void NetworkManager::processPacket(void * packet)
 			SAFE_RELEASE(pPlayerTr);
 			SAFE_RELEASE(pPlayerObject);
 		}
+		int sound_index = rand() % 4;
+		if (0 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
+		else if (1 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack1", SC_EFFECT);
+		else if (2 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack2", SC_EFFECT);
+		else if (2 == sound_index)
+			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);
 	}
 	break;
 
@@ -480,16 +493,19 @@ void NetworkManager::processPacket(void * packet)
 
 		string appendTag = to_string(pPacket->id);
 		string objectTag = "Player" + appendTag;
-
+		SetWindowTextA(GET_SINGLE(CCore)->GetWindowHandle(), objectTag.c_str());
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-		if (pGameObject != nullptr)
+		if (pGameObject == nullptr)
 			break;
 
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
-		pActor->changeAnimation("Idle3");
-
 		if (pPacket->id < NPC_START)
-			pActor->changeAnimation("Idle1");
+			static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+		else
+			pActor->changeAnimation("Idle3");
+
+
+
 	}
 	break;
 
@@ -506,13 +522,14 @@ void NetworkManager::processPacket(void * packet)
 		{
 			if (id < NPC_START)
 			{
-				Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
+				CPlayer* pActor = (CPlayer*)pGameObject->FindComponentFromTypeName<Actor>("Actor");
 				pActor->changeAnimation("Die1");
 			}
 			else
 			{
 				Monster* monster_component = pGameObject->FindComponentFromTag<Monster>("Actor");
 				monster_component->setDieState(true);
+				GET_SINGLE(SoundManager)->Play("monster_death", SC_EFFECT);
 			}
 		}
 	}

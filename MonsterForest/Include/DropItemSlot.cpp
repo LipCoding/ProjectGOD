@@ -123,7 +123,7 @@ void DropItemSlot::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 			string appendTag = _itoa(NetworkManager::getInstance()->getMyClientID(), str, 10);
 			string objectTag = "Player" + appendTag;
 			CGameObject* pGameObject = CGameObject::FindObject(objectTag);
-			CPlayer* pPlayer = pGameObject->FindComponentFromTag<CPlayer>("Player");
+			CPlayer* pPlayer = (CPlayer*)pGameObject->FindComponentFromTypeName<Actor>("Actor");
 
 			cs_packet_additem_inventory* pPacket = reinterpret_cast<cs_packet_additem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
 			pPacket->size = sizeof(cs_packet_additem_inventory);

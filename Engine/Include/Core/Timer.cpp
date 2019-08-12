@@ -67,9 +67,9 @@ void CTimer::Update()
 #ifdef _DEBUG
 		_cprintf("FPS : %.5f\n", m_fFPS);
 #else
-		char	strFPS[128] = {};
-		sprintf_s(strFPS, "FPS : %.5f", m_fFPS);
-		SetWindowTextA(GET_SINGLE(CCore)->GetWindowHandle(), strFPS);
+		//char	strFPS[128] = {};
+		//sprintf_s(strFPS, "FPS : %.5f", m_fFPS);
+		//SetWindowTextA(GET_SINGLE(CCore)->GetWindowHandle(), strFPS);
 #endif // _
 
 	}

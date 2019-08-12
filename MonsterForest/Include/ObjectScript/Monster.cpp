@@ -22,6 +22,7 @@
 #include "../UserInterfaceManager.h"
 #include "../DropItemSlot.h"
 #include "../DropTableUI.h"
+#include "Core/SoundManager.h"
 Monster::Monster()
 {
 }
@@ -34,6 +35,7 @@ Monster::~Monster()
 void Monster::damaged(int damage)
 {
 	currentHP -= damage;
+	GET_SINGLE(SoundManager)->Play("monster_damaged", SC_EFFECT);
 }
 
 void Monster::attack(const string& target_tag)
@@ -48,6 +50,7 @@ void Monster::attack(const string& target_tag)
 
 	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 	target_actor_component->damaged(attackDamage);
+	GET_SINGLE(SoundManager)->Play("monster_attack", SC_EFFECT);
 }
 
 void Monster::rotate(float x, float y, float z)
@@ -74,7 +77,9 @@ void Monster::move(float x, float y, float z, bool isBackMove)
 void Monster::changeAnimation(const string& clip_name)
 {
 	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->SetStopCheck(false);
 	pAnimation->ChangeClip(clip_name);
+	
 	SAFE_RELEASE(pAnimation);
 }
 

@@ -503,7 +503,9 @@ void CPlayer::move(float x, float y, float z, bool isBackMove)
 void CPlayer::changeAnimation(const string& clip_name)
 {
 	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	pAnimation->SetStopCheck(false);
 	pAnimation->ChangeClip(clip_name);
+	
 	SAFE_RELEASE(pAnimation);
 }
 
