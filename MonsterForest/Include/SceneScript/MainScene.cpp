@@ -100,13 +100,15 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
-	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Player\\Tanker\\Spell_Attack_RollingBlade.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Player\\Tanker\\Spell_Attack_ManySwings.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Player\\Tanker\\Spell_Attack_Bomb.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Player\\Tanker\\Spell_Buff_FireCircle.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
 	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
+		"Effect\\Common\\Holy_Light.bin");
 #pragma endregion
 
 #pragma region Layer Setting

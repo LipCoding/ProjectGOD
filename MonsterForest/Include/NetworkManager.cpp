@@ -473,7 +473,7 @@ void NetworkManager::processPacket(void * packet)
 		sc_packet_attack_skill_player * pPacket = reinterpret_cast<sc_packet_attack_skill_player*>(packet);
 		int id = pPacket->playerID;
 
-		string appendTag = to_string(myClientID);
+		string appendTag = to_string(id);
 		string objectTag = "Player" + appendTag;
 
 		CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
@@ -482,9 +482,13 @@ void NetworkManager::processPacket(void * packet)
 		GET_SINGLE(CEffectManager)->OperateEffect("Spell4", nullptr, pos);
 		CAnimation* pAnimation = pPlayerObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 		pAnimation->ChangeClip("Spell4");
+
+		GET_SINGLE(CEffectManager)->OperateEffect("Holy_Light", pPlayerObject, pos, true, false);
 		SAFE_RELEASE(pAnimation);
 		SAFE_RELEASE(pPlayerTr);
 		SAFE_RELEASE(pPlayerObject);
+
+
 	}
 	break;
 	case SC_PACKET_IDLE_ANIMATION:

@@ -42,7 +42,7 @@ void MFObjectManager::protoTypeSetting()
 		CTransform*	pTr = pPlayerObj->GetTransform();
 
 		pTr->SetWorldPos(250.f, 0.f, 250.f);
-		pTr->SetWorldScale(1.f, 1.f, 1.f);
+		pTr->SetWorldScale(1.5f, 1.5f, 1.5f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 		CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
@@ -101,7 +101,7 @@ void MFObjectManager::protoTypeSetting()
 		CLayer*	pLayer = pScene->GetLayer("Default");
 		CGameObject*	pMinoObj = CGameObject::CreatePrototypeDontDestroy("MinoObject", pScene);
 		CTransform*	pTr = pMinoObj->GetTransform();
-
+		pTr->SetWorldScale(2.f, 2.f, 2.f);
 		CRenderer*	pRenderer = pMinoObj->AddComponent<CRenderer>("PlayerRenderer");
 
 		pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.msh");
