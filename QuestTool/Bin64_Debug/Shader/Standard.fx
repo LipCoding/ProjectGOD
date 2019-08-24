@@ -131,7 +131,6 @@ PS_OUTPUT_SINGLE StandardTexPS(VS_OUTPUT_TEX input)
 		vUV.z = g_iAniFrameX;
 		output.vColor = g_DifArrTex.Sample(g_DifSmp, vUV) + g_vColor;
 	}
-
 	else
 	{
 		output.vColor = g_DifTex.Sample(g_DifSmp, input.vUV) + g_vColor;

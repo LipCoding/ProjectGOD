@@ -826,6 +826,7 @@ void CScene::LoadGlobLight(const string & strFileName)
 	m_pLightCamera->SetLightRange(fRange);
 	m_pLightCameraTr->SetWorldPos(vCamPos);
 	m_pLightCamera->SetLightCenterPos(vCamLookPos);
+	m_pLightCamera->SetDistLookAtToEye();
 
 	SAFE_RELEASE(pGlobalLight);
 }

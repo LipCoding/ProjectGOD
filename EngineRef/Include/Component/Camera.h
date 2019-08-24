@@ -56,15 +56,19 @@ private:
 public:
 	void SetLightCenterPos(const Vector3& center);
 	void SetLightRange(const float& range);
+	void SetDistLookAtToEye();
+
+	void SetLightCenterPosToObject(CGameObject *pGameObject);
 
 	Vector3 GetLightCenterPos();
 	float	GetLightRange();
+
 private:
 	Vector3 m_vCenter;
 	float	m_fRange;
 
 private:
-
+	Vector3 m_vDist;
 
 public:
 	void SetOrthoProj(const RESOLUTION& tRS, float fNear, float fFar);

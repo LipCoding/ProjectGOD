@@ -112,7 +112,7 @@ bool CRenderManager::Init()
 	SAFE_RELEASE(pRS);
 
 	CRenderingTarget* pTarget = CreateRenderTarget("Shadow",
-		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iWidth * 4.f,
+		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iHeight * 4.f,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4::Black, DXGI_FORMAT_D24_UNORM_S8_UINT);
 	//DXGI_FORMAT_R8G8B8A8_UNORM
 	//pTarget->SetDebugEnable(true);
@@ -656,7 +656,7 @@ void CRenderManager::Render(float fTime)
 			CRenderManager::SortUI);
 	}
 
-	RenderShadowMap(fTime);
+	//RenderShadowMap(fTime);
 
 	// GBuffer를 만든다.
 	RenderGBuffer(fTime);
@@ -875,7 +875,7 @@ void CRenderManager::Render(float fTime)
 
 void CRenderManager::RenderShadowMap(float fTime)
 {
-	CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
+	/*CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
 
 	pShadowDepth->ClearTarget();
 	pShadowDepth->SetTarget();
@@ -890,7 +890,7 @@ void CRenderManager::RenderShadowMap(float fTime)
 
 	pShadowDepth->ResetTarget();
 
-	SAFE_RELEASE(pShadowDepth);
+	SAFE_RELEASE(pShadowDepth);*/
 }
 
 void CRenderManager::RenderDecal(float fTime)
@@ -942,14 +942,13 @@ void CRenderManager::RenderGBuffer(float fTime)
 	D3D11_VIEWPORT	tVP = {};
 
 	tVP.Width = DEVICE_RESOLUTION.iWidth * 4.f;
-	tVP.Height = DEVICE_RESOLUTION.iWidth * 4.f;
+	tVP.Height = DEVICE_RESOLUTION.iHeight * 4.f;
 	tVP.MaxDepth = 1.f;
 
 	CONTEXT->RSSetViewports(1, &tVP);
 
-	CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
-
-	pShadowDepth->SetShader(18);
+	/*CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
+	pShadowDepth->SetShader(18);*/
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLight*	pLight = pScene->GetGlobalLight("GlobalLight");
@@ -1030,7 +1029,6 @@ void CRenderManager::RenderGBuffer(float fTime)
 
 		SAFE_RELEASE(pRenderer);
 	}
-
 
 	for (int i = 0; i < m_tRenderGroup[RGT_DEFAULT].iSize; ++i)
 	{
@@ -1156,15 +1154,12 @@ void CRenderManager::RenderGBuffer(float fTime)
 		}
 	}*/
 
-
 	//for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	//	m_tRenderGroup[i].iSize = 0;
 
 	pDepthTarget->ResetShader(4);
 	SAFE_RELEASE(pDepthTarget);
 	ResetMRT("GBuffer");
-
-	
 }
 
 void CRenderManager::RenderLightAcc(float fTime)

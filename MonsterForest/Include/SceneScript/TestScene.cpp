@@ -70,8 +70,8 @@ bool CTestScene::Init()
 #pragma region SkyAndLight
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
-		pScene->LoadGlobLight("Night_Test");
-		pScene->LoadPointLight("Night_Test");
+		pScene->LoadGlobLight("Shadow_Test");
+		//pScene->LoadPointLight("Night_Test");
 #pragma endregion
 
 		CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);

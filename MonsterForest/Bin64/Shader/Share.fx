@@ -472,7 +472,7 @@ _tagSkinning Skinning(float3 vPos, float3 vNormal, float4 vWeights,
 	return tSkinning;
 }
 
-static const float SMAP_SIZE = 1400.0f * 4.0f;
+static const float SMAP_SIZE = 1280.0f * 4.f;
 static const float SMAP_DX = 1.0f / SMAP_SIZE;
 
 //SamplerComparisonState cmpSampler : register(s2)

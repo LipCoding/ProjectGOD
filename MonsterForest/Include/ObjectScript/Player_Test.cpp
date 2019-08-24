@@ -18,6 +18,7 @@
 #include "Component/AnimationClip.h"
 #include "Resources/ResourcesManager.h"
 #include "Resources/Mesh.h"
+#include "Component/Camera.h"
 
 
 CPlayer_Test::CPlayer_Test()
@@ -195,6 +196,7 @@ void CPlayer_Test::Input(float fTime)
 		}
 
 		m_pTransform->SetWorldPos(vPos);
+		m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
 
 		m_pAnimation->ChangeClip("Run1");
 	}
