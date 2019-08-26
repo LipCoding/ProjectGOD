@@ -162,6 +162,10 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalVS(VS_INPUT_TEX_NORMAL input)
 
 	output.iDecal = 1;
 
+	output.vPosLight = mul(float4(vPos, 1.f), g_matWorld);
+	output.vPosLight = mul(output.vPosLight, g_matLightView);
+	output.vPosLight = mul(output.vPosLight, g_matLightProj);
+
 	return output;
 }
 
@@ -256,6 +260,67 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	output.vColor1.xyz = (input.vNormal * 0.5f + 0.5f) * fDot;
 	*/
 
+	// Shadow
+	float bias;
+	float2 projectTexCoord;
+	float depthValue;
+	float lightDepthValue;
+
+	bias = 0.00015f;
+
+	projectTexCoord = float2(0.f, 0.f);
+	projectTexCoord.x = input.vPosLight.x / input.vPosLight.w / 2.f + 0.5f;
+	projectTexCoord.y = -input.vPosLight.y / input.vPosLight.w / 2.f + 0.5f;
+
+	if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	{
+		depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+
+		lightDepthValue = lightDepthValue - bias;
+
+		float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+
+		if (lightDepthValue < depthValue)
+			// 그림자가 지지 않는 부분
+		{
+			// vColor.xyz += vColor.xyz * (tLight.vDif.xyz / 5.f);
+		}
+		else
+			// 그림자가 지는 부분
+		{
+			vColor.xyz -= (vColor.xyz / 1.95f);
+			vColor = saturate(vColor);
+		}
+	}
+
+	/*if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	{
+		float s0 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+		float s1 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord + float2(SMAP_DX, 0)).r;
+		float s2 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord + float2(0, SMAP_DX)).r;
+		float s3 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord + float2(SMAP_DX, SMAP_DX)).r;
+
+		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+		lightDepthValue = lightDepthValue - bias;
+
+		float result0 = lightDepthValue < s0;
+		float result1 = lightDepthValue < s1;
+		float result2 = lightDepthValue < s2;
+		float result3 = lightDepthValue < s3;
+
+		float2 texelPos = SMAP_SIZE * projectTexCoord;
+
+		float2 t = frac(texelPos);
+
+		float pow = lerp(lerp(result0, result1, t.x), lerp(result2, result3, t.y), t.y);
+
+		float4 vSub = float4(0.f, 0.f, 0.f, 1.f);
+		
+		vSub.xyz = output.vColor.xyz * (1.f - pow);
+		output.vColor.xyz -= vSub.xyz / 1.85f;
+	}*/
+
 	output.vColor1.xyz = input.vNormal * 0.5f + 0.5f;
 	output.vColor1.w = 1.f;
 	output.vColor2.x = input.vProjPos.z / input.vProjPos.w;
@@ -284,7 +349,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
 		input.vUV);
 
-	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
+	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz * 1.35f + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
 	output.vColor.w = output.vColor.w;
 
 	return output;
@@ -438,6 +503,10 @@ VS_OUTPUT_TEX_NORMAL StandardTexNormalAnimVS(VS_INPUT_ANIM input)
 
 	output.vUV = input.vUV;
 	output.iDecal = 0;
+
+	output.vPosLight = mul(float4(tSkinning.vPos, 1.f), g_matWorld);
+	output.vPosLight = mul(output.vPosLight, g_matLightView);
+	output.vPosLight = mul(output.vPosLight, g_matLightProj);
 
 	return output;
 }

@@ -43,8 +43,8 @@ VS_OUTPUT_BUMP LandScapeVS(VS_INPUT_BUMP input)
 	output.iDecal = 1;
 
 	output.vPosLight = mul(float4(vPos, 1.f), g_matWorld);
-	float4 vLightView = mul(output.vPosLight, g_matLightView);
-	output.vPosLight = mul(vLightView, g_matLightProj);
+	output.vPosLight = mul(output.vPosLight, g_matLightView);
+	output.vPosLight = mul(output.vPosLight, g_matLightProj);
 
 	output.vOriginPos = input.vPos;
 
@@ -299,7 +299,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 
 	float3	vViewNormal = normalize(mul(vBumpNormal, mat));
 	float bias;
-	float2 projectTexCoord, projectTexCoord2;
+	float2 projectTexCoord;
 	float depthValue;
 	float lightDepthValue;
 	float lightIntensity;
@@ -393,7 +393,7 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 }
 
 	// Soft
-	if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	/*if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
 	{
 		float s0 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
 		float s1 = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord + float2(SMAP_DX, 0)).r;
@@ -403,10 +403,10 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 		lightDepthValue = lightDepthValue - bias;
 
-		float result0 = lightDepthValue < s0;
-		float result1 = lightDepthValue < s1;
-		float result2 = lightDepthValue < s2;
-		float result3 = lightDepthValue < s3;
+		float result0 = lightDepthValue <= s0;
+		float result1 = lightDepthValue <= s1;
+		float result2 = lightDepthValue <= s2;
+		float result3 = lightDepthValue <= s3;
 
 		float2 texelPos = SMAP_SIZE * projectTexCoord;
 
@@ -415,47 +415,35 @@ PS_OUTPUT LandScapePS(VS_OUTPUT_BUMP input)
 		float pow = lerp(lerp(result0, result1, t.x), lerp(result2, result3, t.y), t.y);
 
 		float4 vSub = float4(0.f, 0.f, 0.f, 1.f);
+		
 		vSub.xyz = vColor.xyz * (1.f - pow);
+		vColor.xyz -= vSub.xyz / 2.f;
+	}*/
 
-		vColor.xyz -= vSub.xyz / 1.75f;
-	}
 
 	// Hard
-	//if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
-	//{
-	//	depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
-	//	lightDepthValue = input.vPosLight.z / input.vPosLight.w;
+	if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+	{
+		depthValue = g_Shadow_Map.Sample(g_DifSmp, projectTexCoord).r;
+		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 
-	//	lightDepthValue = lightDepthValue - bias;
-	//	
-	//	float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
+		lightDepthValue = lightDepthValue - bias;
+		
+		float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
 
-	//	if (lightDepthValue  < depthValue)
-	//		// 그림자가 지지 않는 부분
-	//	{
-	//		//float3	vLightPos = mul(float4(g_vLightPos, 1.f), g_matView).xyz;
-
-	//		////// 조명 방향을 구해준다.
-	//		//float3 vLightDir = vLightPos - input.vViewPos;
-	//		//vLightDir = normalize(vLightDir);
-
-	//		//lightIntensity = saturate(dot(input.vNormal, vLightDir));
-
-	//		//if (lightIntensity > 0.f)
-	//		//{
-	//		//	float4 color = float4(1.f, 1.f, 1.f, 1.f);
-	//		//	//vColor += vColor * (color / 5.f);
-	//		//	vColor = saturate(vColor);
-	//		//}
-	//	}
-	//	else
-	//		// 그림자가 지는 부분
-	//	{
-	//		vColor = float4(0.f, 0.f, 0.f, 1.f);
-	//		//vColor.xyz -= (vColor.xyz / 2.f);
-	//		vColor = saturate(vColor);
-	//	}
-	//}
+		if (lightDepthValue  < depthValue)
+			// 그림자가 지지 않는 부분
+		{
+			// vColor.xyz += vColor.xyz * (tLight.vDif.xyz / 5.f);
+		}
+		else
+			// 그림자가 지는 부분
+		{
+			//vColor = float4(0.f, 0.f, 0.f, 1.f);
+			vColor.xyz -= (vColor.xyz / 1.75f);
+			vColor = saturate(vColor);
+		}
+	}
 
 	//float factor = CalcShadowFactor(cmpSampler, g_Shadow_Map, input.vPosLight);
 	//float factor = CalcShadowFactor1(g_DifSmp, g_Shadow_Map, projectTexCoord);

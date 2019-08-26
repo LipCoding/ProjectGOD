@@ -196,11 +196,10 @@ void CPlayer_Test::Input(float fTime)
 		}
 
 		m_pTransform->SetWorldPos(vPos);
-		m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
 
 		m_pAnimation->ChangeClip("Run1");
 	}
-
+	
 	if (KEYUP("MoveFront"))
 	{
 		m_pAnimation->ReturnDefaultClip();
@@ -262,7 +261,7 @@ void CPlayer_Test::Input(float fTime)
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-		GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", m_pGameObject, vPos);
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Attack_RollingBlade", m_pGameObject, vPos);
 		m_pAnimation->ChangeClip("Spell1");
 	}
 
@@ -307,6 +306,8 @@ int CPlayer_Test::Update(float fTime)
 		}
 	}
 
+	Vector3 vPos = m_pTransform->GetWorldPos();
+	m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
 
 	return 0;
 }

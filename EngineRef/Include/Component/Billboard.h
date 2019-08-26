@@ -24,6 +24,8 @@ private:
 	class CTransform    *m_pCameraTr = nullptr;
 	bool  m_isOperate = true;
 
+	Vector3 m_vOriginRot = Vector3( 0.f, 0.f, 0.f );
+
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

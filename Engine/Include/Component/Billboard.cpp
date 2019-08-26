@@ -43,6 +43,12 @@ bool CBillboard::Init()
 	SAFE_RELEASE(pScene);
 
 	m_pObjTr = m_pGameObject->GetTransform();
+
+	m_vOriginRot = m_pObjTr->GetWorldRot();
+	m_vOriginRot.x = XMConvertToDegrees(m_vOriginRot.x);
+	m_vOriginRot.y = XMConvertToDegrees(m_vOriginRot.y);
+	m_vOriginRot.z = XMConvertToDegrees(m_vOriginRot.z);
+
 	return true;
 }
 
@@ -56,23 +62,24 @@ int CBillboard::Update(float fTime)
 		return 0;
 
 	Vector3 vPos = m_pObjTr->GetWorldPos();
-	Vector3 vScale = m_pObjTr->GetWorldScale();
 	Vector3 vCamPos = m_pCameraTr->GetWorldPos();
 
 	double angle;
-	float rotation;
+	float rotationX = 0.f, rotationY = 0.f;
 
 	/* x (동작 불가) */
-	/*angle = atan2(vPos.z - vCamPos.z, vPos.y - vCamPos.y) * (180.0 / PG_PI);
-	rotation = (float)XMConvertToRadians(angle);
+	angle = atan2(vPos.y - vCamPos.y, vPos.z - vCamPos.z) * (180.0 / PG_PI);
+	rotationX = (float)XMConvertToRadians(angle);
 
-	m_pObjTr->SetWorldRotX(rotation);*/
+	//m_pObjTr->SetWorldRotX(rotationX);
 
 	/* y */
 	angle = atan2(vPos.x - vCamPos.x, vPos.z - vCamPos.z) * (180.0 / PG_PI);
-	rotation = (float)XMConvertToRadians(angle);
+	rotationY = (float)XMConvertToRadians(angle);
 
-	m_pObjTr->SetWorldRotY(rotation);
+	m_pObjTr->SetWorldRotY(rotationY);
+
+	//m_pObjTr->SetWorldRot(rotationX, rotationY, 0.f);
 
 	return 0;
 }

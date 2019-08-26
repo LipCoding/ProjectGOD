@@ -14,105 +14,55 @@ CNaviManager::CNaviManager()
 
 CNaviManager::~CNaviManager()
 {
-	//Safe_Delete_Map(m_mapNaviMesh);
-	FreeNaviMesh();
+	Safe_Delete_Map(m_mapNaviMesh);	
 }
 
-/*{
-	CNaviMesh * CNaviManager::CreateNaviMesh(const string & strKey)
+
+CNaviMesh * CNaviManager::CreateNaviMesh(const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+	if (strKey == "")
 	{
-		CNaviMesh* pNavi = FindNaviMesh(strKey);
-	
-		if (pNavi)
-			return pNavi;
-	
-		pNavi = new CNaviMesh;
-	
-		if (!pNavi->InitNavi())
-		{
-			SAFE_DELETE(pNavi);
-			return nullptr;
-		}
-	
-		m_mapNaviMesh.insert(make_pair(strKey, pNavi));
-	
-		m_curMeshName = strKey;
-	
+		pNavi = FindNaviMesh(m_curNaviName);
+	}
+	else
+	{
+		pNavi = FindNaviMesh(strKey);
+		m_curNaviName = strKey;
+	}
+
+	if (pNavi)
 		return pNavi;
-	}
-	
-	CNaviMesh * CNaviManager::FindNaviMesh(const string & strKey)
+
+	pNavi = new CNaviMesh;
+
+	if (!pNavi->InitNavi())
 	{
-		unordered_map<string, CNaviMesh*>::iterator iter = m_mapNaviMesh.find(strKey);
-	
-		if (iter == m_mapNaviMesh.end())
-			return nullptr;
-	
-		return iter->second;
-	}
-	
-	CNaviMesh * CNaviManager::FindNaviMesh(const Vector3 & vPos)
-	{
-		return nullptr;
-	}
-	
-	void CNaviManager::Render(float fTime)
-	{
-		if (!m_bRenderCheck)
-			return;
-	
-		CNaviMesh* pNavi = FindNaviMesh(m_curMeshName);
-	
-		if (pNavi)
-		{
-			pNavi->RenderNavi();
-		}
-	}
-}*/
-
-const vector<class CCell*>* CNaviManager::GetNaviCells()
-{
-	if (m_pCurrentNaviMesh == nullptr)
-		return nullptr;
-
-	return m_pCurrentNaviMesh->GetCells();
-}
-
-float CNaviManager::GetY(const Vector3& vPos)
-{
-	if(m_pCurrentNaviMesh == nullptr)
-		return 0.0f;
-
-	return m_pCurrentNaviMesh->Get_y(vPos);
-}
-
-CNaviMesh * CNaviManager::CreateNaviMesh()
-{
-	FreeNaviMesh();
-
-	m_pCurrentNaviMesh = new CNaviMesh;
-
-	if (!m_pCurrentNaviMesh->InitNavi())
-	{
-		FreeNaviMesh();
+		SAFE_DELETE(pNavi);
 		return nullptr;
 	}
 
-	return m_pCurrentNaviMesh;
+	m_mapNaviMesh.insert(make_pair(strKey, pNavi));
+
+	m_curNaviName = strKey;
+
+	return pNavi;
 }
 
-CNaviMesh * CNaviManager::CreateNaviMesh(const string & fileName)
+CNaviMesh * CNaviManager::CreateNaviMeshFromFile(const string & fileName)
 {
 	string flexiblePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(DATA_PATH);
 	string filePath = "Navi\\" + fileName + ".bin";
 
-	FreeNaviMesh();
-	
-	m_pCurrentNaviMesh = new CNaviMesh;
+	m_curNaviName = fileName;
 
-	if (!m_pCurrentNaviMesh->InitNavi())
+	CNaviMesh *pCurrentNaviMesh = new CNaviMesh;
+
+	m_mapNaviMesh.insert(make_pair(fileName, pCurrentNaviMesh));
+
+	if (!pCurrentNaviMesh->InitNavi())
 	{
-		FreeNaviMesh();
+		FreeNaviMesh(fileName);
 		return nullptr;
 	}
 
@@ -122,10 +72,10 @@ CNaviMesh * CNaviManager::CreateNaviMesh(const string & fileName)
 
 	if (!mainFile.is_open())
 	{
-		FreeNaviMesh();
+		FreeNaviMesh(fileName);
 		return nullptr;
 	}
-	
+
 	// Cell 크기를 불러오고
 	UINT iCellSize = 0;
 	mainFile >> iCellSize;
@@ -143,19 +93,76 @@ CNaviMesh * CNaviManager::CreateNaviMesh(const string & fileName)
 	}
 
 	// 이웃 계산
-	m_pCurrentNaviMesh->Compute_Neighbor();
+	pCurrentNaviMesh->Compute_Neighbor();
 
 	mainFile.close();
-	
-	return m_pCurrentNaviMesh;
+
+	return pCurrentNaviMesh;
 }
 
-void CNaviManager::EraseCell(const CCell * searchCell)
+CNaviMesh * CNaviManager::FindNaviMesh(const string & strKey)
 {
-	if (m_pCurrentNaviMesh == nullptr)
+	unordered_map<string, CNaviMesh*>::iterator iter = m_mapNaviMesh.find(strKey);
+
+	if (iter == m_mapNaviMesh.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+void CNaviManager::AddCell(const vector<Vector3>& vPoint, const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
+	{
+		pNavi = CreateNaviMesh(strKey);
+		pNavi->AddCell(vPoint);
+	}
+	else
+	{
+		pNavi->AddCell(vPoint);
+	}
+}
+
+void CNaviManager::AddCell(const Vector3 * vPoint, const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
+	{
+		pNavi = CreateNaviMesh(strKey);
+		pNavi->AddCell(vPoint);
+	}
+	else
+	{
+		pNavi->AddCell(vPoint);
+	}
+}
+
+void CNaviManager::EraseCell(const CCell * searchCell, const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
 		return;
 
-	vector<CCell*>* pVecCells = m_pCurrentNaviMesh->GetCells();
+	vector<CCell*>* pVecCells = pNavi->GetCells();
 
 	auto& cell = remove_if(pVecCells->begin(), pVecCells->end(),
 		[&](CCell* cell) {return searchCell == cell; });
@@ -166,63 +173,111 @@ void CNaviManager::EraseCell(const CCell * searchCell)
 	pVecCells->erase(cell, pVecCells->end());
 }
 
-void CNaviManager::UndoCell()
+void CNaviManager::UndoCell(const string & strKey)
 {
-	if (m_pCurrentNaviMesh == nullptr)
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
 		return;
 
-	vector<CCell*>* pVecCells = m_pCurrentNaviMesh->GetCells();
+	vector<CCell*>* pVecCells = pNavi->GetCells();
 
 	auto& iter_end = pVecCells->rbegin();
 	SAFE_DELETE(*iter_end);
 	pVecCells->pop_back();
 }
 
-bool CNaviManager::CheckPosition(const Vector3 & vPos, Vector3 * vDir)
+bool CNaviManager::CheckPosition(const Vector3 & vPos, Vector3 * vDir, const string & strKey)
 {
-	if (m_pCurrentNaviMesh == nullptr)
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
 		return false;
 
-	return m_pCurrentNaviMesh->Check_Position(vPos, vDir);
+	return pNavi->Check_Position(vPos, vDir);
 }
 
-void CNaviManager::FreeNaviMesh()
+void CNaviManager::FreeNaviMesh(const string & strKey)
 {
-	if (m_pCurrentNaviMesh == nullptr)
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
 		return;
 
-	SAFE_DELETE(m_pCurrentNaviMesh);
-}
+	SAFE_DELETE(pNavi);
 
-void CNaviManager::AddCell(const vector<Vector3>& vPoint)
-{
-	if (m_pCurrentNaviMesh == nullptr)
-		CreateNaviMesh();
-
-	m_pCurrentNaviMesh->AddCell(vPoint);
-}
-
-void CNaviManager::AddCell(const Vector3 * vPoint)
-{
-	if (m_pCurrentNaviMesh == nullptr)
-		CreateNaviMesh();
-
-	m_pCurrentNaviMesh->AddCell(vPoint);
-}
-
-bool CNaviManager::IsCellEmpty()
-{
-	if (m_pCurrentNaviMesh == nullptr)
-		return true;
-
-	return m_pCurrentNaviMesh->GetCellIsEmpty();
+	m_mapNaviMesh.erase(strKey);
 }
 
 void CNaviManager::Render(float fTime)
 {
-	if (m_pCurrentNaviMesh == nullptr ||
-		m_bRenderCheck == false)
+	if (!m_bRenderCheck)
 		return;
 
-	m_pCurrentNaviMesh->RenderNavi();
+	CNaviMesh* pNavi = FindNaviMesh(m_curNaviName);
+
+	if (pNavi)
+	{
+		pNavi->RenderNavi();
+	}
+}
+
+const vector<class CCell*>* CNaviManager::GetNaviCells(const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
+		return nullptr;
+
+	return pNavi->GetCells();
+}
+
+bool CNaviManager::IsCellEmpty(const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
+		return true;
+
+	return pNavi->GetCellIsEmpty();
+}
+
+float CNaviManager::GetY(const Vector3 & vPos, const string & strKey)
+{
+	CNaviMesh* pNavi = nullptr;
+
+	if (strKey == "")
+		pNavi = FindNaviMesh(m_curNaviName);
+	else
+		pNavi = FindNaviMesh(strKey);
+
+	if (pNavi == nullptr)
+		return 0.0f;
+
+	return pNavi->Get_y(vPos);
 }

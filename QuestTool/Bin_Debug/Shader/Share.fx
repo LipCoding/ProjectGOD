@@ -100,6 +100,7 @@ struct VS_OUTPUT_TEX_NORMAL
 	float3	vViewPos	: POSITION;
 	float4	vProjPos	: POSITION1;
 	int		iDecal : DECAL;
+	float4  vPosLight : POSITION2;
 };
 
 struct VS_INPUT_BUMP

@@ -45,6 +45,8 @@ public:
 	Matrix GetShadowViewMatrix()	const;
 	Matrix GetShadowProjMatrix()	const;
 
+	class CTransform* GetAttach();
+
 public:
 	XMMATRIX GetLightView();
 	XMMATRIX GetLightProj();

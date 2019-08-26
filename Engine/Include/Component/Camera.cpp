@@ -135,6 +135,11 @@ Matrix CCamera::GetShadowProjMatrix() const
 	return *m_matShadowProj;
 }
 
+CTransform * CCamera::GetAttach()
+{
+	return m_pAttach;
+}
+
 XMMATRIX CCamera::GetLightView()
 {
 	Vector3 center = m_vCenter;

@@ -209,22 +209,51 @@ void CQuadTreeManager::CheckRenderingChild()
 
 	for (iter = m_mapQuadTreeInfo.begin(); iter != iterEnd; ++iter)
 	{
+		vector<CGameObject*>::iterator objIterBegin = iter->second->pChildObjects.begin();
+		vector<CGameObject*>::iterator objIterEnd = iter->second->pChildObjects.end();
+
 		if (!iter->second->bCullingCheck &&
 			iter->second->pGameObject->GetCulling()) 
 		{
-			for (auto& object : iter->second->pChildObjects)
+			for (auto objIter = objIterBegin; objIter != objIterEnd;)
+			{
+				if (nullptr == *objIter)
+				{
+					objIter = iter->second->pChildObjects.erase(objIter);
+				}
+				else
+				{
+					(*objIter)->SetCulling(true);
+					++objIter;
+				}
+			}
+
+			/*for (auto& object : iter->second->pChildObjects)
 			{
 				object->SetCulling(true);
-			}
+			}*/
 			iter->second->bCullingCheck = true;
 		}
 		else if (iter->second->bCullingCheck &&
 			!iter->second->pGameObject->GetCulling())
 		{
-			for (auto& object : iter->second->pChildObjects)
+			for (auto objIter = objIterBegin; objIter != objIterEnd;)
+			{
+				if (nullptr == *objIter)
+				{
+					objIter = iter->second->pChildObjects.erase(objIter);
+				}
+				else
+				{
+					(*objIter)->SetCulling(false);
+					++objIter;
+				}
+			}
+
+			/*for (auto& object : iter->second->pChildObjects)
 			{
 				object->SetCulling(false);
-			}
+			}*/
 			iter->second->bCullingCheck = false;
 		}
 	}

@@ -29,6 +29,8 @@
 #include "../Component/ColliderSphere.h"
 #include "../Component/AxisLine.h"
 #include "../Component/ColliderAABB.h"
+#include "../Core.h"
+#include "../Component/ThirdCamera.h"
 PG_USING
 
 DEFINITION_SINGLE(CRenderManager)
@@ -112,7 +114,7 @@ bool CRenderManager::Init()
 	SAFE_RELEASE(pRS);
 
 	CRenderingTarget* pTarget = CreateRenderTarget("Shadow",
-		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iHeight * 4.f,
+		DEVICE_RESOLUTION.iWidth * 4.f, DEVICE_RESOLUTION.iWidth * 4.f,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, Vector4::Black, DXGI_FORMAT_D24_UNORM_S8_UINT);
 	//DXGI_FORMAT_R8G8B8A8_UNORM
 	//pTarget->SetDebugEnable(true);
@@ -644,9 +646,9 @@ void CRenderManager::Render(float fTime)
 		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
 			CRenderManager::SortAlpha);
-		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
+		/*sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
-			CRenderManager::SortAlphaRenderEnable);
+			CRenderManager::SortAlphaRenderEnable);*/
 	}
 
 	if (m_tRenderGroup[RGT_UI].iSize >= 2)
@@ -825,7 +827,6 @@ void CRenderManager::Render(float fTime)
 		}
 	}
 	m_tRenderGroup[RGT_ALPHA].iSize = 0;
-
 	m_tRenderGroup[RGT_UI].iSize = 0;
 
 
@@ -942,7 +943,7 @@ void CRenderManager::RenderGBuffer(float fTime)
 	D3D11_VIEWPORT	tVP = {};
 
 	tVP.Width = DEVICE_RESOLUTION.iWidth * 4.f;
-	tVP.Height = DEVICE_RESOLUTION.iHeight * 4.f;
+	tVP.Height = DEVICE_RESOLUTION.iWidth * 4.f;
 	tVP.MaxDepth = 1.f;
 
 	CONTEXT->RSSetViewports(1, &tVP);
@@ -1353,7 +1354,7 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	CTransform*	pDestTr = pDest->GetTransform();
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CCamera*	pCamera = pScene->GetMainCamera();
+	CCamera* pCamera = pScene->GetMainCamera();
 
 	SAFE_RELEASE(pScene);
 
@@ -1369,7 +1370,8 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z >= vDestPos.z;
+	return vSrcPos.Length() > vDestPos.Length();
+	//return vSrcPos.z >= vDestPos.z;
 }
 
 bool CRenderManager::SortAlphaRenderEnable(CGameObject * pSrc, CGameObject * pDest)

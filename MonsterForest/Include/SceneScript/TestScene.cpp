@@ -71,13 +71,14 @@ bool CTestScene::Init()
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
 		pScene->LoadGlobLight("Shadow_Test");
-		//pScene->LoadPointLight("Night_Test");
+		pScene->LoadPointLight("Night_Test");
 #pragma endregion
 
 		CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
 
 #pragma region Navigation
-		GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
+		GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
+		GET_SINGLE(CNaviManager)->SetCurNaviName("Main_Scene_1");
 		GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 #pragma endregion
 
@@ -90,7 +91,7 @@ bool CTestScene::Init()
 
 		CRenderer*	pRenderer = pPlayerObj->FindComponentFromTag<CRenderer>("PlayerRenderer");
 
-		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells())[0]->Get_CenterPos();
+		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells("Main_Scene_1"))[0]->Get_CenterPos();
 
 		pTr->SetWorldPos(vFirstNodeCenterPos);
 		pTr->SetWorldScale(1.5f, 1.5f, 1.5f);
