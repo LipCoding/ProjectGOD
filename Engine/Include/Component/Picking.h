@@ -17,6 +17,7 @@ private:
 
 public:
 	bool Picking_ToBuffer(Vector3 *pOut, Vector3 rayOrigin,  Vector3 rayDir, vector<VERTEXBUMP>& vecVtx, vector<UINT>& vecIndex);
+	bool Picking_ToBuffer(Vector3 *pOut, Vector3 rayOrigin, Vector3 rayDir, vector<Vector3>& vecVtx, vector<int>& vecIndex);
 	//bool Picking_ToMesh();
 
 private:

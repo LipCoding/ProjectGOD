@@ -51,6 +51,43 @@ bool CPicking::Picking_ToBuffer(Vector3 * pOut, Vector3 rayOrigin, Vector3 rayDi
 	return false;
 }
 
+bool CPicking::Picking_ToBuffer(Vector3 * pOut, Vector3 rayOrigin, Vector3 rayDir, vector<Vector3>& vecVtx, vector<int>& vecIndex)
+{
+	// 피킹되는 인덱스를 체크.
+	UINT pickedTriangle = -1;
+	float min = (numeric_limits<float>::max)();
+
+	for (int i = 0; i < vecIndex.size(); i += 3)
+	{
+		UINT i0 = vecIndex[i];
+		UINT i1 = vecIndex[i + 1];
+		UINT i2 = vecIndex[i + 2];
+
+		Vector3 v0 = vecVtx[i0];
+		Vector3 v1 = vecVtx[i1];
+		Vector3 v2 = vecVtx[i2];
+
+		float dist = 0.f;
+		Vector3 temp1, temp2;
+		temp1 = rayOrigin;
+		temp2 = rayDir;
+
+		if (this->IntersectTri(temp1, temp2, v0, v1, v2, dist))
+		{
+			if (dist < min)
+			{
+				min = dist;
+				pickedTriangle = i;
+				Vector3 vPos = temp1 + (temp2 * dist);
+				*pOut = vPos;
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 XMGLOBALCONST XMVECTORF32 g_RayEpsilon = { 1e-20f, 1e-20f, 1e-20f, 1e-20f };
 XMGLOBALCONST XMVECTORF32 g_RayNegEpsilon = { -1e-20f, -1e-20f, -1e-20f, -1e-20f };
 

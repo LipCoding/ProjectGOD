@@ -427,7 +427,7 @@ void CNaviTab::OnBnClickedButtonNaviLoad()
 	OnBnClickedButtonNaviClearall();
 
 	// 불러오기
-	if (!GET_SINGLE(CNaviManager)->CreateNaviMesh(strFileName))
+	if (!GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile(strFileName))
 		return;
 
 	UINT iCellSize = (UINT)GET_SINGLE(CNaviManager)->GetNaviCells()->size();
