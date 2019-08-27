@@ -148,6 +148,23 @@ void CMesh::GetMeshPosition(vector<Vector3>* vecPos, int iContainer)
 	}
 }
 
+void CMesh::GetMeshWorldPosition(vector<Vector3>* vecPos, Matrix worldMat, int iContainer)
+{
+	// 정점 수만큼 반복한다.
+	char*	pVtx = (char*)m_vecMeshContainer[iContainer]->tVB.pVtxData;
+	for (int i = 0; i < m_vecMeshContainer[iContainer]->tVB.iVtxCount; ++i)
+	{
+		int	iSize = m_vecMeshContainer[iContainer]->tVB.iVtxSize;
+
+		Vector3	vPos;
+		memcpy(&vPos, pVtx + (i * iSize), sizeof(Vector3));
+
+		//vPos = vPos.TransformCoord(worldMat.mat);
+
+		vecPos->push_back(vPos.TransformCoord(worldMat.mat));
+	}
+}
+
 void CMesh::GetMeshIndex(vector<int>* vecIndex, int iContainer, int iSubset)
 {
 	char*	pIdx = (char*)m_vecMeshContainer[iContainer]->vecIB[iSubset].pIdxData;

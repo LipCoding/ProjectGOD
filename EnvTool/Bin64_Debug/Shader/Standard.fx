@@ -289,8 +289,8 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 		else
 			// 그림자가 지는 부분
 		{
-			vColor.xyz -= (vColor.xyz / 1.95f);
-			vColor = saturate(vColor);
+			output.vColor.xyz -= (output.vColor.xyz / 1.55f);
+			output.vColor = saturate(output.vColor);
 		}
 	}
 
@@ -304,10 +304,10 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 		lightDepthValue = input.vPosLight.z / input.vPosLight.w;
 		lightDepthValue = lightDepthValue - bias;
 
-		float result0 = lightDepthValue < s0;
-		float result1 = lightDepthValue < s1;
-		float result2 = lightDepthValue < s2;
-		float result3 = lightDepthValue < s3;
+		float result0 = lightDepthValue <= s0;
+		float result1 = lightDepthValue <= s1;
+		float result2 = lightDepthValue <= s2;
+		float result3 = lightDepthValue <= s3;
 
 		float2 texelPos = SMAP_SIZE * projectTexCoord;
 
@@ -349,7 +349,7 @@ PS_OUTPUT StandardTexNormalPS(VS_OUTPUT_TEX_NORMAL input)
 	_tagLightInfo	tLight = ComputeLight(input.vViewPos, input.vNormal,
 		input.vUV);
 
-	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz * 1.35f + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
+	output.vColor.xyz = output.vColor.xyz * (tLight.vDif.xyz * 1.45f + tLight.vAmb.xyz) + tLight.vSpc.xyz / 2.f;
 	output.vColor.w = output.vColor.w;
 
 	return output;

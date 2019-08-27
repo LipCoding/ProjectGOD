@@ -57,12 +57,14 @@ bool CTestScene::Init()
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
+		CLayer* pLayer2 = pScene->CreateLayer("RayCollide");
 
 #pragma region Terrain
 		// Load Terrain
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 		pLandScape->Load_Terrain("Main_Scene_1");
+		//pLandScape->Load_Terrain("TESTTEST");
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
@@ -71,14 +73,14 @@ bool CTestScene::Init()
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
 		pScene->LoadGlobLight("Shadow_Test");
-		pScene->LoadPointLight("Night_Test");
+		//pScene->LoadPointLight("Night_Test");
 #pragma endregion
-
 		CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
+		CGameObject::LoadEnvObjects(L"ray_test", pLayer2);
 
 #pragma region Navigation
-		GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
-		GET_SINGLE(CNaviManager)->SetCurNaviName("Main_Scene_1");
+		GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Navi_Ray");
+		GET_SINGLE(CNaviManager)->SetCurNaviName("Navi_Ray");
 		GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 #pragma endregion
 
@@ -91,7 +93,7 @@ bool CTestScene::Init()
 
 		CRenderer*	pRenderer = pPlayerObj->FindComponentFromTag<CRenderer>("PlayerRenderer");
 
-		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells("Main_Scene_1"))[0]->Get_CenterPos();
+		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells("Navi_Ray"))[0]->Get_CenterPos();
 
 		pTr->SetWorldPos(vFirstNodeCenterPos);
 		pTr->SetWorldScale(1.5f, 1.5f, 1.5f);
@@ -126,8 +128,8 @@ bool CTestScene::Init()
 
 #pragma region Effect
 		GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
-		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
-		GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+		//GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
+		//GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 #pragma endregion
 	}
 

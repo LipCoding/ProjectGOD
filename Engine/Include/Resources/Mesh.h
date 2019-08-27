@@ -75,6 +75,7 @@ public:
 	class CMaterial* CloneMaterial(int iContainer = 0, int iSubset = 0);
 	class CAnimation* CloneAnimation()	const;
 	void GetMeshPosition(vector<Vector3>* vecPos, int iContainer = 0);
+	void GetMeshWorldPosition(vector<Vector3>* vecPos, Matrix worldMat,  int iContainer = 0);
 	void GetMeshIndex(vector<int>* vecIndex, int iContainer = 0, int iSubset = 0);
 	void CreateNaviMeshInfo(class CNavigationMesh* pNaviMesh, const Vector3& vScale,
 		const Vector3& vLandPos);
