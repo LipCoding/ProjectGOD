@@ -25,6 +25,7 @@ private:
 	CFont* edit_quest_contents_text;
 	HWND edit_quest_contents_handle;
 	string edit_quest_contents;
+	vector<string> contents_strings;
 	
 	HWND edit_minimum_level_handle;
 	int edit_minimum_level;
@@ -83,6 +84,7 @@ public:
 	int getEditRewardGold() { return edit_reward_gold; }
 	CGameObject* getQuestUIObject() { return quest_ui_object; }
 	vector<string>& getRewardItems() { return listbox_reward_items; }
+	vector<string>& getContentsStrings() { return contents_strings; }
 
 	void setEditQuestSubject(const string& edit_quest_subject) { this->edit_quest_subject = edit_quest_subject; }
 	void setEditQuestSummary(const string& edit_quest_summary) { this->edit_quest_summary = edit_quest_summary; }

@@ -42,6 +42,9 @@ public:
 
 	void pushChatMessage(const wstring& chat_message);
 	void partySyncronize(const string& object_tag, int x, int y, int z, int current_hp, int current_mp, int level, int exp);
+
+	
+
 public:
 	CUIButton* getUIHeartBar() { return this->pStatus->getUIHearthBar(); }
 	CUIButton* getEnemyUIHearthBar() { return this->pEnemyStatus->getUIHearthBar(); }

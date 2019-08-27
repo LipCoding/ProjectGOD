@@ -1,17 +1,43 @@
 #pragma once
+#include "PGEngine.h"
+
+PG_USING
+
 class Quest
 {
-	// 우측에 퀘스트 제목과 내용을 표시한다.
-
-	// 퀘스트 창을 누르면 퀘스트 목록이 나온다.
-
-	// 퀘스트 목록을 누르면 퀘스트내용이 나온다.
+	string quest_subject;
+	string quest_summary;
+	string quest_contents;
+	int minimum_level;
+	int maximum_level;
+	int reward_experience;
+	int reward_gold;
+	vector<string> contents_strings;
+	vector<string> reward_items;
 public:
 	Quest();
 	~Quest();
 
 public:
-	// 퀘스트의 내용을 파싱해서 담아둔다.
-	bool initialize();
+	bool initialize(const string& quest_subject, const string& quest_summary, const string& quest_contents, int minimum_level, int maximum_level,
+		int reward_experience, int reward_gold, const vector<string>& reward_items);
+	void update(float deltaTime);
+public:
+	const string& getQuestSubject() { return quest_subject; }
+	const string& getQuestSummary() { return quest_summary; }
+	const string& getQuestContents() { return quest_contents; }
+	const vector<string>& getRewardItems() { return this->reward_items; }
+	vector<string>& getContentStrings() { return this->contents_strings; }
+	int getMinimumLevel() { return minimum_level; }
+	int getMaximumLevel() { return maximum_level; }
+	int getRewardExperience() { return reward_experience; }
+	int getRewardGold() { return reward_gold; }
+public:
+	void setQuestSubject(const string& quest_subject) { this->quest_subject = quest_subject; }
+	void setQuestSummary(const string& quest_summary) { this->quest_summary = quest_summary; }
+	void setQuestContents(const string& quest_contents) { this->quest_contents = quest_contents; }
+public:
+	bool save(ofstream& save_file);
+	bool load(ifstream& load_file);
 };
 

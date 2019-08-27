@@ -201,6 +201,9 @@
     <ClInclude Include="PGConfirm.h" />
     <ClInclude Include="PGMessageBox.h" />
     <ClInclude Include="Quest.h" />
+    <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="QuestBaseUI.h" />
+    <ClInclude Include="QuestItem.h" />
     <ClInclude Include="QuickSlot.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneScript\DungeonScene.h" />
@@ -264,6 +267,9 @@
     <ClCompile Include="PGConfirm.cpp" />
     <ClCompile Include="PGMessageBox.cpp" />
     <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="QuestBaseUI.cpp" />
+    <ClCompile Include="QuestItem.cpp" />
     <ClCompile Include="QuickSlot.cpp" />
     <ClCompile Include="SceneScript\DungeonScene.cpp" />
     <ClCompile Include="SceneScript\MainScene.cpp" />

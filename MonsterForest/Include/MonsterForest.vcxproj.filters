@@ -360,6 +360,15 @@
     <ClInclude Include="MFObjectManager.h">
       <Filter>05. Objectmanager</Filter>
     </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestBaseUI.h">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestItem.h">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SceneScript\TestScene.cpp">
@@ -523,6 +532,15 @@
     </ClCompile>
     <ClCompile Include="MFObjectManager.cpp">
       <Filter>05. Objectmanager</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestBaseUI.cpp">
+      <Filter>03. UserInterface\04. Quest</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestItem.cpp">
+      <Filter>03. UserInterface\04. Quest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

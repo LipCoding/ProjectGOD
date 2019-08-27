@@ -31,7 +31,7 @@
 #include "Component/ThirdCamera.h"
 #include "Component/Arm.h"
 #include "Core/QuadTreeManager.h"
-
+#include "QuestManager.h"
 DEFINITION_SINGLE(UserInterfaceManager);
 
 
@@ -46,6 +46,7 @@ UserInterfaceManager::~UserInterfaceManager()
 
 bool UserInterfaceManager::initialize()
 {
+	QuestManager::getInstance()->initialize();
 	this->pChatting = new Chatting;
 	this->pChatting->initialize();
 	this->pInventory = new Inventory;

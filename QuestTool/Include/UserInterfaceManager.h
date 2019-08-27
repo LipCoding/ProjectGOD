@@ -30,6 +30,7 @@ public:
 	CGameObject* quest_exp_object;
 	CGameObject* quest_gold_object;
 	vector<wstring> contents_text_cont;
+
 public:
 	UserInterfaceManager();
 	~UserInterfaceManager();

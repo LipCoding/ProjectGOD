@@ -35,25 +35,52 @@ void Quest::update(float deltaTime)
 bool Quest::save(ofstream& save_file)
 {
 	save_file << quest_subject << " ";
+	save_file << "# ";
 	save_file << quest_summary << " ";
+	save_file << "# ";
 	save_file << quest_contents << " ";
+	save_file << "# ";
 	save_file << minimum_level << " ";
 	save_file << maximum_level << " ";
 	save_file << reward_experience << " ";
 	save_file << reward_gold << " ";
-
 	save_file << reward_items.size() << " ";
 	for (auto& reward_item : reward_items)
+	{
 		save_file << reward_item << " ";
-
+	}
 	return true;
 }
 
 bool Quest::load(ifstream& load_file)
 {
-	load_file >> quest_subject;
-	load_file >> quest_summary;
-	load_file >> quest_contents;
+	string file_string, temp_string;
+	while (load_file >> file_string)
+	{
+		if (file_string == "#")
+			break;
+		temp_string += file_string;
+		
+	}
+	quest_subject = temp_string;
+	temp_string.clear();
+	while (load_file >> file_string)
+	{
+		if (file_string == "#")
+			break;
+		temp_string += file_string;
+	}
+	quest_summary = temp_string;
+	temp_string.clear();
+	while (load_file >> file_string)
+	{
+		if (file_string == "#")
+			break;
+		temp_string += file_string;
+	}
+	quest_contents = temp_string;
+	temp_string.clear();
+
 	load_file >> minimum_level;
 	load_file >> maximum_level;
 	load_file >> reward_experience;
