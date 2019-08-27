@@ -1028,6 +1028,7 @@ void CLandScape::CreateTreeNodeToObject()
 
 			// Mesh
 			CRenderer*	pRenderer = node->pGameObject->AddComponent<CRenderer>("Renderer");
+			CLandScape* pLand = node->pGameObject->AddComponent<CLandScape>("LandScape");
 			CMaterial*	pMaterial = pRenderer->CreateMaterial();
 
 			pRenderer->SetRenderState(LANDSCAPE_SHADER);
@@ -1035,6 +1036,7 @@ void CLandScape::CreateTreeNodeToObject()
 			// 추후에 고쳐야함
 			// Splatting
 
+			SAFE_RELEASE(pLand);
 			SAFE_RELEASE(pMaterial);
 
 			// Mesh 설정

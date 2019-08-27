@@ -52,14 +52,16 @@ public:
 	void AddObject();
 	void Undo();
 	void UpdateMousePos(const Vector3& mousePos);
+
 private:
 	CListBox m_listObjType;
 	CListBox m_listObjList;	
 	CString  m_currentTypePath;
 
-	CEdit m_editMousePosX;
-	CEdit m_editMousePosY;
-	CEdit m_editMousePosZ;
+	CString m_editMousePosX;
+	CString m_editMousePosY;
+	CString m_editMousePosZ;
+
 public:
 	afx_msg void OnBnClickedButtonDeleteAllobj();
 	afx_msg void OnBnClickedButtonDeleteObj();

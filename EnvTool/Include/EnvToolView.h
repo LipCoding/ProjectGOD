@@ -78,6 +78,8 @@ private:
 	CGameObject	*m_pBrushObj = nullptr;
 	Vector3		m_vPickPos;
 
+	float m_fDelay = 0.f;
+
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);

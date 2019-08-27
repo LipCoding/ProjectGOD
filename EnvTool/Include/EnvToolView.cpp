@@ -449,7 +449,13 @@ void CEnvToolView::UpdateInput(const float& fTime)
 	
 	if (type == TAB_OBJECT)
 	{
-		m_pEditForm->GetObjectTab()->UpdateMousePos(m_vPickPos);
+		m_fDelay += fTime;
+
+		if (m_fDelay > 0.1f)
+		{
+			m_pEditForm->GetObjectTab()->UpdateMousePos(m_vPickPos);
+			m_fDelay = 0.f;
+		}
 
 		float scalePower = 0.2f;
 		float movePower = 5.f;

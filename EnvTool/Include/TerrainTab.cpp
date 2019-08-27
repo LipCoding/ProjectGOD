@@ -16,7 +16,7 @@
 #include "Component/Terrain2D.h"
 #include "Component/LandScape.h"
 #include "Component/Picking.h"
-
+#include "Core/QuadTreeManager.h"
 #include "BrushTool.h"
 
 PG_USING
@@ -1160,6 +1160,17 @@ void CTerrainTab::OnBnClickedButtonTerrainLoad()
 		}
 
 		mainFile.close();
+
+		GET_SINGLE(CQuadTreeManager)->DeleteQuadTreeInfo();
+		for (const auto& iter : *pLandScape->GetAllNodes())
+		{
+			GET_SINGLE(CQuadTreeManager)->AddQuadTreeInfo(iter->strNodeName,
+				iter->iSizeX,
+				iter->iSizeZ,
+				iter->vMin,
+				iter->vMax,
+				iter->pGameObject);
+		}
 
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pBrushTool);

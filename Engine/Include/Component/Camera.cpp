@@ -26,6 +26,7 @@ CCamera::CCamera() :
 
 	m_vCenter = Vector3{ 512.f / 2.f, 0.f, 512.f / 2.f };
 	m_fRange = 425.f;
+	m_vDist = Vector3{ 0.f, 0.f, 0.f };
 }
 
 CCamera::CCamera(const CCamera & camera)	:
@@ -134,6 +135,11 @@ Matrix CCamera::GetShadowProjMatrix() const
 	return *m_matShadowProj;
 }
 
+CTransform * CCamera::GetAttach()
+{
+	return m_pAttach;
+}
+
 XMMATRIX CCamera::GetLightView()
 {
 	Vector3 center = m_vCenter;
@@ -162,11 +168,11 @@ XMMATRIX CCamera::GetLightProj()
 	float l = sphereCenterLS.x - radius;
 	float r = sphereCenterLS.x + radius;
 	float t = sphereCenterLS.y + radius;
-	float f = sphereCenterLS.z + radius;
 	float b = sphereCenterLS.y - radius;
-	float n = sphereCenterLS.z - radius;
+	//float n = sphereCenterLS.z - radius;
+	//float f = sphereCenterLS.z + radius;
 
-	m_xmatLightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+	m_xmatLightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, 0.1f, 1000.f);
 
 	return m_xmatLightProj;
 }
@@ -179,6 +185,27 @@ void CCamera::SetLightCenterPos(const Vector3 & center)
 void CCamera::SetLightRange(const float & range)
 {
 	m_fRange = range;
+}
+
+void CCamera::SetDistLookAtToEye()
+{
+	// CamPos
+	Vector3 vEye = m_pTransform->GetWorldPos();
+	Vector3 vLook = m_vCenter;
+
+	m_vDist = vEye - vLook;
+}
+
+void CCamera::SetLightCenterPosToObject(CGameObject * pGameObject)
+{
+	CTransform *pObjTr = pGameObject->GetTransform();
+
+	Vector3 vObjPos = pObjTr->GetWorldPos();
+
+	m_vCenter = vObjPos;
+	m_pTransform->SetWorldPos(m_vCenter + m_vDist);
+
+	SAFE_RELEASE(pObjTr);
 }
 
 Vector3 CCamera::GetLightCenterPos()

@@ -23,6 +23,9 @@ IMPLEMENT_DYNAMIC(CObjTab, CDialogEx)
 
 CObjTab::CObjTab(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG2, pParent)
+	, m_editMousePosX(_T(""))
+	, m_editMousePosY(_T(""))
+	, m_editMousePosZ(_T(""))
 {
 
 }
@@ -47,9 +50,9 @@ void CObjTab::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_OBJECT_TYPE, m_listObjType);
 	DDX_Control(pDX, IDC_LIST_OBJECTS, m_listObjList);
-	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_X, m_editMousePosX);
-	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_Y, m_editMousePosY);
-	DDX_Control(pDX, IDC_EDIT_MOUSE_POS_Z, m_editMousePosZ);
+	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_X, m_editMousePosX);
+	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_Y, m_editMousePosY);
+	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_Z, m_editMousePosZ);
 }
 
 
@@ -386,9 +389,11 @@ void CObjTab::Undo()
 
 void CObjTab::UpdateMousePos(const Vector3 & mousePos)
 {
-	m_editMousePosX.SetWindowTextW(to_wstring(mousePos.x).c_str());
-	m_editMousePosY.SetWindowTextW(to_wstring(mousePos.y).c_str());
-	m_editMousePosZ.SetWindowTextW(to_wstring(mousePos.z).c_str());
+	m_editMousePosX = to_wstring(mousePos.x).c_str();
+	m_editMousePosY = to_wstring(mousePos.y).c_str();
+	m_editMousePosZ = to_wstring(mousePos.z).c_str();
+
+	UpdateData(FALSE);
 }
 
 
@@ -702,6 +707,7 @@ void CObjTab::OnBnClickedButtonObjectLoad()
 		pTr->SetWorldPos(vPos);
 
 		SAFE_RELEASE(pTr);
+
 		// Vector 추가
 		m_vecObjects[i] = pObj;
 		m_vecStringObjTypePath[i] = meshRestPath;

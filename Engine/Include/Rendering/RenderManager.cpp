@@ -29,6 +29,8 @@
 #include "../Component/ColliderSphere.h"
 #include "../Component/AxisLine.h"
 #include "../Component/ColliderAABB.h"
+#include "../Core.h"
+#include "../Component/ThirdCamera.h"
 PG_USING
 
 DEFINITION_SINGLE(CRenderManager)
@@ -645,9 +647,9 @@ void CRenderManager::Render(float fTime)
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
 			CRenderManager::SortAlpha);
 
-		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
+		/*sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
-			CRenderManager::SortAlphaRenderEnable);
+			CRenderManager::SortAlphaRenderEnable);*/
 	}
 
 	if (m_tRenderGroup[RGT_UI].iSize >= 2)
@@ -657,7 +659,7 @@ void CRenderManager::Render(float fTime)
 			CRenderManager::SortUI);
 	}
 
-	RenderShadowMap(fTime);
+	//RenderShadowMap(fTime);
 
 	// GBuffer를 만든다.
 	RenderGBuffer(fTime);
@@ -826,7 +828,6 @@ void CRenderManager::Render(float fTime)
 		}
 	}
 	m_tRenderGroup[RGT_ALPHA].iSize = 0;
-
 	m_tRenderGroup[RGT_UI].iSize = 0;
 
 
@@ -876,7 +877,7 @@ void CRenderManager::Render(float fTime)
 
 void CRenderManager::RenderShadowMap(float fTime)
 {
-	CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
+	/*CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
 
 	pShadowDepth->ClearTarget();
 	pShadowDepth->SetTarget();
@@ -891,7 +892,7 @@ void CRenderManager::RenderShadowMap(float fTime)
 
 	pShadowDepth->ResetTarget();
 
-	SAFE_RELEASE(pShadowDepth);
+	SAFE_RELEASE(pShadowDepth);*/
 }
 
 void CRenderManager::RenderDecal(float fTime)
@@ -948,9 +949,8 @@ void CRenderManager::RenderGBuffer(float fTime)
 
 	CONTEXT->RSSetViewports(1, &tVP);
 
-	CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
-
-	pShadowDepth->SetShader(18);
+	/*CRenderingTarget* pShadowDepth = FindRenderTarget("ShadowDepth");
+	pShadowDepth->SetShader(18);*/
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLight*	pLight = pScene->GetGlobalLight("GlobalLight");
@@ -1031,7 +1031,6 @@ void CRenderManager::RenderGBuffer(float fTime)
 
 		SAFE_RELEASE(pRenderer);
 	}
-
 
 	for (int i = 0; i < m_tRenderGroup[RGT_DEFAULT].iSize; ++i)
 	{
@@ -1157,15 +1156,12 @@ void CRenderManager::RenderGBuffer(float fTime)
 		}
 	}*/
 
-
 	//for (int i = RGT_LANDSCAPE; i <= RGT_DEFAULT; ++i)
 	//	m_tRenderGroup[i].iSize = 0;
 
 	pDepthTarget->ResetShader(4);
 	SAFE_RELEASE(pDepthTarget);
 	ResetMRT("GBuffer");
-
-	
 }
 
 void CRenderManager::RenderLightAcc(float fTime)
@@ -1359,7 +1355,7 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	CTransform*	pDestTr = pDest->GetTransform();
 
 	CScene*	pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	CCamera*	pCamera = pScene->GetMainCamera();
+	CCamera* pCamera = pScene->GetMainCamera();
 
 	SAFE_RELEASE(pScene);
 
@@ -1375,7 +1371,8 @@ bool CRenderManager::SortAlpha(CGameObject * pSrc, CGameObject * pDest)
 	SAFE_RELEASE(pSrcTr);
 	SAFE_RELEASE(pDestTr);
 
-	return vSrcPos.z >= vDestPos.z;
+	return vSrcPos.Length() > vDestPos.Length();
+	//return vSrcPos.z >= vDestPos.z;
 }
 
 bool CRenderManager::SortAlphaRenderEnable(CGameObject * pSrc, CGameObject * pDest)

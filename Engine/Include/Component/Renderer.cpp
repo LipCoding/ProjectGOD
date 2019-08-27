@@ -640,7 +640,7 @@ void CRenderer::UpdateTransform()
 {
 	TRANSFORMCBUFFER	tBuffer = {};
 
-	XMMATRIX	matView, matProj, matLightWorld, matLightView, matLightProj;
+	XMMATRIX	matView, matProj, matLightWorld, matLightView, matLightProj, matTerrainLightProj;
 	/*matView = XMMatrixLookAtLH(Vector3(0.f, 0.f, -5.f).Convert(),
 	Vector3::Zero.Convert(), Vector3::Axis[AXIS_Y].Convert());
 	matProj = XMMatrixPerspectiveFovLH(PG_PI / 3.f, 1280.f / 720.f,
