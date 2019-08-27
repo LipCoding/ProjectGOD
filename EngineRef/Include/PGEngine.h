@@ -26,6 +26,12 @@
 #include <d2d1.h> // 글자 출력
 #include <dwrite.h> // 글자 출력
 #include <fstream>
+#include <Commdlg.h>
+#include <commctrl.h>
+#include <ShlObj.h>
+#include <cguid.h>
+#include <atlconv.h>
+#include <atlimage.h>
 #pragma comment(lib, "DirectXTex")
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")

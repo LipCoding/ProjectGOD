@@ -13,12 +13,8 @@
 #include "Component/Transform.h"
 #include "Component/UIPanel.h"
 #include "Component/UIButton.h"
-//#include "Core/TimerManager.h"
-//#include "Core\Timer.h"
-//#include "Core/Input.h"
-//#include "Component/ThirdCamera.h"
-//#include "Component/Arm.h"
-//#include "Core/QuadTreeManager.h"
+
+
 UserInterfaceManager::UserInterfaceManager()
 {
 }
@@ -55,7 +51,7 @@ bool UserInterfaceManager::initialize()
 		contents_text_summary->SetArea(50, 150, 750, 300.f);
 
 		CFont* contents_text_contents = ui_quest_object->AddComponent<CFont>("quest_ui_text_contents");
-		contents_text_contents->SetFont("맑은고딕N");
+		contents_text_contents->SetFont("맑은고딕25N");
 		contents_text_contents->SetArea(50, 350, 680, 400.f);
 
 		CTransform* pDropTableTr = ui_quest_object->GetTransform();
@@ -126,10 +122,11 @@ bool UserInterfaceManager::initialize()
 		contents_text_summary->SetText(L"경험치 0");
 
 	}
+
 	/*
-						char reward_item_name[128];
-					int i = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCURSEL, 0, 0);
-					SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETTEXT, i, (LPARAM)reward_item_name);
+		char reward_item_name[128];
+		int i = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCURSEL, 0, 0);
+		SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETTEXT, i, (LPARAM)reward_item_name);
 	*/
 	//char reward_item_name[256];
 	//int count = SendMessage(QuestToolCore::getInstance()->getListBoxRewardItemsHandle(), LB_GETCOUNT, 0, 0);
@@ -188,25 +185,48 @@ Quest* UserInterfaceManager::findQuest(const string & quest_subject)
 
 bool UserInterfaceManager::save(const string & save_file_name)
 {
-	ofstream save_file(save_file_name);
-	save_file << quests.size() << " ";
+	//ofstream save_file(save_file_name);
+	//save_file << quests.size() << " ";
+	
+	string temp_path = save_file_name;
+	
+	volatile int offset = temp_path.size();
+
+	for (; offset > 0; --offset)
+	{
+		
+		if (temp_path[offset] == '\\' || temp_path[offset] == '/')
+		{
+			_cprintf("%d\n", offset);
+			char a = 0;
+			break;
+		}
+
+	}
+
+	string path;
+	copy(temp_path.begin(), temp_path.begin() + offset, back_inserter(path));
+	path += "\\";
+
 	for (Quest* quest : quests)
 	{
+		_cprintf("%s", path.c_str());
+		ofstream save_file(path + quest->getQuestSubject());
 		quest->save(save_file);
+		save_file.close();
 	}
 	return true;
 }
 
 bool UserInterfaceManager::load(const string & load_file_name)
 {
-	quests.clear();
 
 	ifstream load_file(load_file_name);
+	// 폴더내 파일 갯수만큼. 파일이름대로 로드로 변경할것.
+	//int count;
+	//load_file >> count;
 
-	int count;
-	load_file >> count;
-
-	for (int i = 0; i < count; ++i)
+	//for (int i = 0; i < count; ++i)
 	{
 		// 새 퀘스트 할당.
 		Quest* load_quest = new Quest;

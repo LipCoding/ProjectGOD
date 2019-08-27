@@ -646,6 +646,7 @@ void CRenderManager::Render(float fTime)
 		sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
 			CRenderManager::SortAlpha);
+
 		/*sort(&m_tRenderGroup[RGT_ALPHA].pRenderObj[0],
 			&m_tRenderGroup[RGT_ALPHA].pRenderObj[m_tRenderGroup[RGT_ALPHA].iSize],
 			CRenderManager::SortAlphaRenderEnable);*/

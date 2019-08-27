@@ -45,6 +45,8 @@ bool QuestResourcesManager::initialize()
 		reward_items_texture.push_back(make_pair(file_name, new_image));
 	}
 
+
+
 	return true;
 }
 

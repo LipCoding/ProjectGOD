@@ -177,13 +177,6 @@ bool QuestToolCore::initialize(HINSTANCE instance)
 	int iRet = GET_SINGLE(CCore)->Run();
 
 	DESTROY_SINGLE(CCore);
-	/*
-		quest_tool_hwnd = CreateWindowW(pClass, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
-		WS_CLIPCHILDREN,
-		0, 0, 100, 100, hWnd, (HMENU)NULL, m_hInst, nullptr);
-	*/
-
-
 
 	return iRet;
 }
@@ -658,17 +651,99 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				switch (HIWORD(wParam)) {
 				case EN_CHANGE:
 				{
+#pragma region temp1
+					/*
+					// 에디트박스로부터 문자열 받아옴.
 					char temp_edit_string[1500];
 					GetWindowTextA(QuestToolCore::getInstance()->getEditQuestContentsHandle(), temp_edit_string, 1500);
+
+					// 컨텐츠 문자열 변경.
 					QuestToolCore::getInstance()->setEditQuestContents(string{ temp_edit_string });
+					
 					CGameObject* quest_ui_object = QuestToolCore::getInstance()->getQuestUIObject();
 
+					//컨버팅 받을 문자열
 					wstring temp_edit_wstring;
+					// 문자열 컨버팅
 					string temp_prev_convert_contents_string = string{ temp_edit_string };
 					temp_edit_wstring = strconv(temp_prev_convert_contents_string);
 
 					
+					// 폰트에 연결된 문자열 변경.
+					CFont* contents_text = quest_ui_object->FindComponentFromTag<CFont>("quest_ui_text_contents");
+					contents_text->SetText(temp_edit_wstring);
+					QuestToolCore::getInstance()->setEditQuestContentsText(contents_text);
+					*/
+#pragma endregion
+					char temp_edit_string[1500];
+					GetWindowTextA(QuestToolCore::getInstance()->getEditQuestContentsHandle(), temp_edit_string, 1500);
 
+					vector<string>& contents_strings = QuestToolCore::getInstance()->getContentsStrings();
+					contents_strings.clear();
+					string edit_string = temp_edit_string;
+					
+					string temp_string;
+					int size = edit_string.size() - 25;
+					if (size >= 0)
+					{
+						// 몫으로 구해서 단위를한다.
+						// 25개 단위로 문자열을 채워넣는다.
+						int lines = edit_string.size() / 25;
+						_cprintf("%d", lines);
+
+						for (int index = 0; index < lines; ++index)
+						{
+							// 총 3줄만 나오게 하는 작업.
+							if (index > 2)
+								break;
+
+							temp_string.clear();
+							for (int j = 0; j < 25; ++j)
+							{
+								temp_string += edit_string[(index*25)+j];
+							}
+							contents_strings.push_back(temp_string);
+						}
+						// 총 3줄만 나오게 하는 조건.
+						if (lines < 3)
+						{
+							// 모듈연산으로 몫으로 계산한 라인 뒤부터남은 문자열을 채워넣는다.
+							int words = edit_string.size() % 25;
+							if (words != 0)
+							{
+								temp_string.clear();
+								for (int index = 0; index < words; ++index)
+								{
+
+									temp_string += edit_string[(lines * 25) + index];
+								}
+								contents_strings.push_back(temp_string);
+							}
+						}
+					}
+					else
+					{
+						contents_strings.push_back(edit_string);
+						temp_string.clear();
+					}
+
+					// 컨텐츠 문자열 변경.
+					QuestToolCore::getInstance()->setEditQuestContents(string{ temp_edit_string });
+
+					CGameObject* quest_ui_object = QuestToolCore::getInstance()->getQuestUIObject();
+
+					//컨버팅 받을 문자열
+					wstring temp_edit_wstring;
+					
+					string view_string;
+
+					for (const string& string : contents_strings)
+					{
+						view_string += string + '\n';
+					}
+
+					temp_edit_wstring = strconv(view_string);
+					// 폰트에 연결된 문자열 변경.
 					CFont* contents_text = quest_ui_object->FindComponentFromTag<CFont>("quest_ui_text_contents");
 					contents_text->SetText(temp_edit_wstring);
 					QuestToolCore::getInstance()->setEditQuestContentsText(contents_text);
@@ -681,12 +756,12 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			case REWARD_LIST:
 			{
 				switch (HIWORD(wParam)) {
-				case LBN_SELCHANGE:
-				{
-					// 모든 보상아이템 목록을 보여준다.
+					case LBN_SELCHANGE:
+					{
+						// 모든 보상아이템 목록을 보여준다.
 
-				}
-				break;
+					}
+					break;
 				}
 			}
 			break;
@@ -900,6 +975,10 @@ LRESULT clientProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				if (GetOpenFileNameA(&OFN) != 0) {
 					quest_tool_core->load(string{ OFN.lpstrFile });
 				}
+
+				int count = SendMessage(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_GETCOUNT, 0, 0);
+				for (int i = count - 1; i >= 0; --i)
+					SendMessageA(QuestToolCore::getInstance()->getListBoxQuestListsHandle(), LB_DELETESTRING, i, 0);
 
 				for (const auto& quest : UserInterfaceManager::getInstance()->getQuests())
 				{
