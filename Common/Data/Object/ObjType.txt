@@ -64,6 +64,7 @@
 98.Static_Mesh\04.Deco\DG_Statue
 98.Static_Mesh\05.Wall\Stone_Wall
 98.Static_Mesh\05.Wall\Wood_Fence
+98.Static_Mesh\05.Wall\Dungeon_Wall
 98.Static_Mesh\06.Facility\Well
 98.Static_Mesh\07.Enterance\Wall_Enterance
 98.Static_Mesh\07.Enterance\DG_Entrance

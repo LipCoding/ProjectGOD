@@ -63,8 +63,8 @@ bool CTestScene::Init()
 		// Load Terrain
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
-		pLandScape->Load_Terrain("Main_Scene_1");
-		//pLandScape->Load_Terrain("TESTTEST");
+		//pLandScape->Load_Terrain("Main_Scene_1");
+		pLandScape->Load_Terrain("TESTTEST");
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
@@ -75,7 +75,7 @@ bool CTestScene::Init()
 		pScene->LoadGlobLight("Shadow_Test");
 		//pScene->LoadPointLight("Night_Test");
 #pragma endregion
-		CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
+		//CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
 		CGameObject::LoadEnvObjects(L"ray_test", pLayer2);
 
 #pragma region Navigation

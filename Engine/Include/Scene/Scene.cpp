@@ -525,7 +525,7 @@ int CScene::Update(float fTime)
 
 		float		fNearDist = 10000.f;
 		Vector3		vNearRayCollidePos;
-		
+
 		CGameObject *collideCamTargetObj = nullptr;
 		Vector3 vCameraRay = -m_pMainCameraTr->GetWorldAxis(AXIS_Z);
 
@@ -533,72 +533,76 @@ int CScene::Update(float fTime)
 
 		// Objects
 		CLayer *pLayer = GetLayer("RayCollide");
-		for (const auto& obj : pLayer->getObjectList())
+		if (pLayer)
 		{
-			// 보이는 애 중에서
-			if (!obj->GetRenderEnable())
-				continue;
-			
-			// 근처에 있는 애, 혹은 NearDist보다 작은 그니까 부딪힌게 가장 가까이 있는지
-			CTransform *pObjTr = obj->GetTransform();
-			Vector3 vObjPos = pObjTr->GetWorldPos();
-
-			float fDistObjToTarget = vObjPos.Distance(pArm->GetTargetPos());
-
-			if (fDistObjToTarget > fDistCamToTarget ||
-				fDistObjToTarget > 500.f)
-				continue;
-
-			// 메쉬 정점 정보 가져옴
-			CRenderer *pRenderer = obj->FindComponentFromType<CRenderer>(CT_RENDERER);
-			if (pRenderer == nullptr)
-				continue;
-			CMesh *pMesh = pRenderer->GetMesh();
-
-			vector<Vector3> vecObjPos;
-			vector<int> vecObjIndex;
-			pMesh->GetMeshWorldPosition(&vecObjPos, pObjTr->GetLocalMatrix() * pObjTr->GetWorldMatrix());
-			pMesh->GetMeshIndex(&vecObjIndex);
-
-			// 충돌하는지 검사
-			Vector3 vRayCollidePos = Vector3(0.f, 0.f, 0.f);
-			bool collideCheck = pPicking->Picking_ToBuffer(&vRayCollidePos, pArm->GetTargetPos(), vCameraRay, vecObjPos, vecObjIndex);
-
-			float fDistRayToTarget = vRayCollidePos.Distance(pArm->GetTargetPos());
-
-			// 충돌한 것이 NearDist보다 작으면 저장
-			if (collideCheck)
+			for (const auto& obj : pLayer->getObjectList())
 			{
-				if (fDistRayToTarget < fNearDist)
+				// 보이는 애 중에서
+				if (!obj->GetRenderEnable())
+					continue;
+
+				// 근처에 있는 애, 혹은 NearDist보다 작은 그니까 부딪힌게 가장 가까이 있는지
+				CTransform *pObjTr = obj->GetTransform();
+				Vector3 vObjPos = pObjTr->GetWorldPos();
+
+				float fDistObjToTarget = vObjPos.Distance(pArm->GetTargetPos());
+
+				if (fDistObjToTarget > 500.f)
+					continue;
+
+				// 메쉬 정점 정보 가져옴
+				CRenderer *pRenderer = obj->FindComponentFromType<CRenderer>(CT_RENDERER);
+				if (pRenderer == nullptr)
+					continue;
+				CMesh *pMesh = pRenderer->GetMesh();
+
+				vector<Vector3> vecObjPos;
+				vector<int> vecObjIndex;
+				pMesh->GetMeshWorldPosition(&vecObjPos, pObjTr->GetLocalMatrix() * pObjTr->GetWorldMatrix());
+				pMesh->GetMeshIndex(&vecObjIndex);
+
+				// 충돌하는지 검사
+				Vector3 vRayCollidePos = Vector3(0.f, 0.f, 0.f);
+				bool collideCheck = pPicking->Picking_ToBuffer(&vRayCollidePos, pArm->GetTargetPos(), vCameraRay, vecObjPos, vecObjIndex);
+
+				float fDistRayToTarget = vRayCollidePos.Distance(pArm->GetTargetPos());
+
+				// 충돌한 것이 NearDist보다 작으면 저장
+				// 그리고 카메라 길이보다 작아야..
+				if (collideCheck)
 				{
-					fNearDist = fDistRayToTarget;
-					collideCamTargetObj = obj;
-					vNearRayCollidePos = vRayCollidePos + -vCameraRay * 1.25f;
+					if (fDistRayToTarget < fNearDist &&
+						fDistRayToTarget < fDistCamToTarget)
+					{
+						fNearDist = fDistRayToTarget;
+						collideCamTargetObj = obj;
+						vNearRayCollidePos = vRayCollidePos + pArm->GetLookAt() + -vCameraRay * 1.25f ;
+					}
 				}
+
+				SAFE_RELEASE(pRenderer);
+				SAFE_RELEASE(pMesh);
+				SAFE_RELEASE(pObjTr);
 			}
 
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pMesh);
-			SAFE_RELEASE(pObjTr);
-		}
-
-		// 한계치 검사
-		float fLimitDist = pArm->GetTargetPos().Distance(m_pMainCameraTr->GetWorldPos());
-		if (fLimitDist > 5.f)
-		{
-			// 가장 가까이 있는 애가 존재하면
-			if (collideCamTargetObj)
+			// 한계치 검사
+			float fLimitDist = pArm->GetTargetPos().Distance(m_pMainCameraTr->GetWorldPos());
+			if (fLimitDist > 5.f)
 			{
-				// vCollidePos로 Set
-				m_pMainCameraTr->SetWorldPos(vNearRayCollidePos);
-			}
-
-			// z
-			float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(m_pMainCameraTr->GetWorldPos());
-			if (vMainCamPos.y < fTerrainHeight + 1.5f)
-				m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);
+				// 가장 가까이 있는 애가 존재하면
+				if (collideCamTargetObj)
+				{
+					// vCollidePos로 Set
+					m_pMainCameraTr->SetWorldPos(vNearRayCollidePos);
+				}
+			}		
+			SAFE_RELEASE(pLayer);
 		}
 
+		// z
+		float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(m_pMainCameraTr->GetWorldPos());
+		if (vMainCamPos.y < fTerrainHeight + 1.5f)
+			m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);
 		SAFE_RELEASE(pPicking);
 		SAFE_RELEASE(pArm);
 	}

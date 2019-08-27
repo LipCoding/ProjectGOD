@@ -24,6 +24,8 @@ private:
 public:
 	const Vector3&			GetDist() { return m_vDist; } 
 	const Vector3&			GetTargetPos() { return m_pTarget->GetWorldPos() + m_vLookAtDist; }
+	const Vector3&			GetLookAt() { return m_vLookAtDist; }
+
 public:
 	void SetTarget(class CTransform* pTarget);
 	void SetTarget(class CGameObject* pTarget);
