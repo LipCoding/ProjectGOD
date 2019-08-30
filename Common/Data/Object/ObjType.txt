@@ -270,3 +270,4 @@
 99.Dynamic_Mesh\02.Monster\Golem\Golem
 99.Dynamic_Mesh\02.Monster\Mino\Mino
 99.Dynamic_Mesh\02.Monster\DemonLord\DemonLord
+97.Effect_Mesh\Box

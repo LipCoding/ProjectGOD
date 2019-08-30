@@ -383,7 +383,8 @@ CGameObject::CGameObject() :
 	m_pTransform(NULL),
 	m_pParent(NULL),
 	m_bDontDestroy(false),
-	m_bCulling(false)
+	m_bCulling(false),
+	m_bRayCollideObj(false)
 {
 	SetTag("GameObject");
 	SetTypeName("CGameObject");
@@ -456,6 +457,16 @@ void CGameObject::SetCulling(bool bCulling)
 bool CGameObject::GetCulling() const
 {
 	return m_bCulling;
+}
+
+void CGameObject::SetRayCollide(bool bRayCollide)
+{
+	m_bRayCollideObj = bRayCollide;
+}
+
+bool CGameObject::GetRayCollide() const
+{
+	return m_bRayCollideObj;
 }
 
 void CGameObject::DontDestroyOnLoad(bool bDontDestroy)
@@ -1126,7 +1137,7 @@ void CGameObject::OnCollisionLeave(CCollider * pSrc,
 	}
 }
 
-void CGameObject::LoadEnvObjects(const wstring & strFileName, class CLayer* pLayer)
+void CGameObject::LoadEnvObjects(const wstring & strFileName, class CLayer* pLayer, const bool& cullingCheck)
 {
 	wchar_t strPath[MAX_PATH] = {};
 	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
@@ -1186,7 +1197,9 @@ void CGameObject::LoadEnvObjects(const wstring & strFileName, class CLayer* pLay
 		SAFE_RELEASE(pTr);
 
 		// QuadTree Child (for culling)
-		GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pObj);
+		if(cullingCheck == true)
+			GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pObj);
+
 		SAFE_RELEASE(pObj);
 	}
 

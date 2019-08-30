@@ -84,6 +84,7 @@
 #define IDC_CHECK_HEIGHT_INIT           1027
 #define IDC_EDIT11                      1027
 #define IDC_EDIT_DIR_POSY               1027
+#define IDC_CHECK_COLLIDE_OBJ           1027
 #define IDC_CHECK_HEIGHT                1028
 #define IDC_BUTTON_NAVI_UNDO            1028
 #define IDC_EDIT12                      1028
@@ -134,7 +135,9 @@
 #define IDC_BUTTON_GLOBLIGHT_SAVE       1050
 #define IDC_BUTTON_OBJECT_LOAD          1051
 #define IDC_BUTTON_NAVI_SAVE            1052
+#define IDC_BUTTON_OBJECT_LOAD_COLLIDE  1052
 #define IDC_BUTTON_NAVI_LOAD            1053
+#define IDC_BUTTON_OBJECT_SAVE_COLLIDE  1053
 #define IDC_LIST_NAVI_POINT             1054
 #define IDC_LIST_NAVI_CELL              1055
 #define IDC_BUTTON_NAVI_CLEARALL        1056

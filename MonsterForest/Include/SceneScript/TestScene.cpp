@@ -64,7 +64,8 @@ bool CTestScene::Init()
 		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 		//pLandScape->Load_Terrain("Main_Scene_1");
-		pLandScape->Load_Terrain("TESTTEST");
+		//pLandScape->Load_Terrain("Main_Scene_1_test");
+		pLandScape->Load_Terrain("dungeon_scene");
 		SAFE_RELEASE(pLandScape);
 		SAFE_RELEASE(pLandScapeObj);
 #pragma endregion
@@ -72,15 +73,21 @@ bool CTestScene::Init()
 #pragma region SkyAndLight
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
-		pScene->LoadGlobLight("Shadow_Test");
-		//pScene->LoadPointLight("Night_Test");
+		pScene->LoadGlobLight("1");
+		pScene->LoadPointLight("1");
 #pragma endregion
 		//CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
-		CGameObject::LoadEnvObjects(L"ray_test", pLayer2);
+		//CGameObject::LoadEnvObjects(L"Main_Scene_1_test", pLayer);
+		//CGameObject::LoadEnvObjects(L"inside", pLayer2);
+		//CGameObject::LoadEnvObjects(L"dungeon_deco", pLayer);
+		//CGameObject::LoadEnvObjects(L"dungeon_scene", pLayer2);
+		CGameObject::LoadEnvObjects(L"1", pLayer2, false);
+		CGameObject::LoadEnvObjects(L"2", pLayer);
 
 #pragma region Navigation
-		GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Navi_Ray");
-		GET_SINGLE(CNaviManager)->SetCurNaviName("Navi_Ray");
+		string naviName = "1";
+		GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile(naviName);
+		GET_SINGLE(CNaviManager)->SetCurNaviName(naviName);
 		GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 #pragma endregion
 
@@ -93,7 +100,7 @@ bool CTestScene::Init()
 
 		CRenderer*	pRenderer = pPlayerObj->FindComponentFromTag<CRenderer>("PlayerRenderer");
 
-		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells("Navi_Ray"))[0]->Get_CenterPos();
+		Vector3 vFirstNodeCenterPos = (*GET_SINGLE(CNaviManager)->GetNaviCells(naviName))[0]->Get_CenterPos();
 
 		pTr->SetWorldPos(vFirstNodeCenterPos);
 		pTr->SetWorldScale(1.5f, 1.5f, 1.5f);
@@ -130,6 +137,41 @@ bool CTestScene::Init()
 		GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
 		//GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(29.f, 0.f, 271.f));
 		//GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+
+		GET_SINGLE(CEffectManager)->AddEffect("Fire_Tall_Dark", "Effect\\Common\\Fire_tall_dark.bin");
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(33.8f, 14.9f, 19.5f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(14.75f, 14.9f, 18.49f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(34.22f, 14.9f, 74.74f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(15.82f, 14.9f, 76.95f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(46.81f, 14.9f, 136.96f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(47.75f, 14.9f, 110.16f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(71.53f, 14.9f, 136.65f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(72.16f, 14.9f, 110.67f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(102.12f, 14.9f, 144.09f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(124.04f, 14.9f, 162.20f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(150.75f, 14.9f, 189.65f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(173.61f, 14.9f, 153.99f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(179.18f, 14.9f, 243.04f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(206.35f, 14.9f, 243.01f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(194.30f, 14.9f, 205.99f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(226.91f, 14.9f, 207.47f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(227.09f, 14.9f, 193.04f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(260.92f, 14.9f, 207.50f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(261.69f, 14.9f, 193.25f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(324.48f, 14.9f, 226.13f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(369.84f, 14.9f, 225.68f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(369.94f, 14.9f, 173.79f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(324.01, 14.9f, 174.36f));
+
+		GET_SINGLE(CEffectManager)->AddEffect("Big_Fire", "Effect\\Common\\BigFire01.bin");
+		GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(17.4f, 1.25f, 131.64f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(65.f, 2.4f, 183.87f));
+
+		GET_SINGLE(CEffectManager)->AddEffect("Fire_Bright", "Effect\\Common\\Fire_Bright.bin");
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(93.61f, 6.75f, 138.01f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(161.83f, 6.75f, 139.08f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(133.80f, 6.75f, 173.73f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(124.08f, 6.75f, 188.72f));
 #pragma endregion
 	}
 
