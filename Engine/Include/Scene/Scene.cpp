@@ -531,6 +531,11 @@ int CScene::Update(float fTime)
 
 		float fDistCamToTarget = vMainCamPos.Distance(pArm->GetTargetPos());
 
+		// z
+		float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(m_pMainCameraTr->GetWorldPos());
+		if (vMainCamPos.y < fTerrainHeight + 1.5f)
+			m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);
+
 		// Objects
 		CLayer *pLayer = GetLayer("RayCollide");
 		if (pLayer)
@@ -599,10 +604,40 @@ int CScene::Update(float fTime)
 			SAFE_RELEASE(pLayer);
 		}
 
-		// z
-		float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(m_pMainCameraTr->GetWorldPos());
-		if (vMainCamPos.y < fTerrainHeight + 1.5f)
-			m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);
+		
+
+		// Light Culling
+		Vector3 vTargetPos = pArm->GetTargetPos();
+		vTargetPos.y = 0.f;
+
+		for (const auto& light : m_LightList)
+		{
+			CLight *pLight = light->FindComponentFromType<CLight>(CT_LIGHT);
+
+			if (pLight->GetLightInfo().iType != LT_POINT || 
+				light->GetTag() == "GlobalLight")
+			{
+				SAFE_RELEASE(pLight);
+				continue;
+			}
+
+			CTransform *pLightTr = pLight->GetTransform();
+			Vector3 vLightPos = pLightTr->GetWorldPos();
+			vLightPos.y = 0.f;
+
+			if (vTargetPos.Distance(vLightPos) > 150)
+			{
+				light->SetCulling(true);
+			}
+			else
+			{
+				light->SetCulling(false);
+			}
+
+			SAFE_RELEASE(pLightTr);
+			SAFE_RELEASE(pLight);
+		}
+
 		SAFE_RELEASE(pPicking);
 		SAFE_RELEASE(pArm);
 	}
@@ -635,6 +670,9 @@ int CScene::Update(float fTime)
 
 	if (m_pSkyObject)
 		m_pSkyObject->Update(fTime);
+
+	// QuadTree Culling
+	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
 
 	return 0;
 }
@@ -893,7 +931,7 @@ void CScene::LoadSky(const wstring & strFileName)
 	}
 }
 
-void CScene::LoadGlobLight(const string & strFileName)
+void CScene::LoadGlobLight(const string & strFileName, const Vector4& ambient)
 {
 	string path = "Light\\Glob\\" + strFileName + ".bin";
 	
@@ -919,17 +957,16 @@ void CScene::LoadGlobLight(const string & strFileName)
 
 	CLight*	pGlobalLight = GetGlobalLight("GlobalLight");
 
-	pGlobalLight->SetLightColor(vLightColor);
-	
 	m_pLightCamera->SetLightRange(fRange);
 	m_pLightCameraTr->SetWorldPos(vCamPos);
 	m_pLightCamera->SetLightCenterPos(vCamLookPos);
 	m_pLightCamera->SetDistLookAtToEye();
+	pGlobalLight->SetLightColor(vLightColor, ambient);
 
 	SAFE_RELEASE(pGlobalLight);
 }
 
-void CScene::LoadPointLight(const string & strFileName)
+void CScene::LoadPointLight(const string & strFileName, const Vector4& ambient)
 {
 	string path = "Light\\Point\\" + strFileName + ".bin";
 
@@ -963,10 +1000,10 @@ void CScene::LoadPointLight(const string & strFileName)
 		pPointLight = CreateLight(strLightName, LT_POINT);
 		pTr = pPointLight->GetTransform();
 		pPointLight->SetLightRange(fRange);
-		pPointLight->SetLightColor(vColor);
+		pPointLight->SetLightColor(vColor, ambient);
 		pTr->SetWorldPos(vPos);
 
-		if (fRange <= 100.f)
+		if (fRange <= 50.f)
 		{
 			CGameObject *pLightGameObject = pPointLight->GetGameObject();
 			GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pLightGameObject);

@@ -19,7 +19,7 @@ protected:
 
 public:
 	virtual bool Init() = 0;
-	virtual void Input(float fTime);
+	virtual void Input(float fTime); 
 	virtual int Update(float fTime);
 	virtual int LateUpdate(float fTime);
 	virtual void Collision(float fTime);
@@ -37,6 +37,7 @@ public:
 	void SetShader();
 
 	const Vector4& GetLightColorDiffuse();
+	const LIGHT& GetLightInfo();
 };
 
 PG_END

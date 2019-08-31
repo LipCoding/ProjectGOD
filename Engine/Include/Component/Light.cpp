@@ -80,3 +80,9 @@ const Vector4 & CLight::GetLightColorDiffuse()
 	// TODO: 여기에 반환 구문을 삽입합니다.
 	return m_tInfo.vDif;
 }
+
+const LIGHT & CLight::GetLightInfo()
+{
+	// TODO: 여기에 반환 구문을 삽입합니다.
+	return m_tInfo;
+}

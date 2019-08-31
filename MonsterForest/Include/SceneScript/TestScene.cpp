@@ -73,8 +73,8 @@ bool CTestScene::Init()
 #pragma region SkyAndLight
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
-		pScene->LoadGlobLight("1");
-		pScene->LoadPointLight("1");
+		pScene->LoadGlobLight("1", Vector4(0.2f, 0.2f, 0.2f, 1.f));
+		pScene->LoadPointLight("1", Vector4(0.2f, 0.2f, 0.2f, 1.f));
 #pragma endregion
 		//CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
 		//CGameObject::LoadEnvObjects(L"Main_Scene_1_test", pLayer);
@@ -164,7 +164,7 @@ bool CTestScene::Init()
 		GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(324.01, 14.9f, 174.36f));
 
 		GET_SINGLE(CEffectManager)->AddEffect("Big_Fire", "Effect\\Common\\BigFire01.bin");
-		GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(17.4f, 1.25f, 131.64f));
+		GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(17.4f, 2.25f, 131.64f));
 		GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(65.f, 2.4f, 183.87f));
 
 		GET_SINGLE(CEffectManager)->AddEffect("Fire_Bright", "Effect\\Common\\Fire_Bright.bin");

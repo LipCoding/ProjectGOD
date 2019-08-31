@@ -73,8 +73,8 @@ public:
 	void LoadFromFullPath(const char* pFullPath);
 	
 	void LoadSky(const wstring& strFileName);
-	void LoadGlobLight(const string& strFileName);
-	void LoadPointLight(const string& strFileName);
+	void LoadGlobLight(const string& strFileName, const Vector4& ambient = Vector4(1.f, 1.f, 1.f, 1.f));
+	void LoadPointLight(const string& strFileName, const Vector4& ambient = Vector4(1.f, 1.f, 1.f, 1.f));
 public:
 	class CLayer* CreateLayer(const string& strTag = "", int iZOrder = 0);
 	class CLayer* GetLayer(const string& strTag);
