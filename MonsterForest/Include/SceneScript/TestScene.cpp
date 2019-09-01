@@ -73,16 +73,16 @@ bool CTestScene::Init()
 #pragma region SkyAndLight
 		// SkyBox, Light
 		pScene->LoadSky(L"Skybox_2");
-		pScene->LoadGlobLight("1", Vector4(0.2f, 0.2f, 0.2f, 1.f));
-		pScene->LoadPointLight("1", Vector4(0.2f, 0.2f, 0.2f, 1.f));
+		pScene->LoadGlobLight("dungeon_scene", Vector4(0.2f, 0.2f, 0.2f, 1.f));
+		pScene->LoadPointLight("dungeon_scene", Vector4(0.2f, 0.2f, 0.2f, 1.f));
 #pragma endregion
 		//CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
 		//CGameObject::LoadEnvObjects(L"Main_Scene_1_test", pLayer);
 		//CGameObject::LoadEnvObjects(L"inside", pLayer2);
 		//CGameObject::LoadEnvObjects(L"dungeon_deco", pLayer);
 		//CGameObject::LoadEnvObjects(L"dungeon_scene", pLayer2);
-		CGameObject::LoadEnvObjects(L"1", pLayer2, false);
-		CGameObject::LoadEnvObjects(L"2", pLayer);
+		CGameObject::LoadEnvObjects(L"dungeon_scene_collision", pLayer2, false);
+		CGameObject::LoadEnvObjects(L"dungeon_scene", pLayer);
 
 #pragma region Navigation
 		string naviName = "1";

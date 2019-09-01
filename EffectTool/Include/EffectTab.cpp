@@ -895,7 +895,7 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 
 
 	/* Collider */
-	CRenderer *pRenderer = m_pObjectMesh->FindComponentFromType<CRenderer>(CT_RENDERER);
+	/*CRenderer *pRenderer = m_pObjectMesh->FindComponentFromType<CRenderer>(CT_RENDERER);
 	CMesh *pMesh = pRenderer->GetMesh();
 	
 	CTransform *pTr = m_pObjectMesh->GetTransform();
@@ -913,16 +913,16 @@ void CEffectTab::OnBnClickedButtonLoadTargetObj()
 	CColliderSphere* pCollider = m_pObjectMesh->AddComponent<CColliderSphere>("Collider");
 	pCollider->SetSphere(vCenter, fRadius);
 	pCollider->SetColliderRenderCheck(true);
-	SAFE_RELEASE(pCollider);
+	SAFE_RELEASE(pCollider);*/
 
 	/*CColliderAABB* pCollider = m_pObjectMesh->AddComponent<CColliderAABB>("Collider");
 	pCollider->SetAABB(vMin * 1.5f, vMax * 1.5f);
 	pCollider->SetColliderRenderCheck(true);
 	SAFE_RELEASE(pCollider);*/
 
-	SAFE_RELEASE(pTr);
+	/*SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pMesh);
-	SAFE_RELEASE(pRenderer);
+	SAFE_RELEASE(pRenderer);*/
 }
 
 void CEffectTab::OnCbnSelchangeComboBoneList()
@@ -1896,6 +1896,29 @@ void CEffectTab::OnBnClickedButtonInfoMain()
 void CEffectTab::OnBnClickedButtonMainPlay()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	// Anim
+	if (m_pObjectMesh)
+	{
+		int iPos = m_comboBoxAnimInfo.GetCurSel();
+
+		if (iPos == -1)
+			return;
+
+		CString strClip;
+		m_comboBoxAnimInfo.GetLBText(iPos, strClip);
+
+		string strKey = CT2CA(strClip);
+
+		CAnimation *pAnimation = m_pObjectMesh->FindComponentFromType<CAnimation>(CT_ANIMATION);
+		CAnimationClip *pClip = pAnimation->FindClip(strKey);
+		UpdateData(FALSE);
+
+		pAnimation->ReturnDefaultClip();
+		pAnimation->ChangeClip(strKey);
+
+		SAFE_RELEASE(pAnimation);
+	}
+
 	if (!m_pTargetObject)
 		return;
 
@@ -1911,7 +1934,7 @@ void CEffectTab::OnBnClickedButtonMainPlay()
 		}
 	}
 	/* Part */
-	else
+	else 
 	{
 		CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
 		if (!pEffect)
@@ -1929,12 +1952,23 @@ void CEffectTab::OnBnClickedButtonMainPlay()
 void CEffectTab::OnBnClickedButtonMainStop()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	// Anim
+	if (m_pObjectMesh)
+	{
+		CAnimation *pAnimation = m_pObjectMesh->FindComponentFromType<CAnimation>(CT_ANIMATION);
+	
+		pAnimation->ReturnDefaultClip();
+		SAFE_RELEASE(pAnimation);
+	}
+	
 	if (!m_pTargetObject)
 		return;
 
 	CEffect *pEffect = m_pTargetObject->FindComponentFromType<CEffect>(CT_EFFECT);
 	if (!pEffect)
 		return;
+
+
 
 	/* All */
 	for (auto& effect : *((CMainFrame*)AfxGetMainWnd())->GetEdit()->GetEffects())

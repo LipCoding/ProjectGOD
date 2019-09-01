@@ -107,6 +107,11 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CInput)->CreateKey("RotInvZ", 'T');
 	GET_SINGLE(CInput)->CreateKey("RotZ", 'G');
 
+	GET_SINGLE(CInput)->CreateKey("MoveLeft", 'A');
+	GET_SINGLE(CInput)->CreateKey("MoveRight", 'D');
+
+	GET_SINGLE(CInput)->CreateKey("Jump", VK_SPACE);
+
 	GET_SINGLE(CInput)->CreateKey("ShieldOn", VK_F1);
 	GET_SINGLE(CInput)->CreateKey("ShieldOff", VK_F2);
 	GET_SINGLE(CInput)->CreateKey("ShieldRangeOn", VK_F3);
@@ -246,12 +251,113 @@ void CPlayer_Test::Input(float fTime)
 		}
 
 		m_pTransform->SetWorldPos(vPos);
-		m_pAnimation->ChangeClip("Run1");
+		m_pAnimation->ChangeClip("RunBack1");
 	}
 
 	if (KEYUP("MoveBack"))
 	{
 		m_pAnimation->ReturnDefaultClip();
+	}
+
+	if (KEYPUSH("MoveLeft"))
+	{
+		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_X).Normalize();
+		Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_X).Normalize();
+
+		vdirection = -vdirection;
+		vDir = -vDir;
+		vPos += vDir * -m_fMoveSpeed * 2.f * fTime;
+
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			m_pTransform->MoveWorld(AXIS_X, -m_fMoveSpeed * 2.f, fTime);
+			vPos = m_pTransform->GetWorldPos();
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+			{
+				m_pTransform->MoveWorld(AXIS_X, -m_fMoveSpeed * 2.f, fTime);
+				vPos = m_pTransform->GetWorldPos();
+				float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+				//float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				vPos.y = fPosY;
+			}
+			else
+			{
+				Vector3 vOpposite = -vdirection;
+				Vector3 vSlide = vDir * vOpposite.Dot(vDir);
+				vSlide = vDir + vSlide;
+
+				vPos = m_pTransform->GetWorldPos();
+				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
+
+				//vPos = 
+			}
+		}
+
+		m_pTransform->SetWorldPos(vPos);
+		m_pAnimation->ChangeClip("RunLeft");
+	}
+
+	if (KEYUP("MoveLeft"))
+	{
+		m_pAnimation->ReturnDefaultClip();
+	}
+
+	if (KEYPUSH("MoveRight"))
+	{
+		Vector3 vPos = m_pTransform->GetWorldPos();
+		Vector3 vdirection = m_pTransform->GetWorldAxis(AXIS_X).Normalize();
+		Vector3 vDir = m_pTransform->GetWorldAxis(AXIS_X).Normalize();
+
+		vPos += vDir * m_fMoveSpeed * 2.f * fTime;
+
+		if (GET_SINGLE(CNaviManager)->GetNaviCells() == nullptr)
+		{
+			m_pTransform->MoveWorld(AXIS_X, m_fMoveSpeed * 2.f, fTime);
+			vPos = m_pTransform->GetWorldPos();
+			float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+			vPos.y = fPosY;
+		}
+		else
+		{
+			if (GET_SINGLE(CNaviManager)->CheckPosition(vPos, &vDir))
+			{
+				m_pTransform->MoveWorld(AXIS_X, m_fMoveSpeed * 2.f, fTime);
+				vPos = m_pTransform->GetWorldPos();
+				float fPosY = GET_SINGLE(CQuadTreeManager)->GetY(vPos);
+				//float fPosY = GET_SINGLE(CNaviManager)->GetY(vPos);
+				vPos.y = fPosY;
+			}
+			else
+			{
+				Vector3 vOpposite = -vdirection;
+				Vector3 vSlide = vDir * vOpposite.Dot(vDir);
+				vSlide = vDir + vSlide;
+
+				vPos = m_pTransform->GetWorldPos();
+				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
+
+				//vPos = 
+			}
+		}
+
+		m_pTransform->SetWorldPos(vPos);
+		m_pAnimation->ChangeClip("RunRight");
+	}
+
+	if (KEYUP("MoveRight"))
+	{
+		m_pAnimation->ReturnDefaultClip();
+	}
+
+	if (KEYDOWN("Jump"))
+	{
+		m_pAnimation->ChangeClip("Jump");
 	}
 
 	if (KEYDOWN("Attack1"))
@@ -308,6 +414,17 @@ int CPlayer_Test::Update(float fTime)
 
 	Vector3 vPos = m_pTransform->GetWorldPos();
 	m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
+
+	// Cam 방향으로 회전
+	CCamera *pMainCam = m_pScene->GetMainCamera();
+	CTransform *pCamTr = pMainCam->GetTransform();
+	Vector3 vCamPos = pCamTr->GetWorldPos();
+	vCamPos.y = 0.f;
+	vPos.y = 0.f;
+
+	Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
+
+	m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
 
 	return 0;
 }
