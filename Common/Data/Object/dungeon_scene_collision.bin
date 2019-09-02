@@ -1,0 +1,501 @@
+125
+98.Static_Mesh\09.Door\Castle_Door_Entrance_1
+6 6 6
+0 0 0
+24.3724 -1.90735e-06 2.82702
+98.Static_Mesh\09.Door\Castle_Door_3
+9.2 4 5
+0 3.14159 0
+24.3119 0 2.0462
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 4.71867 0
+47.0228 -1.90735e-06 15.1033
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 4.71867 0
+47.196 0 41.8974
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 4.71867 0
+47.3568 0 68.81
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.87283 0
+1.53719 0 18.4475
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.87283 0
+2.00619 0 44.0637
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.87283 0
+2.52927 0 70.522
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 1.56451 0
+2.72643 0 97.1794
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 1.56451 0
+2.66645 0 124.112
+98.Static_Mesh\05.Wall\Castle_Wall_8
+6.6 6.6 6.6
+0 0 0
+26.9645 -1.90735e-06 138.087
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 4.71239 0
+47.5003 -3.8147e-06 95.7217
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 6.28947 0
+49.2491 0 97.5604
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 9.42477 0
+50.0943 0 150.138
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.83515 0
+51.7002 0 151.772
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.83515 0
+51.1947 -1.90735e-06 178.188
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 9.43109 0
+76.0678 1.90735e-06 203.26
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 9.43109 0
+102.936 0 203.013
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 9.43109 0
+129.628 0 202.902
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 9.43109 0
+156.011 0 202.819
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 7.85401 0
+157.825 1.90735e-06 204.537
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 11.0082 0
+203.016 3.8147e-06 204.171
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 11.316 0
+198.086 0 174.753
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 11.5611 0
+185.547 7.62939e-06 148.194
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 11.7559 0
+167.945 0 125.676
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 12.2522 0
+141.548 0 109.001
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 12.3842 0
+114.544 -3.8147e-06 101.992
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 12.5601 0
+76.065 0 97.5619
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 12.4093 0
+96.3018 0 98.6344
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 14.1497 0
+157.975 3.8147e-06 231.383
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 15.7017 0
+182.883 0 256.286
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 15.7268 0
+200.984 -3.8147e-06 256.256
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 17.285 0
+225.871 0 231.989
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 20.4266 0
+180.969 0 204.486
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 18.8496 0
+205.464 0 179.858
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 21.9849 0
+227.746 3.8147e-06 220.733
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 25.1265 0
+227.979 0 179.947
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 25.1265 0
+253.922 0 180.116
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 25.1265 0
+280.613 0 180.267
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 25.9245 0
+295.131 0 174.206
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.2807 0
+254.775 0 220.678
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.2807 0
+281.601 0 220.502
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 27.4764 0
+296.02 0 226.536
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.287 0
+326.988 0 239.416
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.287 0
+353.671 0 239.066
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.287 0
+380.337 0 238.763
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 28.287 0
+407.021 0 238.426
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 31.4285 0
+326.161 -3.8147e-06 161.014
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 31.4285 0
+352.923 0 160.666
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 31.4285 0
+379.783 0 160.389
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 31.4285 0
+406.535 -3.8147e-06 160.078
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 29.8514 0
+431.73 -3.8147e-06 213.286
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 29.8514 0
+431.586 3.8147e-06 186.577
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 29.8514 0
+431.475 0 160.026
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 34.5827 0
+77.1665 0 149.834
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 33.9544 0
+94.2721 0 154.781
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 33.7973 0
+113.44 -3.8147e-06 170.373
+98.Static_Mesh\09.Door\Castle_Door_Entrance_4
+6 6.4 6
+0 1.55195 0
+128.572 0 182.869
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 36.8384 0
+128.499 0 155.326
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 36.1221 0
+225.748 0 222.355
+98.Static_Mesh\05.Wall\Castle_Wall_1
+16.4 16.4 16.4
+0 3.84531 0
+62.788 0 138.029
+98.Static_Mesh\05.Wall\Castle_Wall_FirePlace
+1.8 1.8 1.8
+0 -1.57708 0
+64.0226 0 183.462
+98.Static_Mesh\09.Door\Castle_Door_Entrance_3
+9.6 9.6 9.6
+0 6.28947 0
+292.63 0 200.58
+98.Static_Mesh\09.Door\Castle_Door_Entrance_3
+9.6 9.6 9.6
+0 9.40592 0
+294.188 0 200.588
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 39.27 0
+282.286 20.4 201.189
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3.2 4.4 1
+0 40.0428 0
+295.694 18.3 226.187
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+0 44.7677 0
+294.511 18.3 174.717
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 53.4134 0
+327.407 20.32 239.097
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 53.4134 0
+354.066 20.32 239.066
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 53.4134 0
+380.797 20.32 238.874
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 53.4134 0
+407.658 20.32 238.543
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4 1
+0 62.8319 0
+326.37 20.32 161.142
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 8.2
+0 0 0
+24.1195 6.87997 16.5011
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 8.2
+0 0 0
+24.5733 6.87997 37.2297
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 8.2
+0 0 0
+24.9386 6.87997 57.9695
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 8.2
+0 0.0314159 0
+25.0724 6.87997 78.6262
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 8.2
+0 0.00628319 0
+25.1913 6.87997 99.1359
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 11
+0 0.00628319 0
+25.5873 6.87997 124.175
+98.Static_Mesh\14.Roof\Roof_1
+5.8 4.2 11
+0 0.00628319 0
+92.1972 6.87998 123.713
+98.Static_Mesh\14.Roof\Roof_1
+7.4 4.2 10.2
+0 -0.00628318 0
+76.5498 6.87997 151.878
+98.Static_Mesh\14.Roof\Roof_1
+7.4 4.2 10.2
+0 0 0
+76.3718 6.87997 178.484
+98.Static_Mesh\14.Roof\Roof_1
+7.4 4.2 10.4
+0 0 0
+104.795 6.87997 151.558
+98.Static_Mesh\14.Roof\Roof_1
+7.4 4.2 10.2
+0 0 0
+104.728 6.87997 178.505
+98.Static_Mesh\14.Roof\Roof_1
+7.4 4.2 10.2
+0 0 0
+133.114 6.87997 178.432
+98.Static_Mesh\14.Roof\Roof_1
+5.6 4.2 10.2
+0 0 0
+157.805 6.87997 178.387
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 11
+0 0 0
+116.568 6.87997 123.637
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 11
+0 0 0
+143.334 6.87997 123.573
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 10.4
+0 0 0
+132.317 6.87997 151.487
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 10.4
+0 0 0
+158.895 6.87997 151.461
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 10.4
+0 0 0
+170.147 6.87998 124.338
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 10.4
+0 0 0
+185.516 6.87996 151.475
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 10.4
+0 0 0
+181.901 6.87997 178.675
+98.Static_Mesh\14.Roof\Roof_1
+7 4.2 11.4
+0 0.0125664 0
+49.8782 6.87997 123.86
+98.Static_Mesh\14.Roof\Roof_1
+5 4 11.4
+0 0.00628319 0
+72.2723 6.87997 123.35
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 10
+0 0.00628319 0
+180.646 6.87997 205.379
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 10
+0 0.00628319 0
+180.838 6.87997 231.555
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 10
+0 0.00628319 0
+203.6 6.87997 231.482
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 10.4
+0 1.86265e-09 0
+203.261 6.87997 205.015
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 6.8
+0 1.86265e-09 0
+226.237 6.87997 200.156
+98.Static_Mesh\14.Roof\Roof_1
+6 4.2 6.8
+0 1.86265e-09 0
+249.231 6.87997 200.161
+98.Static_Mesh\14.Roof\Roof_1
+4.4 4.2 6.8
+0 0.00628319 0
+285.366 10.7199 200.739
+98.Static_Mesh\14.Roof\Roof_1
+4.6 3.6 6.8
+-0.245044 1.57708 0
+271.076 10.7199 200.841
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3.6 4 1
+0 65.986 0
+275.877 20.32 202.409
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3.6 4 1
+0 65.986 0
+277.226 20.32 220.656
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+308.219 51.9 230.236
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+337.059 51.9 229.835
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+365.915 51.9 229.513
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+394.821 51.9 229.142
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+423.69 51.9 228.806
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+307.973 51.9 207.868
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+336.574 51.9 207.506
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+365.476 51.9 207.164
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+394.302 51.9 206.806
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+423.16 51.9 206.466
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+307.798 51.9 185.206
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+336.716 51.9 184.954
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+365.579 51.9 184.576
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+394.399 51.9 184.271
+98.Static_Mesh\05.Wall\Castle_Wall_9
+3 4.4 1
+1.5708 65.986 0
+423.207 51.9 183.893
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 4.72496 0
+431.727 20.28 213.003
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 4.72496 0
+431.849 20.28 186.35
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 6.28319 0
+352.464 20.28 160.857
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 6.29575 0
+379.089 20.28 160.37
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 6.29575 0
+405.871 20.28 159.823
+98.Static_Mesh\05.Wall\Castle_Wall_9
+2.8 4.4 1
+0 4.86947 0
+429.579 19.86 158.79

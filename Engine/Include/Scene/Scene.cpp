@@ -15,6 +15,11 @@
 #include "../Resources/ResourcesManager.h"
 #include "../Component/Material.h"
 #include "../Core/QuadTreeManager.h"
+#include "../Component/Arm.h"
+#include "../Component/Picking.h"
+#include "../Resources/Mesh.h"
+#include "../Component/Renderer.h"
+#include "../Component/LandScape.h"
 
 PG_USING
 
@@ -504,10 +509,138 @@ int CScene::Update(float fTime)
 
 	m_pMainCameraObj->Update(fTime);
 
+	// Terrain Cam Collide
 	Vector3 vMainCamPos = m_pMainCameraTr->GetWorldPos();
-	float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(vMainCamPos);
-	if (vMainCamPos.y < fTerrainHeight + 1.5f)
-		m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);	
+
+	// Static Object Cam Collide
+	CArm *pArm = m_pMainCameraObj->FindComponentFromType<CArm>(CT_ARM);
+	if (pArm)
+	{
+		CPicking *pPicking = m_pMainCameraObj->FindComponentFromTag<CPicking>("Picking");
+
+		if (pPicking == nullptr)
+		{
+			pPicking = m_pMainCameraObj->AddComponent<CPicking>("Picking");
+		}
+
+		float		fNearDist = 10000.f;
+		Vector3		vNearRayCollidePos;
+
+		CGameObject *collideCamTargetObj = nullptr;
+		Vector3 vCameraRay = -m_pMainCameraTr->GetWorldAxis(AXIS_Z);
+
+		float fDistCamToTarget = vMainCamPos.Distance(pArm->GetTargetPos());
+
+		// z
+		float fTerrainHeight = GET_SINGLE(CQuadTreeManager)->GetY(m_pMainCameraTr->GetWorldPos());
+		if (vMainCamPos.y < fTerrainHeight + 1.5f)
+			m_pMainCameraTr->SetWorldPos(vMainCamPos.x, fTerrainHeight + 1.5f, vMainCamPos.z);
+
+		// Objects
+		CLayer *pLayer = GetLayer("RayCollide");
+		if (pLayer)
+		{
+			for (const auto& obj : pLayer->getObjectList())
+			{
+				// 보이는 애 중에서
+				if (!obj->GetRenderEnable())
+					continue;
+
+				// 근처에 있는 애, 혹은 NearDist보다 작은 그니까 부딪힌게 가장 가까이 있는지
+				CTransform *pObjTr = obj->GetTransform();
+				Vector3 vObjPos = pObjTr->GetWorldPos();
+
+				float fDistObjToTarget = vObjPos.Distance(pArm->GetTargetPos());
+
+				if (fDistObjToTarget > 500.f)
+					continue;
+
+				// 메쉬 정점 정보 가져옴
+				CRenderer *pRenderer = obj->FindComponentFromType<CRenderer>(CT_RENDERER);
+				if (pRenderer == nullptr)
+					continue;
+				CMesh *pMesh = pRenderer->GetMesh();
+
+				vector<Vector3> vecObjPos;
+				vector<int> vecObjIndex;
+				pMesh->GetMeshWorldPosition(&vecObjPos, pObjTr->GetLocalMatrix() * pObjTr->GetWorldMatrix());
+				pMesh->GetMeshIndex(&vecObjIndex);
+
+				// 충돌하는지 검사
+				Vector3 vRayCollidePos = Vector3(0.f, 0.f, 0.f);
+				bool collideCheck = pPicking->Picking_ToBuffer(&vRayCollidePos, pArm->GetTargetPos(), vCameraRay, vecObjPos, vecObjIndex);
+
+				float fDistRayToTarget = vRayCollidePos.Distance(pArm->GetTargetPos());
+
+				// 충돌한 것이 NearDist보다 작으면 저장
+				// 그리고 카메라 길이보다 작아야..
+				if (collideCheck)
+				{
+					if (fDistRayToTarget < fNearDist &&
+						fDistRayToTarget < fDistCamToTarget)
+					{
+						fNearDist = fDistRayToTarget;
+						collideCamTargetObj = obj;
+						vNearRayCollidePos = vRayCollidePos + pArm->GetLookAt() + -vCameraRay * 1.25f ;
+					}
+				}
+
+				SAFE_RELEASE(pRenderer);
+				SAFE_RELEASE(pMesh);
+				SAFE_RELEASE(pObjTr);
+			}
+
+			// 한계치 검사
+			float fLimitDist = pArm->GetTargetPos().Distance(m_pMainCameraTr->GetWorldPos());
+			if (fLimitDist > 5.f)
+			{
+				// 가장 가까이 있는 애가 존재하면
+				if (collideCamTargetObj)
+				{
+					// vCollidePos로 Set
+					m_pMainCameraTr->SetWorldPos(vNearRayCollidePos);
+				}
+			}		
+			SAFE_RELEASE(pLayer);
+		}
+
+		
+
+		// Light Culling
+		Vector3 vTargetPos = pArm->GetTargetPos();
+		vTargetPos.y = 0.f;
+
+		for (const auto& light : m_LightList)
+		{
+			CLight *pLight = light->FindComponentFromType<CLight>(CT_LIGHT);
+
+			if (pLight->GetLightInfo().iType != LT_POINT || 
+				light->GetTag() == "GlobalLight")
+			{
+				SAFE_RELEASE(pLight);
+				continue;
+			}
+
+			CTransform *pLightTr = pLight->GetTransform();
+			Vector3 vLightPos = pLightTr->GetWorldPos();
+			vLightPos.y = 0.f;
+
+			if (vTargetPos.Distance(vLightPos) > 150)
+			{
+				light->SetCulling(true);
+			}
+			else
+			{
+				light->SetCulling(false);
+			}
+
+			SAFE_RELEASE(pLightTr);
+			SAFE_RELEASE(pLight);
+		}
+
+		SAFE_RELEASE(pPicking);
+		SAFE_RELEASE(pArm);
+	}
 
 	if (m_pLightCameraObj)
 		m_pLightCameraObj->Update(fTime);
@@ -537,6 +670,9 @@ int CScene::Update(float fTime)
 
 	if (m_pSkyObject)
 		m_pSkyObject->Update(fTime);
+
+	// QuadTree Culling
+	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
 
 	return 0;
 }
@@ -795,7 +931,7 @@ void CScene::LoadSky(const wstring & strFileName)
 	}
 }
 
-void CScene::LoadGlobLight(const string & strFileName)
+void CScene::LoadGlobLight(const string & strFileName, const Vector4& ambient)
 {
 	string path = "Light\\Glob\\" + strFileName + ".bin";
 	
@@ -821,17 +957,16 @@ void CScene::LoadGlobLight(const string & strFileName)
 
 	CLight*	pGlobalLight = GetGlobalLight("GlobalLight");
 
-	pGlobalLight->SetLightColor(vLightColor);
-	
 	m_pLightCamera->SetLightRange(fRange);
 	m_pLightCameraTr->SetWorldPos(vCamPos);
 	m_pLightCamera->SetLightCenterPos(vCamLookPos);
 	m_pLightCamera->SetDistLookAtToEye();
+	pGlobalLight->SetLightColor(vLightColor, ambient);
 
 	SAFE_RELEASE(pGlobalLight);
 }
 
-void CScene::LoadPointLight(const string & strFileName)
+void CScene::LoadPointLight(const string & strFileName, const Vector4& ambient)
 {
 	string path = "Light\\Point\\" + strFileName + ".bin";
 
@@ -865,10 +1000,10 @@ void CScene::LoadPointLight(const string & strFileName)
 		pPointLight = CreateLight(strLightName, LT_POINT);
 		pTr = pPointLight->GetTransform();
 		pPointLight->SetLightRange(fRange);
-		pPointLight->SetLightColor(vColor);
+		pPointLight->SetLightColor(vColor, ambient);
 		pTr->SetWorldPos(vPos);
 
-		if (fRange <= 100.f)
+		if (fRange <= 50.f)
 		{
 			CGameObject *pLightGameObject = pPointLight->GetGameObject();
 			GET_SINGLE(CQuadTreeManager)->CheckAndAddChild(pLightGameObject);

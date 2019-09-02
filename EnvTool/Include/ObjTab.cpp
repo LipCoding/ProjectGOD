@@ -24,7 +24,7 @@ IMPLEMENT_DYNAMIC(CObjTab, CDialogEx)
 CObjTab::CObjTab(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG2, pParent)
 	, m_editMousePosX(_T(""))
-	, m_editMousePosY(_T(""))
+	, m_editTempPosY(_T(""))
 	, m_editMousePosZ(_T(""))
 {
 
@@ -51,8 +51,9 @@ void CObjTab::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_OBJECT_TYPE, m_listObjType);
 	DDX_Control(pDX, IDC_LIST_OBJECTS, m_listObjList);
 	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_X, m_editMousePosX);
-	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_Y, m_editMousePosY);
+	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_Y, m_editTempPosY);
 	DDX_Text(pDX, IDC_EDIT_MOUSE_POS_Z, m_editMousePosZ);
+	DDX_Control(pDX, IDC_CHECK_COLLIDE_OBJ, m_checkCollideObj);
 }
 
 
@@ -68,6 +69,8 @@ BEGIN_MESSAGE_MAP(CObjTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_ROTATION, &CObjTab::OnBnClickedButtonResetRotation)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_POSITION, &CObjTab::OnBnClickedButtonResetPosition)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_ALL, &CObjTab::OnBnClickedButtonResetAll)
+	ON_BN_CLICKED(IDC_BUTTON_OBJECT_SAVE_COLLIDE, &CObjTab::OnBnClickedButtonObjectSaveCollide)
+	ON_BN_CLICKED(IDC_BUTTON_OBJECT_LOAD_COLLIDE, &CObjTab::OnBnClickedButtonObjectLoadCollide)
 END_MESSAGE_MAP()
 
 
@@ -361,6 +364,12 @@ void CObjTab::AddObject()
 
 	SAFE_RELEASE(pRenderer);
 
+	// Collide Ray Check
+	int rayCheck = m_checkCollideObj.GetCheck();
+
+	if (rayCheck)
+		pObj->SetRayCollide(true);
+
 	m_vecObjects.push_back(pObj);
 	
 	m_vecStringObjTypePath.push_back(string(CT2CA(m_currentTypePath)));
@@ -390,9 +399,17 @@ void CObjTab::Undo()
 void CObjTab::UpdateMousePos(const Vector3 & mousePos)
 {
 	m_editMousePosX = to_wstring(mousePos.x).c_str();
-	m_editMousePosY = to_wstring(mousePos.y).c_str();
 	m_editMousePosZ = to_wstring(mousePos.z).c_str();
 
+	// 가라코드
+	if (m_pTempObject)
+	{
+		CTransform *pTr = m_pTempObject->GetTransform();
+
+		m_editTempPosY = to_wstring(pTr->GetWorldTempPos().y).c_str();
+		
+		SAFE_RELEASE(pTr);
+	}
 	UpdateData(FALSE);
 }
 
@@ -556,30 +573,44 @@ void CObjTab::OnBnClickedButtonObjectSave()
 	file.open(path + fileName + L".bin", ios::out);
 
 	// 총 오브젝트의 갯수
-	file << m_vecObjects.size() << endl;
+	int objCount = 0;
+
+	for (const auto& iter : m_vecObjects)
+	{
+		bool rayCheck = iter->GetRayCollide();
+
+		if (rayCheck == false)
+			++objCount;
+	}
+	file << objCount << endl;
 
 	int iIndex = 0;
 	for (const auto& iter : m_vecObjects)
 	{
-		// -> 파일경로 (Tag)
-		file << m_vecStringObjTypePath[iIndex] << endl;
+		bool rayCheck = iter->GetRayCollide();
 
-		// -> Transform(World)
-		CTransform* pTr = iter->GetTransform();
-		
-		// Scale
-		Vector3 vScale = pTr->GetWorldScale();
-		file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
-		
-		// Rotation
-		Vector3 vRotation = pTr->GetWorldRot();
-		file << vRotation.x << ' ' << vRotation.y << ' ' << vRotation.z << endl;
+		if (rayCheck == false)
+		{
+			// -> 파일경로 (Tag)
+			file << m_vecStringObjTypePath[iIndex] << endl;
 
-		// Position
-		Vector3 vPosition = pTr->GetWorldPos();
+			// -> Transform(World)
+			CTransform* pTr = iter->GetTransform();
 
-		file << vPosition.x << ' ' << vPosition.y << ' ' << vPosition.z << endl;
-		SAFE_RELEASE(pTr);
+			// Scale
+			Vector3 vScale = pTr->GetWorldScale();
+			file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
+
+			// Rotation
+			Vector3 vRotation = pTr->GetWorldRot();
+			file << vRotation.x << ' ' << vRotation.y << ' ' << vRotation.z << endl;
+
+			// Position
+			Vector3 vPosition = pTr->GetWorldPos();
+
+			file << vPosition.x << ' ' << vPosition.y << ' ' << vPosition.z << endl;
+			SAFE_RELEASE(pTr);
+		}
 
 		iIndex++;
 	}
@@ -632,7 +663,7 @@ void CObjTab::OnBnClickedButtonObjectLoad()
 	CString filePath = dlg.GetPathName();
 
 	// 전체삭제
-	OnBnClickedButtonDeleteAllobj();
+	// OnBnClickedButtonDeleteAllobj();
 
 	ifstream file;
 	file.open(filePath, ios::in);
@@ -643,9 +674,6 @@ void CObjTab::OnBnClickedButtonObjectLoad()
 	// 전체 갯수
 	int iObjSize = 0;
 	file >> iObjSize;
-
-	m_vecObjects.resize(iObjSize);
-	m_vecStringObjTypePath.resize(iObjSize);
 
 	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer *pLayer = pScene->GetLayer("Default");
@@ -709,8 +737,8 @@ void CObjTab::OnBnClickedButtonObjectLoad()
 		SAFE_RELEASE(pTr);
 
 		// Vector 추가
-		m_vecObjects[i] = pObj;
-		m_vecStringObjTypePath[i] = meshRestPath;
+		m_vecObjects.push_back(pObj);
+		m_vecStringObjTypePath.push_back(meshRestPath);
 		g_iObjNumber++;
 	}
 
@@ -809,4 +837,238 @@ void CObjTab::OnBnClickedButtonResetAll()
 		m_ArrTransformInfo[m_iCurrentPos].vTempPosition = Vector3(0.f, 0.f, 0.f);
 		SAFE_RELEASE(pTr);
 	}
+}
+
+
+void CObjTab::OnBnClickedButtonObjectSaveCollide()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_vecObjects.empty())
+	{
+		AfxMessageBox(L"Error : No object to save! Create object first!");
+		return;
+	}
+
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(FALSE, NULL, NULL, OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wchar_t strDir[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscpy_s(strDir, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Object\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString path = dlg.GetPathName();
+	CString fileName = dlg.GetFileName();
+
+	// 파일 이름 제거
+	for (int i = lstrlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '\\')
+		{
+			path.Delete(i + 1, lstrlen(path) - 1);
+			break;
+		}
+	}
+
+	// 확장자명 제거(만약 확장자명이 세이브 이름으로 들어갈시)
+	for (int i = lstrlen(fileName) - 1; i >= 0; i--)
+	{
+		if (fileName[i] == '.')
+		{
+			fileName.Delete(i, lstrlen(fileName) - 1);
+			break;
+		}
+	}
+
+	ofstream file;
+
+	file.open(path + fileName + L".bin", ios::out);
+
+	// 총 오브젝트의 갯수
+	int collideObjCount = 0;
+
+	for (const auto& iter : m_vecObjects)
+	{
+		bool rayCheck = iter->GetRayCollide();
+
+		if (rayCheck == true)
+			++collideObjCount;
+	}
+	file << collideObjCount << endl;
+
+	int iIndex = 0;
+	for (const auto& iter : m_vecObjects)
+	{
+		bool rayCheck = iter->GetRayCollide();
+
+		if (rayCheck == true)
+		{
+			// -> 파일경로 (Tag)
+			file << m_vecStringObjTypePath[iIndex] << endl;
+
+			// -> Transform(World)
+			CTransform* pTr = iter->GetTransform();
+
+			// Scale
+			Vector3 vScale = pTr->GetWorldScale();
+			file << vScale.x << ' ' << vScale.y << ' ' << vScale.z << endl;
+
+			// Rotation
+			Vector3 vRotation = pTr->GetWorldRot();
+			file << vRotation.x << ' ' << vRotation.y << ' ' << vRotation.z << endl;
+
+			// Position
+			Vector3 vPosition = pTr->GetWorldPos();
+
+			file << vPosition.x << ' ' << vPosition.y << ' ' << vPosition.z << endl;
+			SAFE_RELEASE(pTr);
+		}
+
+		iIndex++;
+	}
+
+
+	CString dataPath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
+
+	ofstream out(string(dataPath + "InitializePosInfoByNPCObject.txt"));
+
+	for (int i = 0; i < m_vecObjects.size(); ++i)
+	{
+		if (i == 85)
+			volatile char a = 0;
+		if (m_vecObjects[i]->getObjectSetType() != OBJECT_SET_TYPE::NONE)
+		{
+			CTransform* pTr = m_vecObjects[i]->GetTransform();
+			Vector3 pos = pTr->GetWorldPos();
+			out << m_vecObjects[i]->getObjectSetType() << endl;
+			out << pos.x << endl;
+			out << pos.y << endl;
+			out << pos.z << endl;
+			SAFE_RELEASE(pTr);
+		}
+	}
+
+	file.close();
+}
+
+
+void CObjTab::OnBnClickedButtonObjectLoadCollide()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	static TCHAR BASED_CODE szFilter[] =
+		_T("데이터 파일(*.bin) | *.bin;|모든파일(*.*)|*.*||");
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_READONLY | OFN_OVERWRITEPROMPT, szFilter);
+
+	// 경로 지정
+	wchar_t strPath[MAX_PATH] = {};
+	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
+	wcscat_s(strPath, MAX_PATH, L"Object\\");
+
+	CString originPath = strPath;
+
+	dlg.m_ofn.lpstrInitialDir = strPath;
+
+	// do modal error 해결
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString filePath = dlg.GetPathName();
+
+	// 전체삭제
+	// OnBnClickedButtonDeleteAllobj();
+
+	ifstream file;
+	file.open(filePath, ios::in);
+
+	if (!file.is_open())
+		return;
+
+	// 전체 갯수
+	int iObjSize = 0;
+	file >> iObjSize;
+
+	CScene *pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer *pLayer = pScene->GetLayer("Default");
+
+	for (int i = 0; i < iObjSize; i++)
+	{
+		CString objName;
+		objName.Format(_T("%d"), g_iObjNumber);
+
+		objName = L"Object_" + objName;
+		m_listObjList.AddString(objName);
+
+		CGameObject *pObj = CGameObject::CreateObject(string(CT2CA(objName)), pLayer);
+		// Mesh Path
+		// 파일경로
+		string ObjTag;
+		file >> ObjTag;
+		// Mesh
+		string meshPath, meshRestPath;
+		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+		meshRestPath = ObjTag;
+
+		string meshDataPath;
+		meshDataPath = meshPath + meshRestPath + ".msh";
+
+		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
+
+		wstring wMeshDataPath;
+		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
+		pRenderer->SetMeshFromFullPath(ObjTag, wMeshDataPath.c_str());
+
+		SAFE_RELEASE(pRenderer);
+
+		// Transform
+		// Local Transform Data
+		string localDataPath;
+
+		localDataPath = meshPath + meshRestPath + ".dat";
+
+		FILE* pFile = nullptr;
+
+		fopen_s(&pFile, localDataPath.c_str(), "rb");
+
+		if (!pFile)
+			return;
+
+		CTransform* pTr = pObj->GetTransform();
+		pTr->Load_Local(pFile);
+		fclose(pFile);
+
+		// World Transform Data
+		Vector3 vScale, vRotation, vPos;
+		file >> vScale.x >> vScale.y >> vScale.z;
+		file >> vRotation.x >> vRotation.y >> vRotation.z;
+		file >> vPos.x >> vPos.y >> vPos.z;
+
+		pTr->SetWorldScale(vScale);
+		pTr->SetWorldRot(vRotation);
+		pTr->SetWorldPos(vPos);
+
+		SAFE_RELEASE(pTr);
+
+		pObj->SetRayCollide(true);
+
+		// Vector 추가
+		m_vecObjects.push_back(pObj);
+		m_vecStringObjTypePath.push_back(meshRestPath);
+		g_iObjNumber++;
+	}
+
+	file.close();
+
+	SAFE_RELEASE(pLayer);
+	SAFE_RELEASE(pScene);
 }

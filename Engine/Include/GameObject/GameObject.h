@@ -59,7 +59,8 @@ private:
 	list<CGameObject*>		m_ChildList;
 	CGameObject*			m_pParent;
 	bool					m_bDontDestroy;
-	bool	m_bCulling;
+	bool					m_bCulling;
+	bool					m_bRayCollideObj;
 
 public:
 
@@ -67,6 +68,8 @@ public:
 public:
 	void SetCulling(bool bCulling);
 	bool GetCulling()	const;
+	void SetRayCollide(bool bRayCollide);
+	bool GetRayCollide() const;
 	void DontDestroyOnLoad(bool bDontDestroy = true);
 	bool IsDontDestroy()	const;
 	void AddChild(CGameObject* pChild);
@@ -105,7 +108,8 @@ public:
 	void OnCollisionLeave(class CCollider* pSrc, class CCollider* pDest,
 		float fTime);
 	
-	static void LoadEnvObjects(const wstring& strFileName, class CLayer* pLayer = NULL);
+	static void LoadEnvObjects(const wstring& strFileName, class CLayer* pLayer = NULL,
+								const bool& cullingCheck = true);
 
 public:
 	void UpdateTransformHierarchy();

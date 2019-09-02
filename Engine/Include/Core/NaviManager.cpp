@@ -221,7 +221,10 @@ void CNaviManager::FreeNaviMesh(const string & strKey)
 
 	SAFE_DELETE(pNavi);
 
-	m_mapNaviMesh.erase(strKey);
+	if (strKey == "")
+		m_mapNaviMesh.erase(m_curNaviName);
+	else
+		m_mapNaviMesh.erase(strKey);
 }
 
 void CNaviManager::Render(float fTime)

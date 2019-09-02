@@ -156,7 +156,7 @@ _tagLightInfo ComputeLightAcc(float3 vViewPos, float3 vViewNormal,
 	vLightCamDir = mul(float4(vLightCamDir, 0.f), g_matView);
 	float fDot = max(0, dot(normalize(vViewNormal), normalize(vLightDir)));
 
-	fDot = (ceil(fDot * 3) / 3.f);
+	//fDot = (ceil(fDot * 3) / 3.f);
 
 	// 위에서 구해준 뷰 공간의 조명의 역방향과 정점의 뷰공간의 노말을 내적해서 cos 세타를 구해
 	// 준다. 이 값을 이용해서 조명의 강도로 처리를 하는데 이 값이 - 값이 나오게 되면 조명이

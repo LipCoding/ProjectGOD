@@ -59,9 +59,10 @@ private:
 	CString  m_currentTypePath;
 
 	CString m_editMousePosX;
-	CString m_editMousePosY;
+	CString m_editTempPosY;
 	CString m_editMousePosZ;
 
+	CButton m_checkCollideObj;
 public:
 	afx_msg void OnBnClickedButtonDeleteAllobj();
 	afx_msg void OnBnClickedButtonDeleteObj();
@@ -75,4 +76,6 @@ public:
 	afx_msg void OnBnClickedButtonResetRotation();
 	afx_msg void OnBnClickedButtonResetPosition();
 	afx_msg void OnBnClickedButtonResetAll();
+	afx_msg void OnBnClickedButtonObjectSaveCollide();
+	afx_msg void OnBnClickedButtonObjectLoadCollide();
 };

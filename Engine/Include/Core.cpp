@@ -37,7 +37,7 @@ CCore::CCore()
 #ifdef _DEBUG
 	//AllocConsole();
 #endif
-	AllocConsole();
+	//AllocConsole();
 }
 
 CCore::~CCore()
@@ -57,7 +57,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CNaviManager);
 
 //#ifdef _DEBUG
-	FreeConsole();
+	//FreeConsole();
 //#endif // _DEBUG
 }
 
@@ -229,7 +229,7 @@ int CCore::Update(float fTime)
 		pMouseObj->Update(fTime);
 		SAFE_RELEASE(pMouseObj);
 	}
-	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
+
 	return GET_SINGLE(CSceneManager)->Update(fTime);
 }
 
