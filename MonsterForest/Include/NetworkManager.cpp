@@ -66,7 +66,9 @@
 #include "SceneScript/SecondScene.h"
 #include "SceneScript/DungeonScene.h"
 #include "MFObjectManager.h"
-
+#include "ObjectScript/Villager1.h"
+#include "QuestManager.h"
+#include "QuestItem.h"
 queue<void*> NetworkManager::clientPacketQueue;
 CGameObject* NetworkManager::pPlayer;
 NetworkManager::NetworkManager() {}
@@ -140,6 +142,12 @@ void NetworkManager::processPacket(void * packet)
 				NetworkManager::getInstance()->setPlayer(player_component->GetGameObject());
 				GET_SINGLE(UserInterfaceManager)->setPlayer(player_component);
 			}
+		}
+		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::NPC1)
+		{
+			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Villager1>("Default", objectTag, "Villager1", true);
+			//player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
+			player_component->move(pPacket->x, pPacket->y, pPacket->z);
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
 		{
@@ -592,6 +600,60 @@ void NetworkManager::processPacket(void * packet)
 			SAFE_RELEASE(pTr);
 			SAFE_RELEASE(pPlayer);
 		}
+	}
+	break;
+
+	case SC_PACKET_QUEST_ADD:
+	{
+		// 패킷으로부터 받아온 퀘스트를 찾는다.
+		sc_packet_quest_add* pPacket = reinterpret_cast<sc_packet_quest_add*>(packet);
+		string quest_name = strconv(pPacket->qeustname);
+		Quest* quest = QuestManager::getInstance()->findQuest(quest_name.c_str());
+
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		CLayer*	pLayer = pScene->GetLayer("UI_QUEST+2");
+
+		CGameObject* QuestItemObject = CGameObject::CreateObject("QuestItem", pLayer);
+		
+		// 문자열을 받아서 컨버팅한다.
+		//
+		//
+		QuestItemObject->Enable(false);
+		QuestItem* quest_item_component = QuestItemObject->AddComponent<QuestItem>("QuestItem");
+		quest_item_component->setQuest(quest);
+
+		QuestBaseUI* quest_ui_component = QuestManager::getInstance()->getQuestUIComponent();
+		quest_item_component->setQuestBaseUI(quest_ui_component);
+		CRenderer2D* pRenderer = QuestItemObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "QuestItem",
+			0, 0, L"UserInterface/UI_INVEN_BOX_1.png");
+
+		int offset = quest_ui_component->getQuestList().size();
+
+		CTransform* pDropTableTr = QuestItemObject->GetTransform();
+		pDropTableTr->SetWorldScale(400, 50.f, 1.f);
+		pDropTableTr->SetWorldPos(175.f, 180.f + (offset * 55), 1.f);
+		wstring temp_text = strconv(quest->getQuestSubject());
+		CFont* quest_item_text = QuestItemObject->AddComponent<CFont>("quest_ui_text_contents");
+		quest_item_text->SetFont("맑은고딕N");
+		quest_item_text->SetArea(50, 15.f, 680, 400.f);
+		quest_item_text->SetText(temp_text);
+
+		CColliderRect* pRC = QuestItemObject->FindComponentFromType<CColliderRect>(CT_COLLIDER);
+		pRC->SetTag("quest_slot");
+		pRC->SetRect(0, 0, 400.f, 50.f);
+
+		SAFE_RELEASE(pRC);
+
+		SAFE_RELEASE(pDropTableTr);
+		SAFE_RELEASE(pMaterial);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pLayer);
+		SAFE_RELEASE(pScene);
+		//MessageBox(NULL, L"check", L"test", MB_OK);
+		quest_ui_component->getQuestList().push_back(QuestItemObject);
 	}
 	break;
 

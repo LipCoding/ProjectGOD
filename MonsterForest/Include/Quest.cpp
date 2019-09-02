@@ -60,6 +60,13 @@ bool Quest::load(ifstream& load_file)
 
 	}
 	quest_subject = temp_string;
+
+	if (quest_subject[quest_subject.size()] == '\0')
+	{
+		quest_subject.erase(remove_if(quest_subject.begin() + quest_subject.size() - 1, quest_subject.end(), isspace), quest_subject.end());
+
+	}
+
 	temp_string.clear();
 	while (load_file >> file_string)
 	{
@@ -68,6 +75,13 @@ bool Quest::load(ifstream& load_file)
 		temp_string += file_string + " ";
 	}
 	quest_summary = temp_string;
+
+	if (quest_summary[quest_summary.size()] == '\0')
+	{
+		quest_summary.erase(remove_if(quest_summary.begin() + quest_summary.size() - 1, quest_summary.end(), isspace), quest_summary.end());
+
+	}
+
 	temp_string.clear();
 	while (load_file >> file_string)
 	{
@@ -76,7 +90,15 @@ bool Quest::load(ifstream& load_file)
 		temp_string += file_string + " ";
 	}
 	quest_contents = temp_string;
+
+	if (quest_contents[quest_contents.size()] == '\0')
+	{
+		quest_contents.erase(remove_if(quest_contents.begin() + quest_contents.size() - 1, quest_contents.end(), isspace), quest_contents.end());
+
+	}
+
 	temp_string.clear();
+
 
 	load_file >> minimum_level;
 	load_file >> maximum_level;

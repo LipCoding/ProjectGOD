@@ -62,6 +62,7 @@
 #include "../ObjectScript/Armored_GreenLizard.h"
 #include "../ObjectScript/Armored_BlueLizard.h"
 #include "../MFObjectManager.h"
+#include "../QuestManager.h"
 
 std::wstring strconv(const std::string& _src)
 {
@@ -116,6 +117,9 @@ bool CMainScene::Init()
 	m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
 	m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
 	m_pScene->CreateLayer("ParticleLayer", 2000);
+	m_pScene->CreateLayer("UI_QUEST+1", UI_LAYER + 11);
+	m_pScene->CreateLayer("UI_QUEST+2", UI_LAYER + 12);
+	m_pScene->CreateLayer("UI_QUEST+3", UI_LAYER + 13);
 #pragma endregion
 
 	GET_SINGLE(UserInterfaceManager)->initialize();
@@ -127,6 +131,7 @@ bool CMainScene::Init()
 	GET_SINGLE(CInput)->CreateKey("Skill3", 'R');
 	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
+	GET_SINGLE(CInput)->CreateKey("Quest", 'L');
 #pragma endregion
 
 #pragma region Terrain
@@ -187,6 +192,13 @@ bool CMainScene::Init()
 
 void CMainScene::Input(float fTime)
 {
+	move_time += fTime;
+
+	if (move_time >= 0.0333f)
+	{
+		move_enable = true;
+	}
+
 	if(isInitComplete == true)
 	{
 		int checkID = NetworkManager::getInstance()->getMyClientID();
@@ -220,6 +232,12 @@ void CMainScene::Input(float fTime)
 
 					}
 				}
+			}
+			if (KEYDOWN("Quest"))
+			{
+				_cprintf("test\n");
+				bool isEnable = QuestManager::getInstance()->isShow();
+				QuestManager::getInstance()->enableShow(!isEnable);
 			}
 
 			if (KEYDOWN("Skill2"))
@@ -340,144 +358,148 @@ void CMainScene::Input(float fTime)
 				}
 			}
 
-
-			if (KEYPUSH("MoveRight"))
+			if (move_enable)
 			{
-				cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_rotate);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_ROTATE_Y;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			}
-			else if (KEYUP("MoveRight"))
-			{
-				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_move_stop);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_MOVE_STOP;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-			}
-
-
-			if (KEYPUSH("MoveLeft"))
-			{
-				cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_rotate);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_ROTATE_INV_Y;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			}
-			else if (KEYUP("MoveLeft"))
-			{
-				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_move_stop);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_MOVE_STOP;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-			}
-
-			if (KEYPUSH("MoveFront"))
-			{
-
-				CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
-				cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_up);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				DWORD iobyte;
-
-				Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-				pPacket->type = CS_PACKET_MOVE_FRONT;
-				pPacket->dir_x = Axis.x;
-				pPacket->dir_y = Axis.y;
-				pPacket->dir_z = Axis.z;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-				if (ret)
+				if (KEYPUSH("MoveRight"))
 				{
-					// 俊矾贸府.
-					char a = 0;
+					cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_rotate);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_ROTATE_Y;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
 				}
-				//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				//pAnimation->ChangeClip("MOVE");
-				//SAFE_RELEASE(pAnimation);
-			}
-			else if (KEYUP("MoveFront"))
-			{
-				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_move_stop);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_MOVE_STOP;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-			}
-
-			if (KEYPUSH("MoveBack"))
-			{
-
-				CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
-
-				cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_up);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				DWORD iobyte;
-
-				Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-				pPacket->type = CS_PACKET_MOVE_BACK;
-				pPacket->dir_x = Axis.x;
-				pPacket->dir_y = Axis.y;
-				pPacket->dir_z = Axis.z;
-
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-				if (ret)
+				else if (KEYUP("MoveRight"))
 				{
-					char a = 0;
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
-			}
-			else if (KEYUP("MoveBack"))
-			{
-				cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
 
-				pPacket->size = sizeof(cs_packet_move_stop);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				DWORD iobyte;
 
-				pPacket->type = CS_PACKET_MOVE_STOP;
+				if (KEYPUSH("MoveLeft"))
+				{
+					cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
 
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+					pPacket->size = sizeof(cs_packet_rotate);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_ROTATE_INV_Y;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+				}
+				else if (KEYUP("MoveLeft"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
+				if (KEYPUSH("MoveFront"))
+				{
+
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+					pPacket->type = CS_PACKET_MOVE_FRONT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						// 俊矾贸府.
+						char a = 0;
+					}
+					//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					//pAnimation->ChangeClip("MOVE");
+					//SAFE_RELEASE(pAnimation);
+				}
+				else if (KEYUP("MoveFront"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
+				if (KEYPUSH("MoveBack"))
+				{
+
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+					pPacket->type = CS_PACKET_MOVE_BACK;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						char a = 0;
+					}
+				}
+				else if (KEYUP("MoveBack"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
+				move_enable = false;
 			}
 
 			if (KEYDOWN("MouseLButton"))

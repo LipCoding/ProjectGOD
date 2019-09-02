@@ -58,6 +58,8 @@ const unsigned char CS_PACKET_PARTY_CONFIRM = 201;
 const unsigned char CS_PACKET_PARTY_CANCEL = 202;
 const unsigned char CS_PACKET_PARTY_ADD = 203;
 const unsigned char CS_PACKET_PARTY_REMOVE = 204;
+const unsigned char CS_PACKET_QUEST_ADD = 210;
+
 
 const unsigned char SC_PACKET_MOVE = 0;
 const unsigned char SC_PACKET_PUT_PLAYER = 1;
@@ -105,6 +107,7 @@ const unsigned char SC_PACKET_PARTY_CANCEL = 202;
 const unsigned char SC_PACKET_PARTY_ADD = 203;
 const unsigned char SC_PACKET_PARTY_REMOVE = 204;
 const unsigned char SC_PACKET_PARTY_SYNCRONIZE = 205;
+const unsigned char SC_PACKET_QUEST_ADD = 210;
 const unsigned char SC_PACKET_ADD_EXP = 230;
 const unsigned char SC_PACKET_LEVELUP = 231;
 
@@ -253,6 +256,14 @@ struct cs_packet_scene_change
 	unsigned char type;
 };
 
+struct cs_packet_quest_add
+{
+	unsigned short size;
+	unsigned char type;
+	int quest_number;
+	WCHAR qeustname[MAX_STR_SIZE];
+};
+
 struct sc_packet_connect
 {
 	unsigned short size;
@@ -291,6 +302,7 @@ struct sc_packet_pos
 	float x;
 	float y;
 	float z;
+	bool back;
 };
 
 struct sc_packet_rotate
@@ -448,5 +460,13 @@ struct sc_packet_scene_change
 	unsigned char type;
 };
 
+struct sc_packet_quest_add
+{
+	unsigned short size;
+	unsigned char type;
+	unsigned int targetID;
+	int quest_number;
+	WCHAR qeustname[MAX_STR_SIZE];
+};
 
 #pragma pack(pop)

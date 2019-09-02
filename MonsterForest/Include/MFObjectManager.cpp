@@ -286,6 +286,39 @@ void MFObjectManager::protoTypeSetting()
 		SAFE_RELEASE(pLayer);
 	}
 #pragma endregion
+
+
+#pragma region VILLIGER1_PROTOTYPE
+	{
+		CLayer*	pLayer = pScene->GetLayer("Default");
+		CGameObject*	pVillager1Object = CGameObject::CreatePrototypeDontDestroy("Villager1", pScene);
+		CTransform*	pTr = pVillager1Object->GetTransform();
+		pTr->SetWorldScale(2.f, 2.f, 2.f);
+		CRenderer*	pRenderer = pVillager1Object->AddComponent<CRenderer>("PlayerRenderer");
+
+		pRenderer->SetMesh("Villager1", L"99.Dynamic_Mesh\\01.NPC\\Villager1\\Villager1.msh");
+
+		string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+		string transformPath = meshBasePath + "99.Dynamic_Mesh\\01.NPC\\Villager1\\Villager1.dat";
+
+		FILE* pFile_Player = nullptr;
+
+		fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+		if (!pFile_Player)
+			return;
+
+		pTr->Load_Local(pFile_Player);
+
+		fclose(pFile_Player);
+		SAFE_RELEASE(pTr);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pVillager1Object);
+		SAFE_RELEASE(pLayer);
+	}
+#pragma endregion
+
 	SAFE_RELEASE(pScene);
 }
 
