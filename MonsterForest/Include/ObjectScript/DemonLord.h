@@ -36,6 +36,8 @@ public:
 	const Vector3& getRoamingPos() { return roaming_pos; }
 
 public:
+	virtual void attack_animation(const string& target_tag, const wstring& name);
+public:
 	void setInitialPos(const Vector3& initial_pos) { this->initial_pos = initial_pos; }
 	void setRoamingPos(const Vector3& roaming_pos) { this->roaming_pos = roaming_pos; }
 

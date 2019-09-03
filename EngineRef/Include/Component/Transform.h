@@ -21,8 +21,9 @@ public:
 private:
 	int		m_iParentModify;
 	CTransform*	m_pParent;
-
+	float angle;
 public:
+	float getLookAtAngle() { return angle; }
 	CTransform* GetParent()	const;
 	void SetParentModifyType(int iModifyType);
 

@@ -107,6 +107,15 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Player\\Tanker\\Spell_Buff_FireCircle.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossAttack1", "Effect\\Boss\\Attack1.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossAttack2", "Effect\\Boss\\Attack2.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossAttack3", "Effect\\Boss\\Attack3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossAttack4", "Effect\\Boss\\Attack4.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossSpell1", "Effect\\Boss\\Spell1.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("BossSpell2", "Effect\\Boss\\Spell2.bin");
+	// 보스
+
+
 	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
 	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
 		"Effect\\Common\\Holy_Light.bin");
@@ -162,7 +171,7 @@ bool CMainScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 	}
 #pragma endregion
-	MFObjectManager::getInstance()->initialize();
+	MFObjectManager::getInstance()->initialize(L"Main_Scene_1");
 	
 
 	NetworkManager::getInstance()->connectMainServer();
@@ -183,7 +192,7 @@ bool CMainScene::Init()
 #pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 	isInitComplete = true;
 
 	return true;
@@ -362,17 +371,27 @@ void CMainScene::Input(float fTime)
 			{
 				if (KEYPUSH("MoveRight"))
 				{
-					cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
 
-					pPacket->size = sizeof(cs_packet_rotate);
-					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
 					DWORD iobyte;
 
-					pPacket->type = CS_PACKET_ROTATE_Y;
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_X);
+					pPacket->type = CS_PACKET_MOVE_LEFT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
 
-					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 
+					if (ret)
+					{
+						// 에러처리.
+						char a = 0;
+					}
 				}
 				else if (KEYUP("MoveRight"))
 				{
@@ -391,16 +410,37 @@ void CMainScene::Input(float fTime)
 
 				if (KEYPUSH("MoveLeft"))
 				{
-					cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+					//cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
 
-					pPacket->size = sizeof(cs_packet_rotate);
-					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					//pPacket->size = sizeof(cs_packet_rotate);
+					//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					//DWORD iobyte;
+
+					//pPacket->type = CS_PACKET_ROTATE_INV_Y;
+
+					//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					//int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
 					DWORD iobyte;
 
-					pPacket->type = CS_PACKET_ROTATE_INV_Y;
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_X);
+					pPacket->type = CS_PACKET_MOVE_RIGHT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
 
-					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						// 에러처리.
+						char a = 0;
+					}
 
 				}
 				else if (KEYUP("MoveLeft"))
@@ -564,6 +604,53 @@ void CMainScene::Input(float fTime)
 
 				SAFE_RELEASE(pRay);
 				SAFE_RELEASE(pMouseObj);
+			}
+			if (KEYPUSH("MouseRButton"))
+			{
+				cs_packet_rotate_camera_player* pPacket = reinterpret_cast<cs_packet_rotate_camera_player*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_rotate_camera_player);
+				pPacket->type = CS_PACKET_ROTATE_CAMERA_PLAYER;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate_camera_player);
+				DWORD iobyte;
+
+
+				/*
+				Vector3 vPos = m_pTransform->GetWorldPos();
+				m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
+
+				// Cam 방향으로 회전
+				CCamera *pMainCam = m_pScene->GetMainCamera();
+				CTransform *pCamTr = pMainCam->GetTransform();
+				Vector3 vCamPos = pCamTr->GetWorldPos();
+				vCamPos.y = 0.f;
+				vPos.y = 0.f;
+
+				Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
+				m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
+				*/
+				int myclient_id = NetworkManager::getInstance()->getMyClientID();
+				string appendTag = to_string(myclient_id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* myplayer_object = CGameObject::FindObject(objectTag);
+				CTransform* transform_component = myplayer_object->GetTransform();
+				Vector3 vPos = transform_component->GetWorldPos();
+
+				CCamera *pMainCam = m_pScene->GetMainCamera();
+				CTransform *pCamTr = pMainCam->GetTransform();
+				Vector3 vCamPos = pCamTr->GetWorldPos();
+				vCamPos.y = 0.f;
+				vPos.y = 0.f;
+				Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
+
+				pPacket->axis_x = vCamAxisZ.x;
+				pPacket->axis_y = vCamAxisZ.y;
+				pPacket->axis_z = vCamAxisZ.z;
+				
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate_camera_player);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
 			}
 
 			if (KEYDOWN("ESC"))

@@ -61,7 +61,7 @@
 #include "../ObjectScript/BlueLizard.h"
 #include "../ObjectScript/Armored_GreenLizard.h"
 #include "../ObjectScript/Armored_BlueLizard.h"
-
+#include "../MFObjectManager.h"
 DungeonScene::DungeonScene()
 {
 }
@@ -78,61 +78,28 @@ void DungeonScene::chat_callback(float fTime)
 
 bool DungeonScene::Init()
 {
-	///* Effect */
-	//GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
-	////GET_SINGLE(CEffectManager)->AddEffect("Spell", "Effect\\Spell.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Spell1.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Spell2.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Spell3.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Spell4.bin");
-	//GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
-#pragma region Portal
-	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
-#pragma endregion
-	const auto& objlist = CGameObject::getObjectList();
+
+	//m_pScene->LoadSky(L"Skybox_2");
+	//m_pScene->LoadGlobLight("Night_Test");
+	//m_pScene->LoadPointLight("Night_Test");
 #pragma region Layer Setting
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
-		SAFE_RELEASE(pLayer);
-	}
+	m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
+	m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
+	m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
+	m_pScene->CreateLayer("ParticleLayer", 2000);
+	m_pScene->CreateLayer("UI_QUEST+1", UI_LAYER + 11);
+	m_pScene->CreateLayer("UI_QUEST+2", UI_LAYER + 12);
+	m_pScene->CreateLayer("UI_QUEST+3", UI_LAYER + 13);
+#pragma endregion
 
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
-		SAFE_RELEASE(pLayer);
-	}
-
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
-		SAFE_RELEASE(pLayer);
-	}
-
-	{
-		CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
-		SAFE_RELEASE(pParticleLayer);
-	}
-
-
-	//#pragma endregion
 	GET_SINGLE(UserInterfaceManager)->initialize();
-
-	//#pragma region KeySetting
-	//	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
-	//	GET_SINGLE(CInput)->CreateKey("Skill1", 'Q');
-	//	GET_SINGLE(CInput)->CreateKey("Skill2", 'E');
-	//	GET_SINGLE(CInput)->CreateKey("Skill3", 'R');
-	//	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
-	//	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
-	//#pragma endregion
-
 #pragma region Terrain
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer* pLayer = pScene->GetLayer("Default");
 
 		// Load Terrain
-		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Stage1", pLayer);
+		CGameObject* pLandScapeObj = CGameObject::CreateObject("LandScape_Dungeon", pLayer);
 		CLandScape* pLandScape = pLandScapeObj->AddComponent<CLandScape>("LandScape");
 
 		pLandScape->Load_Terrain("dungeon_scene");
@@ -154,412 +121,70 @@ bool DungeonScene::Init()
 		SAFE_RELEASE(pLandScapeObj);
 	}
 #pragma endregion
+	MFObjectManager::getInstance()->initialize(L"dungeon_scene");
 
-#pragma region StaticObject
-	// 경로 지정
-	wchar_t strPath[MAX_PATH] = {};
-	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
-
-	ifstream file;
-	file.open(strPath, ios::in);
-
-	if (!file.is_open())
-		return false;
-
-	int iObjSize = 0;
-	file >> iObjSize;
-
-	for (int i = 0; i < iObjSize; i++)
-	{
-		string objName = "ObjName_" + to_string(i);
-
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer* pLayer = pScene->GetLayer("Default");
-		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
-
-		string objTag;
-		file >> objTag;
-
-		// Mesh
-		string meshPath, meshRestPath;
-		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-		meshRestPath = objTag;
-
-		string meshDataPath;
-		meshDataPath = meshPath + meshRestPath + ".msh";
-
-		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
-
-		wstring wMeshDataPath;
-		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
-
-		SAFE_RELEASE(pRenderer);
-
-		// Transform
-		// Local Transform Data
-		string localDataPath;
-
-		localDataPath = meshPath + meshRestPath + ".dat";
-
-		FILE* pFile = nullptr;
-
-		fopen_s(&pFile, localDataPath.c_str(), "rb");
-
-		if (!pFile)
-			return false;
-
-		CTransform* pTr = pObj->GetTransform();
-		pTr->Load_Local(pFile);
-		fclose(pFile);
-
-		// World Transform Data
-		Vector3 vScale, vRotation, vPos;
-		file >> vScale.x >> vScale.y >> vScale.z;
-		file >> vRotation.x >> vRotation.y >> vRotation.z;
-		file >> vPos.x >> vPos.y >> vPos.z;
-
-		pTr->SetWorldScale(vScale);
-		pTr->SetWorldRot(vRotation);
-		pTr->SetWorldPos(vPos);
-
-		SAFE_RELEASE(pTr);
-	}
-#pragma endregion
-
-	{
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer* pLayer = pScene->GetLayer("Default");
-
-#pragma region PlayerPrototype
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pPlayerObj = CGameObject::CreatePrototypeDontDestroy("PlayerCharacter", m_pScene);
-			CTransform*	pTr = pPlayerObj->GetTransform();
-
-			pTr->SetWorldPos(250.f, 0.f, 250.f);
-			pTr->SetWorldScale(1.f, 1.f, 1.f);
-			pTr->SetWorldRot(0.f, 0.0f, 0.f);
-
-			CRenderer*	pRenderer = pPlayerObj->AddComponent<CRenderer>("PlayerRenderer");
-			pRenderer->SetMesh("Player", L"99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\00.Player\\Tanker\\Tanker.dat";
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-		}
-#pragma endreigon
-
-#pragma region GOLEM_MONSTER_PROTOTYPE
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pGolemObj = CGameObject::CreatePrototypeDontDestroy("GolemObject", m_pScene);
-			CTransform*	pTr = pGolemObj->GetTransform();
-
-			pTr->SetWorldPos(250.f, 0.f, 250.f);
-			pTr->SetWorldScale(1.f, 1.f, 1.f);
-			pTr->SetWorldRot(0.f, 0.0f, 0.f);
-
-			CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("Golem", L"99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Golem\\Golem.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-			SAFE_RELEASE(pGolemObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region MINO_MONSTER_PROTOTYPE
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pMinoObj = CGameObject::CreatePrototypeDontDestroy("MinoObject", m_pScene);
-			CTransform*	pTr = pMinoObj->GetTransform();
-
-			CRenderer*	pRenderer = pMinoObj->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("mino", L"99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Mino\\Mino.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pMinoObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region GREENLIZARD_MONSTER_PROTOTYPE
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pGreenLizardObj = CGameObject::CreatePrototypeDontDestroy("GreenLizard", m_pScene);
-			CTransform*	pTr = pGreenLizardObj->GetTransform();
-
-			CRenderer*	pRenderer = pGreenLizardObj->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("greenlizard", L"99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\GreenLizard\\GreenLizard.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pGreenLizardObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region BlueLizard
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pBlueLizardObj = CGameObject::CreatePrototypeDontDestroy("BlueLizard", m_pScene);
-			CTransform*	pTr = pBlueLizardObj->GetTransform();
-
-			CRenderer*	pRenderer = pBlueLizardObj->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("bluelizard", L"99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\BlueLizard\\BlueLizard.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pBlueLizardObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region Armored_GreenLizard
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pArmoredGreenLizard = CGameObject::CreatePrototypeDontDestroy("Armored_GreenLizard", m_pScene);
-			CTransform*	pTr = pArmoredGreenLizard->GetTransform();
-
-			CRenderer*	pRenderer = pArmoredGreenLizard->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("Armored_GreenLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_GreenLizard\\Armored_GreenLizard.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pArmoredGreenLizard);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region Armored_BlueLizard
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pArmored_BlueLizardObj = CGameObject::CreatePrototypeDontDestroy("Armored_BlueLizard", m_pScene);
-			CTransform*	pTr = pArmored_BlueLizardObj->GetTransform();
-
-			CRenderer*	pRenderer = pArmored_BlueLizardObj->AddComponent<CRenderer>("PlayerRenderer");
-
-			pRenderer->SetMesh("Armored_BlueLizard", L"99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\Armored_BlueLizard\\Armored_BlueLizard.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pArmored_BlueLizardObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-#pragma region DEMONLORD
-		{
-			CLayer*	pLayer = m_pScene->GetLayer("Default");
-			CGameObject*	pSeuteompiObj = CGameObject::CreatePrototypeDontDestroy("DemonLordObjeect", m_pScene);
-			CTransform*	pTr = pSeuteompiObj->GetTransform();
-
-			CRenderer*	pRenderer = pSeuteompiObj->AddComponent<CRenderer>("DemonRnederer");
-
-			pRenderer->SetMesh("DemonLord", L"99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.msh");
-
-			string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-
-			string transformPath = meshBasePath + "99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.dat";
-
-			FILE* pFile_Player = nullptr;
-
-			fopen_s(&pFile_Player, transformPath.c_str(), "rb");
-
-			if (!pFile_Player)
-				return false;
-
-			pTr->Load_Local(pFile_Player);
-
-			fclose(pFile_Player);
-			SAFE_RELEASE(pTr);
-
-			SAFE_RELEASE(pRenderer);
-			SAFE_RELEASE(pSeuteompiObj);
-			SAFE_RELEASE(pLayer);
-		}
-#pragma endregion
-
-
-		SAFE_RELEASE(pLayer);
-		SAFE_RELEASE(pScene);
-	}
-#pragma region billboard
-	{
-		default_random_engine dre;
-		uniform_int_distribution<> ui;
-
-		CLayer*    pParticleLayer = m_pScene->GetLayer("ParticleLayer");
-
-		for (int i = 0; i < 10; ++i)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				string number_tag = to_string(i);
-				string object_tag = "ParticleObj" + number_tag;
-				CGameObject*    pParticleObj = CGameObject::CreateObject(object_tag, pParticleLayer);
-
-				CTransform*    pParticleTr = pParticleObj->GetTransform();
-				pParticleTr->SetWorldPos(300.f + (0.2 * i), 2.f, 300.f + (0.2*j));
-				SAFE_RELEASE(pParticleTr);
-
-				CParticleSingle*    pParticleSingle = pParticleObj->AddComponent<CParticleSingle>("ParticleSingle");
-				pParticleSingle->SetSize(10.f, 10.f);
-				SAFE_RELEASE(pParticleSingle);
-
-				CRenderer*    pParticleRenderer = pParticleObj->FindComponentFromType<CRenderer>(CT_RENDERER);
-				pParticleRenderer->CreateCBuffer("Animation2D", 10, sizeof(ANIMATION2DBUFFER),
-					SCT_VERTEX | SCT_PIXEL);
-				pParticleRenderer->SetRenderState(ALPHA_BLEND);
-				CAnimation2D*    pParticleAnimation = pParticleObj->AddComponent<CAnimation2D>("ParticleAnimation");
-				pParticleAnimation->SetRenderer2DEnable(false);
-
-				vector<wstring>    vecExplosion;
-				for (int i = 1; i <= 1; ++i)
-				{
-					wchar_t    strPath[MAX_PATH] = {};
-					wsprintf(strPath, L"Billboard/test.dds", i);
-
-					vecExplosion.push_back(strPath);
-				}
-
-				pParticleAnimation->CreateClip("Explosion", A2D_FRAME, A2DO_LOOP,
-					1, 1, 1, 1, 0, 0.5f, 0, 0.f, "Explosion", &vecExplosion);
-
-				SAFE_RELEASE(pParticleAnimation);
-				SAFE_RELEASE(pParticleRenderer);
-				SAFE_RELEASE(pParticleObj);
-			}
-		}
-		SAFE_RELEASE(pParticleLayer);
-	}
-#pragma endregion
-
-	// mainserver로의 접속요청을 한다.
-	{
-		cs_packet_connect* pPacket = reinterpret_cast<cs_packet_connect*>(NetworkManager::getInstance()->getSendBuffer());
-		pPacket->size = sizeof(cs_packet_connect);
-		pPacket->type = CS_PACKET_MAINSERVER_CONNECT;
-
-		NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_connect);
-		DWORD iobyte;
-		int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-	}
+	NetworkManager::getInstance()->connectMainServer();
 	NetworkManager::getInstance()->inputTime = high_resolution_clock::now();
-	//
-	//#pragma region sound
-	//	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
-	//
-	//	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
-	//#pragma endregion
 
+#pragma region sound
+	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("SwordAttack3", false, "SwordAttack3.wav");
+	GET_SINGLE(SoundManager)->LoadSound("monster_attack", false, "monster_attack.ogg");
+	GET_SINGLE(SoundManager)->LoadSound("monster_damaged", false, "monster_damaged.flac");
+	GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
+	GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
+	GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
+	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
+#pragma endregion
+
+	GET_SINGLE(CEffectManager)->AddEffect("Fire_Tall_Dark", "Effect\\Common\\Fire_tall_dark.bin");
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(33.8f, 14.9f, 19.5f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(14.75f, 14.9f, 18.49f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(34.22f, 14.9f, 74.74f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(15.82f, 14.9f, 76.95f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(46.81f, 14.9f, 136.96f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(47.75f, 14.9f, 110.16f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(71.53f, 14.9f, 136.65f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(72.16f, 14.9f, 110.67f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(102.12f, 14.9f, 144.09f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(124.04f, 14.9f, 162.20f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(150.75f, 14.9f, 189.65f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(173.61f, 14.9f, 153.99f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(179.18f, 14.9f, 243.04f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(206.35f, 14.9f, 243.01f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(194.30f, 14.9f, 205.99f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(226.91f, 14.9f, 207.47f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(227.09f, 14.9f, 193.04f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(260.92f, 14.9f, 207.50f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(261.69f, 14.9f, 193.25f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(324.48f, 14.9f, 226.13f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(369.84f, 14.9f, 225.68f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(369.94f, 14.9f, 173.79f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Tall_Dark", nullptr, Vector3(324.01, 14.9f, 174.36f));
+
+	GET_SINGLE(CEffectManager)->AddEffect("Big_Fire", "Effect\\Common\\BigFire01.bin");
+	GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(17.4f, 2.25f, 131.64f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Big_Fire", nullptr, Vector3(65.f, 2.4f, 183.87f));
+
+	GET_SINGLE(CEffectManager)->AddEffect("Fire_Bright", "Effect\\Common\\Fire_Bright.bin");
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(93.61f, 6.75f, 138.01f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(161.83f, 6.75f, 139.08f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(133.80f, 6.75f, 173.73f));
+	GET_SINGLE(CEffectManager)->OperateEffect("Fire_Bright", nullptr, Vector3(124.08f, 6.75f, 188.72f));
+
+	m_pScene->LoadSky(L"Skybox_2");
+	m_pScene->LoadGlobLight("dungeon_scene", Vector4(0.2f, 0.2f, 0.2f, 1.f));
+	m_pScene->LoadPointLight("dungeon_scene", Vector4(0.2f, 0.2f, 0.2f, 1.f));
+
+	CLayer* pLayer2 = m_pScene->CreateLayer("RayCollide");
+	CGameObject::LoadEnvObjects(L"dungeon_scene_collision", pLayer2, false);
 	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
 	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 	isInitComplete = true;
+
 	return true;
 }
 

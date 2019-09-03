@@ -24,10 +24,10 @@ void MFObjectManager::operator=(MFObjectManager &&)
 {
 }
 
-bool MFObjectManager::initialize()
+bool MFObjectManager::initialize(const wstring& scene_name)
 {
 	protoTypeSetting();
-	staticObjectSetting();
+	staticObjectSetting(scene_name);
 
 	return true;
 }
@@ -70,7 +70,7 @@ void MFObjectManager::protoTypeSetting()
 		CTransform*	pTr = pGolemObj->GetTransform();
 
 		pTr->SetWorldPos(250.f, 0.f, 250.f);
-		pTr->SetWorldScale(1.f, 1.f, 1.f);
+		pTr->SetWorldScale(2.f, 2.f, 2.f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 		CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
@@ -322,12 +322,11 @@ void MFObjectManager::protoTypeSetting()
 	SAFE_RELEASE(pScene);
 }
 
-void MFObjectManager::staticObjectSetting()
+void MFObjectManager::staticObjectSetting(const wstring& scene_name)
 {
-
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer* pLayer = pScene->GetLayer("Default");
-	CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
+	CGameObject::LoadEnvObjects(scene_name, pLayer);
 	SAFE_RELEASE(pScene);
 	SAFE_RELEASE(pLayer);
 //

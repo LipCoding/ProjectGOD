@@ -245,8 +245,6 @@ void CPlayer_Test::Input(float fTime)
 
 				vPos = m_pTransform->GetWorldPos();
 				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
-
-				//vPos = 
 			}
 		}
 
@@ -423,7 +421,6 @@ int CPlayer_Test::Update(float fTime)
 	vPos.y = 0.f;
 
 	Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
-
 	m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
 
 	return 0;
