@@ -181,7 +181,7 @@ bool DungeonScene::Init()
 
 	CLayer* pLayer2 = m_pScene->CreateLayer("RayCollide");
 	CGameObject::LoadEnvObjects(L"dungeon_scene_collision", pLayer2, false);
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
+	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("dungeon_scene");
 	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 	isInitComplete = true;
 
