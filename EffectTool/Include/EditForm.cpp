@@ -97,7 +97,7 @@ void CEditForm::OnInitialUpdate()
 	si.fMask = SIF_PAGE | SIF_RANGE;
 	si.nPage  = 10;
 	si.nMin = 0;
-	si.nMax = 500;
+	si.nMax = 1000;
 	this->SetScrollInfo(SB_VERT, &si, TRUE);
 
 	m_eTabType = TAB_EFFECT;
