@@ -184,7 +184,7 @@
     <Filter Include="05. Objectmanager">
       <UniqueIdentifier>{e19cc702-ad1e-4840-a0ff-32011730763e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1">
+    <Filter Include="02. Object\01. Actor\02. NPC\02. Villager\01. Villager1">
       <UniqueIdentifier>{1e89d35c-13d0-496f-8754-10d070134c6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -295,7 +295,7 @@
       <Filter>00. EntryPoint</Filter>
     </ClInclude>
     <ClInclude Include="ObjectScript\Villager1.h">
-      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villager1</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
       <Filter>03. UserInterface\07. Option</Filter>
@@ -468,7 +468,7 @@
       <Filter>00. EntryPoint</Filter>
     </ClCompile>
     <ClCompile Include="ObjectScript\Villager1.cpp">
-      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villeger1</Filter>
+      <Filter>02. Object\01. Actor\02. NPC\02. Villager\01. Villager1</Filter>
     </ClCompile>
     <ClCompile Include="Option.cpp">
       <Filter>03. UserInterface\07. Option</Filter>

@@ -18,6 +18,8 @@ public:
 	~CMainScene();
 
 	bool isInitComplete = false;
+	bool move_enable = false;
+	float move_time = 0.f;
 public:
 public:
 	void chat_callback(float fTime);

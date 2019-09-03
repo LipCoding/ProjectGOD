@@ -618,7 +618,7 @@ void CObjTab::OnBnClickedButtonObjectSave()
 
 	CString dataPath = GET_SINGLE(CPathManager)->FindPath(DATA_PATH);
 
-	ofstream out(string(dataPath + "InitializePosInfoByNPCObject.txt"));
+	ofstream out(string(dataPath + "InitializePosInfoByNPCObject_mainscene2.txt"));
 
 	for (int i = 0; i < m_vecObjects.size(); ++i)
 	{

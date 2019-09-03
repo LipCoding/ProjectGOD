@@ -246,8 +246,6 @@ void CPlayer_Test::Input(float fTime)
 
 				vPos = m_pTransform->GetWorldPos();
 				vPos += (vSlide * m_fMoveSpeed * 2.f * fTime) / 2.f;
-
-				//vPos = 
 			}
 		}
 

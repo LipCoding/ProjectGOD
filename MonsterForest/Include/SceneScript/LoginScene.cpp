@@ -77,6 +77,40 @@ bool LoginScene::Init()
 		SAFE_RELEASE(pRenderer);
 		SAFE_RELEASE(pUILayer);
 	}
+
+	{
+		CLayer*	pUILayer = m_pScene->GetLayer("UI");
+		CGameObject*	pGameStartObj = CGameObject::CreateObject("LoginTitle", pUILayer);
+
+		CUIPanel*	pGameStartUI = pGameStartObj->AddComponent<CUIPanel>("LoginTitle");
+		pGameStartUI->EnableTitle(false);
+		SAFE_RELEASE(pGameStartUI);
+
+		CTransform*	pButtonTr = pGameStartObj->GetTransform();
+
+		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
+		pButtonTr->SetWorldScale(400.f, 280.f, 1.f);
+		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 180.f,
+			DEVICE_RESOLUTION.iHeight / 2.f - 300.f, 0.f);
+
+		SAFE_RELEASE(pButtonTr);
+
+		CRenderer2D* pRenderer = pGameStartObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+
+		CMaterial* pMaterial = pRenderer->GetMaterial();
+
+		pMaterial->SetDiffuseTexInfo("Linear", "LoginTitle",
+			0, 0, L"UserInterface\\LoginTitle.png");
+
+		SAFE_RELEASE(pMaterial);
+
+		SAFE_RELEASE(pRenderer);
+
+		SAFE_RELEASE(pGameStartObj);
+
+		SAFE_RELEASE(pUILayer);
+	}
+
 	/// < BaseUI >
 	{
 		CLayer*	pUILayer = m_pScene->GetLayer("UI");
@@ -91,7 +125,7 @@ bool LoginScene::Init()
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
 		pButtonTr->SetWorldScale(260.f, 190.f, 1.f);
 		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 115.f,
-			DEVICE_RESOLUTION.iHeight / 2.f - 50.f, 0.f);
+			DEVICE_RESOLUTION.iHeight / 2.f + 0.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
 
@@ -132,7 +166,7 @@ bool LoginScene::Init()
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
 		pButtonTr->SetWorldScale(230.f, 50.f, 1.f);
 		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f - 35.f, 0.f);
+			DEVICE_RESOLUTION.iHeight / 2.f + 15.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
 
@@ -180,7 +214,7 @@ bool LoginScene::Init()
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
 		pButtonTr->SetWorldScale(230.f, 50.f, 1.f);
 		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f + 20.f, 0.f);
+			DEVICE_RESOLUTION.iHeight / 2.f + 70.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
 
@@ -228,7 +262,7 @@ bool LoginScene::Init()
 		//pButtonTr->SetPivot(0.5f, 0.5f, 0.f);
 		pButtonTr->SetWorldScale(230.f, 50.f, 1.f);
 		pButtonTr->SetWorldPos(DEVICE_RESOLUTION.iWidth / 2.f - 100.f,
-			DEVICE_RESOLUTION.iHeight / 2.f + 75.f, 0.f);
+			DEVICE_RESOLUTION.iHeight / 2.f + 125.f, 0.f);
 
 		SAFE_RELEASE(pButtonTr);
 

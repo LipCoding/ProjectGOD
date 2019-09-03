@@ -24,36 +24,29 @@ QuestBaseUI::~QuestBaseUI()
 
 bool QuestBaseUI::initialize()
 {
-	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-	pScene->CreateLayer("UI_QUEST+1", UI_LAYER + 11);
-	pScene->CreateLayer("UI_QUEST+2", UI_LAYER + 12);
-	pScene->CreateLayer("UI_QUEST+3", UI_LAYER + 13);
-	SAFE_RELEASE(pScene);
-
 	{
 
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI_QUEST+1");
 
-		CGameObject* QuestUIObject = CGameObject::CreateObject("QuestListBackGround", pLayer);
-
-		CUIPanel* quest_ui_component = QuestUIObject->AddComponent<CUIPanel>("QuestListBackGround");
+		QuestUIBackGroundObject = CGameObject::CreateObject("QuestListBackGround", pLayer);
+		QuestUIBackGroundObject->Enable(false);
+		CUIPanel* quest_ui_component = QuestUIBackGroundObject->AddComponent<CUIPanel>("QuestListBackGround");
 		//quest_ui_component->initialize();
 
-		CRenderer2D* pRenderer = QuestUIObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		CRenderer2D* pRenderer = QuestUIBackGroundObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
 		pMaterial->SetDiffuseTexInfo("Linear", "QuestListBackGround",
 			0, 0, L"UserInterface/UI_INVEN_BOX_3.png");
 
-		CTransform* pDropTableTr = QuestUIObject->GetTransform();
+		CTransform* pDropTableTr = QuestUIBackGroundObject->GetTransform();
 		pDropTableTr->SetWorldScale(450, 500.f, 1.f);
 		pDropTableTr->SetWorldPos(150.f, 150.f, 1.f);
 
 		SAFE_RELEASE(pDropTableTr);
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
-		SAFE_RELEASE(QuestUIObject);
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
@@ -64,7 +57,7 @@ bool QuestBaseUI::initialize()
 		CLayer*	pLayer = pScene->GetLayer("UI_QUEST+1");
 
 		quest_view_object = CGameObject::CreateObject("QuestView", pLayer);
-
+		quest_view_object->Enable(false);
 		CUIPanel* quest_ui_component = quest_view_object->AddComponent<CUIPanel>("QuestViewBackGround");
 		//quest_ui_component->initialize();
 
@@ -99,6 +92,16 @@ bool QuestBaseUI::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
+	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+	CLayer*	pLayer = pScene->GetLayer("UI_QUEST+2");
+
+	reward_item_text_object = CGameObject::CreateObject("reward_text", pLayer);
+	reward_item_text_object->AddComponent<CUIButton>("reward_text");
+	reward_item_text_object->Enable(false); 
+	CFont* contents_text_summary = reward_item_text_object->AddComponent<CFont>("보상아이템");
+	contents_text_summary->SetFont("맑은고딕20N");
+	contents_text_summary->SetArea(650, 450, 850, 450.f);
+	contents_text_summary->SetText(L"보상 아이템");
 
 	//for(int i = 0; i<8; ++i)
 	//{
@@ -129,7 +132,9 @@ bool QuestBaseUI::initialize()
 	//	SAFE_RELEASE(pScene);
 	//	quest_list.push_back(QuestItemObject);
 	//}
-	Quest* quest = QuestManager::getInstance()->findQuest("The Archiereus Of Flame");
+
+	 //#######
+	/*Quest* quest = QuestManager::getInstance()->findQuest("The Archiereus Of Flame");
 	current_quest = quest;
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
@@ -169,7 +174,7 @@ bool QuestBaseUI::initialize()
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 		quest_list.push_back(QuestItemObject);
-	}
+	}*/
 
 	//updateQuestView();
 	return true;
@@ -177,6 +182,8 @@ bool QuestBaseUI::initialize()
 
 void QuestBaseUI::updateQuestView()
 {
+
+	// 폰트에 연결된 텍스트 변경.
 	if (current_quest != nullptr)
 	{
 		{
@@ -198,21 +205,14 @@ void QuestBaseUI::updateQuestView()
 		}
 	}
 
+	for (REWARD_ITEM& reward_item : reward_list)
 	{
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer*	pLayer = pScene->GetLayer("UI_QUEST+2");
-
-		CGameObject* ui_quest_object = CGameObject::CreateObject("reward_text", pLayer);
-		ui_quest_object->AddComponent<CUIButton>("reward_text");
-
-		CFont* contents_text_summary = ui_quest_object->AddComponent<CFont>("보상아이템");
-		contents_text_summary->SetFont("맑은고딕20N");
-		contents_text_summary->SetArea(650, 450, 850, 450.f);
-		contents_text_summary->SetText(L"보상 아이템");
+		reward_item.first->Die();
+		reward_item.second->Die();
 	}
-
+	reward_list.clear();
+	reward_list.resize(0);
 	// 첫번째 아이템 보상 표시
-
 	for (int i = 0; i < current_quest->getRewardItems().size(); ++i)
 	{
 		float x;
@@ -239,17 +239,18 @@ void QuestBaseUI::updateQuestView()
 			y = 550;
 		}
 		// 아이템 보상 테두리
+		CGameObject* item_reward_border = nullptr;
 		{
 			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 			CLayer*	pLayer = pScene->GetLayer("UI_QUEST+2");
 
-			CGameObject* ui_quest_object = CGameObject::CreateObject("item", pLayer);
-			ui_quest_object->AddComponent<CUIButton>("ContentsScroll");
+			item_reward_border = CGameObject::CreateObject("item", pLayer);
+			item_reward_border->AddComponent<CUIButton>("ContentsScroll");
 
-			CRenderer2D* pRenderer = ui_quest_object->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CRenderer2D* pRenderer = item_reward_border->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 			CMaterial* pMaterial = pRenderer->GetMaterial();
 
-			CTransform* pDropTableTr = ui_quest_object->GetTransform();
+			CTransform* pDropTableTr = item_reward_border->GetTransform();
 			pDropTableTr->SetWorldScale(150, 35.f, 1.f);
 			pDropTableTr->SetWorldPos(x, y, 1.f);
 
@@ -258,17 +259,18 @@ void QuestBaseUI::updateQuestView()
 		}
 
 		// 아이템 보상 목록에 추가.
+		CGameObject* reward_item_object = nullptr;
 		{
 			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 			CLayer*	pLayer = pScene->GetLayer("UI_QUEST+2");
 
-			CGameObject* ui_quest_object = CGameObject::CreateObject("itemIcon", pLayer);
-			ui_quest_object->AddComponent<CUIButton>("ContentsScroll");
+			reward_item_object = CGameObject::CreateObject("itemIcon", pLayer);
+			reward_item_object->AddComponent<CUIButton>("ContentsScroll");
 
-			CRenderer2D* pRenderer = ui_quest_object->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+			CRenderer2D* pRenderer = reward_item_object->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 			CMaterial* pMaterial = pRenderer->GetMaterial();
 
-			CTransform* pDropTableTr = ui_quest_object->GetTransform();
+			CTransform* pDropTableTr = reward_item_object->GetTransform();
 			pDropTableTr->SetWorldScale(32.f, 32.f, 1.f);
 			pDropTableTr->SetWorldPos(x, y, 1.f);
 			wstring item_text = L"ItemIcon\\";
@@ -277,11 +279,31 @@ void QuestBaseUI::updateQuestView()
 			pMaterial->SetDiffuseTexInfo("Linear", current_quest->getRewardItems()[0].c_str(),
 				0, 0, item_text.c_str());
 
-			CFont* contents_text_summary = ui_quest_object->AddComponent<CFont>("보상아이템");
+			CFont* contents_text_summary = reward_item_object->AddComponent<CFont>("보상아이템");
 			contents_text_summary->SetFont("맑은고딕N");
 			contents_text_summary->SetArea(50, 0, 200, 20.f);
 			wstring item_text_name = strconv(current_quest->getRewardItems()[0]);
 			contents_text_summary->SetText(item_text_name);
+
 		}
+		reward_list.emplace_back(REWARD_ITEM{item_reward_border, reward_item_object});
+	}
+}
+
+void QuestBaseUI::enableShow(bool ui_show)
+{
+	this->ui_show = ui_show;
+	m_pGameObject->Enable(ui_show);
+	quest_view_object->Enable(ui_show);
+
+	reward_item_text_object->Enable(ui_show);
+
+	QuestUIBackGroundObject->Enable(ui_show);
+	for (const auto& quest_item_object : quest_list)
+		quest_item_object->Enable(ui_show);
+	for (REWARD_ITEM& reward_item : reward_list)
+	{
+		reward_item.first->Enable(ui_show);
+		reward_item.second->Enable(ui_show);
 	}
 }

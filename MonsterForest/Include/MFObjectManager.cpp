@@ -24,10 +24,10 @@ void MFObjectManager::operator=(MFObjectManager &&)
 {
 }
 
-bool MFObjectManager::initialize()
+bool MFObjectManager::initialize(const wstring& scene_name)
 {
 	protoTypeSetting();
-	staticObjectSetting();
+	staticObjectSetting(scene_name);
 
 	return true;
 }
@@ -70,7 +70,7 @@ void MFObjectManager::protoTypeSetting()
 		CTransform*	pTr = pGolemObj->GetTransform();
 
 		pTr->SetWorldPos(250.f, 0.f, 250.f);
-		pTr->SetWorldScale(1.f, 1.f, 1.f);
+		pTr->SetWorldScale(2.f, 2.f, 2.f);
 		pTr->SetWorldRot(0.f, 0.0f, 0.f);
 
 		CRenderer*	pRenderer = pGolemObj->AddComponent<CRenderer>("PlayerRenderer");
@@ -286,15 +286,47 @@ void MFObjectManager::protoTypeSetting()
 		SAFE_RELEASE(pLayer);
 	}
 #pragma endregion
+
+
+#pragma region VILLIGER1_PROTOTYPE
+	{
+		CLayer*	pLayer = pScene->GetLayer("Default");
+		CGameObject*	pVillager1Object = CGameObject::CreatePrototypeDontDestroy("Villager1", pScene);
+		CTransform*	pTr = pVillager1Object->GetTransform();
+		pTr->SetWorldScale(2.f, 2.f, 2.f);
+		CRenderer*	pRenderer = pVillager1Object->AddComponent<CRenderer>("PlayerRenderer");
+
+		pRenderer->SetMesh("Villager1", L"99.Dynamic_Mesh\\01.NPC\\Villager1\\Villager1.msh");
+
+		string meshBasePath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
+
+		string transformPath = meshBasePath + "99.Dynamic_Mesh\\01.NPC\\Villager1\\Villager1.dat";
+
+		FILE* pFile_Player = nullptr;
+
+		fopen_s(&pFile_Player, transformPath.c_str(), "rb");
+
+		if (!pFile_Player)
+			return;
+
+		pTr->Load_Local(pFile_Player);
+
+		fclose(pFile_Player);
+		SAFE_RELEASE(pTr);
+		SAFE_RELEASE(pRenderer);
+		SAFE_RELEASE(pVillager1Object);
+		SAFE_RELEASE(pLayer);
+	}
+#pragma endregion
+
 	SAFE_RELEASE(pScene);
 }
 
-void MFObjectManager::staticObjectSetting()
+void MFObjectManager::staticObjectSetting(const wstring& scene_name)
 {
-
 	CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 	CLayer* pLayer = pScene->GetLayer("Default");
-	CGameObject::LoadEnvObjects(L"Main_Scene_1", pLayer);
+	CGameObject::LoadEnvObjects(scene_name, pLayer);
 	SAFE_RELEASE(pScene);
 	SAFE_RELEASE(pLayer);
 //

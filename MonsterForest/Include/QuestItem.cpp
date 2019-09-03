@@ -15,6 +15,8 @@
 #include "QuestItem.h"
 #include "Quest.h"
 #include "Core/Input.h"
+#include "NetworkManager.h"
+
 QuestItem::QuestItem()
 {
 	SetTag("QuestItem");
@@ -39,6 +41,18 @@ void QuestItem::OnCollision(CCollider * pSrc, CCollider * pDest, float fTime)
 		//현재 몇번째 인덱스를 선택했는지 알려준다.
 		//아이템을 갖고있는지 확인
 	   // 아이템을 
+		/*
+			// 서버에 아이템 이동패킷을 보낸다.
+					cs_packet_moveitem_inventory* packet = reinterpret_cast<cs_packet_moveitem_inventory*>(NetworkManager::getInstance()->getSendBuffer());
+					packet->size = sizeof(cs_packet_moveitem_inventory);
+					packet->type = CS_PACKET_MOVEITEM_INVENTORY;
+					packet->fromslot = prevIndex;
+					packet->toslot = this->index;
+					packet->isEquipSlot = false;
+					DWORD iobyte;
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_require_itemtable);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+		*/
 
 
 		if (pDest->GetTag() == "MousePoint")

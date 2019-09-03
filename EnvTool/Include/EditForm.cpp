@@ -201,6 +201,15 @@ void CEditForm::OnInitialUpdate()
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
+	// 스크롤바
+	this->EnableScrollBarCtrl(SB_VERT, TRUE);
+	SCROLLINFO si;
+	si.fMask = SIF_PAGE | SIF_RANGE;
+	si.nPage = 10;
+	si.nMin = 0;
+	si.nMax = 1000;
+	this->SetScrollInfo(SB_VERT, &si, TRUE);
+
 	// Tab Control에 사용할 탭을 추가
 	m_Tab.InsertItem(0, _T("Terrain"));
 	m_Tab.InsertItem(1, _T("Object"));

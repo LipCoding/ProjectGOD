@@ -30,6 +30,8 @@ public:
 	void ClearAll();
 	
 	// 실행
+	// followCheck => 대상을 따라다닙니다.
+	// parentCheck => 대상을 부모로 설정합니다.
 	void OperateEffect(const string& effectTag, CGameObject *pOperator, Vector3 vPos, 
 		bool followCheck = false, bool parentCheck = false);
 

@@ -80,29 +80,42 @@ bool SecondScene::Init()
 {
 	
 	const auto& objlist = CGameObject::getObjectList();
+//#pragma region Effect Setting
+//	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Player\\Tanker\\Spell_Attack_RollingBlade.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Player\\Tanker\\Spell_Attack_ManySwings.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Player\\Tanker\\Spell_Attack_Bomb.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Spell4", "Effect\\Player\\Tanker\\Spell_Buff_FireCircle.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Level_Up", "Effect\\Level_Up.bin");
+//	GET_SINGLE(CEffectManager)->AddEffect("Portal", "Effect\\Portal.bin");
+//	GET_SINGLE(CEffectManager)->OperateEffect("Portal", nullptr, Vector3(78.f, 0.f, 95.f));
+//	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
+//		"Effect\\Common\\Holy_Light.bin");
+//#pragma endregion
+
 #pragma region Layer Setting
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
-		SAFE_RELEASE(pLayer);
-	}
-
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
-		SAFE_RELEASE(pLayer);
-	}
-
-	{
-		CLayer* pLayer = m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
-		SAFE_RELEASE(pLayer);
-	}
-
-	{
-		CLayer*    pParticleLayer = m_pScene->CreateLayer("ParticleLayer", 2000);
-		SAFE_RELEASE(pParticleLayer);
-	}
+	m_pScene->CreateLayer("UI+1", UI_LAYER + 1);
+	m_pScene->CreateLayer("UI+2", UI_LAYER + 2);
+	m_pScene->CreateLayer("UI+3", UI_LAYER + 3);
+	m_pScene->CreateLayer("ParticleLayer", 2000);
+	m_pScene->CreateLayer("UI_QUEST+1", UI_LAYER + 11);
+	m_pScene->CreateLayer("UI_QUEST+2", UI_LAYER + 12);
+	m_pScene->CreateLayer("UI_QUEST+3", UI_LAYER + 13);
+#pragma endregion
 
 	GET_SINGLE(UserInterfaceManager)->initialize();
 
+//#pragma region KeySetting
+//	GET_SINGLE(CInput)->CreateKey("Attack", 'X');
+//	GET_SINGLE(CInput)->CreateKey("Skill1", 'Q');
+//	GET_SINGLE(CInput)->CreateKey("Skill2", 'E');
+//	GET_SINGLE(CInput)->CreateKey("Skill3", 'R');
+//	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
+//	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
+//	GET_SINGLE(CInput)->CreateKey("Quest", 'L');
+//#pragma endregion
 #pragma region Terrain
 	{
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();

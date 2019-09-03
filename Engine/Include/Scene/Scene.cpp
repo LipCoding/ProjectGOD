@@ -673,7 +673,7 @@ int CScene::Update(float fTime)
 		m_pSkyObject->Update(fTime);
 
 	// QuadTree Culling
-	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
+	//GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
 
 	// Sound
 	GET_SINGLE(SoundManager)->Update(fTime);

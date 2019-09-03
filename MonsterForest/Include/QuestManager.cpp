@@ -8,7 +8,7 @@
 #include "Component/ColliderRect.h"
 #include "Component/Material.h"
 #include "Component/Transform.h"
-#include "QuestBaseUI.h"
+
 #include "Component/Font.h"
 
 QuestManager::QuestManager()
@@ -24,6 +24,7 @@ bool QuestManager::initialize()
 {
 	wstring temp_path = GET_SINGLE(CPathManager)->FindPath(BASE_PATH);
 	temp_path += L"Quest/*.*";
+
 	string itemIcon_folder_path = strconv(temp_path);
 	vector<string> filesInForder;
 	WIN32_FIND_DATAA fd;
@@ -66,25 +67,24 @@ bool QuestManager::initialize()
 		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
 		CLayer*	pLayer = pScene->GetLayer("UI_QUEST");
 
-		CGameObject* QuestUIObject = CGameObject::CreateObject("QuestUIObject", pLayer);
+		pQuestUIObject = CGameObject::CreateObject("QuestUIObject", pLayer);
+		pQuestUIObject->Enable(false);
 
-
-		QuestBaseUI* quest_ui_component = QuestUIObject->AddComponent<QuestBaseUI>("QuestUIObject");
-		quest_ui_component->initialize();
-		CRenderer2D* pRenderer = QuestUIObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+		pQuestUIComponent = pQuestUIObject->AddComponent<QuestBaseUI>("QuestUIObject");
+		pQuestUIComponent->initialize();
+		CRenderer2D* pRenderer = pQuestUIObject->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
 		CMaterial* pMaterial = pRenderer->GetMaterial();
 
 		pMaterial->SetDiffuseTexInfo("Linear", "UI_DropTable",
 			0, 0, L"UserInterface/UI_INVEN_BOX_3.png");
 
-		CTransform* pDropTableTr = QuestUIObject->GetTransform();
+		CTransform* pDropTableTr = pQuestUIObject->GetTransform();
 		pDropTableTr->SetWorldScale(1000.f, 600.f, 1.f);
 		pDropTableTr->SetWorldPos(100.f, 100.f, 1.f);
 
 		SAFE_RELEASE(pDropTableTr);
 		SAFE_RELEASE(pMaterial);
 		SAFE_RELEASE(pRenderer);
-		SAFE_RELEASE(QuestUIObject);
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
 	}
@@ -103,4 +103,11 @@ Quest * QuestManager::findQuest(const string & quest_name)
 	}
 
 	return nullptr;
+}
+
+void QuestManager::enableShow(bool ui_show)
+{
+	this->ui_show = ui_show;
+	this->pQuestUIObject->Enable(ui_show);
+	pQuestUIComponent->enableShow(ui_show);
 }
