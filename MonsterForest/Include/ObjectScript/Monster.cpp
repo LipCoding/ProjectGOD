@@ -23,6 +23,7 @@
 #include "../DropItemSlot.h"
 #include "../DropTableUI.h"
 #include "Core/SoundManager.h"
+
 Monster::Monster()
 {
 }

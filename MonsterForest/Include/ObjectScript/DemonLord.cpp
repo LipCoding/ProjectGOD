@@ -17,7 +17,8 @@
 #include "../UserInterfaceManager.h"
 #include "../DropItemSlot.h"
 #include "../DropTableUI.h"
-
+#include "Core/SoundManager.h"
+#include "Core/EffectManager.h"
 DemonLord::DemonLord() :
 	m_pTarget(NULL),
 	m_pNavigation(NULL)
@@ -61,6 +62,49 @@ void DemonLord::changeAttackAnimation()
 	SAFE_RELEASE(pAnimation);
 }
 
+void DemonLord::attack_animation(const string& target_tag, const wstring & name)
+{
+	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
+	string animation_name = strconv(name);
+	pAnimation->ChangeClip(animation_name);
+	SAFE_RELEASE(pAnimation);
+
+	CGameObject* target_object = CGameObject::FindObject(target_tag);
+	if (nullptr == target_object)
+		return;
+
+	if (animation_name == string{ "Attack1" })
+	{
+		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack1", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+	}
+	else if (animation_name == string{ "Attack2" })
+	{
+		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack2", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+	}																							 
+	else if (animation_name == string{ "Attack3" })												 
+	{																							 
+		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack3", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+	}																							 
+	else if (animation_name == string{ "Attack4" })												 
+	{																							 
+		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack4", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+	}																							  
+	else if (animation_name == string{ "Spell1" })												  
+	{																							  
+		GET_SINGLE(CEffectManager)->OperateEffect("BossSpell1", m_pGameObject, Vector3(0.f, 0.f, 0.f)),false, true;
+	}																							  
+	else if (animation_name == string{ "Spell2" })												  
+	{																							  
+		GET_SINGLE(CEffectManager)->OperateEffect("BossSpell2", m_pGameObject, Vector3(0.f, 0.f, 0.f)),false, true;
+	}
+
+	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
+	target_actor_component->damaged(attackDamage);
+	GET_SINGLE(SoundManager)->Play("monster_attack", SC_EFFECT);
+
+
+}
+
 void DemonLord::SetTarget(const string & strTag)
 {
 	CGameObject*	pTargetObj = CGameObject::FindObject(strTag);
@@ -87,7 +131,9 @@ bool DemonLord::Init()
 
 	m_pAnimation->Load("99.Dynamic_Mesh\\02.Monster\\DemonLord\\DemonLord.anm");
 	m_pAnimation->SetDefaultClip("Idle1");
-
+	
+	//Vector3 effect_pos = m_p 
+	
 
 
 	if (!m_pAnimation)

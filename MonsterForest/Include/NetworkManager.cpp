@@ -239,6 +239,64 @@ void NetworkManager::processPacket(void * packet)
 
 	}
 	break;
+	case SC_PACKET_MOVE_LEFT:
+	{
+		sc_packet_pos* pPacket = reinterpret_cast<sc_packet_pos*>(packet);
+
+		string appendTag = to_string(pPacket->id);
+		string objectTag = "Player" + appendTag;
+
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		if (pGameObject == nullptr)
+			break;
+
+		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
+		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
+
+		pActor->changeAnimation("RunRight");
+		SAFE_RELEASE(pGameObject);
+
+
+	}
+	break;
+
+	case SC_PACKET_ROTATE_CAMERA_PLAYER:
+	{
+		sc_packet_rotate_camera_player* pPacket = reinterpret_cast<sc_packet_rotate_camera_player*>(packet);
+
+		string appendTag = to_string(pPacket->id);
+		string objectTag = "Player" + appendTag;
+
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		if (pGameObject == nullptr)
+			break;
+
+		CTransform* pTransform = pGameObject->GetTransform();
+		Vector3 pos = pTransform->GetWorldPos();
+		Vector3 axis = Vector3{ pPacket->axis_x, pPacket->axis_y, pPacket->axis_z };
+		pTransform->LookAt(pos + axis * 1.5f);
+		//				m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
+	}
+		break;
+
+	case SC_PACKET_MOVE_RIGHT:
+	{
+		sc_packet_pos* pPacket = reinterpret_cast<sc_packet_pos*>(packet);
+
+		string appendTag = to_string(pPacket->id);
+		string objectTag = "Player" + appendTag;
+
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+		if (pGameObject == nullptr)
+			break;
+
+		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
+		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
+		pActor->changeAnimation("RunLeft");
+		SAFE_RELEASE(pGameObject);
+
+	}
+	break;
 
 	case SC_PACKET_MOVE_STOP:
 	{
@@ -299,9 +357,17 @@ void NetworkManager::processPacket(void * packet)
 
 		if (nullptr == attacksubject_object)
 			break;
-
-		Actor* attacksubject_actor_component = attacksubject_object->FindComponentFromTypeName<Actor>("Actor");
-		attacksubject_actor_component->attack(target_objectTag);
+		
+		if (nullptr != attacksubject_object->FindComponentFromTypeID<DemonLord>())
+		{
+			Actor* attacksubject_actor_component = attacksubject_object->FindComponentFromTypeName<Actor>("Actor");
+			attacksubject_actor_component->attack_animation(target_objectTag, pPacket->animation_name);
+		}
+		else
+		{
+			Actor* attacksubject_actor_component = attacksubject_object->FindComponentFromTypeName<Actor>("Actor");
+			attacksubject_actor_component->attack(target_objectTag);
+		}
 	}
 	break;
 

@@ -25,6 +25,7 @@ public:
 
 public:
 	virtual void attack(const string& target_tag) = 0;
+	virtual void attack_animation(const string& target_tag, const wstring& name) {};
 	virtual void damaged(int damage) = 0;
 	virtual void settingStatus(int current_hp, int current_mp, int level, int exp) = 0;
 	virtual void rotate(float x, float y, float z) = 0;

@@ -26,13 +26,13 @@ public:
 	void operator=(const MFObjectManager&);
 	void operator=(MFObjectManager&&);
 public:
-	bool initialize();
+	bool initialize(const wstring& scene_name);
 public:
 	template<typename ActorType>
 	ActorType* CreateActor(const string& layer_name, const string& object_name, const string& prefab_name, bool my_player = false);
 private:
 	void protoTypeSetting();
-	void staticObjectSetting();
+	void staticObjectSetting(const wstring& scene_name);
 };
 
 template<typename ActorType>

@@ -1,0 +1,773 @@
+193
+98.Static_Mesh\09.Door\Castle_Door_2
+2.6 3.2 3.2
+0 3.14159 0
+24.7019 0 2.80376
+98.Static_Mesh\12.Flag\Flag_1
+4.6 4.6 4.6
+0 2.53212 0
+102.727 2.94 146.672
+98.Static_Mesh\12.Flag\Flag_2
+1 1 1
+0 6.28947 0
+27.048 5.08 137.956
+98.Static_Mesh\12.Flag\Flag_3
+0.6 0.6 0.6
+0 0 0
+19.1125 2.76 137.962
+98.Static_Mesh\12.Flag\Flag_3
+0.6 0.6 0.6
+0 0 0
+34.7974 2.76 137.972
+98.Static_Mesh\12.Flag\Flag_4
+1 1 1
+0 -2.43159 0
+78.4566 0 146.37
+98.Static_Mesh\12.Flag\Flag_4
+1 1 1
+0 -2.43159 0
+68.2025 0 154.678
+98.Static_Mesh\12.Flag\Flag_6
+1.2 1 1.2
+0 1.51425 0
+63.1675 16.56 166.091
+98.Static_Mesh\12.Flag\Flag_2
+1 0.6 0.8
+0 10.1599 0
+73.0959 9.69999 150.415
+98.Static_Mesh\05.Wall\Castle_Wall_Window_1
+7 7 7
+0 1.57708 0
+420.015 20.94 212.525
+98.Static_Mesh\05.Wall\Castle_Wall_Window_1
+7 7 7
+0 1.57708 0
+419.885 20.94 185.079
+98.Static_Mesh\05.Wall\Castle_Wall_Window_2
+1.6 1.6 1.6
+0 2.34991 0
+160.436 10.84 134.878
+98.Static_Mesh\05.Wall\Castle_Wall_Window_2
+1.6 1.6 1.6
+0 6.22664 0
+112.124 10.84 191.125
+98.Static_Mesh\05.Wall\Castle_Wall_Window_2
+1.6 1.6 1.6
+0 6.22664 0
+86.1933 10.84 191.41
+98.Static_Mesh\05.Wall\Castle_Wall_Window_2
+1.6 1.6 1.6
+0 9.19858 0
+110.528 10.84 113.314
+98.Static_Mesh\05.Wall\Castle_Wall_Window_2
+1.6 1.6 1.6
+0 6.2769 0
+192.436 10.84 244.595
+98.Static_Mesh\04.Deco\Table_3
+1 1 1
+0 3.87673 0
+79.609 0 157.752
+98.Static_Mesh\04.Deco\Table_2
+1 1 1
+0 2.31221 0
+116.628 0 161.879
+98.Static_Mesh\04.Deco\Table_4
+5.6 5.6 5.6
+0 5.44752 0
+87.9466 0 166.499
+98.Static_Mesh\04.Deco\Chair_2
+0.6 0.6 0.6
+0 2.36876 0
+89.3375 0 160.965
+98.Static_Mesh\04.Deco\Chair_2
+0.6 0.6 0.6
+0 2.36876 0
+94.0816 0 166.091
+98.Static_Mesh\04.Deco\Chair_2
+0.6 0.6 0.6
+0 0.79168 0
+92.923 0 171.861
+98.Static_Mesh\04.Deco\Chair_2
+0.6 0.6 0.6
+0 -0.370709 0
+86.8301 -9.53674e-07 173.155
+98.Static_Mesh\04.Deco\Chair_2
+0.6 0.6 0.6
+0 -0.829382 0
+82.3636 -9.53674e-07 166.921
+98.Static_Mesh\04.Deco\Pillow_1
+2.2 2.2 2.2
+0 1.62734 0
+108.796 0 152.686
+98.Static_Mesh\04.Deco\Pillow_1
+2.2 2.2 2.2
+0 5.61088 0
+110.204 -9.53674e-07 153.839
+98.Static_Mesh\04.Deco\Pillow
+1.8 1.8 1.8
+0 1.91009 0
+111.727 0 156.026
+98.Static_Mesh\05.Wall\Castle_Wall_Book
+1.6 1.6 1.6
+0 0.00628404 0
+98.963 0 189.535
+98.Static_Mesh\04.Deco\Coin_1
+1 1 1
+0 0 0
+117.504 5.22 163.211
+98.Static_Mesh\04.Deco\Coin_1
+1 1 1
+0 1.14982 0
+117.103 5.22 162.29
+98.Static_Mesh\04.Deco\Coin_1
+1 1 1
+0 1.14982 0
+116.481 5.22 162.641
+98.Static_Mesh\04.Deco\Castle_Shield
+4.2 4.2 4.2
+0 3.85159 0
+74.5793 3.4 152.157
+98.Static_Mesh\04.Deco\Castle_Shield_1
+3.6 3.6 3.6
+1.45142 2.93425 0
+114.51 5.21999 161.278
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_1
+4.8 4.8 4.8
+0 0 0
+123.055 1.90735e-06 171.38
+98.Static_Mesh\04.Deco\Logs
+4.2 4.2 4.2
+0 1.56451 0
+63.67 9.53674e-07 174.733
+98.Static_Mesh\04.Deco\Logs
+4.2 4.2 4.2
+0 4.7061 0
+65.0825 -9.53674e-07 174.174
+98.Static_Mesh\04.Deco\Logs
+4.2 4.2 4.2
+0 4.7061 0
+63.6822 0 171.877
+98.Static_Mesh\03.Plant\Flower_1
+1 1 1
+0 0 0
+88.0975 2.32 166.616
+98.Static_Mesh\04.Deco\Barrels_1
+1.2 1.2 1.2
+0 0.502655 0
+91.1046 0 141.567
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2 2 2
+0 0 0
+93.672 2.24 168.858
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.6 2.6 2.6
+0 0 0
+82.0638 2.24 164.512
+98.Static_Mesh\04.Deco\Castle_Carpet_1
+11 11 11
+0 0.747699 0
+85.1741 0 164.002
+98.Static_Mesh\04.Deco\Castle_Carpet_6
+8.6 8.8 8.6
+0 0.772832 0
+109.138 1.90735e-06 156.411
+98.Static_Mesh\04.Deco\Barrels_3
+2 2.2 2
+0 -0.653451 0
+112.816 0 150.812
+98.Static_Mesh\04.Deco\Barrels_2
+1.8 1.8 1.8
+0 2.36876 0
+123.594 -9.53674e-07 156.893
+98.Static_Mesh\04.Deco\Castle_Object_Box_1
+2.2 2.2 2.2
+0 1.57708 0
+65.6444 0 170.866
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_2
+1.8 1.8 1.8
+0 -0.320442 0
+153.958 1.44 136.832
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_5
+2 2 2
+0 3.05363 0
+143.182 9.53674e-07 124.404
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_3
+1.2 1.2 1.2
+0 2.02318 0
+146.555 0.0599997 132.22
+98.Static_Mesh\04.Deco\Chair_1
+1.4 1.4 1.4
+0 2.6892 0
+135.897 0 121.03
+98.Static_Mesh\13.Torch\Torch_1
+1.4 1.4 1.4
+0 0 0
+161.911 0 138.966
+98.Static_Mesh\12.Flag\Flag_9
+2 2 2
+0 -0.144513 0
+131.825 -9.53674e-07 119.976
+98.Static_Mesh\04.Deco\Castle_Object_5
+4.6 4.6 4.6
+0 1.59593 0
+407.368 4.24 199.803
+98.Static_Mesh\04.Deco\Castle_Object_6
+4.4 4.6 4.4
+0 1.59593 0
+409.986 0 199.39
+98.Static_Mesh\05.Wall\Castle_Fence_Floor_Long
+0.8 0.6 0.6
+0 1.60221 0
+412.345 4.24 180.227
+98.Static_Mesh\05.Wall\Castle_Fence_Floor_Long
+0.8 0.6 0.6
+0 1.60221 0
+413.049 4.24 218.177
+98.Static_Mesh\04.Deco\Chair_3
+1.8 1.8 1.8
+0 1.62106 0
+409.185 8.42 199.575
+98.Static_Mesh\04.Deco\Castle_Object_8
+4.2 4.2 4.2
+0 1.56451 0
+417.695 17.66 199.247
+98.Static_Mesh\04.Deco\Castle_Object_6
+4.4 4.6 4.4
+0 1.59593 0
+408.591 -0.82 199.45
+98.Static_Mesh\04.Deco\Castle_Object_6
+4.4 4.6 4.4
+0 1.59593 0
+407.353 -1.8 199.403
+98.Static_Mesh\15.Stair\Stair_1
+1 1 1
+0 1.58965 0
+400.732 7.9 199.16
+98.Static_Mesh\15.Stair\Stair_1
+1 1 1
+0 1.58965 0
+395.832 5.72 199.391
+98.Static_Mesh\15.Stair\Stair_1
+1 1 1
+0 1.58965 0
+390.965 3.28 199.51
+98.Static_Mesh\05.Wall\Castle_Wall_Cutton_1
+1 1 1
+0 0.238759 0
+195.412 9.58001 244.585
+98.Static_Mesh\05.Wall\Castle_Wall_Cutton_1
+1 1 1
+0 3.4746 0
+189.496 9.56001 244.096
+98.Static_Mesh\15.Stair\Stair_1
+1 1 1
+0 1.58965 0
+386.544 0.760004 199.598
+98.Static_Mesh\04.Deco\DG_Statue
+1.2 1.2 1.2
+0 1.64619 0
+396.491 0 179.509
+98.Static_Mesh\04.Deco\DG_Statue
+1.2 1.2 1.2
+0 1.64619 0
+396.31 0 219.034
+98.Static_Mesh\05.Wall\Castle_Fence_Arrow
+0.6 2 1.2
+0 1.58336 0
+385.994 0 219.389
+98.Static_Mesh\05.Wall\Castle_Fence_Arrow
+0.6 2 1.2
+0 1.58336 0
+385.313 0 180.092
+98.Static_Mesh\04.Deco\Castle_Carpet_3
+2.2 2.2 2.2
+0 0.0188497 0
+371.515 0 200.618
+98.Static_Mesh\04.Deco\Castle_Carpet_2
+2.2 2.2 2.2
+0 0.0125661 0
+344.42 1.90735e-06 200.995
+98.Static_Mesh\04.Deco\Castle_Carpet_2
+2.2 2.2 2.2
+0 0.0125661 0
+317.278 0 201.335
+98.Static_Mesh\04.Deco\Castle_Candle_3
+2.8 2.8 2.8
+0 0.27646 0
+361.442 34.6799 200.481
+98.Static_Mesh\04.Deco\Castle_Candle_4
+0.6 0.6 0.6
+0 0.376991 0
+90.5746 13.96 165.398
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 -0.018849 0
+372.694 25.8 224.87
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 -0.018849 0
+340.834 25.8 225.863
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 3.12274 0
+372.053 25.8 174.508
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 3.12274 0
+340.402 25.8 174.025
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 3.88301 0
+305.348 25.8 182.675
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 5.46636 0
+306.358 25.8 216.793
+98.Static_Mesh\04.Deco\Castle_Object_4
+1.2 1.2 1.2
+-0.590619 4.72495 0
+295.361 25.8 199.984
+98.Static_Mesh\13.Torch\Torch_1
+1.4 1.4 1.4
+0 -0.314159 0
+133.614 9.53674e-07 173.829
+98.Static_Mesh\13.Torch\Torch_1
+1.4 1.4 1.4
+0 -0.402124 0
+124.263 0 188.816
+98.Static_Mesh\13.Torch\Torch_1
+1.4 1.4 1.4
+0 -0.257611 0
+93.7339 -9.53674e-07 138.204
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 -1.70903 0
+192.7 13.26 205.797
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 -0.55292 0
+101.222 13.26 145.451
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 -0.647168 0
+123.113 13.26 163.459
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 -0.0376989 0
+150.716 13.26 191.244
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 3.11646 0
+47.7597 13.26 109.207
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 3.11646 0
+72.1406 13.26 109.156
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.3523 0
+71.5262 13.26 138.266
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.3523 0
+46.885 13.26 138.516
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 8.48232 0
+174.942 13.26 153.122
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.31462 0
+179.222 13.26 244.482
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.31462 0
+206.538 13.26 244.543
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.31462 0
+261.059 13.26 208.99
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 6.31462 0
+227.016 13.26 209.058
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 9.4185 0
+227.14 13.26 191.561
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 9.4185 0
+261.924 13.26 191.773
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 9.4185 0
+369.922 13.26 172.18
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 9.4185 0
+324.08 13.26 172.69
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 12.5475 0
+369.765 13.26 227.22
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 12.5475 0
+324.451 13.26 227.817
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 14.1623 0
+35.3887 13.26 19.703
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 14.1623 0
+35.752 13.26 74.6877
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 17.3604 0
+14.3154 13.26 77.0733
+98.Static_Mesh\13.Torch\Torch_6
+1.2 1.2 1.2
+0 17.3604 0
+13.2988 13.26 18.603
+98.Static_Mesh\04.Deco\Castle_Candle_2
+2.2 2.2 2.2
+0 1.51425 0
+384.894 0.26 211.048
+98.Static_Mesh\04.Deco\Castle_Candle_2
+2.2 2.2 2.2
+0 1.76557 0
+386.063 0.760001 188.474
+98.Static_Mesh\04.Deco\Castle_Candle_2
+2.2 2.2 2.2
+0 0.201062 0
+385.98 0.760001 189.421
+98.Static_Mesh\04.Deco\Castle_Candle_2
+2.2 2.2 2.2
+0 0.961327 0
+385.994 0.760001 188.291
+98.Static_Mesh\04.Deco\Castle_Candle_2
+2.2 2.2 2.2
+0 0.961327 0
+384.195 0.760001 209.651
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 0 0
+410.578 8.42 191.198
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 2.74575 0
+409.248 8.42 192.031
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 2.74575 0
+411.03 8.42 207.384
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 2.74575 0
+411.062 8.42 206.639
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 0.640885 0
+410.098 8.42 207.008
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 3.68195 0
+411.579 8.42 208.52
+98.Static_Mesh\04.Deco\Castle_Candle_1
+3.8 3.8 3.8
+0 2.98451 0
+409.013 8.42 191.037
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 2.98451 0
+384.5 0.119999 188.925
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 2.98451 0
+385.311 0.119999 210.023
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 2.98451 0
+388.213 2.08 207.097
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 0.125665 0
+388.262 2.08 207.372
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 0.125665 0
+395.191 5.72 188.94
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 -2.19911 0
+394.846 5.72 189.482
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 -2.19911 0
+395.484 5.72 210.373
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 -2.19911 0
+391.381 3.9 192.305
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 -2.19911 0
+385.874 0.780003 190.169
+98.Static_Mesh\04.Deco\Castle_Candle_1
+2.8 2.8 2.8
+0 -0.628317 0
+384.888 0.0400027 209.714
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+354.24 0 208.511
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+318.174 0 208.802
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+318.187 0 194.27
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+354.564 0 193.305
+98.Static_Mesh\04.Deco\Table_1
+0.6 0.6 0.6
+0 -3.51858 0
+134.957 0 123.131
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+381.021 0 193.519
+98.Static_Mesh\04.Deco\Castle_Object_10
+1 1 1
+0 0.0942478 0
+380.73 0 208.228
+98.Static_Mesh\04.Deco\Barrels_2
+1.8 1.8 1.8
+0 1.87239 0
+214.42 -9.53674e-07 241.871
+98.Static_Mesh\04.Deco\Barrels_2
+1.8 1.8 1.8
+0 5.08309 0
+154.29 0 135.177
+98.Static_Mesh\04.Deco\Castle_Candle_4
+0.6 0.6 0.6
+0 0 0
+118.021 14.02 137.396
+98.Static_Mesh\04.Deco\Castle_Candle_4
+0.6 0.6 0.6
+0 0 0
+168.258 14.02 175.727
+98.Static_Mesh\13.Torch\Torch_5
+3.4 3.4 3.4
+0 1.13726 0
+17.1809 -9.53674e-07 131.873
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 3.19814 0
+14.2764 15.3 102.547
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 6.12611 0
+35.5136 15.3 43.2679
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 8.01106 0
+56.3827 15.3 109.067
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 6.40257 0
+184.011 15.3 168.942
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 7.76602 0
+124.068 15.3 115.512
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 9.4939 0
+169.526 15.3 218.312
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 7.81001 0
+242.618 15.3 191.697
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 7.81001 0
+277.402 15.3 191.829
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 7.81001 0
+204.108 15.3 191.365
+98.Static_Mesh\12.Flag\Flag_12
+1 1 1
+0 12.4282 0
+214.228 15.3 220.483
+98.Static_Mesh\04.Deco\Pillow_1
+1.4 1.4 1.4
+0 2.55726 0
+151.053 0 137.35
+98.Static_Mesh\04.Deco\Castle_Carpet_6
+6.4 6.4 6.4
+0 -0.389558 0
+134.868 0 123.363
+98.Static_Mesh\04.Deco\Castle_Carpet_8
+13.2 13.2 13.2
+0 0 0
+73.7468 0 183.374
+98.Static_Mesh\04.Deco\Castle_Shield_2
+6.8 6 6.8
+0 5.55434 0
+304.761 12.58 217.715
+98.Static_Mesh\04.Deco\Castle_Shield_2
+6.8 6 6.8
+0 10.185 0
+304.051 12.58 181.801
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 0.150796 0
+152.763 0 138.177
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.100531 0
+152.606 0 135.469
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.100531 0
+150.724 0 137.43
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.100531 0
+153.026 0.299999 137.58
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.100531 0
+151.832 0.299999 139.737
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.559203 0
+149.072 0.299999 139.116
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.559203 0
+150.114 0.460001 137.482
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.559203 0
+150.931 0.46 139.182
+98.Static_Mesh\04.Deco\Coin_1
+1.6 1.6 1.6
+0 -0.559203 0
+148.346 0.24 138.151
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_1
+3.2 3.2 3.2
+0 4.73124 0
+33.6986 0.0800003 83.3316
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_4
+1 1 1
+0 -1.47655 0
+14.3316 0 127.671
+98.Static_Mesh\04.Deco\Castle_Object_Boxes_3
+1 1 1
+0 -0.961328 0
+16.1258 -0.12 124.445
+98.Static_Mesh\04.Deco\Steel
+2.2 2.2 2.2
+0 0 0
+160.425 1.22 190.961
+98.Static_Mesh\04.Deco\Steel
+2.2 2.2 2.2
+0 0 0
+143.154 1.22 190.991
+98.Static_Mesh\04.Deco\Steel
+2.2 2.2 2.2
+0 -0.760265 0
+126.49 1.22 166.522
+98.Static_Mesh\04.Deco\Steel
+2.2 2.2 2.2
+0 -4.76265 0
+213.922 1.22 228.751
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+65.318 0 135.433
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+64.7276 0 113.71
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+124.192 0 139.288
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+132.546 4.76837e-07 138.167
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+130.61 0 145.619
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+92.4452 0 179.149
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+93.0276 0 184.484
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+82.3407 0 141.076
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+88.6845 4.76837e-07 144.238
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+89.0798 -4.76837e-07 150.818
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+205.098 4.76837e-07 214.65
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+199.553 -4.76837e-07 214.243
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+276.681 0 205.053
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+277.968 0 197.487
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+350.72 0 219.081
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+350.115 4.76837e-07 210.118
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+351.355 0 200.281
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+351.436 -4.76837e-07 189.456
+99.Dynamic_Mesh\02.Monster\Golem\Golem
+1 1 1
+0 0 0
+352.332 -4.76837e-07 180.134
+99.Dynamic_Mesh\02.Monster\DemonLord\DemonLord
+1 1 1
+0 0 0
+371.18 4.76837e-07 199.073
