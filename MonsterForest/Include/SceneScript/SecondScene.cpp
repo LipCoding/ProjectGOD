@@ -569,8 +569,8 @@ bool SecondScene::Init()
 //	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 //#pragma endregion
 
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_2");
+	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 	isInitComplete = true;
 	return true;
 }

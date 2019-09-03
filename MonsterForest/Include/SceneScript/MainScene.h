@@ -18,7 +18,7 @@ public:
 	~CMainScene();
 
 	bool isInitComplete = false;
-	bool move_enable = false;
+	bool move_enable = true;
 	float move_time = 0.f;
 public:
 public:
