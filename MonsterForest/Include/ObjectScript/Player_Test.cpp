@@ -19,6 +19,7 @@
 #include "Resources/ResourcesManager.h"
 #include "Resources/Mesh.h"
 #include "Component/Camera.h"
+#include "Core/SoundManager.h"
 
 
 CPlayer_Test::CPlayer_Test()
@@ -357,6 +358,7 @@ void CPlayer_Test::Input(float fTime)
 
 	if (KEYDOWN("Jump"))
 	{
+		//GET_SINGLE(SoundManager)->ChangeSound_Smooth("FieldBGM");
 		m_pAnimation->ChangeClip("Jump");
 	}
 
@@ -424,7 +426,7 @@ int CPlayer_Test::Update(float fTime)
 
 	Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
 
-	m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
+	m_pTransform->LookAt(m_pTransform->GetWorldPos() + vCamAxisZ * 1.5f);
 
 	return 0;
 }

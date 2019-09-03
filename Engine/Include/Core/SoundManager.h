@@ -18,6 +18,8 @@ typedef struct _tagSoundInfo
 
 PG_BEGIN
 
+const float VolumeMax = 100.f;
+
 class PG_DLL SoundManager
 {
 private:
@@ -31,6 +33,36 @@ public:
 	bool Play(const string& strKey, SOUND_CHANNEL _Channel);
 	bool Stop(SOUND_CHANNEL eChannel);
 	bool Volume(SOUND_CHANNEL eChannel, float fVolume);
+
+public:
+	bool Update(float fTime);
+
+public:
+	struct SoundChangeArea
+	{
+		Vector3 vCenterPos;
+		float m_fRange;
+	};
+
+	void SetPlayerTr(class CTransform* pTr);
+	void AddSoundArea(const string& musicName, const Vector3& center, const float& range);
+	void EraseSoundArea();
+
+private:
+	bool ChangeSound_Smooth(const string& strKey);
+
+private:
+	unordered_map<string, SoundChangeArea>	m_mapSoundArea;
+
+	class CTransform *m_pPlayerTr = nullptr;
+
+	float m_fVolume = 100.f;
+	SOUND_CHANNEL m_eNowChannel = SC_BGM;
+	
+	bool m_bChangeSoundCheck = false;
+	bool m_bSwapSoundCheck = false;
+	string m_strSoundName = "";
+	string m_strNowPlayed = "";
 
 private:
 	PSOUNDINFO FindSound(const string& strKey);

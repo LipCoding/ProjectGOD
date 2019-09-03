@@ -20,6 +20,7 @@
 #include "../Resources/Mesh.h"
 #include "../Component/Renderer.h"
 #include "../Component/LandScape.h"
+#include "../Core/SoundManager.h"
 
 PG_USING
 
@@ -673,6 +674,9 @@ int CScene::Update(float fTime)
 
 	// QuadTree Culling
 	GET_SINGLE(CQuadTreeManager)->CheckRenderingChild();
+
+	// Sound
+	GET_SINGLE(SoundManager)->Update(fTime);
 
 	return 0;
 }
