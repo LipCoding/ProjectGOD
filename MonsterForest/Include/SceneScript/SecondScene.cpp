@@ -79,7 +79,7 @@ void SecondScene::chat_callback(float fTime)
 
 bool SecondScene::Init()
 {
-	
+
 	const auto& objlist = CGameObject::getObjectList();
 //#pragma region Effect Setting
 //	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
@@ -570,7 +570,8 @@ bool SecondScene::Init()
 //
 //	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 //#pragma endregion
-
+	m_pScene->LoadGlobLight("Main_Scene_2_DY");
+	m_pScene->LoadPointLight("Main_Scene_2_DY_Lights");
 	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_2_DY");
 	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 	isInitComplete = true;

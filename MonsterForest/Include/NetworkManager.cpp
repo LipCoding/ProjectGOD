@@ -235,6 +235,8 @@ void NetworkManager::processPacket(void * packet)
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 		if (pGameObject == nullptr)
 			break;
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
 
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
 		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
@@ -514,7 +516,7 @@ void NetworkManager::processPacket(void * packet)
 			double y = pPlayerTr->GetWorldPos().y;
 			double z = pPlayerTr->GetWorldPos().z;
 
-			GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, Vector3((float)x, (float)y, (float)z));
+			GET_SINGLE(CEffectManager)->OperateEffect("Spell2", pPlayerObject, Vector3{0,0,0});
 
 			SAFE_RELEASE(pPlayerTr);
 			SAFE_RELEASE(pPlayerObject);
