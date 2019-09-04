@@ -354,17 +354,17 @@ int CPlayer::Update(float fTime)
 			int iCurrentFrame = m_pAnimation->GetClipFrame();
 
 			//if (18 == iCurrentFrame)
-			if (30 == iCurrentFrame)
+		///	if (30 == iCurrentFrame)
 			{
-				cs_packet_attack_skill_player* packet = reinterpret_cast<cs_packet_attack_skill_player*>(NetworkManager::getInstance()->getSendBuffer());
-				packet->size = sizeof(cs_packet_attack_skill_player);
-				packet->type = CS_PACKET_ATTACK_SKILL2_EFFECT;
-				packet->playerID = id;
-				wstring effectName = L"Spell2";
-				wcscpy_s(packet->effect_name, effectName.c_str());
-				DWORD iobyte;
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_skill_player);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				//cs_packet_attack_skill_player* packet = reinterpret_cast<cs_packet_attack_skill_player*>(NetworkManager::getInstance()->getSendBuffer());
+				//packet->size = sizeof(cs_packet_attack_skill_player);
+				//packet->type = CS_PACKET_ATTACK_SKILL2_EFFECT;
+				//packet->playerID = id;
+				//wstring effectName = L"Spell2";
+				//wcscpy_s(packet->effect_name, effectName.c_str());
+				//DWORD iobyte;
+				//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_skill_player);
+				//int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 		}
 

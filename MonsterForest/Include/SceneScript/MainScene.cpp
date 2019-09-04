@@ -321,6 +321,16 @@ void CMainScene::Input(float fTime)
 
 					}
 				}
+
+				cs_packet_attack_skill_player* packet = reinterpret_cast<cs_packet_attack_skill_player*>(NetworkManager::getInstance()->getSendBuffer());
+				packet->size = sizeof(cs_packet_attack_skill_player);
+				packet->type = CS_PACKET_ATTACK_SKILL2_EFFECT;
+				packet->playerID = id;
+				wstring effectName = L"Spell2";
+				wcscpy_s(packet->effect_name, effectName.c_str());
+				DWORD iobyte;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_skill_player);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 
 			if (KEYDOWN("Skill3"))
@@ -741,10 +751,10 @@ void CMainScene::Input(float fTime)
 
 int CMainScene::Update(float fTime)
 {
-	if (this->isInitComplete)
-	{
-		m_pScene->LoadSky(L"Skybox_6");
-	}
+	//if (this->isInitComplete)
+	//{
+	//	m_pScene->LoadSky(L"Skybox_6");
+	//}
 	#pragma region Chatting
 		{
 			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
