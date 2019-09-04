@@ -141,6 +141,9 @@ bool CMainScene::Init()
 	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
 	GET_SINGLE(CInput)->CreateKey("Quest", 'L');
+
+	GET_SINGLE(CInput)->CreateKey("QUADTREE", 'N');
+	GET_SINGLE(CInput)->CreateKey("NAVI", 'M');
 #pragma endregion
 
 #pragma region Terrain
@@ -191,8 +194,7 @@ bool CMainScene::Init()
 	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
 	isInitComplete = true;
 
 	return true;
@@ -201,6 +203,56 @@ bool CMainScene::Init()
 
 void CMainScene::Input(float fTime)
 {
+	/* For Rendering Navi, QuadTree, etc */
+	if (KEYDOWN("F1"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+			if (!m_isCheckColliderQuadTree)
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(true);
+					SAFE_RELEASE(pCollider);
+				}
+				m_isCheckColliderQuadTree = true;
+			}
+			else
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(false);
+					SAFE_RELEASE(pCollider);
+				}
+
+				m_isCheckColliderQuadTree = false;
+			}
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
+	if (KEYDOWN("F2"))
+	{
+		if (!m_isCheckColliderNaviMesh)
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+			m_isCheckColliderNaviMesh = true;
+		}
+		else
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+			m_isCheckColliderNaviMesh = false;
+		}
+	}
+	move_time += fTime;
+
 	if(isInitComplete == true)
 	{
 		int checkID = NetworkManager::getInstance()->getMyClientID();
@@ -531,8 +583,6 @@ void CMainScene::Input(float fTime)
 					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
-
-
 			}
 
 			if (KEYDOWN("MouseLButton"))
@@ -679,56 +729,6 @@ void CMainScene::Input(float fTime)
 					{
 
 					}
-				}
-			}
-
-
-			/* For Rendering Navi, QuadTree, etc */
-			if (KEYDOWN("F1"))
-			{
-				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
-
-				if (pLandScapeObj)
-				{
-					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-					list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
-					if (!m_isCheckColliderQuadTree)
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(true);
-							SAFE_RELEASE(pCollider);
-						}
-						m_isCheckColliderQuadTree = true;
-					}
-					else
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(false);
-							SAFE_RELEASE(pCollider);
-						}
-
-						m_isCheckColliderQuadTree = false;
-					}
-					SAFE_RELEASE(pLandScape);
-					SAFE_RELEASE(pLandScapeObj);
-				}
-			}
-
-			if (KEYDOWN("F2"))
-			{
-				if (!m_isCheckColliderNaviMesh)
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(true);
-					m_isCheckColliderNaviMesh = true;
-				}
-				else
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(false);
-					m_isCheckColliderNaviMesh = false;
 				}
 			}
 		}
