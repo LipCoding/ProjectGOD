@@ -92,6 +92,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	tDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	tDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	tDesc.BufferCount = 1;
+	
 	tDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	
 #ifdef _QUEST_TOOL_
@@ -105,7 +106,7 @@ bool CDevice::Init(HWND hWnd, UINT iWidth, UINT iHeight,
 	hr = m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &quality);
 	m_pDevice->Release();
 	m_pContext->Release();
-
+	
 	tDesc.SampleDesc.Quality = 0;
 	tDesc.SampleDesc.Count = 1;
 	tDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;

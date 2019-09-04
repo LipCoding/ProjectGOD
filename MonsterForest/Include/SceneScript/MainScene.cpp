@@ -201,13 +201,6 @@ bool CMainScene::Init()
 
 void CMainScene::Input(float fTime)
 {
-	move_time += fTime;
-
-	if (move_time >= 0.0333f)
-	{
-		move_enable = true;
-	}
-
 	if(isInitComplete == true)
 	{
 		int checkID = NetworkManager::getInstance()->getMyClientID();
@@ -367,10 +360,10 @@ void CMainScene::Input(float fTime)
 				}
 			}
 
-			if (move_enable)
 			{
 				if (KEYPUSH("MoveRight"))
 				{
+
 					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
 					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
 
@@ -539,7 +532,7 @@ void CMainScene::Input(float fTime)
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
 
-				move_enable = false;
+
 			}
 
 			if (KEYDOWN("MouseLButton"))
