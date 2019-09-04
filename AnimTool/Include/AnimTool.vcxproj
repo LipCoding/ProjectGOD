@@ -23,7 +23,7 @@
     <ProjectGuid>{2CFBC3BD-97A7-484A-B856-DD5BF38F2074}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
     <RootNamespace>AnimTool</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

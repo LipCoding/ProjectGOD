@@ -141,9 +141,6 @@ bool CMainScene::Init()
 	GET_SINGLE(CInput)->CreateKey("Skill4", 'T');
 	GET_SINGLE(CInput)->CreateKey("INVENTORY", 'I');
 	GET_SINGLE(CInput)->CreateKey("Quest", 'L');
-
-	GET_SINGLE(CInput)->CreateKey("QUADTREE", 'N');
-	GET_SINGLE(CInput)->CreateKey("NAVI", 'M');
 #pragma endregion
 
 #pragma region Terrain
@@ -181,7 +178,12 @@ bool CMainScene::Init()
 	NetworkManager::getInstance()->inputTime = high_resolution_clock::now();
 
 #pragma region sound
-	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("TownBGM", true, "Main_Scene_1_Town.mp3");
+	GET_SINGLE(SoundManager)->AddSoundArea("TownBGM", Vector3(335.f, 0.f, 358.f), 10.f);
+	GET_SINGLE(SoundManager)->LoadSound("FieldBGM", true, "Main_Scene_1_Field.mp3");
+	GET_SINGLE(SoundManager)->AddSoundArea("FieldBGM", Vector3(316.f, 0.f, 343.f), 10.f);
+	GET_SINGLE(SoundManager)->Play("TownBGM", SC_BGM);
+
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
@@ -191,11 +193,11 @@ bool CMainScene::Init()
 	GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
-	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
 	isInitComplete = true;
+
 
 	return true;
 }
@@ -251,7 +253,7 @@ void CMainScene::Input(float fTime)
 			m_isCheckColliderNaviMesh = false;
 		}
 	}
-	move_time += fTime;
+
 
 	if(isInitComplete == true)
 	{
@@ -648,6 +650,7 @@ void CMainScene::Input(float fTime)
 				SAFE_RELEASE(pRay);
 				SAFE_RELEASE(pMouseObj);
 			}
+
 			if (KEYPUSH("MouseRButton"))
 			{
 				cs_packet_rotate_camera_player* pPacket = reinterpret_cast<cs_packet_rotate_camera_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -738,6 +741,10 @@ void CMainScene::Input(float fTime)
 
 int CMainScene::Update(float fTime)
 {
+	if (this->isInitComplete)
+	{
+		m_pScene->LoadSky(L"Skybox_6");
+	}
 	#pragma region Chatting
 		{
 			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
