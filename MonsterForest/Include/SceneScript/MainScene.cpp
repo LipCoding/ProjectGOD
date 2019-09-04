@@ -417,6 +417,7 @@ void CMainScene::Input(float fTime)
 			{
 				if (KEYPUSH("MoveRight"))
 				{
+
 					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
 					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
 
@@ -584,7 +585,6 @@ void CMainScene::Input(float fTime)
 					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
-
 			}
 
 			if (KEYDOWN("MouseLButton"))
