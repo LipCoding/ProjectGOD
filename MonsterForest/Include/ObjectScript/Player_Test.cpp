@@ -136,6 +136,11 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
 		"Effect\\Common\\Holy_Light.bin");
 
+	GET_SINGLE(CEffectManager)->AddEffect("Spell_Attack_Bomb", 
+		"Effect\\Player\\Tanker\\Spell_Attack_Bomb.bin");
+
+	GET_SINGLE(SoundManager)->LoadSound("Spell_Attack_Bomb", false, "Tanker_Attack_Bomb.wav");
+
 	return true;
 }
 
@@ -244,9 +249,10 @@ void CPlayer_Test::Input(float fTime)
 	if (KEYDOWN("Attack3"))
 	{
 		Vector3 vPos = m_pTransform->GetWorldPos();
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Buff_FireCircle", m_pGameObject, Vector3(0.f, 0.f, 0.f),
+		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Attack_Bomb", m_pGameObject, Vector3(0.f, 0.f, 0.f),
 			false, true);
-		GET_SINGLE(CEffectManager)->OperateEffect("Holy_Light", m_pGameObject, vPos, true, false);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Spell_Attack_Bomb", SC_EFFECT, 1.f);
+		//GET_SINGLE(CEffectManager)->OperateEffect("Holy_Light", m_pGameObject, vPos, true, false);
 		m_pAnimation->ChangeClip("Spell");
 	}
 
@@ -321,8 +327,6 @@ int CPlayer_Test::Update(float fTime)
 
 	Vector3 vPos = m_pTransform->GetWorldPos();
 	m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
-
-	
 
 	return 0;
 }

@@ -90,6 +90,19 @@ bool SoundManager::Play(const string & strKey, SOUND_CHANNEL _Channel)
 	return true;
 }
 
+bool SoundManager::PlayWithDelay(const string& strKey, SOUND_CHANNEL _Channel, const float& delay)
+{
+	DelaySound dSound;
+	dSound.strDelayedSoundName = strKey;
+	dSound.eDelayedChannel = _Channel;
+	dSound.fDelay = 0.f;
+	dSound.fMaxDelay = delay;
+
+	m_listDelaySound.push_back(dSound);
+
+	return true;
+}
+
 bool SoundManager::Stop(SOUND_CHANNEL eChannel)
 {
 	m_pChannel[eChannel]->stop();
@@ -156,6 +169,27 @@ bool SoundManager::Update(float fTime)
 	}
 
 	Volume(m_eNowChannel, m_fVolume / VolumeMax);
+
+	if (!m_listDelaySound.empty())
+	{
+		list<DelaySound>::iterator iter_begin = m_listDelaySound.begin();
+		list<DelaySound>::iterator iter_end = m_listDelaySound.end();
+
+		for (auto iter = iter_begin; iter != iter_end;)
+		{
+			(*iter).fDelay += fTime;
+
+			if ((*iter).fDelay >= (*iter).fMaxDelay)
+			{
+				Play((*iter).strDelayedSoundName, (*iter).eDelayedChannel);
+				iter = m_listDelaySound.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
 
 	return true;
 }
