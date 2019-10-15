@@ -60,12 +60,12 @@ void CTimer::Update()
 	// 하지만 Sleep은 Sleep(1)이 1ms만 쉬지는 않는다.
 	// 프로세스가 대기로 빠졌다가 다시 코어에 올라가서 활성화되기까지 많은 과정들을 거쳐야 하기때문.
 	// 이점 고려할것. 그렇기때문에 안좋은 코드.
-	//float duration_time = 0.016666f - m_fDeltaTime;
-	//if (duration_time > 0.f)
-	//{
-	//	int sleep_time = duration_time * 1000;
-	//	Sleep(sleep_time);
-	//}
+	/*float duration_time = 0.016666f - m_fDeltaTime;
+	if (duration_time > 0.f)
+	{
+		int sleep_time = duration_time * 1000;
+		Sleep(sleep_time);
+	}*/
 	m_tTime = tTime;
 
 
@@ -82,9 +82,9 @@ void CTimer::Update()
 #ifdef _DEBUG
 		_cprintf("FPS : %.5f\n", m_fFPS);
 #else
-		char	strFPS[128] = {};
+		/*char	strFPS[128] = {};
 		sprintf_s(strFPS, "FPS : %.5f", m_fFPS);
-		SetWindowTextA(GET_SINGLE(CCore)->GetWindowHandle(), strFPS);
+		SetWindowTextA(GET_SINGLE(CCore)->GetWindowHandle(), strFPS);*/
 #endif // _
 
 	}

@@ -94,7 +94,7 @@ bool CMainScene::Init()
 {
 
 	//m_pScene->LoadSky(L"Skybox_2");
-	//m_pScene->LoadGlobLight("Night_Test");
+	m_pScene->LoadGlobLight("Main_Scene_1");
 	//m_pScene->LoadPointLight("Night_Test");
 
 #pragma region Effect Setting
@@ -751,10 +751,10 @@ void CMainScene::Input(float fTime)
 
 int CMainScene::Update(float fTime)
 {
-	//if (this->isInitComplete)
-	//{
-	//	m_pScene->LoadSky(L"Skybox_6");
-	//}
+	if (this->isInitComplete)
+	{
+		m_pScene->LoadSky(L"Skybox_6");
+	}
 	#pragma region Chatting
 		{
 			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();

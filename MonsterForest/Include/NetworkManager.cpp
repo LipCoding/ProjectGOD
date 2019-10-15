@@ -235,9 +235,11 @@ void NetworkManager::processPacket(void * packet)
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 		if (pGameObject == nullptr)
 			break;
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
-
+		if (pPacket->id == NetworkManager::getInstance()->myClientID)
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
+		}
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
 		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
 		SAFE_RELEASE(pGameObject);
