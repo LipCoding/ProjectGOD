@@ -142,30 +142,30 @@ bool UserInterfaceManager::initialize()
 	}
 #pragma endregion
 
-#pragma region MiniMap
-	{
-		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-		CLayer*	pLayer = pScene->GetLayer("UI+1");
-		CGameObject* pMinimapObj = CGameObject::CreateObject("Minimap", pLayer);
-		this->pMiniMap = pMinimapObj->AddComponent<MiniMap>("Minimap");
-		this->pMiniMap->initialize();
-
-		CTransform* pStatusTr = pMinimapObj->GetTransform();
-		pStatusTr->SetWorldScale(150.f, 150.f, 1.f);
-		pStatusTr->SetWorldPos(1100.f, 0.f, 0.f);
-		CRenderer2D* pRenderer = pMinimapObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
-		CMaterial* pMaterial = pRenderer->GetMaterial();
-
-		pMaterial->SetDiffuseTexInfo("Linear", "UIMINIMAP",
-			0, 0, L"UserInterface/UI_MINIMAP_CIRCLE.png");
-		SAFE_RELEASE(pStatusTr);
-		SAFE_RELEASE(pMaterial);
-		SAFE_RELEASE(pRenderer);
-		SAFE_RELEASE(pMinimapObj);
-		SAFE_RELEASE(pLayer);
-		SAFE_RELEASE(pScene);
-	}
-#pragma endregion
+//#pragma region MiniMap
+//	{
+//		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+//		CLayer*	pLayer = pScene->GetLayer("UI+1");
+//		CGameObject* pMinimapObj = CGameObject::CreateObject("Minimap", pLayer);
+//		this->pMiniMap = pMinimapObj->AddComponent<MiniMap>("Minimap");
+//		this->pMiniMap->initialize();
+//
+//		CTransform* pStatusTr = pMinimapObj->GetTransform();
+//		pStatusTr->SetWorldScale(150.f, 150.f, 1.f);
+//		pStatusTr->SetWorldPos(1100.f, 0.f, 0.f);
+//		CRenderer2D* pRenderer = pMinimapObj->FindComponentFromType<CRenderer2D>(CT_RENDERER2D);
+//		CMaterial* pMaterial = pRenderer->GetMaterial();
+//
+//		pMaterial->SetDiffuseTexInfo("Linear", "UIMINIMAP",
+//			0, 0, L"UserInterface/UI_MINIMAP_CIRCLE.png");
+//		SAFE_RELEASE(pStatusTr);
+//		SAFE_RELEASE(pMaterial);
+//		SAFE_RELEASE(pRenderer);
+//		SAFE_RELEASE(pMinimapObj);
+//		SAFE_RELEASE(pLayer);
+//		SAFE_RELEASE(pScene);
+//	}
+//#pragma endregion
 
 #pragma region frameRender
 	{
@@ -394,7 +394,7 @@ void UserInterfaceManager::update(float time)
 
 	/// < 프레임 출력 >
 	CTimer*	pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
-	pTimer->Update();
+	//pTimer->Update();
 	float fTime = pTimer->GetFPS();
 	frameString = to_wstring((int)fTime);
 	SAFE_RELEASE(pTimer);

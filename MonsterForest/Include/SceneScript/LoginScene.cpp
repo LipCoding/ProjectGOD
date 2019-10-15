@@ -24,6 +24,7 @@
 #include "../Client.h"
 #include "Component/UIPanel.h"
 #include "../UserInterfaceManager.h"
+#include "Core/SoundManager.h"
 LoginScene::LoginScene()
 {
 }
@@ -294,7 +295,9 @@ bool LoginScene::Init()
 		SAFE_RELEASE(pUILayer);
 	}
 
-
+	GET_SINGLE(SoundManager)->LoadSound("Main_Menu", true, "Main_Menu.mp3");
+	GET_SINGLE(SoundManager)->Play("Main_Menu", SC_BGM);
+	GET_SINGLE(SoundManager)->Volume(SC_BGM, 1.0);
 	NetworkManager::getInstance()->initialize();
 
 	return true;

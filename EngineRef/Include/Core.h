@@ -18,6 +18,7 @@ private:
 	RESOLUTION		m_tResolution;
 	WNDPROC	 oldProc;
 	static bool isFocus;
+	float m_Timer = 0.f;
 public:
 	HWND GetWindowHandle()	const;
 

@@ -37,7 +37,7 @@ CCore::CCore()
 #ifdef _DEBUG
 	//AllocConsole();
 #endif
-	AllocConsole();
+	//AllocConsole();
 }
 
 CCore::~CCore()
@@ -55,7 +55,7 @@ CCore::~CCore()
 	DESTROY_SINGLE(CDevice);
 	DESTROY_SINGLE(CQuadTreeManager);
 	DESTROY_SINGLE(CNaviManager);
-	FreeConsole();
+	//FreeConsole();
 //#ifdef _DEBUG
 	//FreeConsole();
 //#endif // _DEBUG
@@ -181,6 +181,7 @@ void CCore::Logic()
 
 	if(isFocus)
 		Input(fTime);
+
 	if (Update(fTime) == SC_CHANGE)
 	{
 		if(isFocus)

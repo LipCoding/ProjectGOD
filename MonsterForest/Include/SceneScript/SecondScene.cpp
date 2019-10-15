@@ -61,6 +61,7 @@
 #include "../ObjectScript/BlueLizard.h"
 #include "../ObjectScript/Armored_GreenLizard.h"
 #include "../ObjectScript/Armored_BlueLizard.h"
+#include "../QuestManager.h"
 
 SecondScene::SecondScene()
 {
@@ -78,7 +79,7 @@ void SecondScene::chat_callback(float fTime)
 
 bool SecondScene::Init()
 {
-	
+
 	const auto& objlist = CGameObject::getObjectList();
 //#pragma region Effect Setting
 //	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
@@ -475,7 +476,8 @@ bool SecondScene::Init()
 			SAFE_RELEASE(pLayer);
 		}
 #pragma endregion
-
+		GET_SINGLE(SoundManager)->LoadSound("Scene2BGM", true, "Main_Scene_2.mp3");
+		GET_SINGLE(SoundManager)->Play("Scene2BGM", SC_BGM);
 
 		SAFE_RELEASE(pLayer);
 		SAFE_RELEASE(pScene);
@@ -568,9 +570,10 @@ bool SecondScene::Init()
 //
 //	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 //#pragma endregion
-
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+	m_pScene->LoadGlobLight("Main_Scene_2_DY");
+	m_pScene->LoadPointLight("Main_Scene_2_DY_Lights");
+	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_2_DY");
+	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
 	isInitComplete = true;
 	return true;
 }
@@ -578,6 +581,55 @@ bool SecondScene::Init()
 
 void SecondScene::Input(float fTime)
 {
+	/* For Rendering Navi, QuadTree, etc */
+	if (KEYDOWN("F1"))
+	{
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+			if (!m_isCheckColliderQuadTree)
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(true);
+					SAFE_RELEASE(pCollider);
+				}
+				m_isCheckColliderQuadTree = true;
+			}
+			else
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(false);
+					SAFE_RELEASE(pCollider);
+				}
+
+				m_isCheckColliderQuadTree = false;
+			}
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
+	}
+
+	if (KEYDOWN("F2"))
+	{
+		if (!m_isCheckColliderNaviMesh)
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+			m_isCheckColliderNaviMesh = true;
+		}
+		else
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+			m_isCheckColliderNaviMesh = false;
+		}
+	}
+
 	if (isInitComplete == true)
 	{
 		int checkID = NetworkManager::getInstance()->getMyClientID();
@@ -611,6 +663,12 @@ void SecondScene::Input(float fTime)
 
 					}
 				}
+			}
+			if (KEYDOWN("Quest"))
+			{
+				_cprintf("test\n");
+				bool isEnable = QuestManager::getInstance()->isShow();
+				QuestManager::getInstance()->enableShow(!isEnable);
 			}
 
 			if (KEYDOWN("Skill2"))
@@ -719,10 +777,6 @@ void SecondScene::Input(float fTime)
 						chat_message = chat_message + appendString;
 					}
 
-					//while (chat_message.length() < 20)
-					//{
-					//	chat_message += L" ";
-					//}
 					packet->id = NetworkManager::getInstance()->getMyClientID();
 					packet->size = sizeof(cs_packet_chat);
 					wcscpy_s(packet->message, chat_message.c_str());
@@ -735,98 +789,177 @@ void SecondScene::Input(float fTime)
 				}
 			}
 
-
-			if (KEYPUSH("MoveRight"))
 			{
-				cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_rotate);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_ROTATE_Y;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			}
-
-
-			if (KEYPUSH("MoveLeft"))
-			{
-				cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_rotate);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				DWORD iobyte;
-
-				pPacket->type = CS_PACKET_ROTATE_INV_Y;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-			}
-
-			if (KEYPUSH("MoveFront"))
-			{
-
-				CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
-				cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_up);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				DWORD iobyte;
-
-				Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-				pPacket->type = CS_PACKET_MOVE_FRONT;
-				pPacket->dir_x = Axis.x;
-				pPacket->dir_y = Axis.y;
-				pPacket->dir_z = Axis.z;
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-				if (ret)
+				if (KEYPUSH("MoveRight"))
 				{
-					// 에러처리.
-					char a = 0;
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_X);
+					pPacket->type = CS_PACKET_MOVE_LEFT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						// 에러처리.
+						char a = 0;
+					}
 				}
-				//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				//pAnimation->ChangeClip("MOVE");
-				//SAFE_RELEASE(pAnimation);
-			}
-
-			if (KEYUP("MoveFront"))
-			{
-				CAnimation* pAnimation = NetworkManager::getInstance()->pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
-				pAnimation->ReturnDefaultClip();
-			}
-
-			if (KEYPUSH("MoveBack"))
-			{
-
-				CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
-
-				cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
-
-				pPacket->size = sizeof(cs_packet_up);
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				DWORD iobyte;
-
-				Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
-				pPacket->type = CS_PACKET_MOVE_BACK;
-				pPacket->dir_x = Axis.x;
-				pPacket->dir_y = Axis.y;
-				pPacket->dir_z = Axis.z;
-
-
-				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
-				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
-
-				if (ret)
+				else if (KEYUP("MoveRight"))
 				{
-					char a = 0;
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
+
+
+				if (KEYPUSH("MoveLeft"))
+				{
+					//cs_packet_rotate* pPacket = reinterpret_cast<cs_packet_rotate*>(NetworkManager::getInstance()->getSendBuffer());
+
+					//pPacket->size = sizeof(cs_packet_rotate);
+					//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					//DWORD iobyte;
+
+					//pPacket->type = CS_PACKET_ROTATE_INV_Y;
+
+					//NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate);
+					//int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_X);
+					pPacket->type = CS_PACKET_MOVE_RIGHT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						// 에러처리.
+						char a = 0;
+					}
+
+				}
+				else if (KEYUP("MoveLeft"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
+				if (KEYPUSH("MoveFront"))
+				{
+
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+					pPacket->type = CS_PACKET_MOVE_FRONT;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						// 에러처리.
+						char a = 0;
+					}
+					//CAnimation* pAnimation = pPlayer->FindComponentFromType<CAnimation>(CT_ANIMATION);
+					//pAnimation->ChangeClip("MOVE");
+					//SAFE_RELEASE(pAnimation);
+				}
+				else if (KEYUP("MoveFront"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
+				if (KEYPUSH("MoveBack"))
+				{
+
+					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
+
+					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_up);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					DWORD iobyte;
+
+					Vector3 Axis = pTransform->GetWorldAxis(AXIS_Z);
+					pPacket->type = CS_PACKET_MOVE_BACK;
+					pPacket->dir_x = Axis.x;
+					pPacket->dir_y = Axis.y;
+					pPacket->dir_z = Axis.z;
+
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_up);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+					if (ret)
+					{
+						char a = 0;
+					}
+				}
+				else if (KEYUP("MoveBack"))
+				{
+					cs_packet_move_stop* pPacket = reinterpret_cast<cs_packet_move_stop*>(NetworkManager::getInstance()->getSendBuffer());
+
+					pPacket->size = sizeof(cs_packet_move_stop);
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					DWORD iobyte;
+
+					pPacket->type = CS_PACKET_MOVE_STOP;
+
+					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
+					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+				}
+
 			}
 
 			if (KEYDOWN("MouseLButton"))
@@ -838,6 +971,16 @@ void SecondScene::Input(float fTime)
 				{
 					CColliderSphere *pColl = object->FindComponentFromType<CColliderSphere>(CT_COLLIDER);
 
+					if (pColl == nullptr)
+						continue;
+
+					CGameObject* pObject = pColl->GetGameObject();
+					string object_tag = "Player" + to_string(NetworkManager::getInstance()->getMyClientID());
+					if (pObject->GetTag() == object_tag)
+					{
+						clickedEnemy = false;
+						break;
+					}
 					if (pRay->CheckCollList(pColl))
 					{
 						clickedEnemy = true;
@@ -847,6 +990,7 @@ void SecondScene::Input(float fTime)
 
 				if (clickedEnemy)
 				{
+
 					GET_SINGLE(UserInterfaceManager)->getEnemyStatus()->enableRender(true);
 				}
 				else
@@ -882,6 +1026,54 @@ void SecondScene::Input(float fTime)
 				SAFE_RELEASE(pMouseObj);
 			}
 
+			if (KEYPUSH("MouseRButton"))
+			{
+				cs_packet_rotate_camera_player* pPacket = reinterpret_cast<cs_packet_rotate_camera_player*>(NetworkManager::getInstance()->getSendBuffer());
+
+				pPacket->size = sizeof(cs_packet_rotate_camera_player);
+				pPacket->type = CS_PACKET_ROTATE_CAMERA_PLAYER;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate_camera_player);
+				DWORD iobyte;
+
+
+				/*
+				Vector3 vPos = m_pTransform->GetWorldPos();
+				m_pScene->GetLightCamera()->SetLightCenterPosToObject(m_pGameObject);
+
+				// Cam 방향으로 회전
+				CCamera *pMainCam = m_pScene->GetMainCamera();
+				CTransform *pCamTr = pMainCam->GetTransform();
+				Vector3 vCamPos = pCamTr->GetWorldPos();
+				vCamPos.y = 0.f;
+				vPos.y = 0.f;
+
+				Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
+				m_pTransform->LookAt(vPos + vCamAxisZ * 1.5f);
+				*/
+				int myclient_id = NetworkManager::getInstance()->getMyClientID();
+				string appendTag = to_string(myclient_id);
+				string objectTag = "Player" + appendTag;
+
+				CGameObject* myplayer_object = CGameObject::FindObject(objectTag);
+				CTransform* transform_component = myplayer_object->GetTransform();
+				Vector3 vPos = transform_component->GetWorldPos();
+
+				CCamera *pMainCam = m_pScene->GetMainCamera();
+				CTransform *pCamTr = pMainCam->GetTransform();
+				Vector3 vCamPos = pCamTr->GetWorldPos();
+				vCamPos.y = 0.f;
+				vPos.y = 0.f;
+				Vector3 vCamAxisZ = (vPos - vCamPos).Normalize();
+
+				pPacket->axis_x = vCamAxisZ.x;
+				pPacket->axis_y = vCamAxisZ.y;
+				pPacket->axis_z = vCamAxisZ.z;
+
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_rotate_camera_player);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
+
+			}
+
 			if (KEYDOWN("ESC"))
 			{
 				GET_SINGLE(UserInterfaceManager)->getDropTableUI()->enableRender(false);
@@ -915,56 +1107,6 @@ void SecondScene::Input(float fTime)
 					{
 
 					}
-				}
-			}
-
-
-			/* For Rendering Navi, QuadTree, etc */
-			if (KEYDOWN("F1"))
-			{
-				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
-
-				if (pLandScapeObj)
-				{
-					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-					list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
-					if (!m_isCheckColliderQuadTree)
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(true);
-							SAFE_RELEASE(pCollider);
-						}
-						m_isCheckColliderQuadTree = true;
-					}
-					else
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(false);
-							SAFE_RELEASE(pCollider);
-						}
-
-						m_isCheckColliderQuadTree = false;
-					}
-					SAFE_RELEASE(pLandScape);
-					SAFE_RELEASE(pLandScapeObj);
-				}
-			}
-
-			if (KEYDOWN("F2"))
-			{
-				if (!m_isCheckColliderNaviMesh)
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(true);
-					m_isCheckColliderNaviMesh = true;
-				}
-				else
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(false);
-					m_isCheckColliderNaviMesh = false;
 				}
 			}
 		}

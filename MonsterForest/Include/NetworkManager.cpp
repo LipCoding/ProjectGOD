@@ -69,6 +69,7 @@
 #include "ObjectScript/Villager1.h"
 #include "QuestManager.h"
 #include "QuestItem.h"
+#include "SceneScript/MainScene.h"
 queue<void*> NetworkManager::clientPacketQueue;
 CGameObject* NetworkManager::pPlayer;
 NetworkManager::NetworkManager() {}
@@ -138,6 +139,8 @@ void NetworkManager::processPacket(void * packet)
 
 			if (pPacket->id == NetworkManager::getInstance()->getMyClientID())
 			{
+				CTransform* pTr = player_component->GetTransform();
+				GET_SINGLE(SoundManager)->SetPlayerTr(pTr);
 				GET_SINGLE(UserInterfaceManager)->setCameraTarget(player_component->GetGameObject());
 				NetworkManager::getInstance()->setPlayer(player_component->GetGameObject());
 				GET_SINGLE(UserInterfaceManager)->setPlayer(player_component);
@@ -232,7 +235,11 @@ void NetworkManager::processPacket(void * packet)
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 		if (pGameObject == nullptr)
 			break;
-
+		if (pPacket->id == NetworkManager::getInstance()->myClientID)
+		{
+			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+			pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
+		}
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
 		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
 		SAFE_RELEASE(pGameObject);
@@ -511,7 +518,7 @@ void NetworkManager::processPacket(void * packet)
 			double y = pPlayerTr->GetWorldPos().y;
 			double z = pPlayerTr->GetWorldPos().z;
 
-			GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, Vector3((float)x, (float)y, (float)z));
+			GET_SINGLE(CEffectManager)->OperateEffect("Spell2", pPlayerObject, Vector3{0,0,0});
 
 			SAFE_RELEASE(pPlayerTr);
 			SAFE_RELEASE(pPlayerObject);
@@ -755,6 +762,7 @@ void NetworkManager::processPacket(void * packet)
 		sc_packet_login* login_packet = reinterpret_cast<sc_packet_login*>(packet);
 
 		// 로그인 성공시 씬 전환.
+		GET_SINGLE(SoundManager)->Stop(SC_BGM);
 		if (PACKETSTATE::PACKETSTATE_LOGIN_SUCCESS == login_packet->state)
 		{
 			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("MainScene");
@@ -774,6 +782,29 @@ void NetworkManager::processPacket(void * packet)
 	};
 #pragma endregion
 
+	case SC_PACKET_SCENECHANGE_SCENE1:
+	{
+		string appendTag = to_string(NetworkManager::getInstance()->myClientID);
+		string objectTag = "Player" + appendTag;
+		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
+
+		if (pGameObject != nullptr)
+		{
+			CTransform* pTr = pGameObject->GetTransform();
+
+			//pTr->SetWorldPos(23, 0, 253);
+			GET_SINGLE(SoundManager)->EraseSoundArea();
+			GET_SINGLE(SoundManager)->Stop(SC_BGM);
+			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("MainScene");
+
+			pScene->CreateSceneScript<CMainScene>("MainScene", false);
+			SAFE_RELEASE(pScene);
+		}
+
+
+	}
+	break;
+
 	case SC_PACKET_SCENECHANGE_SCENE2:
 	{
 		string appendTag = to_string(NetworkManager::getInstance()->myClientID);
@@ -784,12 +815,16 @@ void NetworkManager::processPacket(void * packet)
 		{
 			CTransform* pTr = pGameObject->GetTransform();
 
-			pTr->SetWorldPos(23, 0, 253);
+			//pTr->SetWorldPos(23, 0, 253);
+			GET_SINGLE(SoundManager)->EraseSoundArea();
+			GET_SINGLE(SoundManager)->Stop(SC_BGM);
 			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("SecondScene");
 
 			pScene->CreateSceneScript<SecondScene>("SecondScene", false);
 			SAFE_RELEASE(pScene);
 		}
+
+		
 	}
 	break;
 
@@ -802,11 +837,14 @@ void NetworkManager::processPacket(void * packet)
 		CTransform* pTr = pGameObject->GetTransform();
 		if (pGameObject != nullptr)
 		{
-			pTr->SetWorldPos(200, 0, 200);
+			//pTr->SetWorldPos(200, 0, 200);
+			GET_SINGLE(SoundManager)->EraseSoundArea();
+			GET_SINGLE(SoundManager)->Stop(SC_BGM);
 			CScene*	pScene = GET_SINGLE(CSceneManager)->CreateNextScene("DungeonScene");
 			pScene->CreateSceneScript<DungeonScene>("DungeonScene", false);
 			SAFE_RELEASE(pScene);
 		}
+		
 	}
 	break;
 #pragma UserInterface

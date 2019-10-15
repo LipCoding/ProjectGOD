@@ -63,7 +63,7 @@ void CThirdCamera::Input(float fTime)
 			m_pArm->RotationY(PG_PI);
 	}
 
-	if (KEYPUSH("MouseRButton"))
+	if (KEYPUSH("MouseRButton") || KEYPUSH("MouseLButton"))
 	{
 		++m_iDragCount;
 

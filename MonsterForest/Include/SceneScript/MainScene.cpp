@@ -94,7 +94,7 @@ bool CMainScene::Init()
 {
 
 	//m_pScene->LoadSky(L"Skybox_2");
-	//m_pScene->LoadGlobLight("Night_Test");
+	m_pScene->LoadGlobLight("Main_Scene_1");
 	//m_pScene->LoadPointLight("Night_Test");
 
 #pragma region Effect Setting
@@ -178,7 +178,12 @@ bool CMainScene::Init()
 	NetworkManager::getInstance()->inputTime = high_resolution_clock::now();
 
 #pragma region sound
-	GET_SINGLE(SoundManager)->LoadSound("MainSceneBGM", true, "WoodlandFantasy.mp3");
+	GET_SINGLE(SoundManager)->LoadSound("TownBGM", true, "Main_Scene_1_Town.mp3");
+	GET_SINGLE(SoundManager)->AddSoundArea("TownBGM", Vector3(335.f, 0.f, 358.f), 10.f);
+	GET_SINGLE(SoundManager)->LoadSound("FieldBGM", true, "Main_Scene_1_Field.mp3");
+	GET_SINGLE(SoundManager)->AddSoundArea("FieldBGM", Vector3(316.f, 0.f, 343.f), 10.f);
+	GET_SINGLE(SoundManager)->Play("TownBGM", SC_BGM);
+
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
 	GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
@@ -188,12 +193,11 @@ bool CMainScene::Init()
 	GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
-	GET_SINGLE(SoundManager)->Play("MainSceneBGM", SC_BGM);
 #pragma endregion
 
-	GET_SINGLE(CNaviManager)->CreateNaviMesh("Main_Scene_1");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
 	isInitComplete = true;
+
 
 	return true;
 }
@@ -201,12 +205,55 @@ bool CMainScene::Init()
 
 void CMainScene::Input(float fTime)
 {
-	move_time += fTime;
-
-	if (move_time >= 0.0333f)
+	/* For Rendering Navi, QuadTree, etc */
+	if (KEYDOWN("F1"))
 	{
-		move_enable = true;
+		CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
+
+		if (pLandScapeObj)
+		{
+			CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
+			list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
+			if (!m_isCheckColliderQuadTree)
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(true);
+					SAFE_RELEASE(pCollider);
+				}
+				m_isCheckColliderQuadTree = true;
+			}
+			else
+			{
+				for (auto& iter : *nodes)
+				{
+					CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
+					pCollider->SetColliderRenderCheck(false);
+					SAFE_RELEASE(pCollider);
+				}
+
+				m_isCheckColliderQuadTree = false;
+			}
+			SAFE_RELEASE(pLandScape);
+			SAFE_RELEASE(pLandScapeObj);
+		}
 	}
+
+	if (KEYDOWN("F2"))
+	{
+		if (!m_isCheckColliderNaviMesh)
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+			m_isCheckColliderNaviMesh = true;
+		}
+		else
+		{
+			GET_SINGLE(CNaviManager)->SetRenderCheck(false);
+			m_isCheckColliderNaviMesh = false;
+		}
+	}
+
 
 	if(isInitComplete == true)
 	{
@@ -274,6 +321,16 @@ void CMainScene::Input(float fTime)
 
 					}
 				}
+
+				cs_packet_attack_skill_player* packet = reinterpret_cast<cs_packet_attack_skill_player*>(NetworkManager::getInstance()->getSendBuffer());
+				packet->size = sizeof(cs_packet_attack_skill_player);
+				packet->type = CS_PACKET_ATTACK_SKILL2_EFFECT;
+				packet->playerID = id;
+				wstring effectName = L"Spell2";
+				wcscpy_s(packet->effect_name, effectName.c_str());
+				DWORD iobyte;
+				NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_attack_skill_player);
+				int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 			}
 
 			if (KEYDOWN("Skill3"))
@@ -367,10 +424,10 @@ void CMainScene::Input(float fTime)
 				}
 			}
 
-			if (move_enable)
 			{
 				if (KEYPUSH("MoveRight"))
 				{
+
 					CTransform* pTransform = NetworkManager::getInstance()->pPlayer->GetTransform();
 					cs_packet_up* pPacket = reinterpret_cast<cs_packet_up*>(NetworkManager::getInstance()->getSendBuffer());
 
@@ -538,8 +595,6 @@ void CMainScene::Input(float fTime)
 					NetworkManager::getInstance()->getSendWsaBuf().len = sizeof(cs_packet_move_stop);
 					int ret = WSASend(NetworkManager::getInstance()->getSocket(), &NetworkManager::getInstance()->getSendWsaBuf(), 1, &iobyte, 0, NULL, NULL);
 				}
-
-				move_enable = false;
 			}
 
 			if (KEYDOWN("MouseLButton"))
@@ -605,6 +660,7 @@ void CMainScene::Input(float fTime)
 				SAFE_RELEASE(pRay);
 				SAFE_RELEASE(pMouseObj);
 			}
+
 			if (KEYPUSH("MouseRButton"))
 			{
 				cs_packet_rotate_camera_player* pPacket = reinterpret_cast<cs_packet_rotate_camera_player*>(NetworkManager::getInstance()->getSendBuffer());
@@ -688,56 +744,6 @@ void CMainScene::Input(float fTime)
 					}
 				}
 			}
-
-
-			/* For Rendering Navi, QuadTree, etc */
-			if (KEYDOWN("F1"))
-			{
-				CGameObject* pLandScapeObj = CGameObject::FindObject("LandScape_Stage1");
-
-				if (pLandScapeObj)
-				{
-					CLandScape* pLandScape = pLandScapeObj->FindComponentFromTag<CLandScape>("LandScape");
-					list<QUADTREENODE*>* nodes = pLandScape->GetAllNodes();
-					if (!m_isCheckColliderQuadTree)
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(true);
-							SAFE_RELEASE(pCollider);
-						}
-						m_isCheckColliderQuadTree = true;
-					}
-					else
-					{
-						for (auto& iter : *nodes)
-						{
-							CColliderAABB *pCollider = iter->pGameObject->FindComponentFromTag<CColliderAABB>("Collider");
-							pCollider->SetColliderRenderCheck(false);
-							SAFE_RELEASE(pCollider);
-						}
-
-						m_isCheckColliderQuadTree = false;
-					}
-					SAFE_RELEASE(pLandScape);
-					SAFE_RELEASE(pLandScapeObj);
-				}
-			}
-
-			if (KEYDOWN("F2"))
-			{
-				if (!m_isCheckColliderNaviMesh)
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(true);
-					m_isCheckColliderNaviMesh = true;
-				}
-				else
-				{
-					GET_SINGLE(CNaviManager)->SetRenderCheck(false);
-					m_isCheckColliderNaviMesh = false;
-				}
-			}
 		}
 	}
 }
@@ -745,6 +751,10 @@ void CMainScene::Input(float fTime)
 
 int CMainScene::Update(float fTime)
 {
+	if (this->isInitComplete)
+	{
+		m_pScene->LoadSky(L"Skybox_6");
+	}
 	#pragma region Chatting
 		{
 			Chatting* pChatting = GET_SINGLE(UserInterfaceManager)->getChatting();
