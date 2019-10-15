@@ -42,8 +42,8 @@
 #include "Core/EffectManager.h"
 #include "Core/SoundManager.h"
 
-#define DUNGEON
-//#define SCENE_1
+//#define DUNGEON
+#define SCENE_1
 //#define SCENE_2
 
 CTestScene::CTestScene()
