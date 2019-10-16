@@ -246,9 +246,6 @@
     <ClInclude Include="ObjectScript\Mino.h">
       <Filter>02. Object\01. Actor\02. NPC\01. Monster\02. Mino</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectScript\Monster.h">
-      <Filter>02. Object\01. Actor\02. NPC\01. Monster</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectScript\Shield.h">
       <Filter>02. Object\99. Temp</Filter>
     </ClInclude>
@@ -368,6 +365,9 @@
     </ClInclude>
     <ClInclude Include="QuestItem.h">
       <Filter>03. UserInterface\04. Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectScript\Monster.h">
+      <Filter>02. Object\01. Actor\02. NPC\01. Monster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

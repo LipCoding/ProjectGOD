@@ -238,6 +238,9 @@ void NetworkManager::processPacket(void * packet)
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
 
+
+			CColliderSphere* collider = player_component->FindComponentFromTag<CColliderSphere>("collider");
+			collider->SetSphere(Vector3(0.f, 3.f, 0.f), 5.f);
 			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
 			if (pPacket->id < NPC_START)
 				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
@@ -451,7 +454,7 @@ void NetworkManager::processPacket(void * packet)
 		Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 		attacksubject_player_component->skill1_Attack(target_objectTag);
 
-		GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
+		//GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
 	}
 	break;
 
@@ -493,7 +496,7 @@ void NetworkManager::processPacket(void * packet)
 		CPlayer* attacksubject_player_component = attacksubject_object->FindComponentFromTypeName<CPlayer>("Actor");
 		attacksubject_player_component->skill3_Attack(target_objectTag);
 
-		GET_SINGLE(SoundManager)->Play("firecircle_first", SC_EFFECT);
+		//GET_SINGLE(SoundManager)->Play("firecircle_first", SC_EFFECT);
 	}
 	break;
 
@@ -542,14 +545,14 @@ void NetworkManager::processPacket(void * packet)
 			SAFE_RELEASE(pPlayerObject);
 		}
 		int sound_index = rand() % 4;
-		if (0 == sound_index)
+		/*if (0 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
 		else if (1 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack1", SC_EFFECT);
 		else if (2 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack2", SC_EFFECT);
 		else if (2 == sound_index)
-			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);
+			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);*/
 
 	}
 	break;
@@ -593,14 +596,14 @@ void NetworkManager::processPacket(void * packet)
 			}
 		}
 		int sound_index = rand() % 4;
-		if (0 == sound_index)
+		/*if (0 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack", SC_EFFECT);
 		else if (1 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack1", SC_EFFECT);
 		else if (2 == sound_index)
 			GET_SINGLE(SoundManager)->Play("SwordAttack2", SC_EFFECT);
 		else if (2 == sound_index)
-			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);
+			GET_SINGLE(SoundManager)->Play("SwordAttack3", SC_EFFECT);*/
 	}
 	break;
 
@@ -617,7 +620,7 @@ void NetworkManager::processPacket(void * packet)
 		CTransform* pPlayerTr = pPlayerObject->GetTransform();
 		Vector3 pos = pPlayerTr->GetWorldPos();
 		GET_SINGLE(CEffectManager)->OperateEffect("Spell4", nullptr, pos);
-		GET_SINGLE(SoundManager)->Play("Tanker_Buff_FireCircle ", SC_EFFECT);
+		GET_SINGLE(SoundManager)->Play("Tanker_Buff_FireCircle", SC_EFFECT);
 		CAnimation* pAnimation = pPlayerObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 		pAnimation->ChangeClip("Spell4");
 
@@ -672,7 +675,7 @@ void NetworkManager::processPacket(void * packet)
 			{
 				Monster* monster_component = pGameObject->FindComponentFromTag<Monster>("Actor");
 				monster_component->setDieState(true);
-				GET_SINGLE(SoundManager)->Play("monster_death", SC_EFFECT);
+				//GET_SINGLE(SoundManager)->Play("monster_death", SC_EFFECT);
 			}
 		}
 	}

@@ -136,6 +136,9 @@ bool CPlayer_Test::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Holy_Light",
 		"Effect\\Common\\Holy_Light.bin");
 
+	GET_SINGLE(CEffectManager)->AddEffect("Attack_Slash", "Effect\\Common\\Hit\\Hit_Slash.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack_Slash_Sprite", "Effect\\Common\\Hit\\Hit_Sprite_Slash.bin");
+
 	GET_SINGLE(CEffectManager)->AddEffect("Spell_Attack_Bomb", 
 		"Effect\\Player\\Tanker\\Spell_Attack_Bomb.bin");
 
@@ -231,8 +234,25 @@ void CPlayer_Test::Input(float fTime)
 		//vPos += vLook * 1.75f;
 		//vPos.y += 0.75f;
 		//GET_SINGLE(CEffectManager)->OperateEffect("Hit", nullptr, vPos);
-		GET_SINGLE(CEffectManager)->OperateEffect("Spell_Attack_RollingBlade", m_pGameObject, vPos);
-		m_pAnimation->ChangeClip("Spell1");
+		
+		int r = rand();
+
+		if (r % 2 == 0)
+		{
+			//CTransform* pTr = GetTransform();
+			Vector3 pos = Vector3(0.f, 1.f, 2.f);
+			GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash", m_pGameObject, pos);
+			//SAFE_RELEASE(pTr);
+		}
+		else
+		{
+			//CTransform* pTr = GetTransform();
+			Vector3 pos = Vector3(0.f, 1.f, 2.f);
+			GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash_Sprite", m_pGameObject, pos);
+			//SAFE_RELEASE(pTr);
+		}
+
+		m_pAnimation->ChangeClip("Attack1");
 	}
 
 	if (KEYDOWN("Attack2"))

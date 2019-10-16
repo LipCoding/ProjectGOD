@@ -36,7 +36,7 @@ Monster::~Monster()
 void Monster::damaged(int damage)
 {
 	currentHP -= damage;
-	GET_SINGLE(SoundManager)->Play("monster_damaged", SC_EFFECT);
+	GET_SINGLE(SoundManager)->Play("monster_damaged", SC_MONSTER);
 }
 
 void Monster::attack(const string& target_tag)

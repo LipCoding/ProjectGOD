@@ -186,15 +186,15 @@ bool CMainScene::Init()
 	GET_SINGLE(SoundManager)->AddSoundArea("FieldBGM", Vector3(316.f, 0.f, 343.f), 10.f);
 	GET_SINGLE(SoundManager)->Play("TownBGM", SC_BGM);
 
-	GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
-	GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
-	GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
-	GET_SINGLE(SoundManager)->LoadSound("SwordAttack3", false, "SwordAttack3.wav");
-	GET_SINGLE(SoundManager)->LoadSound("monster_attack", false, "monster_attack.ogg");
-	GET_SINGLE(SoundManager)->LoadSound("monster_damaged", false, "monster_damaged.flac");
-	GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
-	GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
-	GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
+	//GET_SINGLE(SoundManager)->LoadSound("SwordAttack", false, "SwordAttack.wav");
+	//GET_SINGLE(SoundManager)->LoadSound("SwordAttack1", false, "SwordAttack1.wav");
+	//GET_SINGLE(SoundManager)->LoadSound("SwordAttack2", false, "SwordAttack2.mp3");
+	//GET_SINGLE(SoundManager)->LoadSound("SwordAttack3", false, "SwordAttack3.wav");
+	//GET_SINGLE(SoundManager)->LoadSound("monster_attack", false, "monster_attack.ogg");
+	//GET_SINGLE(SoundManager)->LoadSound("monster_damaged", false, "monster_damaged.flac");
+	//GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
+	//GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
+	//GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
 
 	// New
 	// BGM

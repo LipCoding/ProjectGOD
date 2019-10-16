@@ -409,14 +409,14 @@ void CPlayer::attack(const string& target_tag)
 	if (r % 2 == 0)
 	{
 		//CTransform* pTr = GetTransform();
-		Vector3 pos = Vector3(0.f, 0.f, 0.5f);
+		Vector3 pos = Vector3(0.f, 1.f, 2.f);
 		GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash", m_pGameObject, pos);
 		//SAFE_RELEASE(pTr);
 	}
 	else
 	{
 		//CTransform* pTr = GetTransform();
-		Vector3 pos = Vector3(0.f, 0.f, 0.5f);
+		Vector3 pos = Vector3(0.f, 1.f, 2.f);
 		GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash_Sprite", m_pGameObject, pos);
 		//SAFE_RELEASE(pTr);
 	}
@@ -463,7 +463,7 @@ void CPlayer::skill3_Attack(const string& target_tag)
 	CTransform* pTr = GetTransform();
 	Vector3 pos = pTr->GetWorldPos();
 	GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, pos);
-	GET_SINGLE(SoundManager)->PlayWithDelay("Tanker_Attack_Bomb ", SC_EFFECT, 1.f);
+	GET_SINGLE(SoundManager)->PlayWithDelay("Tanker_Attack_Bomb", SC_EFFECT, 1.f);
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 
