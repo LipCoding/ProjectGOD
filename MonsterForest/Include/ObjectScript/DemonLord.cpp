@@ -75,32 +75,47 @@ void DemonLord::attack_animation(const string& target_tag, const wstring & name)
 
 	if (animation_name == string{ "Attack1" })
 	{
+		GET_SINGLE(SoundManager)->Play("Boss_Att_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack1", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack1", SC_EFFECT, 0.8f);
 	}
 	else if (animation_name == string{ "Attack2" })
 	{
+		GET_SINGLE(SoundManager)->Play("Boss_Att_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack2", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack2", SC_EFFECT, 1.5f);
 	}																							 
 	else if (animation_name == string{ "Attack3" })												 
-	{																							 
+	{							
+		GET_SINGLE(SoundManager)->Play("Boss_Att_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack3", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack3", SC_EFFECT, 1.6f);
 	}																							 
 	else if (animation_name == string{ "Attack4" })												 
-	{																							 
+	{					
+		GET_SINGLE(SoundManager)->Play("Boss_Att_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossAttack4", m_pGameObject, Vector3(0.f, 0.f, 0.f),false, true);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack4", SC_EFFECT, 0.f);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack4", SC_EFFECT, 0.5f);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack4", SC_EFFECT, 1.f);
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Attack4", SC_EFFECT, 1.5f);
 	}																							  
 	else if (animation_name == string{ "Spell1" })												  
-	{																							  
+	{							
+		GET_SINGLE(SoundManager)->Play("Boss_Spell_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossSpell1", m_pGameObject, Vector3(0.f, 0.f, 0.f)),false, true;
+		GET_SINGLE(SoundManager)->PlayWithDelay("Boss_Spell1", SC_EFFECT, 1.f);
 	}																							  
 	else if (animation_name == string{ "Spell2" })												  
-	{																							  
+	{											
+		GET_SINGLE(SoundManager)->Play("Boss_Spell_Sound", SC_MONSTER);
 		GET_SINGLE(CEffectManager)->OperateEffect("BossSpell2", m_pGameObject, Vector3(0.f, 0.f, 0.f)),false, true;
+		GET_SINGLE(SoundManager)->Play("Boss_Spell2", SC_EFFECT);
 	}
 
 	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 	target_actor_component->damaged(attackDamage);
-	GET_SINGLE(SoundManager)->Play("monster_attack", SC_EFFECT);
+	//GET_SINGLE(SoundManager)->Play("monster_attack", SC_EFFECT);
 
 
 }

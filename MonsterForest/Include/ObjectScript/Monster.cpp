@@ -51,7 +51,7 @@ void Monster::attack(const string& target_tag)
 
 	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 	target_actor_component->damaged(attackDamage);
-	GET_SINGLE(SoundManager)->Play("monster_attack", SC_EFFECT);
+	GET_SINGLE(SoundManager)->Play("Lizard_Attack", SC_MONSTER);
 }
 
 void Monster::rotate(float x, float y, float z)
@@ -93,6 +93,7 @@ void Monster::setDieState(bool state)
 	this->dieState = state;
 	CAnimation* pAnimation = FindComponentFromType<CAnimation>(CT_ANIMATION);
 	pAnimation->ChangeClip("Die1");
+	GET_SINGLE(SoundManager)->Play("Lizard_Die", SC_MONSTER);
 	SAFE_RELEASE(pAnimation);
 }
 

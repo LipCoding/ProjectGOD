@@ -6,6 +6,7 @@ enum SOUND_CHANNEL
 {
 	SC_BGM,
 	SC_EFFECT,
+	SC_MONSTER,
 	SC_MAX,
 };
 

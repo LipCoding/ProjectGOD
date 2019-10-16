@@ -101,6 +101,8 @@ bool CMainScene::Init()
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack2", "Effect\\Attack2.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Attack3", "Effect\\Attack3.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack_Slash", "Effect\\Common\\Hit\\Hit_Slash.bin");
+	GET_SINGLE(CEffectManager)->AddEffect("Attack_Slash_Sprite", "Effect\\Common\\Hit\\Hit_Sprite_Slash.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell1", "Effect\\Player\\Tanker\\Spell_Attack_RollingBlade.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell2", "Effect\\Player\\Tanker\\Spell_Attack_ManySwings.bin");
 	GET_SINGLE(CEffectManager)->AddEffect("Spell3", "Effect\\Player\\Tanker\\Spell_Attack_Bomb.bin");
@@ -204,9 +206,9 @@ bool CMainScene::Init()
 
 	// Boss
 	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack1.wav");
-	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack2.wav");
-	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack3.wav");
-	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack4.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack2", false, "Boss_Attack2.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack3", false, "Boss_Attack3.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack4", false, "Boss_Attack4.wav");
 	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell1", false, "Boss_Spell1.wav");
 	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell2", false, "Boss_Spell2.wav");
 	
@@ -231,7 +233,7 @@ bool CMainScene::Init()
 	// Boss
 	GET_SINGLE(SoundManager)->LoadSound("Boss_Att_Sound", false, "Boss_Att_Sound.wav");
 	GET_SINGLE(SoundManager)->LoadSound("Boss_Die", false, "Boss_Die.wav");
-	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell", false, "Boss_Spell.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell_Sound", false, "Boss_Spell.wav");
 
 #pragma endregion
 

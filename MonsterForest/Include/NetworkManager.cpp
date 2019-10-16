@@ -375,6 +375,8 @@ void NetworkManager::processPacket(void * packet)
 			Actor* attacksubject_actor_component = attacksubject_object->FindComponentFromTypeName<Actor>("Actor");
 			attacksubject_actor_component->attack(target_objectTag);
 		}
+
+
 	}
 	break;
 
@@ -561,8 +563,10 @@ void NetworkManager::processPacket(void * packet)
 		CTransform* pPlayerTr = pPlayerObject->GetTransform();
 		Vector3 pos = pPlayerTr->GetWorldPos();
 		GET_SINGLE(CEffectManager)->OperateEffect("Spell4", nullptr, pos);
+		GET_SINGLE(SoundManager)->Play("Tanker_Buff_FireCircle ", SC_EFFECT);
 		CAnimation* pAnimation = pPlayerObject->FindComponentFromType<CAnimation>(CT_ANIMATION);
 		pAnimation->ChangeClip("Spell4");
+
 
 		GET_SINGLE(CEffectManager)->OperateEffect("Holy_Light", pPlayerObject, pos, true, false);
 		SAFE_RELEASE(pAnimation);
@@ -670,6 +674,7 @@ void NetworkManager::processPacket(void * packet)
 			CTransform* pTr = pPlayerObject->GetTransform();
 			Vector3 pos = pTr->GetWorldPos();
 			GET_SINGLE(CEffectManager)->OperateEffect("Level_Up", nullptr, pos);
+			GET_SINGLE(SoundManager)->Play("LevelUp", SC_EFFECT);
 			SAFE_RELEASE(pTr);
 			SAFE_RELEASE(pPlayer);
 		}
