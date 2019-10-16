@@ -1,0 +1,7 @@
+Tanker_Attack_Bomb => 1.0
+
+Boss_Attack1 => 0.8
+Boss_Attack2 => 1.5
+Boss_Attack3 => 1.6
+Boss_Attack4 => 0, 0.5, 1.0, 1.5
+Boss_Spell1 => 1.0

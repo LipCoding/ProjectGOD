@@ -394,6 +394,7 @@ void UserInterfaceManager::update(float time)
 
 	/// < 프레임 출력 >
 	CTimer*	pTimer = GET_SINGLE(CTimerManager)->FindTimer("MainThread");
+
 	float fTime = pTimer->GetFPS();
 	frameString = to_wstring((int)fTime);
 	SAFE_RELEASE(pTimer);

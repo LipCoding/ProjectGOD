@@ -31,6 +31,7 @@ public:
 	bool Init();
 	bool LoadSound(const string& strKey, bool bLoop, char* pFileName, const string& strPathKey = SOUND_PATH);
 	bool Play(const string& strKey, SOUND_CHANNEL _Channel);
+	bool PlayWithDelay(const string& strKey, SOUND_CHANNEL _Channel, const float& delay);
 	bool Stop(SOUND_CHANNEL eChannel);
 	bool Volume(SOUND_CHANNEL eChannel, float fVolume);
 
@@ -44,6 +45,14 @@ public:
 		float m_fRange;
 	};
 
+	struct DelaySound
+	{
+		string strDelayedSoundName;
+		SOUND_CHANNEL eDelayedChannel;
+		float fDelay;
+		float fMaxDelay;
+	};
+
 	void SetPlayerTr(class CTransform* pTr);
 	void AddSoundArea(const string& musicName, const Vector3& center, const float& range);
 	void EraseSoundArea();
@@ -53,6 +62,7 @@ private:
 
 private:
 	unordered_map<string, SoundChangeArea>	m_mapSoundArea;
+	list<DelaySound> m_listDelaySound;
 
 	class CTransform *m_pPlayerTr = nullptr;
 

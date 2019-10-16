@@ -181,6 +181,7 @@ void CCore::Logic()
 
 	if(isFocus)
 		Input(fTime);
+
 	if (Update(fTime) == SC_CHANGE)
 	{
 		if(isFocus)

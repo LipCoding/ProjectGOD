@@ -1,8 +1,8 @@
 4
 97.Effect_Mesh\Ringwave
 97.Effect_Mesh\Ringwave
-Effect_Texture\Fire_Full
-0 0 0
+Effect_Texture\Blue_Rail
+0 1.1 0
 4 0.1 4
 0 0 0
 0
@@ -36,8 +36,8 @@ Effect_Texture\Fire_Full
 0
 0
 0
-1
-2
+3
+-2
 0
 2
 0
@@ -87,8 +87,8 @@ Effect_Texture\Fire_Full
 0
 97.Effect_Mesh\Ringwave
 97.Effect_Mesh\Ringwave
-Effect_Texture\Fire_Full
-0 0 0
+Effect_Texture\Blue_Rail
+0 1.1 0
 4 0.1 4
 0 0 90
 0
@@ -122,8 +122,8 @@ Effect_Texture\Fire_Full
 0
 0
 0
-1
-2
+3
+-2
 0
 2
 0
@@ -173,8 +173,8 @@ Effect_Texture\Fire_Full
 0
 97.Effect_Mesh\Ringwave
 97.Effect_Mesh\Ringwave
-Effect_Texture\Fire_Full
-0 0 0
+Effect_Texture\Blue_Rail
+0 1.1 0
 4 0.1 4
 90 0 0
 0
@@ -208,8 +208,8 @@ Effect_Texture\Fire_Full
 0
 0
 0
-1
-2
+3
+-2
 0
 2
 0
@@ -260,7 +260,7 @@ Effect_Texture\Fire_Full
 97.Effect_Mesh\Plane
 97.Effect_Mesh\Plane
 Effect_Texture\Outside_Rune
-0 0.1 0
+0 0.3 0
 1 1 1
 0 0 0
 0
@@ -271,7 +271,7 @@ Effect_Texture\Outside_Rune
 12
 1.5
 4
-5 0 5
+2 0 2
 0
 2
 0
