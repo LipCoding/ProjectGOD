@@ -404,7 +404,24 @@ void CPlayer::attack(const string& target_tag)
 	Actor* target_actor_component = target_object->FindComponentFromTypeName<Actor>("Actor");
 	target_actor_component->damaged(attackDamage);
 
+	int r = rand();
 
+	if (r % 2 == 0)
+	{
+		//CTransform* pTr = GetTransform();
+		Vector3 pos = Vector3(0.f, 0.f, 0.5f);
+		GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash", m_pGameObject, pos);
+		//SAFE_RELEASE(pTr);
+	}
+	else
+	{
+		//CTransform* pTr = GetTransform();
+		Vector3 pos = Vector3(0.f, 0.f, 0.5f);
+		GET_SINGLE(CEffectManager)->OperateEffect("Attack_Slash_Sprite", m_pGameObject, pos);
+		//SAFE_RELEASE(pTr);
+	}
+
+	GET_SINGLE(SoundManager)->PlayWithDelay("Tanker_Attack_Swing", SC_EFFECT, 0.4f);
 }
 void CPlayer::skill1_Attack(const string& target_tag)
 {
@@ -413,6 +430,7 @@ void CPlayer::skill1_Attack(const string& target_tag)
 	CTransform* pTr = GetTransform();
 	Vector3 pos = pTr->GetWorldPos();
 	GET_SINGLE(CEffectManager)->OperateEffect("Spell1", nullptr, pos);
+	GET_SINGLE(SoundManager)->Play("Tanker_Attack_RollingBlade", SC_EFFECT);
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 	CGameObject* target_object = CGameObject::FindObject(target_tag);
@@ -427,7 +445,8 @@ void CPlayer::skill2_Attack(const string& target_tag)
 	pAnimation->ChangeClip("Spell2");
 	CTransform* pTr = GetTransform();
 	Vector3 pos = pTr->GetWorldPos();
-
+	GET_SINGLE(CEffectManager)->OperateEffect("Spell2", m_pGameObject, Vector3(0.f, 0.f, 0.f));
+	GET_SINGLE(SoundManager)->Play("Tanker_Attack_ManySwings", SC_EFFECT);
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 
@@ -444,6 +463,7 @@ void CPlayer::skill3_Attack(const string& target_tag)
 	CTransform* pTr = GetTransform();
 	Vector3 pos = pTr->GetWorldPos();
 	GET_SINGLE(CEffectManager)->OperateEffect("Spell3", nullptr, pos);
+	GET_SINGLE(SoundManager)->PlayWithDelay("Tanker_Attack_Bomb ", SC_EFFECT, 1.f);
 	SAFE_RELEASE(pTr);
 	SAFE_RELEASE(pAnimation);
 
