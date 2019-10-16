@@ -193,6 +193,46 @@ bool CMainScene::Init()
 	GET_SINGLE(SoundManager)->LoadSound("monster_death", false, "monster_death.flac");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_first", false, "firecircle_first.aif");
 	GET_SINGLE(SoundManager)->LoadSound("firecircle_second", false, "firecircle_second.aif");
+
+	// New
+	// BGM
+	GET_SINGLE(SoundManager)->LoadSound("EndSound", false, "End.wav");
+
+	// Effect
+	// Common
+	GET_SINGLE(SoundManager)->LoadSound("LevelUp", false, "LevelUp.wav");
+
+	// Boss
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack1.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack2.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack3.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Attack1", false, "Boss_Attack4.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell1", false, "Boss_Spell1.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell2", false, "Boss_Spell2.wav");
+	
+	// Tanker
+	GET_SINGLE(SoundManager)->LoadSound("Tanker_Attack_Bomb", false, "Tanker_Attack_Bomb.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Tanker_Attack_ManySwings", false, "Tanker_Attack_ManySwings.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Tanker_Attack_RollingBlade", false, "Tanker_Attack_RollingBlade.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Tanker_Attack_Swing", false, "Tanker_Attack_Swing.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Tanker_Buff_FireCircle", false, "Tanker_Buff_FireCircle.wav");
+
+
+	// Monster Sound
+	// Golem
+	GET_SINGLE(SoundManager)->LoadSound("Golem_Attack", false, "Golem_Attack.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Golem_Die", false, "Golem_Die.wav");
+	// Cow
+	GET_SINGLE(SoundManager)->LoadSound("Cow_Attack", false, "Cow_attack.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Cow_Die", false, "Cow_Die.ogg");
+	// Lizard
+	GET_SINGLE(SoundManager)->LoadSound("Lizard_Attack", false, "Lizard_Attack.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Lizard_Die", false, "Lizard_Die.wav");
+	// Boss
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Att_Sound", false, "Boss_Att_Sound.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Die", false, "Boss_Die.wav");
+	GET_SINGLE(SoundManager)->LoadSound("Boss_Spell", false, "Boss_Spell.wav");
+
 #pragma endregion
 
 	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_1");
