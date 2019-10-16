@@ -144,55 +144,105 @@ void NetworkManager::processPacket(void * packet)
 				GET_SINGLE(UserInterfaceManager)->setCameraTarget(player_component->GetGameObject());
 				NetworkManager::getInstance()->setPlayer(player_component->GetGameObject());
 				GET_SINGLE(UserInterfaceManager)->setPlayer(player_component);
+				
 			}
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::NPC1)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Villager1>("Default", objectTag, "Villager1", true);
 			//player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GOLEM)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Golem>("Default", objectTag, "GolemObject", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::MINO)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Mino>("Default", objectTag, "MinoObject", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::GREEN_LIZARD)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<GreenLizard>("Default", objectTag, "GreenLizard", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::BLUE_LIZARD)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<BlueLizard>("Default", objectTag, "BlueLizard", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_GREEN_LIZARD)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Armored_GreenLizard>("Default", objectTag, "Armored_GreenLizard", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::ARMORED_BLUE_LIZARD)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<Armored_BlueLizard>("Default", objectTag, "Armored_BlueLizard", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 		else if (static_cast<sc_packet_put_player*>(packet)->objectSetType == OBJECT_SET_TYPE::DEMONLORD)
 		{
 			const auto& player_component = MFObjectManager::getInstance()->CreateActor<DemonLord>("Default", objectTag, "DemonLordObjeect", true);
 			player_component->settingStatus(pPacket->current_hp, pPacket->current_mp, pPacket->level, pPacket->exp);
 			player_component->move(pPacket->x, pPacket->y, pPacket->z);
+
+			Actor* pActor = player_component->FindComponentFromTypeName<Actor>("Actor");
+			if (pPacket->id < NPC_START)
+				static_cast<CPlayer*>(pActor)->changeAnimation("Idle1");
+			else
+				pActor->changeAnimation("Idle3");
 		}
 	}
 	break;
@@ -235,14 +285,15 @@ void NetworkManager::processPacket(void * packet)
 		CGameObject* pGameObject = CGameObject::FindObject(objectTag);
 		if (pGameObject == nullptr)
 			break;
-		if (pPacket->id == NetworkManager::getInstance()->myClientID)
-		{
-			CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-			pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
-		}
+
 		Actor* pActor = pGameObject->FindComponentFromTypeName<Actor>("Actor");
 		pActor->move(pPacket->x, pPacket->y, pPacket->z, pPacket->back);
-		SAFE_RELEASE(pGameObject);
+		//SAFE_RELEASE(pGameObject);
+
+		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
+		if(pPacket->id == NetworkManager::getInstance()->myClientID)
+			pScene->GetLightCamera()->SetLightCenterPosToObject(pGameObject);
+
 
 	}
 	break;
@@ -531,12 +582,15 @@ void NetworkManager::processPacket(void * packet)
 			string objectTag = "Player" + appendTag;
 
 			CGameObject* pPlayerObject = CGameObject::FindObject(objectTag);
-			CTransform* pPlayerTr = pPlayerObject->GetTransform();
-			Vector3 vPos = pPlayerTr->GetWorldPos();
-			GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
+			if (pPlayerObject != nullptr)
+			{
+				CTransform* pPlayerTr = pPlayerObject->GetTransform();
+				Vector3 vPos = pPlayerTr->GetWorldPos();
+				GET_SINGLE(CEffectManager)->OperateEffect("Spell2", nullptr, vPos);
 
-			SAFE_RELEASE(pPlayerTr);
-			SAFE_RELEASE(pPlayerObject);
+				SAFE_RELEASE(pPlayerTr);
+				SAFE_RELEASE(pPlayerObject);
+			}
 		}
 		int sound_index = rand() % 4;
 		if (0 == sound_index)

@@ -95,7 +95,7 @@ bool CMainScene::Init()
 
 	//m_pScene->LoadSky(L"Skybox_2");
 	m_pScene->LoadGlobLight("Main_Scene_1");
-	//m_pScene->LoadPointLight("Night_Test");
+
 
 #pragma region Effect Setting
 	GET_SINGLE(CEffectManager)->AddEffect("Attack", "Effect\\Attack.bin");
