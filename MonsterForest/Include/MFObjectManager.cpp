@@ -27,7 +27,7 @@ void MFObjectManager::operator=(MFObjectManager &&)
 bool MFObjectManager::initialize(const wstring& scene_name)
 {
 	protoTypeSetting();
-	staticObjectSetting(scene_name);
+	//staticObjectSetting(scene_name);
 
 	return true;
 }
@@ -329,77 +329,4 @@ void MFObjectManager::staticObjectSetting(const wstring& scene_name)
 	CGameObject::LoadEnvObjects(scene_name, pLayer);
 	SAFE_RELEASE(pScene);
 	SAFE_RELEASE(pLayer);
-//
-//#pragma region StaticObject
-//	// 경로 지정
-//	wchar_t strPath[MAX_PATH] = {};
-//	wcscpy_s(strPath, MAX_PATH, GET_SINGLE(CPathManager)->FindPath(DATA_PATH));
-//	wcscat_s(strPath, MAX_PATH, L"Object\\Main_Scene_1.bin");
-//
-//	ifstream file;
-//	file.open(strPath, ios::in);
-//
-//	if (!file.is_open())
-//		return;
-//
-//	int iObjSize = 0;
-//	file >> iObjSize;
-//
-//	for (int i = 0; i < iObjSize; i++)
-//	{
-//		string objName = "ObjName_" + to_string(i);
-//
-//		CScene* pScene = GET_SINGLE(CSceneManager)->GetCurrentScene();
-//		CLayer* pLayer = pScene->GetLayer("Default");
-//		CGameObject *pObj = CGameObject::CreateObject(objName, pLayer);
-//
-//		string objTag;
-//		file >> objTag;
-//
-//		// Mesh
-//		string meshPath, meshRestPath;
-//		meshPath = GET_SINGLE(CPathManager)->FindPathToMultiByte(MESH_PATH);
-//		meshRestPath = objTag;
-//
-//		string meshDataPath;
-//		meshDataPath = meshPath + meshRestPath + ".msh";
-//
-//		CRenderer* pRenderer = pObj->AddComponent<CRenderer>("Renderer");
-//
-//		wstring wMeshDataPath;
-//		wMeshDataPath.assign(meshDataPath.begin(), meshDataPath.end());
-//		pRenderer->SetMeshFromFullPath(objTag, wMeshDataPath.c_str());
-//
-//		SAFE_RELEASE(pRenderer);
-//
-//		// Transform
-//		// Local Transform Data
-//		string localDataPath;
-//
-//		localDataPath = meshPath + meshRestPath + ".dat";
-//
-//		FILE* pFile = nullptr;
-//
-//		fopen_s(&pFile, localDataPath.c_str(), "rb");
-//
-//		if (!pFile)
-//			return;
-//
-//		CTransform* pTr = pObj->GetTransform();
-//		pTr->Load_Local(pFile);
-//		fclose(pFile);
-//
-//		// World Transform Data
-//		Vector3 vScale, vRotation, vPos;
-//		file >> vScale.x >> vScale.y >> vScale.z;
-//		file >> vRotation.x >> vRotation.y >> vRotation.z;
-//		file >> vPos.x >> vPos.y >> vPos.z;
-//
-//		pTr->SetWorldScale(vScale);
-//		pTr->SetWorldRot(vRotation);
-//		pTr->SetWorldPos(vPos);
-//
-//		SAFE_RELEASE(pTr);
-//	}
-//#pragma endregion
 }

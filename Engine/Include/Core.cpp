@@ -174,7 +174,7 @@ void CCore::Logic()
 	pTimer->Update();
 
 	float fTime = pTimer->GetDeltaTime();
-
+	
 	SAFE_RELEASE(pTimer);
 
 	GET_SINGLE(CScheduler)->Update(fTime);

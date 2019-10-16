@@ -1111,7 +1111,7 @@ void SecondScene::Input(float fTime)
 			}
 		}
 	}
-	isInitComplete = true;
+	//isInitComplete = true;
 }
 
 
