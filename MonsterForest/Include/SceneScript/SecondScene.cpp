@@ -573,7 +573,7 @@ bool SecondScene::Init()
 	m_pScene->LoadGlobLight("Main_Scene_2_DY");
 	m_pScene->LoadPointLight("Main_Scene_2_DY_Lights");
 	GET_SINGLE(CNaviManager)->CreateNaviMeshFromFile("Main_Scene_2_DY");
-	GET_SINGLE(CNaviManager)->SetRenderCheck(true);
+	GET_SINGLE(CNaviManager)->SetRenderCheck(false);
 	isInitComplete = true;
 	return true;
 }
