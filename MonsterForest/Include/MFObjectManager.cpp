@@ -27,7 +27,7 @@ void MFObjectManager::operator=(MFObjectManager &&)
 bool MFObjectManager::initialize(const wstring& scene_name)
 {
 	protoTypeSetting();
-	//staticObjectSetting(scene_name);
+	staticObjectSetting(scene_name);
 
 	return true;
 }
